@@ -68,7 +68,10 @@ class ModelProfile:
 
 SD15 = ModelProfile("sd15", min_side=512, max_side=768, min_context=512)
 SDXL = ModelProfile("sdxl", min_side=768, max_side=1024, min_context=768)
-PROFILES = {"sd15": SD15, "sdxl": SDXL}
+FLUX = ModelProfile("flux", min_side=768, max_side=1024, min_context=768, multiple=16)
+QWEN = ModelProfile("qwen_image", min_side=768, max_side=1024, min_context=768, multiple=16)
+INPAINT_MODEL = ModelProfile("inpaint_model", min_side=256, max_side=1024, min_context=512)
+PROFILES = {"sd15": SD15, "sdxl": SDXL, "flux": FLUX, "qwen_image": QWEN, "inpaint_model": INPAINT_MODEL}
 
 
 def round_to_multiple(value: int, multiple: int) -> int:

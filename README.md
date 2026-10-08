@@ -112,10 +112,56 @@ Non-interactive use (scripts, batch mode) is supported through the PDB; see
 `tests/gimp_batch_fill.py` for a complete example that opens an image, selects
 a region, runs the fill and exports the result.
 
+## Models
+
+`Filters > AI > Generative Fill Settings... > Models` lists every model from
+`models/catalog.json`, shows whether it is installed, and downloads, activates
+or removes it without leaving GIMP. Downloads run in the hidden supervisor
+process (resumable, sha256-verified, atomic rename; progress is shown in the
+tab and keeps going if you close the dialog). "Set active" chooses the model
+used when a dialog's Model field says "Active model"; it also selects the
+workflow template.
+
+| Catalog id | Model | Tier | Download | License | Source |
+|---|---|---|---|---|---|
+| `sd15-inpainting` | Stable Diffusion 1.5 Inpainting | fast | 4.0 GB | CreativeML OpenRAIL-M | first-party |
+| `sdxl-base` | SDXL 1.0 Base + Fooocus patch | quality | 6.5 GB (+1.3 GB patch) | CreativeML OpenRAIL++-M | first-party (stabilityai) |
+| `fooocus-inpaint-patch` | Fooocus inpaint head + v2.6 patch (companion for SDXL models) | quality | 1.3 GB | OpenRAIL | first-party (lllyasviel) |
+| `juggernaut-xl-v9` | Juggernaut XL v9 + Fooocus patch | quality | 6.6 GB | CreativeML OpenRAIL-M | first-party (RunDiffusion) |
+| `flux1-fill-dev-gguf-q4` | FLUX.1 Fill [dev] GGUF Q4_0 + T5 GGUF + CLIP-L + FLUX VAE | quality | 10.0 GB | FLUX.1 [dev] Non-Commercial | community quantization (YarvixPA, city96); VAE gated |
+| `flux1-fill-dev` | FLUX.1 Fill [dev] full safetensors (fp8 at load) | quality | 27 GB | FLUX.1 [dev] Non-Commercial | first-party (black-forest-labs), gated |
+| `qwen-image-edit-2511-gguf-q4` | Qwen-Image-Edit-2511 GGUF Q4_K_M + Qwen2.5-VL fp8 + VAE | edit | 21.3 GB | Apache-2.0 | community quantization (unsloth), encoders from Comfy-Org |
+| `lama-big` | LaMa big-lama (prompt-free removal) | removal | 196 MB | Apache-2.0 | first-party checkpoint via GitHub release |
+| `mat-places512` | MAT Places512 fp16 (prompt-free removal) | removal | 119 MB | CC BY-NC 4.0 | Acly conversion of the official checkpoint |
+
+Tiers: **fast** (SD 1.5), **quality** (SDXL/FLUX), **edit** (instruction
+edits, Qwen), **removal** (no prompt; Generative Fill just removes what is
+selected). FLUX and Qwen need the ComfyUI-GGUF node pack; the tab offers
+"Install nodes" (git clone at the pinned commit plus pip install with
+ComfyUI's Python, then a backend restart) after a confirmation.
+
+**Gated models and the Hugging Face token.** FLUX.1 files published by Black
+Forest Labs require accepting the license on the model page while logged in
+to Hugging Face, then a read token from https://huggingface.co/settings/tokens.
+Paste it into the token field of the Models tab (saved to `config.json` in
+your GIMP profile only; it is never written into this repository). For
+`flux1-fill-dev-gguf-q4` the GGUF and encoders are open, only the VAE comes
+from the gated `black-forest-labs/FLUX.1-schnell` repository.
+
+Headless parity: `install.ps1 -ListModels` prints the table with install
+state; `install.ps1 -Model <id> [-HfToken hf_...]` downloads (resumes) and
+verifies the files with curl and `Get-FileHash`, then clones required nodes.
+
+VRAM guidance for an 8 GB card: SD 1.5 and the removal models are
+comfortable; SDXL and FLUX Q4 fit with ComfyUI's automatic offloading
+(slower); Qwen Q4 (13 GB weights) offloads heavily and is marked 12 GB
+minimum.
+
 ## Settings
 
 Stored in `<GIMP profile>/stable-boy/config.json` and edited through
-`Filters > AI > Generative Fill Settings...`.
+`Filters > AI > Generative Fill Settings...` (General tab; the Models tab is
+described above).
 
 | Setting | Default | Notes |
 |---|---|---|

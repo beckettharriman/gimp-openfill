@@ -71,6 +71,39 @@ If a request fails with an out-of-memory message, use a smaller selection,
 fewer variations, or the Fast tier. `--lowvram` can be added through
 "Extra ComfyUI arguments" in the settings dialog.
 
+## The catalog (`models/catalog.json`)
+
+Everything the Models tab offers comes from this file. Each entry records
+id, display name, tier, capabilities, architecture, workflow template, page,
+license (name + URL), gated flag, source type (`first-party` or
+`community-quantization` with the uploader named), minimum VRAM, required
+custom nodes (repo, folder, pinned commit) and the files (URL, destination
+under `models/`, size, sha256 when the host publishes one). Every URL was
+verified with a HEAD request (`tests/check_catalog_urls.py`, log in
+`docs/evidence/catalog-url-check.txt`).
+
+Additional entries beyond the four files above:
+
+| Catalog id | Files | Size | License | Source |
+|---|---|---|---|---|
+| `juggernaut-xl-v9` | `checkpoints/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors` | 7.1 GB | CreativeML OpenRAIL-M (repo tag) | RunDiffusion (first-party) |
+| `flux1-fill-dev-gguf-q4` | `unet/flux1-fill-dev-Q4_0.gguf` (YarvixPA), `clip/t5-v1_1-xxl-encoder-Q5_K_M.gguf` (city96), `clip/clip_l.safetensors` (comfyanonymous), `vae/ae.safetensors` (black-forest-labs, gated) | 10.8 GB | FLUX.1 [dev] Non-Commercial (encoders Apache-2.0) | community quantization |
+| `flux1-fill-dev` | `diffusion_models/flux1-fill-dev.safetensors`, `clip/t5xxl_fp8_e4m3fn.safetensors`, `clip/clip_l.safetensors`, `vae/ae.safetensors` | 29.3 GB | FLUX.1 [dev] Non-Commercial | black-forest-labs (first-party, gated) |
+| `qwen-image-edit-2511-gguf-q4` | `unet/qwen-image-edit-2511-Q4_K_M.gguf` (unsloth), `text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors`, `vae/qwen_image_vae.safetensors` (Comfy-Org) | 22.9 GB | Apache-2.0 | community quantization |
+| `lama-big` | `inpaint/big-lama.pt` | 206 MB | Apache-2.0 | advimman/lama checkpoint from the Sanster/models GitHub release (no published checksum) |
+| `mat-places512` | `inpaint/MAT_Places512_G_fp16.safetensors` | 125 MB | CC BY-NC 4.0 | Acly/MAT (fp16 conversion of fenglinglwb/MAT) |
+
+No reputable repository offers a Q4_K_M quantization of FLUX.1 Fill; the
+catalog uses YarvixPA's Q4_0 (the most downloaded FLUX Fill GGUF) and lists
+the first-party safetensors as the alternative.
+
+Custom node packs referenced by the catalog:
+
+| Pack | Pinned commit | License | Needed by |
+|---|---|---|---|
+| Acly/comfyui-inpaint-nodes | `5b7681746fe19e563113d27366ba85236bc1ba5b` | GPL-3.0 | SDXL + Fooocus, LaMa/MAT removal |
+| city96/ComfyUI-GGUF | `6ea2651e7df66d7585f6ffee804b20e92fb38b8a` | Apache-2.0 | FLUX GGUF, Qwen GGUF |
+
 ## Adding other models
 
 Any SD 1.5 or SDXL checkpoint dropped into `models/checkpoints/` appears in

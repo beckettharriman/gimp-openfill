@@ -65,8 +65,18 @@ def _choice(options: list[tuple[str, str]]) -> Gimp.Choice:
     return choice
 
 
-def _quality_choice() -> Gimp.Choice:
-    return _choice([("fast", "Fast (SD 1.5 inpainting)"), ("quality", "Quality (SDXL + Fooocus)")])
+def _model_choice() -> Gimp.Choice:
+    """'active' (from the settings), the two legacy tiers, then every catalog model."""
+    options = [("active", "Active model (see Settings > Models)"),
+               ("fast", "Fast (SD 1.5 inpainting)"), ("quality", "Quality (SDXL + Fooocus)")]
+    try:
+        from stable_boy.catalog import load_catalog
+        for entry in load_catalog(plugin_dir=os.path.dirname(os.path.abspath(__file__))):
+            if entry.runnable:
+                options.append((entry.id, f"{entry.name} [{entry.tier}]".replace("_", "__")))
+    except Exception:
+        pass
+    return _choice(options)
 
 
 def _load_models_cache() -> dict:
@@ -106,7 +116,7 @@ def run_fill(procedure, run_mode, image, drawables, config, data):
         app = App()
         app.generative_fill(image, config.get_property("prompt"), config.get_property("negative"),
                             config.get_property("variations"), config.get_property("strength"),
-                            config.get_property("seed"), config.get_property("quality"))
+                            config.get_property("seed"), config.get_property("model"))
     except Exception as err:  # noqa: BLE001 - every failure must reach the user
         return _fail(procedure, err, app.log if app else None)
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
@@ -123,7 +133,7 @@ def run_expand(procedure, run_mode, image, drawables, config, data):
                               config.get_property("left"), config.get_property("top"),
                               config.get_property("right"), config.get_property("bottom"),
                               config.get_property("variations"), config.get_property("seed"),
-                              config.get_property("quality"))
+                              config.get_property("model"))
     except Exception as err:  # noqa: BLE001
         return _fail(procedure, err, app.log if app else None)
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
@@ -139,17 +149,62 @@ def run_txt2img(procedure, run_mode, image, drawables, config, data):
         app.text_to_image(image, config.get_property("prompt"), config.get_property("negative"),
                           config.get_property("width"), config.get_property("height"),
                           config.get_property("variations"), config.get_property("seed"),
-                          config.get_property("quality"), config.get_property("target"))
+                          config.get_property("model"), config.get_property("target"))
     except Exception as err:  # noqa: BLE001
         return _fail(procedure, err, app.log if app else None)
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
 
 
 SETTINGS_KEYS = ["backend", "comfy_dir", "url", "a1111_url", "autostart", "idle_timeout_minutes",
-                 "quality", "checkpoint", "sdxl_checkpoint", "fooocus_patch", "steps", "cfg",
+                 "quality", "progress_window", "checkpoint", "sdxl_checkpoint", "fooocus_patch", "steps", "cfg",
                  "sampler", "scheduler", "grow", "feather", "prefill", "max_side_sd15",
                  "max_side_sdxl", "txt2img_width", "txt2img_height", "startup_timeout",
                  "request_timeout", "extra_server_args", "debug"]
+
+
+def _settings_dialog(procedure, config) -> bool:
+    """Settings as a notebook: General (generated from the procedure arguments)
+    and Models (the catalog panel)."""
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gtk
+    from stable_boy.app import App
+    from stable_boy.models_ui import ModelsPanel
+
+    GimpUi.init("gimp-stable-boy")
+    dialog = GimpUi.ProcedureDialog.new(procedure, config, "Generative Fill Settings")
+    general = dialog.fill_box("general", [k.replace("_", "-") for k in SETTINGS_KEYS] + ["check-backend"])
+    scroller = Gtk.ScrolledWindow()
+    scroller.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+    scroller.set_min_content_height(480)
+    scroller.add(general)
+    notebook = Gtk.Notebook()
+    notebook.append_page(scroller, Gtk.Label(label="General"))
+    panel = None
+    try:
+        panel = ModelsPanel(App())
+        notebook.append_page(panel, Gtk.Label(label="Models"))
+    except Exception as err:  # noqa: BLE001 - the General page must still work
+        notebook.append_page(Gtk.Label(label=f"Models tab unavailable: {err}"), Gtk.Label(label="Models"))
+    dialog.get_content_area().pack_start(notebook, True, True, 0)
+    dialog.set_default_size(920, 720)
+    notebook.show_all()
+    if os.environ.get("SB_SETTINGS_TAB") == "models":
+        def _go_models(*_):
+            notebook.set_current_page(1)
+            print(f"[stable-boy] models tab requested; current page {notebook.get_current_page()} of "
+                  f"{notebook.get_n_pages()}", file=sys.stderr)
+            return False
+        dialog.connect("map-event", _go_models)
+        GLib.timeout_add(400, _go_models)
+        GLib.timeout_add(1500, _go_models)
+    autoclose = float(os.environ.get("SB_TEST_AUTOCLOSE", "0") or 0)
+    if autoclose > 0:
+        GLib.timeout_add(int(autoclose * 1000), lambda: dialog.response(Gtk.ResponseType.OK) or False)
+    ok = dialog.run()
+    if panel is not None:
+        panel.stop()
+    dialog.destroy()
+    return bool(ok)
 
 
 def run_settings(procedure, config, data):
@@ -161,8 +216,9 @@ def run_settings(procedure, config, data):
             config.set_property(key.replace("_", "-"), getattr(settings, key))
         except Exception:
             pass
-    if run_mode == Gimp.RunMode.INTERACTIVE and not _dialog(procedure, config, "Generative Fill Settings"):
+    if run_mode == Gimp.RunMode.INTERACTIVE and not _settings_dialog(procedure, config):
         return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
+    settings = Settings.load(paths.config)  # the Models tab may have changed active_model / token meanwhile
     for key in SETTINGS_KEYS:
         setattr(settings, key, config.get_property(key.replace("_", "-")))
     settings.save(paths.config)
@@ -222,8 +278,8 @@ class StableBoy(Gimp.PlugIn):
     @staticmethod
     def _seed_quality_args(procedure):
         procedure.add_int_argument("seed", "_Seed", "-1 for random", -1, 2**31 - 1, -1, RW)
-        procedure.add_choice_argument("quality", "_Model", "Which model tier to use",
-                                      _quality_choice(), "fast", RW)
+        procedure.add_choice_argument("model", "_Model", "Which model to use ('active' = the one chosen "
+                                      "in Settings > Models)", _model_choice(), "active", RW)
 
     def _image_procedure(self, name, func, label, blurb, help_text):
         procedure = Gimp.ImageProcedure.new(self, name, Gimp.PDBProcType.PLUGIN, func, None)
@@ -297,38 +353,42 @@ class StableBoy(Gimp.PlugIn):
         p.add_choice_argument("backend", "_Backend", "Generation server", _choice(
             [("comfyui", "ComfyUI (managed, recommended)"), ("a1111", "AUTOMATIC1111 WebUI (external)")]),
             s.backend, RW)
-        p.add_string_argument("comfy-dir", "ComfyUI _folder", "Folder of the ComfyUI portable build",
+        p.add_string_argument("comfy-dir", "Co_mfyUI folder", "Folder of the ComfyUI portable build",
                               s.comfy_dir, RW)
-        p.add_string_argument("url", "ComfyUI _URL", "Base URL of ComfyUI", s.url, RW)
-        p.add_string_argument("a1111-url", "A1111 URL", "Base URL of the WebUI API", s.a1111_url, RW)
-        p.add_boolean_argument("autostart", "Start backend _automatically", "", s.autostart, RW)
+        p.add_string_argument("url", "Com_fyUI URL", "Base URL of ComfyUI", s.url, RW)
+        p.add_string_argument("a1111-url", "_A1111 URL", "Base URL of the WebUI API", s.a1111_url, RW)
+        p.add_boolean_argument("autostart", "S_tart backend automatically", "", s.autostart, RW)
         p.add_int_argument("idle-timeout-minutes", "_Idle timeout (min)",
                            "Stop the backend after this many idle minutes; 0 = until GIMP exits",
                            0, 24 * 60, s.idle_timeout_minutes, RW)
-        p.add_choice_argument("quality", "Default _model tier", "", _quality_choice(), s.quality, RW)
+        p.add_choice_argument("quality", "L_egacy tier for 'fast'/'quality' calls", "",
+                              _choice([("fast", "Fast (SD 1.5 inpainting)"), ("quality", "Quality (SDXL + Fooocus)")]),
+                              s.quality, RW)
+        p.add_boolean_argument("progress-window", "Float_ing progress window", "Show a floating window with "
+                               "progress, live preview and downloads", s.progress_window, RW)
         self._model_arg(p, "checkpoint", "SD 1.5 _checkpoint", cache.get("checkpoints"), s.checkpoint)
         self._model_arg(p, "sdxl-checkpoint", "SD_XL checkpoint", cache.get("checkpoints"), s.sdxl_checkpoint)
         self._model_arg(p, "fooocus-patch", "Fooocus _patch", cache.get("fooocus_patches"), s.fooocus_patch)
-        p.add_int_argument("steps", "S_teps", "", 1, 150, s.steps, RW)
-        p.add_double_argument("cfg", "CFG scale", "", 0.0, 30.0, s.cfg, RW)
+        p.add_int_argument("steps", "Ste_ps", "", 1, 150, s.steps, RW)
+        p.add_double_argument("cfg", "CF_G scale", "", 0.0, 30.0, s.cfg, RW)
         p.add_choice_argument("sampler", "Sampler", "", _choice([(x, x) for x in SAMPLERS]), s.sampler, RW)
-        p.add_choice_argument("scheduler", "Scheduler", "", _choice([(x, x) for x in SCHEDULERS]),
+        p.add_choice_argument("scheduler", "Sche_duler", "", _choice([(x, x) for x in SCHEDULERS]),
                               s.scheduler, RW)
-        p.add_int_argument("grow", "Mask _grow (px)", "Dilate the mask before generating", 0, 256, s.grow, RW)
-        p.add_int_argument("feather", "Mask _feather (px)", "Soft edge of the layer mask", 0, 256, s.feather, RW)
+        p.add_int_argument("grow", "Mas_k grow (px)", "Dilate the mask before generating", 0, 256, s.grow, RW)
+        p.add_int_argument("feather", "Mask feather (p_x)", "Soft edge of the layer mask", 0, 256, s.feather, RW)
         p.add_boolean_argument("prefill", "Pre-fill masked area", "Hide old content under the mask "
                                "before sampling (needs comfyui-inpaint-nodes)", s.prefill, RW)
-        p.add_int_argument("max-side-sd15", "Max working size SD 1.5", "", 512, 2048, s.max_side_sd15, RW)
-        p.add_int_argument("max-side-sdxl", "Max working size SDXL", "", 768, 2048, s.max_side_sdxl, RW)
+        p.add_int_argument("max-side-sd15", "Max _working size SD 1.5", "", 512, 2048, s.max_side_sd15, RW)
+        p.add_int_argument("max-side-sdxl", "Max worki_ng size SDXL", "", 768, 2048, s.max_side_sdxl, RW)
         p.add_int_argument("txt2img-width", "Text to Image width", "", 64, 4096, s.txt2img_width, RW)
         p.add_int_argument("txt2img-height", "Text to Image height", "", 64, 4096, s.txt2img_height, RW)
-        p.add_int_argument("startup-timeout", "Startup timeout (s)", "", 30, 1800, s.startup_timeout, RW)
-        p.add_int_argument("request-timeout", "Request timeout (s)", "0 = estimate per request",
+        p.add_int_argument("startup-timeout", "Start_up timeout (s)", "", 30, 1800, s.startup_timeout, RW)
+        p.add_int_argument("request-timeout", "Re_quest timeout (s)", "0 = estimate per request",
                            0, 7200, s.request_timeout, RW)
-        p.add_string_argument("extra-server-args", "Extra ComfyUI arguments",
+        p.add_string_argument("extra-server-args", "Extra ComfyUI ar_guments",
                               "For example --lowvram", s.extra_server_args, RW)
-        p.add_boolean_argument("debug", "Verbose log", "", s.debug, RW)
-        p.add_boolean_argument("check-backend", "Check backend now",
+        p.add_boolean_argument("debug", "_Verbose log", "", s.debug, RW)
+        p.add_boolean_argument("check-backend", "Chec_k backend now",
                                "Start the backend if needed and list its models", True, RW)
         return p
 
@@ -338,7 +398,9 @@ class StableBoy(Gimp.PlugIn):
         if default and default not in options:
             options.insert(0, default)
         if options:
-            procedure.add_choice_argument(name, nick, "", _choice([(o, o) for o in options]), default, RW)
+            # a single underscore would become a mnemonic in the radio label
+            procedure.add_choice_argument(name, nick, "", _choice([(o, o.replace("_", "__")) for o in options]),
+                                          default, RW)
         else:
             procedure.add_string_argument(name, nick, "", default, RW)
 

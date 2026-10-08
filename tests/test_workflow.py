@@ -103,6 +103,91 @@ class InpaintGraphTests(unittest.TestCase):
         self.assertEqual(w.total_steps(graph), 33)
 
 
+class TemplateSelectionTests(unittest.TestCase):
+    def test_select_builder(self):
+        self.assertIs(w.select_builder("sd15_inpaint"), w.build_inpaint)
+        self.assertIs(w.select_builder("sdxl_fooocus"), w.build_inpaint)
+        self.assertIs(w.select_builder("flux_fill"), w.build_flux_fill)
+        self.assertIs(w.select_builder("qwen_edit"), w.build_qwen_edit)
+        self.assertIs(w.select_builder("inpaint_model"), w.build_removal)
+        with self.assertRaises(ValueError):
+            w.select_builder("nope")
+
+    def test_effective_template_from_arch(self):
+        self.assertEqual(ModelSpec("x.ckpt").effective_template, "sd15_inpaint")
+        self.assertEqual(ModelSpec("x", arch="flux").effective_template, "flux_fill")
+        self.assertEqual(ModelSpec("x", template="qwen_edit", arch="sd15").effective_template, "qwen_edit")
+        self.assertTrue(ModelSpec(arch="inpaint_model").prompt_free)
+
+    def test_build_fill_dispatches_on_active_model(self):
+        sd = w.build_fill(_req(), "i", "m", 1, w.Capabilities(True))
+        self.assertEqual(sd["ckpt"]["class_type"], "CheckpointLoaderSimple")
+        flux = ModelSpec(arch="flux", unet="flux1-fill-dev-Q4_0.gguf", clip1="t5.gguf", clip2="clip_l.safetensors",
+                         vae="ae.safetensors")
+        fx = w.build_fill(_req(model=flux, sampling=Sampling(cfg=30.0, steps=20)), "i", "m", 1, w.Capabilities(True))
+        self.assertEqual(fx["unet"]["class_type"], "UnetLoaderGGUF")
+        self.assertEqual(fx["clip"]["class_type"], "DualCLIPLoaderGGUF")
+        self.assertEqual(fx["clip"]["inputs"]["type"], "flux")
+        self.assertEqual(fx["guidance"]["inputs"]["guidance"], 30.0)
+        self.assertEqual(fx["sampler"]["inputs"]["cfg"], 1.0)
+        self.assertEqual(fx["encode"]["class_type"], "InpaintModelConditioning")
+        self.assertEqual(fx["sampler"]["inputs"]["model"], ["diff", 0])
+
+    def test_flux_safetensors_uses_core_loaders(self):
+        flux = ModelSpec(arch="flux", unet="flux1-fill-dev.safetensors", clip1="t5xxl_fp8_e4m3fn.safetensors",
+                         clip2="clip_l.safetensors", vae="ae.safetensors")
+        fx = w.build_fill(_req(model=flux), "i", "m", 1, w.Capabilities(False))
+        self.assertEqual(fx["unet"]["class_type"], "UNETLoader")
+        self.assertEqual(fx["unet"]["inputs"]["weight_dtype"], "fp8_e4m3fn")
+        self.assertEqual(fx["clip"]["class_type"], "DualCLIPLoader")
+
+    def test_qwen_edit_graph(self):
+        qwen = ModelSpec(arch="qwen_image", unet="qwen-image-edit-2511-Q4_K_M.gguf",
+                         clip1="qwen_2.5_vl_7b_fp8_scaled.safetensors", vae="qwen_image_vae.safetensors")
+        g = w.build_fill(_req(model=qwen, prompt="replace the box with a bench"), "i", "m", 1, w.Capabilities(True))
+        self.assertEqual(g["clip"]["class_type"], "CLIPLoader")
+        self.assertEqual(g["clip"]["inputs"]["type"], "qwen_image")
+        self.assertEqual(g["pos"]["class_type"], "TextEncodeQwenImageEditPlus")
+        self.assertEqual(g["pos"]["inputs"]["image1"], ["image_scale", 0])
+        self.assertEqual(g["noise_mask"]["inputs"]["mask"], ["mask_stable", 0])
+        self.assertEqual(g["sampler"]["inputs"]["cfg"], 2.5)
+        self.assertEqual(g["sampler"]["inputs"]["model"], ["cfgnorm", 0])
+
+    def test_removal_graph_has_no_prompt_nodes(self):
+        lama = ModelSpec(arch="inpaint_model", inpaint_model="big-lama.pt")
+        g = w.build_fill(_req(model=lama), "i", "m", 7, w.Capabilities(True))
+        classes = {n["class_type"] for n in g.values()}
+        self.assertNotIn("CLIPTextEncode", classes)
+        self.assertNotIn("KSampler", classes)
+        self.assertEqual(g["inpaint_model"]["inputs"]["model_name"], "big-lama.pt")
+        self.assertEqual(g["remove"]["inputs"]["seed"], 7)
+        self.assertEqual(g[w.OUTPUT_NODE]["inputs"]["images"], ["out_scale", 0])
+        with self.assertRaises(ValueError):
+            w.build_fill(_req(model=lama), "i", "m", 7, w.Capabilities(False))
+
+    def test_sdxl_checkpoint_swap(self):
+        jug = ModelSpec("Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors", "sdxl",
+                        "fooocus_inpaint_head.pth", "inpaint_v26.fooocus.patch", template="sdxl_fooocus")
+        g = w.build_fill(_req(model=jug), "i", "m", 1, w.Capabilities(True))
+        self.assertEqual(g["ckpt"]["inputs"]["ckpt_name"], "Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors")
+        self.assertEqual(g["fooocus"]["class_type"], "INPAINT_ApplyFooocusInpaint")
+
+    def test_txt2img_rejects_non_txt2img_models(self):
+        for spec in (ModelSpec(arch="flux", unet="u"), ModelSpec(arch="inpaint_model", inpaint_model="l")):
+            with self.assertRaises(ValueError):
+                w.build_txt2img(Txt2ImgRequest(512, 512, "p", "n", spec), 1)
+
+    def test_all_links_resolve_in_new_templates(self):
+        specs = [ModelSpec(arch="flux", unet="u.gguf", clip1="t.gguf", clip2="c", vae="v"),
+                 ModelSpec(arch="qwen_image", unet="u.gguf", clip1="c", vae="v"),
+                 ModelSpec(arch="inpaint_model", inpaint_model="l")]
+        for spec in specs:
+            graph = w.build_fill(_req(model=spec, sampling=Sampling(batch=2)), "i", "m", 1, w.Capabilities(True))
+            for node_id in graph:
+                for link in _links(graph, node_id).values():
+                    self.assertIn(link[0], graph, f"{spec.arch}: {node_id} -> {link[0]}")
+
+
 class Txt2ImgGraphTests(unittest.TestCase):
     def test_graph(self):
         req = Txt2ImgRequest(768, 512, "p", "n", ModelSpec("x.ckpt"), Sampling(batch=2, steps=12))

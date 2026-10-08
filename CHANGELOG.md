@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Model catalog (`models/catalog.json`): SD 1.5 inpainting, SDXL base,
+  Fooocus inpaint patch, Juggernaut XL v9, FLUX.1 Fill [dev] (GGUF Q4_0
+  community quantization and gated first-party safetensors), Qwen-Image-Edit-2511
+  GGUF Q4_K_M, LaMa and MAT for prompt-free removal, each with license,
+  source type, gating flag, sizes, published sha256 and pinned custom nodes.
+- Models tab in the Settings dialog: status (Installed / Available /
+  Downloading / Needs token / Needs node / Partial), Download, Cancel, Set
+  active, Install nodes, Remove, Open models folder, Hugging Face token field
+  (stored in the profile `config.json` only).
+- Windowless downloader in the supervisor: queue, HTTP Range resume, sha256
+  verification, atomic rename, disk-space and gated (401/403) errors, cancel;
+  a tasks-only supervisor mode when the backend is not running.
+- On-demand custom node installation (git clone at the pinned commit, pip
+  install with ComfyUI's Python) with confirmation and backend restart;
+  ComfyUI-GGUF for the FLUX and Qwen tiers.
+- Workflow templates selected by the active model: FLUX Fill (GGUF or fp8
+  loaders), Qwen-Image-Edit (TextEncodeQwenImageEditPlus), LaMa/MAT removal
+  (prompt skipped), SDXL checkpoint swap for Juggernaut.
+- `install.ps1 -ListModels` and `-Model <id> [-HfToken]` for headless parity.
+- Unit tests for catalog validation, resumable downloads and template selection.
+
+### Changed
+
+- The dialogs' "Model" field now offers "Active model" (from the Models tab),
+  the legacy fast/quality tiers, and every runnable catalog entry.
+- ComfyUI is started with `--preview-method taesd`.
+
 ## [2.0.0-alpha.1] - 2026-10-08
 
 Complete rewrite for GIMP 3. Nothing from the 0.x code base runs under GIMP 3

@@ -1,0 +1,241 @@
+{
+  "started": "2026-10-08 15:00:12",
+  "gimp_pid": 31588,
+  "steps": [
+    {
+      "step": "catalog",
+      "ids": [
+        "sd15-inpainting",
+        "sdxl-base",
+        "fooocus-inpaint-patch",
+        "juggernaut-xl-v9",
+        "flux1-fill-dev-gguf-q4",
+        "flux1-fill-dev",
+        "qwen-image-edit-2511-gguf-q4",
+        "lama-big",
+        "mat-places512"
+      ],
+      "statuses": {
+        "sd15-inpainting": "Installed",
+        "sdxl-base": "Installed",
+        "fooocus-inpaint-patch": "Installed",
+        "juggernaut-xl-v9": "Available",
+        "flux1-fill-dev-gguf-q4": "Needs token",
+        "flux1-fill-dev": "Needs token",
+        "qwen-image-edit-2511-gguf-q4": "Available",
+        "lama-big": "Available",
+        "mat-places512": "Available"
+      },
+      "active": "sd15-inpainting",
+      "models_root": "C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\models",
+      "time": "15:00:12"
+    },
+    {
+      "step": "download-queued",
+      "task_ids": [
+        "1791486012652-download"
+      ],
+      "worker_alive": false,
+      "time": "15:00:12"
+    },
+    {
+      "step": "download-finished",
+      "result": {
+        "task_id": "1791486012652-download",
+        "type": "download",
+        "model_id": "mat-places512",
+        "state": "done",
+        "message": "1 file(s) ready",
+        "finished": 1791486017.263071,
+        "files": [
+          {
+            "dest": "inpaint/MAT_Places512_G_fp16.safetensors",
+            "sha256": "309dd6ce6e04034dc4b6b15c7bd2a4844d158e03eb2a139e0eca6b366e40c0de",
+            "skipped": false,
+            "resumed_from": 0
+          }
+        ]
+      },
+      "samples": [
+        {
+          "t": 2.0,
+          "done": 1048576,
+          "total": 125280278,
+          "speed_mbps": 2.12,
+          "state": "downloading",
+          "file": "inpaint/MAT_Places512_G_fp16.safetensors"
+        },
+        {
+          "t": 4.0,
+          "done": 79691776,
+          "total": 125280278,
+          "speed_mbps": 30.42,
+          "state": "downloading",
+          "file": "inpaint/MAT_Places512_G_fp16.safetensors"
+        },
+        {
+          "t": 2.0,
+          "done": 1048576,
+          "total": 125280278,
+          "speed_mbps": 2.12,
+          "state": "downloading",
+          "file": "inpaint/MAT_Places512_G_fp16.safetensors"
+        },
+        {
+          "t": 4.0,
+          "done": 79691776,
+          "total": 125280278,
+          "speed_mbps": 30.42,
+          "state": "downloading",
+          "file": "inpaint/MAT_Places512_G_fp16.safetensors"
+        }
+      ],
+      "sample_count": 2,
+      "time": "15:00:18"
+    },
+    {
+      "step": "download-verified",
+      "exists": true,
+      "size": 125280278,
+      "expected_size": 125280278,
+      "sha256": "309dd6ce6e04034dc4b6b15c7bd2a4844d158e03eb2a139e0eca6b366e40c0de",
+      "expected_sha256": "309dd6ce6e04034dc4b6b15c7bd2a4844d158e03eb2a139e0eca6b366e40c0de",
+      "match": true,
+      "time": "15:00:18"
+    },
+    {
+      "step": "status-after-download",
+      "status": "Installed",
+      "all": {
+        "sd15-inpainting": "Installed",
+        "sdxl-base": "Installed",
+        "fooocus-inpaint-patch": "Installed",
+        "juggernaut-xl-v9": "Available",
+        "flux1-fill-dev-gguf-q4": "Needs token",
+        "flux1-fill-dev": "Needs token",
+        "qwen-image-edit-2511-gguf-q4": "Available",
+        "lama-big": "Available",
+        "mat-places512": "Installed"
+      },
+      "time": "15:00:18"
+    },
+    {
+      "step": "download-again",
+      "result": {
+        "task_id": "1791486018840-download",
+        "type": "download",
+        "model_id": "mat-places512",
+        "state": "done",
+        "message": "1 file(s) ready",
+        "finished": 1791486019.4816628,
+        "files": [
+          {
+            "dest": "inpaint/MAT_Places512_G_fp16.safetensors",
+            "sha256": "309dd6ce6e04034dc4b6b15c7bd2a4844d158e03eb2a139e0eca6b366e40c0de",
+            "skipped": true,
+            "resumed_from": 0
+          }
+        ]
+      },
+      "time": "15:00:20"
+    },
+    {
+      "step": "set-active",
+      "active": "mat-places512",
+      "template": "inpaint_model",
+      "prompt_free": true,
+      "time": "15:00:20"
+    },
+    {
+      "step": "removal-fill",
+      "status": "3",
+      "seconds": 34.0,
+      "layers": [
+        {
+          "name": "Object Removal",
+          "has_mask": true,
+          "visible": true
+        },
+        {
+          "name": "Background",
+          "has_mask": false,
+          "visible": true
+        }
+      ],
+      "time": "15:00:55"
+    },
+    {
+      "step": "nodes-needed",
+      "nodes": [
+        [
+          "ComfyUI-GGUF",
+          "6ea2651e7df66d7585f6ffee804b20e92fb38b8a"
+        ]
+      ],
+      "time": "15:00:56"
+    },
+    {
+      "step": "nodes-installed",
+      "result": {
+        "task_id": "1791486056365-install_nodes",
+        "type": "install_nodes",
+        "model_id": "flux1-fill-dev-gguf-q4",
+        "state": "done",
+        "message": "custom nodes installed",
+        "finished": 1791486064.9870594
+      },
+      "folder_exists": true,
+      "time": "15:01:06"
+    },
+    {
+      "step": "backend-restarted-with-gguf-nodes",
+      "unet_loader_gguf_present": false,
+      "time": "15:05:07"
+    },
+    {
+      "step": "sd15-fill-after",
+      "status": "3",
+      "seconds": 24.5,
+      "layers": [
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "has_mask": true,
+          "visible": true
+        },
+        {
+          "name": "Object Removal",
+          "has_mask": true,
+          "visible": true
+        },
+        {
+          "name": "Background",
+          "has_mask": false,
+          "visible": true
+        }
+      ],
+      "time": "15:05:32"
+    },
+    {
+      "step": "status-final",
+      "all": {
+        "sd15-inpainting": "Installed",
+        "sdxl-base": "Installed",
+        "fooocus-inpaint-patch": "Installed",
+        "juggernaut-xl-v9": "Available",
+        "flux1-fill-dev-gguf-q4": "Needs token",
+        "flux1-fill-dev": "Needs token",
+        "qwen-image-edit-2511-gguf-q4": "Available",
+        "lama-big": "Available",
+        "mat-places512": "Installed"
+      },
+      "time": "15:05:33"
+    },
+    {
+      "step": "settings-dialog",
+      "status": "3",
+      "time": "15:05:45"
+    }
+  ],
+  "ok": true,
+  "finished": "2026-10-08 15:05:45"
+}

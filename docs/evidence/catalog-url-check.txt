@@ -1,0 +1,37 @@
+ok  sd15-inpainting              page     200 https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-inpainting
+ok  sd15-inpainting              license  200 https://huggingface.co/spaces/CompVis/stable-diffusion-license
+ok  sd15-inpainting              checkpoint 200 size=4265437280 expected=4265437280 https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-inpainting/resolve/main/sd-v1-5-inpainting.ckpt
+ok  sdxl-base                    page     200 https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0
+ok  sdxl-base                    license  200 https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/blob/main/LICENSE.md
+ok  sdxl-base                    checkpoint 200 size=6938078334 expected=6938078334 https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
+ok  fooocus-inpaint-patch        page     200 https://huggingface.co/lllyasviel/fooocus_inpaint
+ok  fooocus-inpaint-patch        license  200 https://huggingface.co/lllyasviel/fooocus_inpaint
+ok  fooocus-inpaint-patch        fooocus_head 200 size=52602 expected=52602 https://huggingface.co/lllyasviel/fooocus_inpaint/resolve/main/fooocus_inpaint_head.pth
+ok  fooocus-inpaint-patch        fooocus_patch 200 size=1323362033 expected=1323362033 https://huggingface.co/lllyasviel/fooocus_inpaint/resolve/main/inpaint_v26.fooocus.patch
+ok  juggernaut-xl-v9             page     200 https://huggingface.co/RunDiffusion/Juggernaut-XL-v9
+ok  juggernaut-xl-v9             license  200 https://huggingface.co/RunDiffusion/Juggernaut-XL-v9
+ok  juggernaut-xl-v9             checkpoint 200 size=7105348188 expected=7105348188 https://huggingface.co/RunDiffusion/Juggernaut-XL-v9/resolve/main/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors
+ok  flux1-fill-dev-gguf-q4       page     200 https://huggingface.co/YarvixPA/FLUX.1-Fill-dev-GGUF
+ok  flux1-fill-dev-gguf-q4       license  200 https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/blob/main/LICENSE.md
+ok  flux1-fill-dev-gguf-q4       unet     200 size=6809920800 expected=6809920800 https://huggingface.co/YarvixPA/FLUX.1-Fill-dev-GGUF/resolve/main/flux1-fill-dev-Q4_0.gguf
+ok  flux1-fill-dev-gguf-q4       clip1    200 size=3386856640 expected=3386856640 https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/resolve/main/t5-v1_1-xxl-encoder-Q5_K_M.gguf
+ok  flux1-fill-dev-gguf-q4       clip2    200 size=246144152 expected=246144152 https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors
+ok  flux1-fill-dev-gguf-q4       vae      401 size=None expected=335304388 https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/ae.safetensors
+ok  flux1-fill-dev               page     200 https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev
+ok  flux1-fill-dev               license  200 https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/blob/main/LICENSE.md
+ok  flux1-fill-dev               unet     401 size=None expected=23804922408 https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/resolve/main/flux1-fill-dev.safetensors
+ok  flux1-fill-dev               clip1    200 size=4893934904 expected=4893934904 https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn.safetensors
+ok  flux1-fill-dev               clip2    200 size=246144152 expected=246144152 https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors
+ok  flux1-fill-dev               vae      401 size=None expected=335304388 https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/resolve/main/ae.safetensors
+ok  qwen-image-edit-2511-gguf-q4 page     200 https://huggingface.co/unsloth/Qwen-Image-Edit-2511-GGUF
+ok  qwen-image-edit-2511-gguf-q4 license  200 https://huggingface.co/Qwen/Qwen-Image-Edit-2511
+ok  qwen-image-edit-2511-gguf-q4 unet     200 size=13244758624 expected=13244758624 https://huggingface.co/unsloth/Qwen-Image-Edit-2511-GGUF/resolve/main/qwen-image-edit-2511-Q4_K_M.gguf
+ok  qwen-image-edit-2511-gguf-q4 clip1    200 size=9384670680 expected=9384670680 https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors
+ok  qwen-image-edit-2511-gguf-q4 vae      200 size=253806246 expected=253806246 https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/vae/qwen_image_vae.safetensors
+ok  lama-big                     page     200 https://github.com/advimman/lama
+ok  lama-big                     license  200 https://github.com/advimman/lama/blob/main/LICENSE
+ok  lama-big                     inpaint_model 200 size=205669692 expected=205669692 https://github.com/Sanster/models/releases/download/add_big_lama/big-lama.pt
+ok  mat-places512                page     200 https://huggingface.co/Acly/MAT
+ok  mat-places512                license  200 https://creativecommons.org/licenses/by-nc/4.0/
+ok  mat-places512                inpaint_model 200 size=125280278 expected=125280278 https://huggingface.co/Acly/MAT/resolve/main/MAT_Places512_G_fp16.safetensors
+problems: 0

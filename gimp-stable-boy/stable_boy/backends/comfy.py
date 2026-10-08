@@ -78,8 +78,11 @@ class ComfyBackend(Backend):
             mask_ref = self.client.upload_image(f"sb-{job}-mask.png", request.mask_png)
         except ComfyApiError as err:
             raise BackendUnavailable(f"upload failed: {err}") from err
-        graph = workflow.build_inpaint(request, image_ref, mask_ref, seed, caps,
-                                       filename_prefix=f"stable-boy/{request.mode}-{job}")
+        try:
+            graph = workflow.build_fill(request, image_ref, mask_ref, seed, caps,
+                                        filename_prefix=f"stable-boy/{request.mode}-{job}")
+        except ValueError as err:
+            raise WorkflowRejected(str(err)) from err
         pixels = request.work_width * request.work_height
         try:
             images = self._run(graph, request.sampling.steps, request.sampling.batch, pixels, progress)
@@ -99,7 +102,10 @@ class ComfyBackend(Backend):
     def txt2img(self, request: Txt2ImgRequest, progress: ProgressCallback | None = None) -> GenerationResult:
         seed = seed_or_random(request.sampling.seed)
         job = uuid.uuid4().hex[:12]
-        graph = workflow.build_txt2img(request, seed, filename_prefix=f"stable-boy/txt2img-{job}")
+        try:
+            graph = workflow.build_txt2img(request, seed, filename_prefix=f"stable-boy/txt2img-{job}")
+        except ValueError as err:
+            raise WorkflowRejected(str(err)) from err
         images = self._run(graph, request.sampling.steps, request.sampling.batch,
                            request.width * request.height, progress)
         return GenerationResult(images, seed, {"job": job, "graph": graph, "backend": self.name})

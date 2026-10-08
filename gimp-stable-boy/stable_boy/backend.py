@@ -58,14 +58,31 @@ class Sampling:
 
 @dataclass
 class ModelSpec:
-    checkpoint: str
-    arch: str = "sd15"                        # "sd15" or "sdxl"
+    checkpoint: str = ""
+    arch: str = "sd15"                        # sd15 | sdxl | flux | qwen_image | inpaint_model
     fooocus_head: Optional[str] = None        # SDXL only
     fooocus_patch: Optional[str] = None       # SDXL only
+    template: str = ""                        # catalog template id; "" = derive from arch
+    unet: str = ""                            # diffusion model file (FLUX / Qwen, safetensors or gguf)
+    clip1: str = ""                           # text encoder 1 (T5 / Qwen2.5-VL)
+    clip2: str = ""                           # text encoder 2 (CLIP-L)
+    vae: str = ""                             # separate VAE file
+    inpaint_model: str = ""                   # LaMa / MAT file for prompt-free removal
 
     @property
     def uses_fooocus(self) -> bool:
         return self.arch == "sdxl" and bool(self.fooocus_head and self.fooocus_patch)
+
+    @property
+    def effective_template(self) -> str:
+        if self.template:
+            return self.template
+        return {"sdxl": "sdxl_fooocus", "flux": "flux_fill", "qwen_image": "qwen_edit",
+                "inpaint_model": "inpaint_model"}.get(self.arch, "sd15_inpaint")
+
+    @property
+    def prompt_free(self) -> bool:
+        return self.effective_template == "inpaint_model"
 
 
 @dataclass

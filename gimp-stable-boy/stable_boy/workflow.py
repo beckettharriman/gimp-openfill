@@ -170,8 +170,157 @@ def build_inpaint(req: InpaintRequest, image_ref: str, mask_ref: str, seed: int,
     return g.to_dict()
 
 
+def _is_gguf(name: str) -> bool:
+    return name.lower().endswith(".gguf")
+
+
+def _flux_loaders(g: Graph, spec) -> tuple[list, list, list]:
+    """UNet / dual CLIP / VAE loaders for FLUX, GGUF or safetensors as needed."""
+    if _is_gguf(spec.unet):
+        g.add("unet", "UnetLoaderGGUF", unet_name=spec.unet)
+    else:
+        g.add("unet", "UNETLoader", unet_name=spec.unet, weight_dtype="fp8_e4m3fn")
+    if _is_gguf(spec.clip1) or _is_gguf(spec.clip2):
+        g.add("clip", "DualCLIPLoaderGGUF", clip_name1=spec.clip1, clip_name2=spec.clip2, type="flux")
+    else:
+        g.add("clip", "DualCLIPLoader", clip_name1=spec.clip1, clip_name2=spec.clip2, type="flux")
+    g.add("vae", "VAELoader", vae_name=spec.vae)
+    return g.out("unet"), g.out("clip"), g.out("vae")
+
+
+def _load_inputs(g: Graph, req: InpaintRequest, image_ref: str, mask_ref: str, caps: Capabilities) -> tuple[list, list]:
+    g.add("load_image", "LoadImage", image=image_ref)
+    g.add("load_mask", "LoadImage", image=mask_ref)
+    image = g.out("load_image", 0)
+    if req.needs_scaling:
+        image = _scale_image(g, "image_scale", image, req.work_width, req.work_height)
+    mask = _prepare_mask(g, g.out("load_mask", 0), req, caps)
+    return image, mask
+
+
+def _finish(g: Graph, req: InpaintRequest, out: list, mask: list, caps: Capabilities,
+            filename_prefix: str) -> dict:
+    if caps.inpaint_nodes and req.color_match > 0:
+        reference = g.out("image_scale") if req.needs_scaling else g.out("load_image", 0)
+        g.add("color_match", "INPAINT_ColorMatch", target=out, reference=reference,
+              exclude_mask=mask, strength=float(req.color_match))
+        out = g.out("color_match")
+    if req.needs_scaling:
+        out = _scale_image(g, "out_scale", out, req.width, req.height)
+    g.add(OUTPUT_NODE, "SaveImage", images=out, filename_prefix=filename_prefix)
+    return g.to_dict()
+
+
+def build_flux_fill(req: InpaintRequest, image_ref: str, mask_ref: str, seed: int,
+                    caps: Capabilities, filename_prefix: str = "stable-boy/flux") -> dict:
+    """FLUX.1 Fill: UNet (GGUF or fp8) + T5/CLIP-L + FLUX VAE, InpaintModelConditioning,
+    FluxGuidance, cfg 1.0."""
+    g = Graph()
+    model, clip, vae = _flux_loaders(g, req.model)
+    positive, negative = _prompts(g, clip, req.prompt, req.negative)
+    g.add("guidance", "FluxGuidance", conditioning=positive, guidance=float(req.sampling.cfg or 30.0))
+    positive = g.out("guidance")
+    image, mask = _load_inputs(g, req, image_ref, mask_ref, caps)
+    image = _prefill(g, image, mask, req, caps)
+    g.add("diff", "DifferentialDiffusion", model=model)
+    g.add("encode", "InpaintModelConditioning", positive=positive, negative=negative, vae=vae,
+          pixels=image, mask=mask, noise_mask=True)
+    latent = g.out("encode", 2)
+    batch = max(1, int(req.sampling.batch))
+    if batch > 1:
+        g.add("batch", "RepeatLatentBatch", samples=latent, amount=batch)
+        latent = g.out("batch")
+    g.add("sampler", "KSampler", model=g.out("diff"), positive=g.out("encode", 0),
+          negative=g.out("encode", 1), latent_image=latent, seed=int(seed),
+          steps=int(req.sampling.steps), cfg=1.0, sampler_name="euler", scheduler="normal",
+          denoise=float(req.sampling.denoise))
+    g.add("decode", "VAEDecode", samples=g.out("sampler"), vae=vae)
+    return _finish(g, req, g.out("decode"), mask, caps, filename_prefix)
+
+
+def build_qwen_edit(req: InpaintRequest, image_ref: str, mask_ref: str, seed: int,
+                    caps: Capabilities, filename_prefix: str = "stable-boy/qwen") -> dict:
+    """Qwen-Image-Edit (2509/2511 class): instruction-driven edit of the context
+    region, limited to the mask with a latent noise mask."""
+    g = Graph()
+    spec = req.model
+    if _is_gguf(spec.unet):
+        g.add("unet", "UnetLoaderGGUF", unet_name=spec.unet)
+    else:
+        g.add("unet", "UNETLoader", unet_name=spec.unet, weight_dtype="default")
+    if _is_gguf(spec.clip1):
+        g.add("clip", "CLIPLoaderGGUF", clip_name=spec.clip1, type="qwen_image")
+    else:
+        g.add("clip", "CLIPLoader", clip_name=spec.clip1, type="qwen_image")
+    g.add("vae", "VAELoader", vae_name=spec.vae)
+    model, clip, vae = g.out("unet"), g.out("clip"), g.out("vae")
+    g.add("shift", "ModelSamplingAuraFlow", model=model, shift=3.0)
+    g.add("cfgnorm", "CFGNorm", model=g.out("shift"), strength=1.0)
+    model = g.out("cfgnorm")
+    image, mask = _load_inputs(g, req, image_ref, mask_ref, caps)
+    g.add("pos", "TextEncodeQwenImageEditPlus", clip=clip, prompt=req.prompt, vae=vae, image1=image)
+    g.add("neg", "TextEncodeQwenImageEditPlus", clip=clip, prompt=req.negative or "", vae=vae, image1=image)
+    g.add("encode", "VAEEncode", pixels=image, vae=vae)
+    g.add("noise_mask", "SetLatentNoiseMask", samples=g.out("encode"), mask=mask)
+    latent = g.out("noise_mask")
+    batch = max(1, int(req.sampling.batch))
+    if batch > 1:
+        g.add("batch", "RepeatLatentBatch", samples=latent, amount=batch)
+        latent = g.out("batch")
+    g.add("sampler", "KSampler", model=model, positive=g.out("pos"), negative=g.out("neg"),
+          latent_image=latent, seed=int(seed), steps=int(req.sampling.steps),
+          cfg=float(req.sampling.cfg if 1.0 < req.sampling.cfg <= 5.0 else 2.5), sampler_name="euler",
+          scheduler="simple", denoise=float(req.sampling.denoise))
+    g.add("decode", "VAEDecode", samples=g.out("sampler"), vae=vae)
+    return _finish(g, req, g.out("decode"), mask, caps, filename_prefix)
+
+
+def build_removal(req: InpaintRequest, image_ref: str, mask_ref: str, seed: int,
+                  caps: Capabilities, filename_prefix: str = "stable-boy/remove") -> dict:
+    """Prompt-free removal with LaMa / MAT through comfyui-inpaint-nodes."""
+    if not caps.inpaint_nodes:
+        raise ValueError("prompt-free removal needs comfyui-inpaint-nodes on the server")
+    g = Graph()
+    image, mask = _load_inputs(g, req, image_ref, mask_ref, caps)
+    g.add("inpaint_model", "INPAINT_LoadInpaintModel", model_name=req.model.inpaint_model)
+    g.add("remove", "INPAINT_InpaintWithModel", inpaint_model=g.out("inpaint_model"), image=image,
+          mask=mask, seed=int(seed))
+    out = g.out("remove")
+    if req.needs_scaling:
+        out = _scale_image(g, "out_scale", out, req.width, req.height)
+    g.add(OUTPUT_NODE, "SaveImage", images=out, filename_prefix=filename_prefix)
+    return g.to_dict()
+
+
+BUILDERS = {
+    "sd15_inpaint": build_inpaint,
+    "sdxl_fooocus": build_inpaint,
+    "flux_fill": build_flux_fill,
+    "qwen_edit": build_qwen_edit,
+    "inpaint_model": build_removal,
+}
+
+
+def select_builder(template: str):
+    """Return the graph builder for a catalog template id."""
+    try:
+        return BUILDERS[template]
+    except KeyError:
+        raise ValueError(f"unknown workflow template '{template}'") from None
+
+
+def build_fill(req: InpaintRequest, image_ref: str, mask_ref: str, seed: int, caps: Capabilities,
+               filename_prefix: str = "stable-boy/fill") -> dict:
+    """Dispatch on the active model's template."""
+    return select_builder(req.model.effective_template)(req, image_ref, mask_ref, seed, caps, filename_prefix)
+
+
 def build_txt2img(req: Txt2ImgRequest, seed: int, filename_prefix: str = "stable-boy/txt2img") -> dict:
     g = Graph()
+    if req.model.effective_template == "flux_fill":
+        raise ValueError("FLUX.1 Fill is an inpainting model; use it for Generative Fill or Expand")
+    if req.model.effective_template in ("qwen_edit", "inpaint_model"):
+        raise ValueError("the active model does not support text to image")
     model, clip, vae = _checkpoint(g, req.model.checkpoint)
     positive, negative = _prompts(g, clip, req.prompt, req.negative)
     g.add("latent", "EmptyLatentImage", width=int(req.width), height=int(req.height),

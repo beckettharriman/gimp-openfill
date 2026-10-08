@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "notes": [
+    "Every URL points at an official project page: Hugging Face repositories of the model authors (or Comfy-Org / comfyanonymous repackaging), or GitHub releases.",
+    "source_type is 'first-party' when the uploader is the model author or the ComfyUI project, 'community-quantization' when a third party converted the weights (uploader named in 'uploader').",
+    "sha256 values are the LFS checksums published by Hugging Face; null means the host publishes no checksum (the plug-in records the hash after a successful download).",
+    "dest paths are relative to <ComfyUI>/models/. gated=true means the Hugging Face repository requires accepting its license and a user access token.",
+    "A file marked optional is skipped when a file with the same dest already exists (for example the FLUX VAE shared by several entries)."
+  ],
+  "models": [
+    {
+      "id": "sd15-inpainting",
+      "name": "Stable Diffusion 1.5 Inpainting",
+      "tier": "fast",
+      "capabilities": ["fill", "expand", "txt2img"],
+      "arch": "sd15",
+      "template": "sd15_inpaint",
+      "page": "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-inpainting",
+      "license": {"name": "CreativeML OpenRAIL-M", "url": "https://huggingface.co/spaces/CompVis/stable-diffusion-license"},
+      "gated": false,
+      "source_type": "first-party",
+      "uploader": "stable-diffusion-v1-5 (RunwayML weights, community-maintained mirror of the original repository)",
+      "min_vram_gb": 4,
+      "requires_nodes": [],
+      "requires_models": [],
+      "files": [
+        {"role": "checkpoint", "url": "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-inpainting/resolve/main/sd-v1-5-inpainting.ckpt", "dest": "checkpoints/sd-v1-5-inpainting.ckpt", "size": 4265437280, "sha256": "c6bbc15e3224e6973459ba78de4998b80b50112b0ae5b5c67113d56b4e366b19"}
+      ]
+    },
+    {
+      "id": "sdxl-base",
+      "name": "Stable Diffusion XL 1.0 Base (with Fooocus inpaint patch)",
+      "tier": "quality",
+      "capabilities": ["fill", "expand", "txt2img"],
+      "arch": "sdxl",
+      "template": "sdxl_fooocus",
+      "page": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0",
+      "license": {"name": "CreativeML OpenRAIL++-M", "url": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/blob/main/LICENSE.md"},
+      "gated": false,
+      "source_type": "first-party",
+      "uploader": "stabilityai",
+      "min_vram_gb": 8,
+      "requires_nodes": [
+        {"repo": "https://github.com/Acly/comfyui-inpaint-nodes", "folder": "comfyui-inpaint-nodes", "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b", "license": "GPL-3.0"}
+      ],
+      "requires_models": ["fooocus-inpaint-patch"],
+      "files": [
+        {"role": "checkpoint", "url": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors", "dest": "checkpoints/sd_xl_base_1.0.safetensors", "size": 6938078334, "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"}
+      ]
+    },
+    {
+      "id": "fooocus-inpaint-patch",
+      "name": "Fooocus Inpaint Patch v2.6 (SDXL)",
+      "tier": "quality",
+      "capabilities": ["patch"],
+      "arch": "sdxl",
+      "template": null,
+      "page": "https://huggingface.co/lllyasviel/fooocus_inpaint",
+      "license": {"name": "OpenRAIL (repository tag)", "url": "https://huggingface.co/lllyasviel/fooocus_inpaint"},
+      "gated": false,
+      "source_type": "first-party",
+      "uploader": "lllyasviel",
+      "min_vram_gb": 8,
+      "requires_nodes": [
+        {"repo": "https://github.com/Acly/comfyui-inpaint-nodes", "folder": "comfyui-inpaint-nodes", "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b", "license": "GPL-3.0"}
+      ],
+      "requires_models": [],
+      "files": [
+        {"role": "fooocus_head", "url": "https://huggingface.co/lllyasviel/fooocus_inpaint/resolve/main/fooocus_inpaint_head.pth", "dest": "inpaint/fooocus_inpaint_head.pth", "size": 52602, "sha256": "32f7f838e0c6d8f13437ba8411e77a4688d77a2e34df8857e4ef4d51f6b97692"},
+        {"role": "fooocus_patch", "url": "https://huggingface.co/lllyasviel/fooocus_inpaint/resolve/main/inpaint_v26.fooocus.patch", "dest": "inpaint/inpaint_v26.fooocus.patch", "size": 1323362033, "sha256": "f8657a025104e22d70f9c060635d8e8c2196f433871a2f68dc40abd2171f0d59"}
+      ]
+    },
+    {
+      "id": "juggernaut-xl-v9",
+      "name": "Juggernaut XL v9 (RunDiffusion Photo v2, with Fooocus inpaint patch)",
+      "tier": "quality",
+      "capabilities": ["fill", "expand", "txt2img"],
+      "arch": "sdxl",
+      "template": "sdxl_fooocus",
+      "page": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v9",
+      "license": {"name": "CreativeML OpenRAIL-M (repository tag)", "url": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v9"},
+      "gated": false,
+      "source_type": "first-party",
+      "uploader": "RunDiffusion",
+      "min_vram_gb": 8,
+      "requires_nodes": [
+        {"repo": "https://github.com/Acly/comfyui-inpaint-nodes", "folder": "comfyui-inpaint-nodes", "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b", "license": "GPL-3.0"}
+      ],
+      "requires_models": ["fooocus-inpaint-patch"],
+      "files": [
+        {"role": "checkpoint", "url": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v9/resolve/main/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors", "dest": "checkpoints/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors", "size": 7105348188, "sha256": "c9e3e68f89b8e38689e1097d4be4573cf308de4e3fd044c64ca697bdb4aa8bca"}
+      ]
+    },
+    {
+      "id": "flux1-fill-dev-gguf-q4",
+      "name": "FLUX.1 Fill [dev] GGUF Q4_0 (+ T5 GGUF, CLIP-L, FLUX VAE)",
+      "tier": "quality",
+      "capabilities": ["fill", "expand"],
+      "arch": "flux",
+      "template": "flux_fill",
+      "page": "https://huggingface.co/YarvixPA/FLUX.1-Fill-dev-GGUF",
+      "license": {"name": "FLUX.1 [dev] Non-Commercial License", "url": "https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/blob/main/LICENSE.md"},
+      "gated": true,
+      "source_type": "community-quantization",
+      "uploader": "YarvixPA (GGUF of black-forest-labs/FLUX.1-Fill-dev); city96 (T5 GGUF); comfyanonymous (CLIP-L); black-forest-labs (VAE, gated)",
+      "min_vram_gb": 8,
+      "requires_nodes": [
+        {"repo": "https://github.com/city96/ComfyUI-GGUF", "folder": "ComfyUI-GGUF", "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a", "license": "Apache-2.0"}
+      ],
+      "requires_models": [],
+      "files": [
+        {"role": "unet", "url": "https://huggingface.co/YarvixPA/FLUX.1-Fill-dev-GGUF/resolve/main/flux1-fill-dev-Q4_0.gguf", "dest": "unet/flux1-fill-dev-Q4_0.gguf", "size": 6809920800, "sha256": "fc9c8398f7ba88d1fe670b5011330c1b08c70838828a0d8f876fe5402653321b"},
+        {"role": "clip1", "url": "https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/resolve/main/t5-v1_1-xxl-encoder-Q5_K_M.gguf", "dest": "clip/t5-v1_1-xxl-encoder-Q5_K_M.gguf", "size": 3386856640, "sha256": "b51cbb10b1a7aac6dd1c3b62f0ed908bfd06e0b42d2f3577d43e061361f51dae", "license": "Apache-2.0"},
+        {"role": "clip2", "url": "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors", "dest": "clip/clip_l.safetensors", "size": 246144152, "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd", "license": "Apache-2.0"},
+        {"role": "vae", "url": "https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/ae.safetensors", "dest": "vae/ae.safetensors", "size": 335304388, "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38", "gated": true, "license": "Apache-2.0", "optional": true}
+      ]
+    },
+    {
+      "id": "flux1-fill-dev",
+      "name": "FLUX.1 Fill [dev] (first-party safetensors, fp8 at load time)",
+      "tier": "quality",
+      "capabilities": ["fill", "expand"],
+      "arch": "flux",
+      "template": "flux_fill",
+      "page": "https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev",
+      "license": {"name": "FLUX.1 [dev] Non-Commercial License", "url": "https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/blob/main/LICENSE.md"},
+      "gated": true,
+      "source_type": "first-party",
+      "uploader": "black-forest-labs",
+      "min_vram_gb": 16,
+      "requires_nodes": [],
+      "requires_models": [],
+      "files": [
+        {"role": "unet", "url": "https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/resolve/main/flux1-fill-dev.safetensors", "dest": "diffusion_models/flux1-fill-dev.safetensors", "size": 23804922408, "sha256": "03e289f530df51d014f48e675a9ffa2141bc003259bf5f25d75b957e920a41ca", "gated": true},
+        {"role": "clip1", "url": "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn.safetensors", "dest": "clip/t5xxl_fp8_e4m3fn.safetensors", "size": 4893934904, "sha256": "7d330da4816157540d6bb7838bf63a0f02f573fc48ca4d8de34bb0cbfd514f09", "license": "Apache-2.0"},
+        {"role": "clip2", "url": "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors", "dest": "clip/clip_l.safetensors", "size": 246144152, "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd", "license": "Apache-2.0", "optional": true},
+        {"role": "vae", "url": "https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/resolve/main/ae.safetensors", "dest": "vae/ae.safetensors", "size": 335304388, "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38", "gated": true, "optional": true}
+      ]
+    },
+    {
+      "id": "qwen-image-edit-2511-gguf-q4",
+      "name": "Qwen-Image-Edit-2511 GGUF Q4_K_M (+ Qwen2.5-VL text encoder fp8, Qwen VAE)",
+      "tier": "edit",
+      "capabilities": ["fill", "expand", "edit"],
+      "arch": "qwen_image",
+      "template": "qwen_edit",
+      "page": "https://huggingface.co/unsloth/Qwen-Image-Edit-2511-GGUF",
+      "license": {"name": "Apache-2.0", "url": "https://huggingface.co/Qwen/Qwen-Image-Edit-2511"},
+      "gated": false,
+      "source_type": "community-quantization",
+      "uploader": "unsloth (GGUF of Qwen/Qwen-Image-Edit-2511); Comfy-Org (text encoder and VAE repackaging)",
+      "min_vram_gb": 12,
+      "requires_nodes": [
+        {"repo": "https://github.com/city96/ComfyUI-GGUF", "folder": "ComfyUI-GGUF", "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a", "license": "Apache-2.0"}
+      ],
+      "requires_models": [],
+      "files": [
+        {"role": "unet", "url": "https://huggingface.co/unsloth/Qwen-Image-Edit-2511-GGUF/resolve/main/qwen-image-edit-2511-Q4_K_M.gguf", "dest": "unet/qwen-image-edit-2511-Q4_K_M.gguf", "size": 13244758624, "sha256": "8677bac90627adbbc11efab87b1870e701c4eb3689ee865a3de8ab81b705a723"},
+        {"role": "clip1", "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors", "dest": "text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors", "size": 9384670680, "sha256": "cb5636d852a0ea6a9075ab1bef496c0db7aef13c02350571e388aea959c5c0b4", "license": "Apache-2.0"},
+        {"role": "vae", "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/vae/qwen_image_vae.safetensors", "dest": "vae/qwen_image_vae.safetensors", "size": 253806246, "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f", "license": "Apache-2.0"}
+      ]
+    },
+    {
+      "id": "lama-big",
+      "name": "LaMa (big-lama) - prompt-free object removal",
+      "tier": "removal",
+      "capabilities": ["remove"],
+      "arch": "inpaint_model",
+      "template": "inpaint_model",
+      "page": "https://github.com/advimman/lama",
+      "license": {"name": "Apache-2.0", "url": "https://github.com/advimman/lama/blob/main/LICENSE"},
+      "gated": false,
+      "source_type": "first-party",
+      "uploader": "Sanster (lama-cleaner author) GitHub release of the official advimman/lama big-lama checkpoint",
+      "min_vram_gb": 2,
+      "requires_nodes": [
+        {"repo": "https://github.com/Acly/comfyui-inpaint-nodes", "folder": "comfyui-inpaint-nodes", "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b", "license": "GPL-3.0"}
+      ],
+      "requires_models": [],
+      "files": [
+        {"role": "inpaint_model", "url": "https://github.com/Sanster/models/releases/download/add_big_lama/big-lama.pt", "dest": "inpaint/big-lama.pt", "size": 205669692, "sha256": null}
+      ]
+    },
+    {
+      "id": "mat-places512",
+      "name": "MAT Places512 (fp16) - prompt-free object removal",
+      "tier": "removal",
+      "capabilities": ["remove"],
+      "arch": "inpaint_model",
+      "template": "inpaint_model",
+      "page": "https://huggingface.co/Acly/MAT",
+      "license": {"name": "CC BY-NC 4.0", "url": "https://creativecommons.org/licenses/by-nc/4.0/"},
+      "gated": false,
+      "source_type": "first-party",
+      "uploader": "Acly (fp16 safetensors conversion of the official fenglinglwb/MAT checkpoint, non-commercial license retained)",
+      "min_vram_gb": 2,
+      "requires_nodes": [
+        {"repo": "https://github.com/Acly/comfyui-inpaint-nodes", "folder": "comfyui-inpaint-nodes", "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b", "license": "GPL-3.0"}
+      ],
+      "requires_models": [],
+      "files": [
+        {"role": "inpaint_model", "url": "https://huggingface.co/Acly/MAT/resolve/main/MAT_Places512_G_fp16.safetensors", "dest": "inpaint/MAT_Places512_G_fp16.safetensors", "size": 125280278, "sha256": "309dd6ce6e04034dc4b6b15c7bd2a4844d158e03eb2a139e0eca6b366e40c0de"}
+      ]
+    }
+  ]
+}

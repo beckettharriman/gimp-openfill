@@ -120,12 +120,11 @@ class ServerManager:
         host, port = _split_host_port(url)
         gimp_pid = os.getppid()
         cmd = [
-            _hidden_python(), str(Path(__file__).with_name("supervisor.py")),
+            _hidden_python(), str(Path(__file__).with_name("supervisor.py")), "--mode", "backend",
             "--python", str(layout["python"]), "--main", str(layout["main"]),
             "--cwd", str(layout["cwd"]), "--host", host, "--port", str(port),
-            "--state", str(self.paths.state), "--server-log", str(self.paths.server_log),
-            "--log", str(self.paths.log), "--watch-pid", str(gimp_pid),
-            "--idle-minutes", str(self.settings.idle_timeout_minutes),
+            "--base", str(self.paths.base), "--config", str(self.paths.config),
+            "--watch-pid", str(gimp_pid), "--idle-minutes", str(self.settings.idle_timeout_minutes),
         ]
         if self.settings.extra_server_args.strip():
             cmd += ["--extra-args", self.settings.extra_server_args.strip()]
@@ -133,6 +132,78 @@ class ServerManager:
             self.log.info("launching supervisor (gimp pid %s): %s", gimp_pid, " ".join(cmd))
         self._spawn_detached(cmd)
         return self._wait_ready(url, progress)
+
+    # tasks (downloads, node installs) -------------------------------------
+
+    @property
+    def tasks_dir(self) -> Path:
+        return self.paths.base / "tasks"
+
+    def supervisor_alive(self) -> bool:
+        state = self.read_state()
+        pid = int(state.get("supervisor_pid") or 0)
+        return bool(pid) and _pid_alive(pid)
+
+    def task_worker_alive(self) -> bool:
+        """A worker is a tasks-mode supervisor, or a backend supervisor that
+        announced itself in tasks-status.json (older supervisors did not)."""
+        for name, key in (("tasks-worker.json", "pid"), ("tasks-status.json", "worker_pid")):
+            try:
+                info = json.loads((self.paths.base / name).read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+            if _pid_alive(int(info.get(key) or 0)):
+                return True
+        return False
+
+    def ensure_task_worker(self) -> None:
+        """Make sure something will process queued tasks."""
+        if self.task_worker_alive():
+            return
+        cmd = [_hidden_python(), str(Path(__file__).with_name("supervisor.py")), "--mode", "tasks",
+               "--base", str(self.paths.base), "--config", str(self.paths.config)]
+        if self.log:
+            self.log.info("launching task worker: %s", " ".join(cmd))
+        self._spawn_detached(cmd)
+
+    def queue_task(self, task: dict) -> str:
+        self.tasks_dir.mkdir(parents=True, exist_ok=True)
+        task_id = task.get("id") or f"{int(time.time() * 1000)}-{task.get('type', 'task')}"
+        task["id"] = task_id
+        task.setdefault("queued", time.time())
+        tmp = self.tasks_dir / f"{task_id}.json.tmp"
+        tmp.write_text(json.dumps(task, indent=2), encoding="utf-8")
+        os.replace(tmp, self.tasks_dir / f"{task_id}.json")
+        self.ensure_task_worker()
+        if self.log:
+            self.log.info("queued task %s (%s)", task_id, task.get("type"))
+        return task_id
+
+    def task_status(self) -> dict:
+        try:
+            return json.loads((self.paths.base / "tasks-status.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return {}
+
+    def request_cancel(self) -> None:
+        self.tasks_dir.mkdir(parents=True, exist_ok=True)
+        (self.tasks_dir / "cancel").write_text(str(time.time()), encoding="utf-8")
+        # also drop anything still waiting in the queue
+        for p in self.tasks_dir.glob("*.json"):
+            if not p.name.endswith(".running.json"):
+                try:
+                    p.unlink()
+                except OSError:
+                    pass
+
+    def pending_tasks(self) -> list[dict]:
+        out = []
+        for p in sorted(self.tasks_dir.glob("*.json")) if self.tasks_dir.is_dir() else []:
+            try:
+                out.append(json.loads(p.read_text(encoding="utf-8")))
+            except (OSError, ValueError):
+                pass
+        return out
 
     def _spawn_detached(self, cmd: list[str]) -> None:
         kwargs: dict = dict(stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
@@ -180,6 +251,28 @@ class ServerManager:
         except OSError:
             return "(no backend log yet)"
         return "\n".join(text.strip().splitlines()[-lines:])
+
+
+def _pid_alive(pid: int) -> bool:
+    if pid <= 0:
+        return False
+    if IS_WINDOWS:
+        import ctypes
+        k32 = ctypes.windll.kernel32  # type: ignore[attr-defined]
+        handle = k32.OpenProcess(0x00100000, False, pid)  # SYNCHRONIZE
+        if not handle:
+            return False
+        try:
+            return k32.WaitForSingleObject(handle, 0) == 0x102
+        finally:
+            k32.CloseHandle(handle)
+    try:
+        os.kill(pid, 0)
+        return True
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
 
 
 def _split_host_port(url: str) -> tuple[str, int]:

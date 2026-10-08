@@ -1,0 +1,48 @@
+{
+  "started": "2026-10-08 15:07:58",
+  "gimp_pid": 21236,
+  "steps": [
+    {
+      "step": "backend-up",
+      "url": "http://127.0.0.1:8188",
+      "server_pid": 19524,
+      "supervisor": 13024,
+      "gguf_before": true,
+      "time": "15:08:25"
+    },
+    {
+      "step": "install-queued",
+      "task_id": "1791486505457-install_nodes",
+      "worker_alive": true,
+      "time": "15:08:25"
+    },
+    {
+      "step": "install-finished",
+      "result": {
+        "task_id": "1791486505457-install_nodes",
+        "type": "install_nodes",
+        "model_id": "flux1-fill-dev-gguf-q4",
+        "state": "done",
+        "message": "custom nodes installed and backend restarted",
+        "finished": 1791486509.1065366
+      },
+      "seconds": 4.0,
+      "time": "15:08:29"
+    },
+    {
+      "step": "backend-restarted",
+      "restarted": true,
+      "old_pid": 19524,
+      "new_pid": 28240,
+      "gguf_after": true,
+      "time": "15:08:46"
+    },
+    {
+      "step": "settings-dialog",
+      "status": "3",
+      "time": "15:08:59"
+    }
+  ],
+  "ok": true,
+  "finished": "2026-10-08 15:08:59"
+}

@@ -110,7 +110,7 @@ try:
     t0 = time.time()
     status = run_procedure("python-fu-stable-boy-generative-fill", image, image.get_layers(),
                            prompt=PROMPT, negative="blurry, text, watermark", variations=1,
-                           strength=1.0, seed=12345, quality="fast")
+                           strength=1.0, seed=12345, model=os.environ.get("SB_TEST_MODEL", "fast"))
     step("generative-fill", status=str(status), seconds=round(time.time() - t0, 1),
          layers=describe_layers(image))
     export(image, os.path.join(OUT, "02-after-fill.png"))
@@ -120,7 +120,7 @@ try:
         t0 = time.time()
         status = run_procedure("python-fu-stable-boy-generative-expand", image, image.get_layers(),
                                prompt="grass field under a blue sky, photo", negative="blurry",
-                               variations=1, left=0, top=0, right=256, bottom=0, seed=7, quality="fast")
+                               variations=1, left=0, top=0, right=256, bottom=0, seed=7, model=os.environ.get("SB_TEST_MODEL", "fast"))
         step("generative-expand", status=str(status), seconds=round(time.time() - t0, 1),
              size=[image.get_width(), image.get_height()], layers=describe_layers(image))
         export(image, os.path.join(OUT, "03-after-expand.png"))
@@ -130,7 +130,7 @@ try:
         t0 = time.time()
         status = run_procedure("python-fu-stable-boy-generative-fill", image, image.get_layers(),
                                prompt="a hot air balloon in the sky, photo", negative="blurry",
-                               variations=3, strength=1.0, seed=99, quality="fast")
+                               variations=3, strength=1.0, seed=99, model=os.environ.get("SB_TEST_MODEL", "fast"))
         step("generative-fill-variations", status=str(status), seconds=round(time.time() - t0, 1),
              layers=describe_layers(image))
         export(image, os.path.join(OUT, "04-after-variations.png"))
@@ -140,7 +140,7 @@ try:
         t0 = time.time()
         status = run_procedure("python-fu-stable-boy-text-to-image", image, image.get_layers(),
                                prompt="a small wooden cabin in a meadow, photo", negative="blurry",
-                               variations=1, width=512, height=384, target="layer", seed=3, quality="fast")
+                               variations=1, width=512, height=384, target="layer", seed=3, model=os.environ.get("SB_TEST_MODEL", "fast"))
         step("text-to-image-layer", status=str(status), seconds=round(time.time() - t0, 1),
              layers=describe_layers(image))
         export(image, os.path.join(OUT, "05-after-txt2img.png"))
@@ -150,7 +150,7 @@ try:
         t0 = time.time()
         status = run_procedure("python-fu-stable-boy-generative-fill", image, image.get_layers(),
                                prompt="a wooden picnic table on grass, photo", negative="blurry",
-                               variations=1, strength=1.0, seed=5, quality="quality")
+                               variations=1, strength=1.0, seed=5, model="quality")
         step("generative-fill-sdxl", status=str(status), seconds=round(time.time() - t0, 1),
              layers=describe_layers(image))
         export(image, os.path.join(OUT, "06-after-sdxl.png"))
