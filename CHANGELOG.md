@@ -29,6 +29,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (prompt skipped), SDXL checkpoint swap for Juggernaut.
 - `install.ps1 -ListModels` and `-Model <id> [-HfToken]` for headless parity.
 - Unit tests for catalog validation, resumable downloads and template selection.
+- Floating progress window (`stable_boy/progress_window.py`, `runner.py`):
+  always-on-top, positioned over the image window and remembered in
+  `config.json`; operation and model, step text, percent, elapsed and
+  estimated remaining time, live TAESD preview from ComfyUI's websocket
+  (throttled), download rows from the Models tab, Cancel (interrupt + clear
+  queue, image untouched); closes a second after success, stays open with the
+  error on failure. Optional via the "Floating progress window" setting.
+  Generation now runs in a worker thread with GTK/GIMP calls marshalled to
+  the main loop.
+- Unit tests for preview frame parsing, ETA estimation and frame throttling.
 
 ### Changed
 

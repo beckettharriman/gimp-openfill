@@ -138,6 +138,19 @@ class ComfyClientTests(unittest.TestCase):
             self.client.wait_for("pid-1", 10, time.monotonic() + 20, poll_interval=0.05)
         self.assertTrue(ctx.exception.is_out_of_memory)
 
+    def test_cancel_interrupts_and_clears_queue(self):
+        STATE.history_ready_after = 10**6
+        calls = {"n": 0}
+
+        def cancel():
+            calls["n"] += 1
+            return calls["n"] >= 2
+
+        with self.assertRaises(ComfyApiError) as ctx:
+            self.client.wait_for("pid-1", 10, time.monotonic() + 20, cancel=cancel, poll_interval=0.05)
+        self.assertIn("cancelled", str(ctx.exception))
+        self.assertTrue(STATE.interrupted)
+
     def test_wait_times_out(self):
         STATE.history_ready_after = 10**6
         with self.assertRaises(ComfyApiError):

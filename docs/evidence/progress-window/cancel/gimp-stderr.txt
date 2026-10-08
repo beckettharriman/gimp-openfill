@@ -1,0 +1,119 @@
+Non-native shell detected, GIMP may behave unexpectedly on Unix shells in Windows.
+C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe: GEGL-WARNING: Failed to set operation type port:load, using a passthrough op instead
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.524: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe: GEGL-WARNING: Failed to set operation type port:load, using a passthrough op instead
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.554: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe: GEGL-WARNING: Failed to set operation type port:load, using a passthrough op instead
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.717: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe: GEGL-WARNING: Failed to set operation type port:load, using a passthrough op instead
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.746: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe: GEGL-WARNING: Failed to set operation type port:load, using a passthrough op instead
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.754: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.754: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.758: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.758: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.758: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.758: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.758: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.762: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.762: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.762: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.762: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.766: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.766: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.771: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.771: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.771: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.771: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.771: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.775: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.775: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.775: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.779: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.780: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.782: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.783: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.783: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.783: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.787: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.787: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.787: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.787: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.787: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.791: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.794: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.795: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.795: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.795: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.795: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.800: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.800: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.800: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.804: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.804: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.806: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.806: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.808: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.808: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.812: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.816: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe: GEGL-WARNING: Failed to set operation type port:load, using a passthrough op instead
+
+(gimp:29028): GLib-GObject-CRITICAL **: 15:30:04.877: ../glib-2.90.0/gobject/gbinding.c:1301: The target object of type gegl_op_nop has no property called 'src'
+C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\stable_boy\progress_window.py:243: Warning: Source ID 7 was not found when attempting to remove it
+  GLib.source_remove(self._timer)
+Generative Fill-Warning: Generation was cancelled.
+

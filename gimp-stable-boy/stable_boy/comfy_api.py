@@ -14,7 +14,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from .websocket import OP_TEXT, WebSocket, WebSocketError, ws_url
+from .websocket import OP_BINARY, OP_TEXT, WebSocket, WebSocketError, ws_url
 
 ProgressCallback = Callable[[float, str], None]
 
@@ -171,13 +171,22 @@ class ComfyClient:
 
     # job tracking --------------------------------------------------------
 
+    def clear_queue(self) -> None:
+        self._json("POST", "/queue", {"clear": True})
+
     def wait_for(self, prompt_id: str, total_steps: int, deadline: float,
-                 progress: ProgressCallback | None = None, poll_interval: float = 1.0) -> dict:
+                 progress: ProgressCallback | None = None, poll_interval: float = 1.0,
+                 preview: Callable[[bytes], None] | None = None,
+                 cancel: Callable[[], bool] | None = None) -> dict:
         """Block until ``prompt_id`` finishes; return ``history[prompt_id]``.
 
-        Uses the websocket for step-level progress and falls back to polling
-        ``/history`` when it is not available. Raises :class:`ComfyApiError`
-        on timeout and :class:`ComfyExecutionError` on failure.
+        Uses the websocket for step-level progress (and binary preview frames,
+        handed raw to ``preview``) and falls back to polling ``/history`` when
+        it is not available. ``cancel()`` is polled every loop; when it
+        returns True the job is interrupted, the queue cleared and
+        :class:`ComfyApiError` ("cancelled") raised. Raises
+        :class:`ComfyApiError` on timeout and :class:`ComfyExecutionError`
+        on failure.
         """
         ws: Optional[WebSocket] = None
         try:
@@ -196,6 +205,13 @@ class ComfyClient:
                 now = time.monotonic()
                 if now > deadline:
                     raise ComfyApiError("timed out waiting for the backend")
+                if cancel and cancel():
+                    for action in (self.interrupt, self.clear_queue):
+                        try:
+                            action()
+                        except ComfyApiError:
+                            pass
+                    raise ComfyApiError("cancelled by the user")
                 if ws is not None:
                     try:
                         opcode, payload = ws.recv()
@@ -204,6 +220,11 @@ class ComfyClient:
                     except (WebSocketError, OSError):
                         ws = None
                         opcode, payload = None, b""
+                    if opcode == OP_BINARY and preview is not None:
+                        try:
+                            preview(payload)
+                        except Exception:  # noqa: BLE001 - previews are best effort
+                            pass
                     if opcode == OP_TEXT:
                         msg = json.loads(payload.decode("utf-8"))
                         kind, data = msg.get("type"), msg.get("data") or {}

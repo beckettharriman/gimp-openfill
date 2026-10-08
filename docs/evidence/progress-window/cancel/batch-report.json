@@ -1,0 +1,48 @@
+{
+  "started": "2026-10-08 15:30:07",
+  "gimp_pid": 28680,
+  "cancel_at": "0.3",
+  "steps": [
+    {
+      "step": "settings",
+      "progress_window": true,
+      "position": [
+        1240,
+        93
+      ],
+      "time": "15:30:07"
+    },
+    {
+      "step": "backend",
+      "url": "http://127.0.0.1:8188",
+      "time": "15:30:35"
+    },
+    {
+      "step": "generative-fill",
+      "status": "0",
+      "seconds": 15.6,
+      "layers_before": [
+        {
+          "name": "Background",
+          "has_mask": false
+        }
+      ],
+      "layers_after": [
+        {
+          "name": "Background",
+          "has_mask": false
+        }
+      ],
+      "layer_added": false,
+      "time": "15:30:51"
+    },
+    {
+      "step": "comfy-queue",
+      "running": 0,
+      "pending": 0,
+      "time": "15:30:52"
+    }
+  ],
+  "ok": true,
+  "finished": "2026-10-08 15:30:52"
+}

@@ -1,0 +1,52 @@
+{
+  "started": "2026-10-08 15:28:14",
+  "gimp_pid": 3780,
+  "cancel_at": null,
+  "steps": [
+    {
+      "step": "settings",
+      "progress_window": true,
+      "position": [
+        -1,
+        -1
+      ],
+      "time": "15:28:15"
+    },
+    {
+      "step": "backend",
+      "url": "http://127.0.0.1:8188",
+      "time": "15:28:45"
+    },
+    {
+      "step": "generative-fill",
+      "status": "3",
+      "seconds": 18.8,
+      "layers_before": [
+        {
+          "name": "Background",
+          "has_mask": false
+        }
+      ],
+      "layers_after": [
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "has_mask": true
+        },
+        {
+          "name": "Background",
+          "has_mask": false
+        }
+      ],
+      "layer_added": true,
+      "time": "15:29:04"
+    },
+    {
+      "step": "comfy-queue",
+      "running": 0,
+      "pending": 0,
+      "time": "15:29:05"
+    }
+  ],
+  "ok": true,
+  "finished": "2026-10-08 15:29:05"
+}

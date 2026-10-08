@@ -112,6 +112,30 @@ Non-interactive use (scripts, batch mode) is supported through the PDB; see
 `tests/gimp_batch_fill.py` for a complete example that opens an image, selects
 a region, runs the fill and exports the result.
 
+## Progress window
+
+Every generation opens a small floating window (always on top, top-right of
+the image window, position remembered) in addition to GIMP's status-bar
+progress:
+
+![Progress window placeholder](docs/screenshots/progress-window.png)
+*(screenshot placeholder; real captures of a run are in `docs/evidence/progress-window/`)*
+
+- operation and model name, the current step ("Starting the AI backend",
+  "Generating... step 12/25", "Downloading result"), a percent bar, elapsed
+  and estimated remaining time;
+- a live preview of the fill forming (ComfyUI's TAESD previews over the
+  websocket, throttled to about 4 frames per second, scaled to 320 px);
+- model downloads started from the Models tab, one line per download with
+  speed and percent;
+- a **Cancel** button that interrupts the ComfyUI job, clears its queue and
+  leaves the image untouched.
+
+The window closes itself a second after the layer lands and stays open with
+the error text on failure. The generation runs in a worker thread so GIMP's
+main loop and the window stay responsive. Turn it off with "Floating progress
+window" in the General settings.
+
 ## Models
 
 `Filters > AI > Generative Fill Settings... > Models` lists every model from

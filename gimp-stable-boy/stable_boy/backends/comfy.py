@@ -1,7 +1,7 @@
 # Stable Boy - generative fill for GIMP 3
 # Copyright (C) 2026 Stable Boy contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""ComfyUI backend: builds graphs, uploads inputs, streams progress."""
+"""ComfyUI backend: builds graphs, uploads inputs, streams progress and previews."""
 
 from __future__ import annotations
 
@@ -9,9 +9,9 @@ import time
 import uuid
 
 from .. import workflow
-from ..backend import (Backend, BackendUnavailable, GenerationResult, GenerationTimeout,
-                       HealthStatus, InpaintRequest, ModelMissing, OutOfMemory, Progress,
-                       ProgressCallback, Txt2ImgRequest, WorkflowRejected)
+from ..backend import (Backend, BackendUnavailable, CancelCallback, GenerationCancelled, GenerationResult,
+                       GenerationTimeout, HealthStatus, InpaintRequest, ModelMissing, OutOfMemory, Progress,
+                       PreviewCallback, ProgressCallback, Txt2ImgRequest, WorkflowRejected)
 from ..comfy_api import ComfyApiError, ComfyClient, ComfyExecutionError
 from ..geometry import estimate_timeout, seed_or_random
 
@@ -59,14 +59,16 @@ class ComfyBackend(Backend):
         return self._progress
 
     def cancel(self) -> None:
-        try:
-            self.client.interrupt()
-        except ComfyApiError:
-            pass
+        for action in (self.client.interrupt, self.client.clear_queue):
+            try:
+                action()
+            except ComfyApiError:
+                pass
 
     # ------------------------------------------------------------------
 
-    def inpaint(self, request: InpaintRequest, progress: ProgressCallback | None = None) -> GenerationResult:
+    def inpaint(self, request: InpaintRequest, progress: ProgressCallback | None = None,
+                preview: PreviewCallback | None = None, cancel: CancelCallback | None = None) -> GenerationResult:
         caps = self.capabilities()
         if request.model.uses_fooocus and not caps.inpaint_nodes:
             raise ModelMissing("the Fooocus inpaint patch needs comfyui-inpaint-nodes on the server")
@@ -78,14 +80,15 @@ class ComfyBackend(Backend):
             mask_ref = self.client.upload_image(f"sb-{job}-mask.png", request.mask_png)
         except ComfyApiError as err:
             raise BackendUnavailable(f"upload failed: {err}") from err
+        prefix = f"stable-boy/{request.mode}-{job}"
         try:
-            graph = workflow.build_fill(request, image_ref, mask_ref, seed, caps,
-                                        filename_prefix=f"stable-boy/{request.mode}-{job}")
+            graph = workflow.build_fill(request, image_ref, mask_ref, seed, caps, filename_prefix=prefix)
         except ValueError as err:
             raise WorkflowRejected(str(err)) from err
         pixels = request.work_width * request.work_height
         try:
-            images = self._run(graph, request.sampling.steps, request.sampling.batch, pixels, progress)
+            images = self._run(graph, request.sampling.steps, request.sampling.batch, pixels,
+                               progress, preview, cancel)
         except WorkflowRejected as err:
             # The telea / navier-stokes pre-fill modes need OpenCV on the server.
             # Fall back to the dependency-free neutral fill instead of failing.
@@ -94,12 +97,13 @@ class ComfyBackend(Backend):
             if self.log:
                 self.log.warning("server has no OpenCV; retrying with neutral pre-fill")
             request.prefill_mode = "neutral"
-            graph = workflow.build_inpaint(request, image_ref, mask_ref, seed, caps,
-                                           filename_prefix=f"stable-boy/{request.mode}-{job}")
-            images = self._run(graph, request.sampling.steps, request.sampling.batch, pixels, progress)
+            graph = workflow.build_fill(request, image_ref, mask_ref, seed, caps, filename_prefix=prefix)
+            images = self._run(graph, request.sampling.steps, request.sampling.batch, pixels,
+                               progress, preview, cancel)
         return GenerationResult(images, seed, {"job": job, "graph": graph, "backend": self.name})
 
-    def txt2img(self, request: Txt2ImgRequest, progress: ProgressCallback | None = None) -> GenerationResult:
+    def txt2img(self, request: Txt2ImgRequest, progress: ProgressCallback | None = None,
+                preview: PreviewCallback | None = None, cancel: CancelCallback | None = None) -> GenerationResult:
         seed = seed_or_random(request.sampling.seed)
         job = uuid.uuid4().hex[:12]
         try:
@@ -107,13 +111,13 @@ class ComfyBackend(Backend):
         except ValueError as err:
             raise WorkflowRejected(str(err)) from err
         images = self._run(graph, request.sampling.steps, request.sampling.batch,
-                           request.width * request.height, progress)
+                           request.width * request.height, progress, preview, cancel)
         return GenerationResult(images, seed, {"job": job, "graph": graph, "backend": self.name})
 
     # ------------------------------------------------------------------
 
-    def _run(self, graph: dict, steps: int, batch: int, pixels: int,
-             progress: ProgressCallback | None) -> list[bytes]:
+    def _run(self, graph: dict, steps: int, batch: int, pixels: int, progress: ProgressCallback | None,
+             preview: PreviewCallback | None = None, cancel: CancelCallback | None = None) -> list[bytes]:
         timeout = self.request_timeout or estimate_timeout(steps, batch, pixels)
         deadline = time.monotonic() + timeout
         self._report(progress, 0.02, "Submitting workflow...")
@@ -127,16 +131,19 @@ class ComfyBackend(Backend):
             self.log.info("queued prompt %s (timeout %.0fs, %d steps x %d)", prompt_id, timeout, steps, batch)
         try:
             entry = self.client.wait_for(prompt_id, workflow.total_steps(graph), deadline,
-                                         self._wrap(progress))
+                                         self._wrap(progress), preview=preview, cancel=cancel)
         except ComfyExecutionError as err:
             if err.is_out_of_memory:
                 raise OutOfMemory(str(err)) from err
             raise WorkflowRejected(f"{err.node_type or 'node'}: {err}") from err
         except ComfyApiError as err:
-            if "timed out" in str(err):
+            text = str(err)
+            if "cancelled" in text or "interrupted" in text:
+                raise GenerationCancelled(text) from err
+            if "timed out" in text:
                 self.cancel()
                 raise GenerationTimeout(f"no result after {timeout:.0f} s") from err
-            raise BackendUnavailable(str(err)) from err
+            raise BackendUnavailable(text) from err
         finally:
             self._active_prompt = None
             self._progress = Progress(1.0, "done", False)

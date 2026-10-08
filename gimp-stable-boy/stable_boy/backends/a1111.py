@@ -20,7 +20,7 @@ import time
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-from ..backend import (Backend, BackendUnavailable, GenerationResult, GenerationTimeout,
+from ..backend import (Backend, BackendUnavailable, GenerationCancelled, GenerationResult, GenerationTimeout,
                        HealthStatus, InpaintRequest, OutOfMemory, Progress, ProgressCallback,
                        Txt2ImgRequest, WorkflowRejected)
 from ..geometry import estimate_timeout, seed_or_random
@@ -85,7 +85,8 @@ class A1111Backend(Backend):
         except Exception:
             pass
 
-    def inpaint(self, request: InpaintRequest, progress: ProgressCallback | None = None) -> GenerationResult:
+    def inpaint(self, request: InpaintRequest, progress: ProgressCallback | None = None,
+                preview=None, cancel=None) -> GenerationResult:
         seed = seed_or_random(request.sampling.seed)
         body = self._common(request.prompt, request.negative, request.sampling, seed,
                             request.work_width, request.work_height)
@@ -102,17 +103,18 @@ class A1111Backend(Backend):
             if request.model.checkpoint else {},
         })
         pixels = request.work_width * request.work_height
-        images = self._run("/sdapi/v1/img2img", body, request.sampling, pixels, progress)
+        images = self._run("/sdapi/v1/img2img", body, request.sampling, pixels, progress, cancel)
         return GenerationResult(images, seed, {"backend": self.name})
 
-    def txt2img(self, request: Txt2ImgRequest, progress: ProgressCallback | None = None) -> GenerationResult:
+    def txt2img(self, request: Txt2ImgRequest, progress: ProgressCallback | None = None,
+                preview=None, cancel=None) -> GenerationResult:
         seed = seed_or_random(request.sampling.seed)
         body = self._common(request.prompt, request.negative, request.sampling, seed,
                             request.width, request.height)
         if request.model.checkpoint:
             body["override_settings"] = {"sd_model_checkpoint": request.model.checkpoint}
         images = self._run("/sdapi/v1/txt2img", body, request.sampling,
-                           request.width * request.height, progress)
+                           request.width * request.height, progress, cancel)
         return GenerationResult(images, seed, {"backend": self.name})
 
     # internals -----------------------------------------------------------
@@ -133,7 +135,7 @@ class A1111Backend(Backend):
         }
 
     def _run(self, path: str, body: dict, sampling, pixels: int,
-             progress: ProgressCallback | None) -> list[bytes]:
+             progress: ProgressCallback | None, cancel=None) -> list[bytes]:
         timeout = self.request_timeout or estimate_timeout(sampling.steps, sampling.batch, pixels)
         result: dict = {}
         error: list[BaseException] = []
@@ -149,6 +151,9 @@ class A1111Backend(Backend):
         started = time.monotonic()
         while thread.is_alive():
             thread.join(1.0)
+            if cancel and cancel():
+                self.cancel()
+                raise GenerationCancelled("cancelled by the user")
             if time.monotonic() - started > timeout:
                 self.cancel()
                 raise GenerationTimeout(f"no result after {timeout:.0f} s")

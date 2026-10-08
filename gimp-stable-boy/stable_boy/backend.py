@@ -15,6 +15,8 @@ from dataclasses import dataclass, field
 from typing import Callable, Optional
 
 ProgressCallback = Callable[[float, str], None]
+PreviewCallback = Callable[[bytes], None]      # raw ComfyUI binary frame (see progress.parse_preview_frame)
+CancelCallback = Callable[[], bool]            # polled; True aborts the running job
 
 
 class BackendError(RuntimeError):
@@ -156,16 +158,19 @@ class Backend(ABC):
         """Return server status and the models it can offer."""
 
     @abstractmethod
-    def inpaint(self, request: InpaintRequest, progress: ProgressCallback | None = None) -> GenerationResult:
+    def inpaint(self, request: InpaintRequest, progress: ProgressCallback | None = None,
+                preview: PreviewCallback | None = None, cancel: CancelCallback | None = None) -> GenerationResult:
         """Fill the masked part of ``request.image_png``."""
 
-    def outpaint(self, request: InpaintRequest, progress: ProgressCallback | None = None) -> GenerationResult:
+    def outpaint(self, request: InpaintRequest, progress: ProgressCallback | None = None,
+                 preview: PreviewCallback | None = None, cancel: CancelCallback | None = None) -> GenerationResult:
         """Expand: same as inpaint with ``mode='expand'`` semantics."""
         request.mode = "expand"
-        return self.inpaint(request, progress)
+        return self.inpaint(request, progress, preview, cancel)
 
     @abstractmethod
-    def txt2img(self, request: Txt2ImgRequest, progress: ProgressCallback | None = None) -> GenerationResult:
+    def txt2img(self, request: Txt2ImgRequest, progress: ProgressCallback | None = None,
+                preview: PreviewCallback | None = None, cancel: CancelCallback | None = None) -> GenerationResult:
         """Generate from text only."""
 
     @abstractmethod

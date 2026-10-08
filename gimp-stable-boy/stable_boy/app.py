@@ -28,6 +28,7 @@ from .comfy_api import ComfyApiError, ComfyClient
 from .config import Paths, Settings, comfy_layout
 from .geometry import Rect
 from .log import get_logger
+from .runner import Runner
 from .server import ServerManager
 
 LEGACY_CHOICES = {"fast": "sd15-inpainting", "quality": "sdxl-base"}
@@ -267,15 +268,17 @@ class App:
             feather=max(0, round(self.settings.feather * ws.scale)),
             prefill=self.settings.prefill)
         title = "Object Removal" if model.prompt_free else "Generative Fill"
-        progress = gimp_io.GimpProgress(title)
+        runner = Runner(self, title, entry.name if entry else model.checkpoint)
         try:
-            backend = self.backend(progress)
-            result = backend.inpaint(request, progress)
-        finally:
-            progress.done()
-        self.server.touch()
-        layers = gimp_io.insert_results(image, result.images, ctx, _layer_name(title, prompt),
-                                        float(self.settings.feather), self.paths.temp)
+            result = runner.run(lambda progress, preview, cancel:
+                                self.backend(progress).inpaint(request, progress, preview, cancel))
+            self.server.touch()
+            layers = gimp_io.insert_results(image, result.images, ctx, _layer_name(title, prompt),
+                                            float(self.settings.feather), self.paths.temp)
+        except BaseException as err:
+            runner.fail(err)
+            raise
+        runner.done(f"Added layer: {layers[0].get_name()}" if layers else "Done")
         self.log.info("fill: done, seed=%s, %d layer(s)", result.seed, len(layers))
         return layers
 
@@ -305,22 +308,24 @@ class App:
             sampling=self.sampling(model, variations, seed, 1.0), mode="expand",
             grow=max(0, round(self.settings.grow * ws.scale)),
             feather=max(0, round(self.settings.feather * ws.scale)), prefill=True)
-        progress = gimp_io.GimpProgress("Generative Expand")
+        runner = Runner(self, "Generative Expand", entry.name if entry else model.checkpoint)
         try:
-            backend = self.backend(progress)
-            result = backend.outpaint(request, progress)
-        finally:
-            progress.done()
-        self.server.touch()
-        image.undo_group_start()
-        try:
-            gimp_io.resize_canvas(image, plan.new_width, plan.new_height, plan.offset_x, plan.offset_y)
-            layers = gimp_io.insert_results(image, result.images, plan.context,
-                                            _layer_name("Generative Expand", prompt),
-                                            float(self.settings.feather), self.paths.temp,
-                                            mask_pixels=mask_pixels)
-        finally:
-            image.undo_group_end()
+            result = runner.run(lambda progress, preview, cancel:
+                                self.backend(progress).outpaint(request, progress, preview, cancel))
+            self.server.touch()
+            image.undo_group_start()
+            try:
+                gimp_io.resize_canvas(image, plan.new_width, plan.new_height, plan.offset_x, plan.offset_y)
+                layers = gimp_io.insert_results(image, result.images, plan.context,
+                                                _layer_name("Generative Expand", prompt),
+                                                float(self.settings.feather), self.paths.temp,
+                                                mask_pixels=mask_pixels)
+            finally:
+                image.undo_group_end()
+        except BaseException as err:
+            runner.fail(err)
+            raise
+        runner.done(f"Canvas is now {plan.new_width} x {plan.new_height}")
         self.log.info("expand: done, seed=%s, %d layer(s)", result.seed, len(layers))
         return layers
 
@@ -342,19 +347,21 @@ class App:
         request = Txt2ImgRequest(ws.width, ws.height, prompt, negative, model,
                                  self.sampling(model, variations, seed, 1.0))
         self.log.info("txt2img: %dx%d model=%s target=%s", ws.width, ws.height, model.checkpoint, target)
-        progress = gimp_io.GimpProgress("Text to Image")
+        runner = Runner(self, "Text to Image", entry.name if entry else model.checkpoint)
         try:
-            backend = self.backend(progress)
-            result = backend.txt2img(request, progress)
-        finally:
-            progress.done()
-        self.server.touch()
-        name = _layer_name("Text to Image", prompt)
-        if image is None or target == "image":
-            gimp_io.new_image_from_pngs(result.images, name, self.paths.temp)
-        else:
-            gimp_io.insert_results(image, result.images, Rect(origin.x, origin.y, ws.width, ws.height),
-                                   name, 0.0, self.paths.temp, use_selection_mask=False)
+            result = runner.run(lambda progress, preview, cancel:
+                                self.backend(progress).txt2img(request, progress, preview, cancel))
+            self.server.touch()
+            name = _layer_name("Text to Image", prompt)
+            if image is None or target == "image":
+                gimp_io.new_image_from_pngs(result.images, name, self.paths.temp)
+            else:
+                gimp_io.insert_results(image, result.images, Rect(origin.x, origin.y, ws.width, ws.height),
+                                       name, 0.0, self.paths.temp, use_selection_mask=False)
+        except BaseException as err:
+            runner.fail(err)
+            raise
+        runner.done("Done")
         self.log.info("txt2img: done, seed=%s", result.seed)
 
     def check_backend(self) -> HealthStatus:

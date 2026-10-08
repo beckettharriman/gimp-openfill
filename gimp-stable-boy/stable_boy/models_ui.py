@@ -112,6 +112,7 @@ class ModelsPanel(Gtk.Box):
         if self._timer:
             GLib.source_remove(self._timer)
             self._timer = 0
+        self._close_downloads_window()
 
     def selected_id(self) -> str | None:
         model, it = self.view.get_selection().get_selected()
@@ -226,9 +227,63 @@ class ModelsPanel(Gtk.Box):
             ids = self.app.queue_download(model_id)
             self._say(f"Queued {len(ids)} download task(s) for {model_id}. Progress continues in the "
                       "background even if you close this dialog.")
+            self._open_downloads_window()
         except BackendError as err:
             self._say(str(err))
         self._refresh_rows(force=True)
+
+    # floating downloads window (same window class as generation progress) ----
+
+    _dl_window = None
+    _dl_timer = 0
+
+    def _open_downloads_window(self) -> None:
+        if not self.app.settings.progress_window or self._dl_window is not None:
+            return
+        try:
+            from .progress_window import ProgressWindow
+            self._dl_window = ProgressWindow("Model downloads", "", on_cancel=self.app.server.request_cancel,
+                                             position=(self.app.settings.progress_window_x,
+                                                       self.app.settings.progress_window_y),
+                                             show_preview=False, quit_main_on_close=False)
+            self._dl_timer = GLib.timeout_add(1000, self._tick_downloads)
+        except Exception as err:  # noqa: BLE001 - the window is optional
+            self._dl_window = None
+            self._say(f"(progress window unavailable: {err})")
+
+    def _tick_downloads(self) -> bool:
+        win = self._dl_window
+        if win is None:
+            return False
+        status = self.app.task_status()
+        current = status.get("current") or {}
+        pending = [t.get("model_id") or t.get("type", "task") for t in self.app.server.pending_tasks()]
+        win.set_downloads(current, pending)
+        if current.get("type") == "download":
+            done, total = current.get("done") or 0, current.get("total") or 0
+            win.set_step(done / total if total else 0.0, f"Downloading {cat.human_size(done)} of {cat.human_size(total)}")
+            return True
+        if current or pending:
+            win.set_step(0.0, f"{current.get('type', 'task')}: {current.get('state', 'working')}")
+            return True
+        history = status.get("history") or []
+        last = history[0] if history else {}
+        ok = last.get("state") == "done"
+        win.finish(ok, "Download complete" if ok else f"{last.get('state', 'stopped')}: {last.get('message', '')}", 1500)
+        self._dl_window = None
+        self._dl_timer = 0
+        return False
+
+    def _close_downloads_window(self) -> None:
+        if self._dl_timer:
+            GLib.source_remove(self._dl_timer)
+            self._dl_timer = 0
+        if self._dl_window is not None:
+            try:
+                self._dl_window.destroy()
+            except Exception:  # noqa: BLE001
+                pass
+            self._dl_window = None
 
     def _on_cancel(self, *_):
         self.app.server.request_cancel()
