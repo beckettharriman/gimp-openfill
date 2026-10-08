@@ -18,7 +18,7 @@ backend (ComfyUI, started and stopped by the plug-in) and the UX are new.
 
 | Menu entry (`Filters > AI`) | What happens |
 |---|---|
-| **Generative Fill...** | Fills the current selection from a prompt. The plug-in crops a context region around the selection, generates, and adds a new layer with a feathered layer mask. 1 to 8 variations go into a layer group. Strength below 1.0 keeps part of the original. |
+| **Generative Fill...** | Fills the current selection from a prompt. The plug-in crops a context region of about three times the selection, scales it to the model's working resolution, generates, scales back and adds a new layer with a layer mask (selection grown a little, then feathered). 1 to 8 variations go into a layer group. Strength below 1.0 keeps part of the original. **Remove object** (or an empty prompt) erases the selection instead: an installed LaMa/MAT model is used when available, otherwise the chosen model with a background prompt. |
 | **Generative Expand...** | Grows the canvas by the margins you enter and outpaints the new border into a new masked layer. The image is untouched if generation fails. |
 | **Text to Image...** | Generates from text into a new layer (sized to the selection when there is one) or a new image. |
 | **Generative Fill Settings...** | Backend folder/URL, model tier and checkpoints, steps, CFG, sampler, mask grow/feather, idle timeout, and a "check backend now" button that lists the server's models. |
@@ -99,6 +99,11 @@ Errors come back as plain GIMP messages: backend not found, failed to start
    prompt, number of variations, strength, seed, and the model tier.
 3. OK. The progress bar shows upload, backend start (first time), sampling
    steps and download.
+   For removing something (a button, a cable, a passer-by) select it snugly,
+   tick **Remove object** and leave the prompt empty; with `mat-places512`
+   or `lama-big` installed this takes a few seconds and never invents a new
+   object. Very small selections are fine: the plug-in upscales the context
+   so the model works at full resolution.
 4. A layer named `Generative Fill: <prompt>` with a layer mask appears above
    the active layer. Paint on the mask to refine the blend, or delete the layer
    to discard. With several variations, they sit in a group with only the first
@@ -198,7 +203,8 @@ described above).
 | checkpoint / sdxl_checkpoint | `sd-v1-5-inpainting.ckpt` / `sd_xl_base_1.0.safetensors` | pick from the server's list after "check backend" |
 | fooocus_head / fooocus_patch | `fooocus_inpaint_head.pth` / `inpaint_v26.fooocus.patch` | SDXL only |
 | steps / cfg / sampler / scheduler | 25 / 7.0 / dpmpp_2m / karras | sampling defaults |
-| grow / feather | 16 / 24 px | mask dilation sent to the model, soft edge of the layer mask |
+| grow_percent / feather_percent | 15 / 6 % | mask dilation and layer-mask feather as a percentage of the selection's larger side (scales with what you select) |
+| grow / feather | 48 / 24 px | upper caps for the two values above |
 | prefill | true | blur/fill old content under the mask before sampling (needs inpaint nodes) |
 | max_side_sd15 / max_side_sdxl | 768 / 1024 | longest side the model sees; larger regions are scaled |
 | request_timeout / startup_timeout | 0 (auto) / 240 s | |

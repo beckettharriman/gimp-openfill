@@ -71,7 +71,11 @@ def _prepare_mask(g: Graph, mask_image: list, req: InpaintRequest, caps: Capabil
     g.add("mask", "ImageToMask", image=mask_image, channel="red")
     mask = g.out("mask")
     grow = max(0, int(req.grow))
-    blur = max(0, int(req.feather))
+    # The blur must not exceed the growth, otherwise a small selection never
+    # reaches mask value 1.0 and the model only partially repaints it. The
+    # LaMa/MAT node wants a hard mask: no blur at all.
+    hard = req.model.effective_template == "inpaint_model"
+    blur = 0 if hard else max(0, min(int(req.feather), grow))
     if caps.inpaint_nodes:
         if grow or blur:
             g.add("mask_grow", "INPAINT_ExpandMask", mask=mask, grow=grow, blur=blur,
@@ -98,7 +102,9 @@ def _prefill(g: Graph, image: list, mask: list, req: InpaintRequest, caps: Capab
     pixels (expand)."""
     if not (req.prefill and caps.inpaint_nodes):
         return image
-    if req.mode == "expand":
+    if req.mode == "expand" or req.prefill_style == "border":
+        # Fill the hole from its border so nothing of the removed object (its
+        # colour, its blurred shape) survives into the sampler's starting image.
         mode = req.prefill_mode if req.prefill_mode in ("navier-stokes", "telea", "neutral") else "navier-stokes"
         g.add("prefill", "INPAINT_MaskedFill", image=image, mask=mask, fill=mode, falloff=0)
         g.add("preblur", "INPAINT_MaskedBlur", image=g.out("prefill"), mask=mask, blur=65,

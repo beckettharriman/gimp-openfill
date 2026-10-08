@@ -1,0 +1,51 @@
+{
+  "rect": [
+    0,
+    0,
+    512,
+    420
+  ],
+  "work": [
+    512,
+    416
+  ],
+  "mode": "fill",
+  "grow": 16,
+  "feather": 24,
+  "prefill": true,
+  "prompt": "",
+  "negative": "",
+  "model": {
+    "checkpoint": "",
+    "arch": "inpaint_model",
+    "fooocus_head": null,
+    "fooocus_patch": null,
+    "template": "inpaint_model",
+    "unet": "",
+    "clip1": "",
+    "clip2": "",
+    "vae": "",
+    "inpaint_model": "MAT_Places512_G_fp16.safetensors"
+  },
+  "sampling": {
+    "steps": 25,
+    "cfg": 7.0,
+    "sampler": "dpmpp_2m",
+    "scheduler": "karras",
+    "denoise": 1.0,
+    "seed": 31337,
+    "batch": 1
+  },
+  "seed": 31337,
+  "layer_feather": 24,
+  "graph_classes": [
+    "INPAINT_ExpandMask",
+    "INPAINT_InpaintWithModel",
+    "INPAINT_LoadInpaintModel",
+    "INPAINT_StabilizeMask",
+    "ImageScale",
+    "ImageToMask",
+    "LoadImage",
+    "SaveImage"
+  ]
+}

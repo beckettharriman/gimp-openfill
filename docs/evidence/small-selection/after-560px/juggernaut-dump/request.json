@@ -1,0 +1,60 @@
+{
+  "rect": [
+    102,
+    72,
+    256,
+    256
+  ],
+  "work": [
+    768,
+    768
+  ],
+  "mode": "fill",
+  "grow": 18,
+  "feather": 12,
+  "prefill": true,
+  "prompt": "seamless continuation of the surrounding background, same material, texture, lighting and color as the area around it, nothing added",
+  "negative": "blurry, object, button, logo, text, watermark, person, blurry, smudge, artifacts, seam",
+  "model": {
+    "checkpoint": "Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors",
+    "arch": "sdxl",
+    "fooocus_head": "fooocus_inpaint_head.pth",
+    "fooocus_patch": "inpaint_v26.fooocus.patch",
+    "template": "sdxl_fooocus",
+    "unet": "",
+    "clip1": "",
+    "clip2": "",
+    "vae": "",
+    "inpaint_model": ""
+  },
+  "sampling": {
+    "steps": 25,
+    "cfg": 7.0,
+    "sampler": "dpmpp_2m",
+    "scheduler": "karras",
+    "denoise": 1.0,
+    "seed": 31337,
+    "batch": 1
+  },
+  "seed": 31337,
+  "layer_feather": 24,
+  "graph_classes": [
+    "CLIPTextEncode",
+    "CheckpointLoaderSimple",
+    "DifferentialDiffusion",
+    "INPAINT_ApplyFooocusInpaint",
+    "INPAINT_ColorMatch",
+    "INPAINT_ExpandMask",
+    "INPAINT_LoadFooocusInpaint",
+    "INPAINT_MaskedBlur",
+    "INPAINT_MaskedFill",
+    "INPAINT_StabilizeMask",
+    "INPAINT_VAEEncodeInpaintConditioning",
+    "ImageScale",
+    "ImageToMask",
+    "KSampler",
+    "LoadImage",
+    "SaveImage",
+    "VAEDecode"
+  ]
+}

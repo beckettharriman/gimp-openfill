@@ -1,0 +1,148 @@
+{
+  "started": "2026-10-08 16:05:53",
+  "image": "C:\\repos\\gimp-stable-boy\\tests\\data\\fabric-button-small.png",
+  "selection": [
+    198,
+    168,
+    64,
+    64
+  ],
+  "scale": 0.0,
+  "remove": false,
+  "prompt": "",
+  "runs": [
+    {
+      "model": "sd15-inpainting",
+      "status": "3",
+      "seconds": 17.4,
+      "layers": [
+        "Generative Fill",
+        "Background"
+      ],
+      "log": [
+        "FO  [31144 stable-boy] fill: selection=Rect(x=198, y=168, width=64, height=64) context=Rect(x=0, y=0, width=512, height=420) working=624x512 model=sd15-inpainting template=sd15_inpaint",
+        "FO  [31144 stable-boy] queued prompt 71260b25-ab49-41c0-802a-1c89501aed84 (timeout 120s, 25 steps x 1)",
+        "FO  [31144 stable-boy] debug dump: C:\\Users\\becke\\AppData\\Roaming\\GIMP\\3.2\\stable-boy\\tmp\\debug-fill-20261008-160609",
+        "FO  [31144 stable-boy] progress window: 13 preview frame(s) shown, closing after success",
+        "FO  [31144 stable-boy] fill: done, seed=31337, 1 layer(s)"
+      ],
+      "pixels": {
+        "dump": "C:\\repos\\gimp-stable-boy\\docs\\evidence\\small-selection\\before-560px\\sd15-dump",
+        "layer": "Generative Fill",
+        "layer_size": [
+          512,
+          420
+        ],
+        "layer_offset": [
+          0,
+          0
+        ],
+        "raw_size": [
+          512,
+          420
+        ],
+        "content_vs_raw": {
+          "max_abs_diff": 0,
+          "mean_abs_diff": 0.0,
+          "identical": true
+        },
+        "mask": {
+          "center_value": 253,
+          "max": 253,
+          "pixels_ge_250": 688,
+          "pixels_gt_0": 9896,
+          "selection_area": 3216
+        }
+      }
+    },
+    {
+      "model": "juggernaut-xl-v9",
+      "status": "3",
+      "seconds": 32.7,
+      "layers": [
+        "Generative Fill",
+        "Background"
+      ],
+      "log": [
+        "FO  [22720 stable-boy] fill: selection=Rect(x=198, y=168, width=64, height=64) context=Rect(x=0, y=0, width=560, height=420) working=1024x768 model=juggernaut-xl-v9 template=sdxl_fooocus",
+        "FO  [22720 stable-boy] queued prompt 0a6bc23c-7d89-4e1a-9ca6-8ee6b1db803a (timeout 149s, 25 steps x 1)",
+        "FO  [22720 stable-boy] debug dump: C:\\Users\\becke\\AppData\\Roaming\\GIMP\\3.2\\stable-boy\\tmp\\debug-fill-20261008-160645",
+        "FO  [22720 stable-boy] progress window: 25 preview frame(s) shown, closing after success",
+        "FO  [22720 stable-boy] fill: done, seed=31337, 1 layer(s)"
+      ],
+      "pixels": {
+        "dump": "C:\\repos\\gimp-stable-boy\\docs\\evidence\\small-selection\\before-560px\\juggernaut-dump",
+        "layer": "Generative Fill",
+        "layer_size": [
+          560,
+          420
+        ],
+        "layer_offset": [
+          0,
+          0
+        ],
+        "raw_size": [
+          560,
+          420
+        ],
+        "content_vs_raw": {
+          "max_abs_diff": 0,
+          "mean_abs_diff": 0.0,
+          "identical": true
+        },
+        "mask": {
+          "center_value": 253,
+          "max": 253,
+          "pixels_ge_250": 688,
+          "pixels_gt_0": 9896,
+          "selection_area": 3216
+        }
+      }
+    },
+    {
+      "model": "mat-places512",
+      "status": "3",
+      "seconds": 6.3,
+      "layers": [
+        "Object Removal",
+        "Background"
+      ],
+      "log": [
+        "FO  [12628 stable-boy] fill: selection=Rect(x=198, y=168, width=64, height=64) context=Rect(x=0, y=0, width=512, height=420) working=512x416 model=mat-places512 template=inpaint_model",
+        "FO  [12628 stable-boy] queued prompt 7faee387-6e0b-4a41-b1d9-6bf383585ee0 (timeout 120s, 25 steps x 1)",
+        "FO  [12628 stable-boy] debug dump: C:\\Users\\becke\\AppData\\Roaming\\GIMP\\3.2\\stable-boy\\tmp\\debug-fill-20261008-160654",
+        "FO  [12628 stable-boy] progress window: 0 preview frame(s) shown, closing after success",
+        "FO  [12628 stable-boy] fill: done, seed=31337, 1 layer(s)"
+      ],
+      "pixels": {
+        "dump": "C:\\repos\\gimp-stable-boy\\docs\\evidence\\small-selection\\before-560px\\mat-dump",
+        "layer": "Object Removal",
+        "layer_size": [
+          512,
+          420
+        ],
+        "layer_offset": [
+          0,
+          0
+        ],
+        "raw_size": [
+          512,
+          420
+        ],
+        "content_vs_raw": {
+          "max_abs_diff": 0,
+          "mean_abs_diff": 0.0,
+          "identical": true
+        },
+        "mask": {
+          "center_value": 253,
+          "max": 253,
+          "pixels_ge_250": 688,
+          "pixels_gt_0": 9896,
+          "selection_area": 3216
+        }
+      }
+    }
+  ],
+  "ok": true
+}

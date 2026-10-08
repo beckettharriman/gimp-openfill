@@ -103,7 +103,9 @@ class InpaintRequest:
     grow: int = 16               # mask dilation in working pixels
     feather: int = 24            # mask blur in working pixels
     prefill: bool = True         # pre-fill masked area before sampling
-    prefill_mode: str = "navier-stokes"  # expand pre-fill: navier-stokes | telea | neutral
+    prefill_mode: str = "navier-stokes"  # border pre-fill algorithm: navier-stokes | telea | neutral
+    prefill_style: str = "blur"          # "blur": soften existing content (fill); "border": paint the area
+                                         # from its surroundings first (expand, object removal)
     color_match: float = 1.0     # strength of the post color correction (0 = off)
 
     @property

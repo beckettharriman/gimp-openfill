@@ -1,0 +1,148 @@
+{
+  "started": "2026-10-08 16:19:21",
+  "image": "C:\\repos\\gimp-stable-boy\\tests\\data\\fabric-button-small.png",
+  "selection": [
+    198,
+    168,
+    64,
+    64
+  ],
+  "scale": 0.0,
+  "remove": false,
+  "prompt": "",
+  "runs": [
+    {
+      "model": "sd15-inpainting",
+      "status": "3",
+      "seconds": 14.5,
+      "layers": [
+        "Generative Fill: seamless continuation of the surrounding backgro",
+        "Background"
+      ],
+      "log": [
+        "FO  [8272 stable-boy] fill: selection=Rect(x=198, y=168, width=64, height=64) context=Rect(x=134, y=104, width=192, height=192) working=512x512 scale=2.67 mask(grow=6/16px feather=4/11px) model=sd15-inpainting temp",
+        "FO  [8272 stable-boy] queued prompt 9f9802da-b3e6-491e-854a-06597e53a57f (timeout 120s, 25 steps x 1)",
+        "FO  [8272 stable-boy] debug dump: C:\\Users\\becke\\AppData\\Roaming\\GIMP\\3.2\\stable-boy\\tmp\\debug-fill-20261008-161935",
+        "FO  [8272 stable-boy] progress window: 13 preview frame(s) shown, closing after success",
+        "FO  [8272 stable-boy] fill: done, seed=31337, 1 layer(s)"
+      ],
+      "pixels": {
+        "dump": "C:\\repos\\gimp-stable-boy\\docs\\evidence\\small-selection\\after-560px\\sd15-dump",
+        "layer": "Generative Fill: seamless continuation of the surrounding backgro",
+        "layer_size": [
+          192,
+          192
+        ],
+        "layer_offset": [
+          134,
+          104
+        ],
+        "raw_size": [
+          192,
+          192
+        ],
+        "content_vs_raw": {
+          "max_abs_diff": 0,
+          "mean_abs_diff": 0.0,
+          "identical": true
+        },
+        "mask": {
+          "center_value": 255,
+          "max": 255,
+          "pixels_ge_250": 3900,
+          "pixels_gt_0": 5768,
+          "selection_area": 3216
+        }
+      }
+    },
+    {
+      "model": "juggernaut-xl-v9",
+      "status": "3",
+      "seconds": 26.8,
+      "layers": [
+        "Generative Fill: seamless continuation of the surrounding backgro",
+        "Background"
+      ],
+      "log": [
+        "FO  [31592 stable-boy] fill: selection=Rect(x=198, y=168, width=64, height=64) context=Rect(x=102, y=72, width=256, height=256) working=768x768 scale=3.00 mask(grow=6/18px feather=4/12px) model=juggernaut-xl-v9 tem",
+        "FO  [31592 stable-boy] queued prompt b4a64bf1-cf17-4b5f-a3c2-67a4234293d5 (timeout 134s, 25 steps x 1)",
+        "FO  [31592 stable-boy] debug dump: C:\\Users\\becke\\AppData\\Roaming\\GIMP\\3.2\\stable-boy\\tmp\\debug-fill-20261008-162004",
+        "FO  [31592 stable-boy] progress window: 25 preview frame(s) shown, closing after success",
+        "FO  [31592 stable-boy] fill: done, seed=31337, 1 layer(s)"
+      ],
+      "pixels": {
+        "dump": "C:\\repos\\gimp-stable-boy\\docs\\evidence\\small-selection\\after-560px\\juggernaut-dump",
+        "layer": "Generative Fill: seamless continuation of the surrounding backgro",
+        "layer_size": [
+          256,
+          256
+        ],
+        "layer_offset": [
+          102,
+          72
+        ],
+        "raw_size": [
+          256,
+          256
+        ],
+        "content_vs_raw": {
+          "max_abs_diff": 0,
+          "mean_abs_diff": 0.0,
+          "identical": true
+        },
+        "mask": {
+          "center_value": 255,
+          "max": 255,
+          "pixels_ge_250": 3900,
+          "pixels_gt_0": 5768,
+          "selection_area": 3216
+        }
+      }
+    },
+    {
+      "model": "mat-places512",
+      "status": "3",
+      "seconds": 6.2,
+      "layers": [
+        "Object Removal",
+        "Background"
+      ],
+      "log": [
+        "FO  [34592 stable-boy] fill: selection=Rect(x=198, y=168, width=64, height=64) context=Rect(x=0, y=0, width=512, height=420) working=512x416 scale=1.00 mask(grow=6/6px feather=4/4px) model=mat-places512 template=in",
+        "FO  [34592 stable-boy] queued prompt 18baf227-1a08-4238-97a7-f9340d6c7fee (timeout 120s, 25 steps x 1)",
+        "FO  [34592 stable-boy] debug dump: C:\\Users\\becke\\AppData\\Roaming\\GIMP\\3.2\\stable-boy\\tmp\\debug-fill-20261008-162013",
+        "FO  [34592 stable-boy] progress window: 0 preview frame(s) shown, closing after success",
+        "FO  [34592 stable-boy] fill: done, seed=31337, 1 layer(s)"
+      ],
+      "pixels": {
+        "dump": "C:\\repos\\gimp-stable-boy\\docs\\evidence\\small-selection\\after-560px\\mat-dump",
+        "layer": "Object Removal",
+        "layer_size": [
+          512,
+          420
+        ],
+        "layer_offset": [
+          0,
+          0
+        ],
+        "raw_size": [
+          512,
+          420
+        ],
+        "content_vs_raw": {
+          "max_abs_diff": 0,
+          "mean_abs_diff": 0.0,
+          "identical": true
+        },
+        "mask": {
+          "center_value": 255,
+          "max": 255,
+          "pixels_ge_250": 3900,
+          "pixels_gt_0": 5768,
+          "selection_area": 3216
+        }
+      }
+    }
+  ],
+  "ok": true
+}

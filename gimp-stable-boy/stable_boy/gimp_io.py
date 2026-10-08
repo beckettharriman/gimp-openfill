@@ -155,14 +155,18 @@ def select_from_mask(image: Gimp.Image, rect: Rect, pixels: bytes) -> None:
 
 def add_selection_mask(image: Gimp.Image, layer: Gimp.Layer, selection: Gimp.Channel | None,
                        feather: float, mask_rect: Rect | None = None,
-                       mask_pixels: bytes | None = None) -> None:
-    """Attach a layer mask (feathered selection or explicit mask) to ``layer``."""
+                       mask_pixels: bytes | None = None, grow: int = 0) -> None:
+    """Attach a layer mask (selection grown by ``grow`` then feathered, or an
+    explicit mask) to ``layer``. Growing first keeps the regenerated rim of a
+    removed object inside the opaque part of the mask."""
     if mask_pixels is not None and mask_rect is not None:
         select_from_mask(image, mask_rect, mask_pixels)
     elif selection is not None:
         image.select_item(Gimp.ChannelOps.REPLACE, selection)
     else:
         Gimp.Selection.all(image)
+    if grow > 0 and selection is not None and mask_pixels is None:
+        Gimp.Selection.grow(image, int(grow))
     if feather > 0:
         Gimp.Selection.feather(image, feather)
     mask = layer.create_mask(Gimp.AddMaskType.SELECTION)
@@ -171,7 +175,8 @@ def add_selection_mask(image: Gimp.Image, layer: Gimp.Layer, selection: Gimp.Cha
 
 def insert_results(image: Gimp.Image, images: list[bytes], origin: Rect, base_name: str,
                    feather: float, temp_dir: Path | None, use_selection_mask: bool = True,
-                   group_variations: bool = True, mask_pixels: bytes | None = None) -> list[Gimp.Layer]:
+                   group_variations: bool = True, mask_pixels: bytes | None = None,
+                   grow: int = 0) -> list[Gimp.Layer]:
     """Insert generated PNGs as layers at ``origin`` with a feathered mask.
 
     The mask comes from the user's selection, or from ``mask_pixels`` (an
@@ -193,7 +198,7 @@ def insert_results(image: Gimp.Image, images: list[bytes], origin: Rect, base_na
                 layer.set_offsets(origin.x, origin.y)
                 image.insert_layer(layer, parent, index)
                 if use_selection_mask:
-                    add_selection_mask(image, layer, saved.channel, feather, origin, mask_pixels)
+                    add_selection_mask(image, layer, saved.channel, feather, origin, mask_pixels, grow)
                 layer.set_visible(index == 0)
                 layers.append(layer)
             if layers:

@@ -242,8 +242,32 @@ class App:
 
     # features ------------------------------------------------------------
 
+    REMOVAL_PROMPT = ("seamless continuation of the surrounding background, same material, texture, "
+                      "lighting and color as the area around it, nothing added")
+    REMOVAL_NEGATIVE = "object, button, logo, text, watermark, person, blurry, smudge, artifacts, seam"
+
+    def removal_model_available(self) -> cat.ModelEntry | None:
+        """An installed prompt-free removal model (LaMa/MAT), best first."""
+        for mid in ("mat-places512", "lama-big"):
+            try:
+                entry = cat.by_id(self.catalog, mid)
+            except cat.CatalogError:
+                continue
+            st = cat.install_status(entry, self.models_root, self.custom_nodes_dir, self.catalog)
+            if st.installed and not st.missing_nodes:
+                return entry
+        return None
+
     def generative_fill(self, image, prompt: str, negative: str, variations: int,
-                        strength: float, seed: int, model_choice: str) -> list:
+                        strength: float, seed: int, model_choice: str, remove: bool = False) -> list:
+        if remove:
+            removal = self.removal_model_available()
+            if removal is not None:
+                self.log.info("fill: Remove object -> using %s", removal.id)
+                model_choice = removal.id
+            else:
+                self.log.info("fill: Remove object requested but no LaMa/MAT installed; using %s with a "
+                              "background prompt", model_choice)
         entry, model = self.resolve_model(model_choice)
         profile = self.profile_for(model)
         full = gimp_io.image_rect(image)
@@ -251,10 +275,20 @@ class App:
         target = selection or full
         ctx = geometry.context_rect(target, full, profile)
         ws = geometry.working_size(ctx.width, ctx.height, profile)
+        mp = geometry.mask_params(target, ws.scale, self.settings.grow_percent, self.settings.feather_percent,
+                                  self.settings.grow, self.settings.feather)
+        removal_intent = remove or not prompt.strip()
         if model.prompt_free:
             prompt, negative = "", ""
-        self.log.info("fill: selection=%s context=%s working=%dx%d model=%s template=%s", target, ctx,
-                      ws.width, ws.height, entry.id if entry else model.checkpoint, model.effective_template)
+        elif removal_intent:
+            # Empty prompt on a generation model: ask for background, not "anything".
+            prompt = self.REMOVAL_PROMPT
+            negative = (negative + ", " if negative.strip() else "") + self.REMOVAL_NEGATIVE
+            strength = 1.0
+        self.log.info("fill: selection=%s context=%s working=%dx%d scale=%.2f mask(grow=%d/%dpx feather=%d/%dpx) "
+                      "model=%s template=%s", target, ctx, ws.width, ws.height, ws.scale, mp.grow_image,
+                      mp.grow_work, mp.feather_image, mp.blur_work, entry.id if entry else model.checkpoint,
+                      model.effective_template)
         image_png = gimp_io.export_region_png(image, ctx)
         if selection is not None:
             mask_png = gimp_io.export_selection_mask_png(image, ctx)
@@ -264,17 +298,17 @@ class App:
             image_png=image_png, mask_png=mask_png, width=ctx.width, height=ctx.height,
             work_width=ws.width, work_height=ws.height, prompt=prompt, negative=negative,
             model=model, sampling=self.sampling(model, variations, seed, strength), mode="fill",
-            grow=max(0, round(self.settings.grow * ws.scale)),
-            feather=max(0, round(self.settings.feather * ws.scale)),
-            prefill=self.settings.prefill)
+            grow=mp.grow_work, feather=mp.blur_work, prefill=self.settings.prefill,
+            prefill_style="border" if removal_intent else "blur")
         title = "Object Removal" if model.prompt_free else "Generative Fill"
         runner = Runner(self, title, entry.name if entry else model.checkpoint)
         try:
             result = runner.run(lambda progress, preview, cancel:
                                 self.backend(progress).inpaint(request, progress, preview, cancel))
             self.server.touch()
+            self._debug_dump("fill", request, result, ctx)
             layers = gimp_io.insert_results(image, result.images, ctx, _layer_name(title, prompt),
-                                            float(self.settings.feather), self.paths.temp)
+                                            float(mp.feather_image), self.paths.temp, grow=mp.grow_image)
         except BaseException as err:
             runner.fail(err)
             raise
@@ -289,8 +323,12 @@ class App:
         plan = geometry.plan_expand(image.get_width(), image.get_height(), left, top, right, bottom,
                                     profile)
         ws = geometry.working_size(plan.context.width, plan.context.height, profile)
+        mp = geometry.mask_params(plan.fill_rect, ws.scale, self.settings.grow_percent, self.settings.feather_percent,
+                                  self.settings.grow, self.settings.feather)
         if model.prompt_free:
             prompt, negative = "", ""
+        elif not prompt.strip():
+            prompt = self.REMOVAL_PROMPT.replace("nothing added", "continuing the scene naturally")
         self.log.info("expand: margins=%s canvas=%dx%d context=%s working=%dx%d model=%s",
                       (left, top, right, bottom), plan.new_width, plan.new_height, plan.context,
                       ws.width, ws.height, entry.id if entry else model.checkpoint)
@@ -306,8 +344,7 @@ class App:
             height=plan.context.height, work_width=ws.width, work_height=ws.height,
             prompt=prompt, negative=negative, model=model,
             sampling=self.sampling(model, variations, seed, 1.0), mode="expand",
-            grow=max(0, round(self.settings.grow * ws.scale)),
-            feather=max(0, round(self.settings.feather * ws.scale)), prefill=True)
+            grow=mp.grow_work, feather=mp.blur_work, prefill=True)
         runner = Runner(self, "Generative Expand", entry.name if entry else model.checkpoint)
         try:
             result = runner.run(lambda progress, preview, cancel:
@@ -318,7 +355,7 @@ class App:
                 gimp_io.resize_canvas(image, plan.new_width, plan.new_height, plan.offset_x, plan.offset_y)
                 layers = gimp_io.insert_results(image, result.images, plan.context,
                                                 _layer_name("Generative Expand", prompt),
-                                                float(self.settings.feather), self.paths.temp,
+                                                float(mp.feather_image), self.paths.temp,
                                                 mask_pixels=mask_pixels)
             finally:
                 image.undo_group_end()
@@ -363,6 +400,30 @@ class App:
             raise
         runner.done("Done")
         self.log.info("txt2img: done, seed=%s", result.seed)
+
+    def _debug_dump(self, kind: str, request: InpaintRequest, result, rect: Rect) -> None:
+        """With debug on (settings or SB_DEBUG_DUMP=1) keep the exact bytes exchanged
+        with the backend next to a JSON description, for bug reports."""
+        if not (self.settings.debug or os.environ.get("SB_DEBUG_DUMP") == "1"):
+            return
+        try:
+            folder = self.paths.temp / f"debug-{kind}-{time.strftime('%Y%m%d-%H%M%S')}"
+            folder.mkdir(parents=True, exist_ok=True)
+            (folder / "sent-image.png").write_bytes(request.image_png)
+            (folder / "sent-mask.png").write_bytes(request.mask_png)
+            for i, data in enumerate(result.images):
+                (folder / f"result-{i}.png").write_bytes(data)
+            info = {"rect": [rect.x, rect.y, rect.width, rect.height],
+                    "work": [request.work_width, request.work_height], "mode": request.mode,
+                    "grow": request.grow, "feather": request.feather, "prefill": request.prefill,
+                    "prompt": request.prompt, "negative": request.negative,
+                    "model": request.model.__dict__, "sampling": request.sampling.__dict__,
+                    "seed": result.seed, "layer_feather": self.settings.feather,
+                    "graph_classes": sorted({n["class_type"] for n in (result.info.get("graph") or {}).values()})}
+            (folder / "request.json").write_text(json.dumps(info, indent=2, default=str), encoding="utf-8")
+            self.log.info("debug dump: %s", folder)
+        except Exception as err:  # noqa: BLE001
+            self.log.warning("debug dump failed: %s", err)
 
     def check_backend(self) -> HealthStatus:
         try:

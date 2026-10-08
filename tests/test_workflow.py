@@ -37,7 +37,10 @@ class InpaintGraphTests(unittest.TestCase):
         graph = w.build_inpaint(_req(grow=10, feather=20), "i", "m", 1, w.Capabilities(True))
         self.assertEqual(graph["mask_grow"]["class_type"], "INPAINT_ExpandMask")
         self.assertEqual(graph["mask_grow"]["inputs"]["grow"], 10)
-        self.assertEqual(graph["mask_grow"]["inputs"]["blur"], 20)
+        self.assertEqual(graph["mask_grow"]["inputs"]["blur"], 10)  # blur is capped at grow
+        lama = ModelSpec(arch="inpaint_model", inpaint_model="big-lama.pt")
+        hard = w.build_inpaint(_req(grow=10, feather=20, model=lama), "i", "m", 1, w.Capabilities(True))
+        self.assertEqual(hard["mask_grow"]["inputs"]["blur"], 0)  # removal models get a hard mask
         self.assertEqual(graph["preblur"]["class_type"], "INPAINT_MaskedBlur")
         self.assertEqual(graph["encode"]["inputs"]["pixels"], ["preblur", 0])
         self.assertEqual(graph["encode"]["inputs"]["mask"], ["mask_stable", 0])
@@ -58,6 +61,14 @@ class InpaintGraphTests(unittest.TestCase):
         self.assertNotIn("color_match", off)
         core = w.build_inpaint(_req(), "i", "m", 1, w.Capabilities(False))
         self.assertNotIn("color_match", core)
+
+    def test_removal_intent_prefills_from_the_border(self):
+        graph = w.build_inpaint(_req(prefill_style="border"), "i", "m", 1, w.Capabilities(True))
+        self.assertEqual(graph["prefill"]["class_type"], "INPAINT_MaskedFill")
+        self.assertEqual(graph["prefill"]["inputs"]["fill"], "navier-stokes")
+        self.assertEqual(graph["preblur"]["inputs"]["image"], ["prefill", 0])
+        default = w.build_inpaint(_req(), "i", "m", 1, w.Capabilities(True))
+        self.assertNotIn("prefill", default)  # plain fill keeps the blur-only prefill
 
     def test_prefill_disabled(self):
         graph = w.build_inpaint(_req(prefill=False), "i", "m", 1, w.Capabilities(True))

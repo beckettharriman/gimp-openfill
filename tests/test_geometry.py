@@ -19,27 +19,26 @@ class RectTests(unittest.TestCase):
 class ContextRectTests(unittest.TestCase):
     image = g.Rect(0, 0, 2000, 1500)
 
-    def test_small_selection_gets_minimum_context(self):
+    def test_small_selection_gets_tight_context_at_least_minimum(self):
         ctx = g.context_rect(g.Rect(900, 700, 40, 40), self.image, g.SD15)
-        self.assertEqual(ctx.size, (512, 512))
+        self.assertEqual(ctx.size, (192, 192))  # 3x selection = 120 < min_context 192
         self.assertTrue(ctx.contains(g.Rect(900, 700, 40, 40)))
         self.assertTrue(self.image.contains(ctx))
 
-    def test_padding_scales_with_selection(self):
-        sel = g.Rect(500, 500, 600, 400)
+    def test_context_is_about_three_times_the_selection(self):
+        sel = g.Rect(500, 500, 300, 200)
         ctx = g.context_rect(sel, self.image, g.SD15)
-        pad = round(600 * 0.35)
-        self.assertEqual(ctx.size, (600 + 2 * pad, 400 + 2 * pad))
+        self.assertEqual(ctx.size, (900, 800))  # pad = 300 on each side
         self.assertTrue(ctx.contains(sel))
 
     def test_clamped_to_image_edges(self):
         ctx = g.context_rect(g.Rect(0, 0, 30, 30), self.image, g.SDXL)
-        self.assertEqual(ctx, g.Rect(0, 0, 768, 768))
+        self.assertEqual(ctx, g.Rect(0, 0, 256, 256))
         ctx = g.context_rect(g.Rect(1990, 1490, 10, 10), self.image, g.SD15)
         self.assertEqual((ctx.right, ctx.bottom), (2000, 1500))
 
     def test_image_smaller_than_minimum(self):
-        small = g.Rect(0, 0, 300, 200)
+        small = g.Rect(0, 0, 150, 100)
         ctx = g.context_rect(g.Rect(10, 10, 50, 50), small, g.SD15)
         self.assertEqual(ctx, small)
 
@@ -59,12 +58,12 @@ class WorkingSizeTests(unittest.TestCase):
         self.assertEqual(ws.height % 8, 0)
         self.assertLessEqual(ws.height, 768)
 
-    def test_upscale_small_region_capped(self):
-        ws = g.working_size(200, 100, g.SD15)
-        self.assertLessEqual(ws.width / 200, 2.0 + 1e-9)
-        self.assertEqual(ws.width % 8, 0)
-        ws = g.working_size(300, 200, g.SD15)
-        self.assertEqual((ws.width, ws.height), (600, 400))
+    def test_small_region_is_upscaled_to_min_side(self):
+        ws = g.working_size(192, 192, g.SD15)
+        self.assertEqual((ws.width, ws.height), (512, 512))
+        self.assertAlmostEqual(ws.scale, 512 / 192, places=6)
+        ws = g.working_size(256, 256, g.SDXL)
+        self.assertEqual((ws.width, ws.height), (768, 768))
 
     def test_upscale_never_exceeds_max_side(self):
         ws = g.working_size(700, 300, g.SD15)
@@ -77,6 +76,44 @@ class WorkingSizeTests(unittest.TestCase):
     def test_invalid(self):
         with self.assertRaises(ValueError):
             g.working_size(0, 10, g.SD15)
+
+
+class SmallSelectionPipelineTests(unittest.TestCase):
+    """The bug report: a 38x33 px button in a 3024x4032 photo with SDXL."""
+
+    def test_button_on_jacket(self):
+        image = g.Rect(0, 0, 3024, 4032)
+        sel = g.Rect(474, 1010, 38, 33)
+        ctx = g.context_rect(sel, image, g.SDXL)
+        self.assertEqual(ctx.size, (256, 256))             # tight crop, not 768
+        self.assertTrue(ctx.contains(sel))
+        ws = g.working_size(ctx.width, ctx.height, g.SDXL)
+        self.assertEqual((ws.width, ws.height), (768, 768))  # upscaled 3x so the button is ~114 px
+        mp = g.mask_params(sel, ws.scale)
+        self.assertEqual(mp.grow_image, 6)                  # 15 % of 38 -> 6 px (min 6)
+        self.assertEqual(mp.feather_image, 2)               # 6 % of 38 -> 2 px, not 24
+        self.assertEqual(mp.grow_work, 18)
+        self.assertLessEqual(mp.blur_work, mp.grow_work)
+
+    def test_fixed_feather_bug_is_gone(self):
+        # Before the fix a fixed 24 px feather exceeded the selection itself.
+        sel = g.Rect(0, 0, 38, 33)
+        mp = g.mask_params(sel, 1.0)
+        self.assertLess(mp.feather_image * 2, sel.height)
+
+    def test_large_selection_caps(self):
+        mp = g.mask_params(g.Rect(0, 0, 1200, 900), 0.5)
+        self.assertEqual(mp.grow_image, 48)                 # capped
+        self.assertEqual(mp.feather_image, 24)              # capped
+        self.assertEqual(mp.grow_work, 24)
+        self.assertEqual(mp.blur_work, 12)
+
+    def test_blur_never_exceeds_grow(self):
+        for side in (10, 40, 100, 400, 2000):
+            for scale in (0.25, 1.0, 4.0):
+                mp = g.mask_params(g.Rect(0, 0, side, side), scale, feather_percent=30.0, grow_percent=5.0)
+                self.assertLessEqual(mp.blur_work, mp.grow_work)
+                self.assertGreaterEqual(mp.grow_work, 1)
 
 
 class ExpandTests(unittest.TestCase):

@@ -49,8 +49,10 @@ class Settings:
     sampler: str = "dpmpp_2m"
     scheduler: str = "karras"
     denoise: float = 1.0
-    grow: int = 16                                 # mask dilation (px)
-    feather: int = 24                              # mask feather (px)
+    grow: int = 48                                 # mask dilation cap (px); actual = grow_percent of selection
+    feather: int = 24                              # layer mask feather cap (px); actual = feather_percent
+    grow_percent: float = 15.0                     # dilation as percent of the selection's larger side (covers object rims)
+    feather_percent: float = 6.0                   # layer mask feather as percent of the larger side
     prefill: bool = True
     max_side_sd15: int = 768
     max_side_sdxl: int = 1024

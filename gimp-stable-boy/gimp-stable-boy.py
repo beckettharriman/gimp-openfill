@@ -71,7 +71,8 @@ def _model_choice() -> Gimp.Choice:
                ("fast", "Fast (SD 1.5 inpainting)"), ("quality", "Quality (SDXL + Fooocus)")]
     try:
         from stable_boy.catalog import load_catalog
-        for entry in load_catalog(plugin_dir=os.path.dirname(os.path.abspath(__file__))):
+        from pathlib import Path
+        for entry in load_catalog(plugin_dir=Path(__file__).resolve().parent):  # resolve() follows a junction
             if entry.runnable:
                 options.append((entry.id, f"{entry.name} [{entry.tier}]".replace("_", "__")))
     except Exception:
@@ -116,7 +117,8 @@ def run_fill(procedure, run_mode, image, drawables, config, data):
         app = App()
         app.generative_fill(image, config.get_property("prompt"), config.get_property("negative"),
                             config.get_property("variations"), config.get_property("strength"),
-                            config.get_property("seed"), config.get_property("model"))
+                            config.get_property("seed"), config.get_property("model"),
+                            remove=bool(config.get_property("remove")))
     except Exception as err:  # noqa: BLE001 - every failure must reach the user
         return _fail(procedure, err, app.log if app else None)
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
@@ -157,7 +159,7 @@ def run_txt2img(procedure, run_mode, image, drawables, config, data):
 
 SETTINGS_KEYS = ["backend", "comfy_dir", "url", "a1111_url", "autostart", "idle_timeout_minutes",
                  "quality", "progress_window", "checkpoint", "sdxl_checkpoint", "fooocus_patch", "steps", "cfg",
-                 "sampler", "scheduler", "grow", "feather", "prefill", "max_side_sd15",
+                 "sampler", "scheduler", "grow_percent", "feather_percent", "grow", "feather", "prefill", "max_side_sd15",
                  "max_side_sdxl", "txt2img_width", "txt2img_height", "startup_timeout",
                  "request_timeout", "extra_server_args", "debug"]
 
@@ -303,6 +305,10 @@ class StableBoy(Gimp.PlugIn):
         self._common_prompt_args(p)
         p.add_double_argument("strength", "_Strength", "1.0 replaces the selection entirely; "
                               "lower values keep more of the original", 0.1, 1.0, 1.0, RW)
+        p.add_boolean_argument("remove", "_Remove object (ignore prompt)",
+                               "Erase what is selected and continue the background. Uses an installed "
+                               "LaMa/MAT removal model when available, otherwise the chosen model with a "
+                               "background prompt.", False, RW)
         self._seed_quality_args(p)
         return p
 
@@ -374,8 +380,12 @@ class StableBoy(Gimp.PlugIn):
         p.add_choice_argument("sampler", "Sampler", "", _choice([(x, x) for x in SAMPLERS]), s.sampler, RW)
         p.add_choice_argument("scheduler", "Sche_duler", "", _choice([(x, x) for x in SCHEDULERS]),
                               s.scheduler, RW)
-        p.add_int_argument("grow", "Mas_k grow (px)", "Dilate the mask before generating", 0, 256, s.grow, RW)
-        p.add_int_argument("feather", "Mask feather (p_x)", "Soft edge of the layer mask", 0, 256, s.feather, RW)
+        p.add_double_argument("grow-percent", "Mask grow (% of selection)", "Dilation of the selection sent to the "
+                              "model, as percent of its larger side", 0.0, 50.0, s.grow_percent, RW)
+        p.add_double_argument("feather-percent", "Mask feather (% of selection)", "Soft edge of the layer mask, "
+                              "as percent of the selection's larger side", 0.0, 50.0, s.feather_percent, RW)
+        p.add_int_argument("grow", "Mask grow cap (px)", "Upper limit for the dilation", 0, 256, s.grow, RW)
+        p.add_int_argument("feather", "Mask feather cap (px)", "Upper limit for the layer mask feather", 0, 256, s.feather, RW)
         p.add_boolean_argument("prefill", "Pre-fill masked area", "Hide old content under the mask "
                                "before sampling (needs comfyui-inpaint-nodes)", s.prefill, RW)
         p.add_int_argument("max-side-sd15", "Max _working size SD 1.5", "", 512, 2048, s.max_side_sd15, RW)

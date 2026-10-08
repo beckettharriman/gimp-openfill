@@ -66,10 +66,16 @@ class ModelProfile:
     multiple: int = 8  # latent alignment
 
 
-SD15 = ModelProfile("sd15", min_side=512, max_side=768, min_context=512)
-SDXL = ModelProfile("sdxl", min_side=768, max_side=1024, min_context=768)
-FLUX = ModelProfile("flux", min_side=768, max_side=1024, min_context=768, multiple=16)
-QWEN = ModelProfile("qwen_image", min_side=768, max_side=1024, min_context=768, multiple=16)
+# min_context is deliberately small: a tiny selection gets a tight crop that is
+# then UPSCALED to min_side so the object fills a useful part of the frame
+# (A1111 "inpaint at full resolution" behaviour), instead of a 768 px crop in
+# which a 40 px object is 5 % of the image and gets painted as a blur.
+SD15 = ModelProfile("sd15", min_side=512, max_side=768, min_context=192)
+SDXL = ModelProfile("sdxl", min_side=768, max_side=1024, min_context=256)
+FLUX = ModelProfile("flux", min_side=768, max_side=1024, min_context=256, multiple=16)
+QWEN = ModelProfile("qwen_image", min_side=768, max_side=1024, min_context=256, multiple=16)
+# LaMa/MAT work best on native-resolution pixels: a 512 px context at 1:1,
+# no upscaling (texture scale would not match the surroundings otherwise).
 INPAINT_MODEL = ModelProfile("inpaint_model", min_side=256, max_side=1024, min_context=512)
 PROFILES = {"sd15": SD15, "sdxl": SDXL, "flux": FLUX, "qwen_image": QWEN, "inpaint_model": INPAINT_MODEL}
 
@@ -89,13 +95,15 @@ def clamp_rect(rect: Rect, bounds: Rect) -> Rect:
 
 
 def context_rect(selection: Rect, image: Rect, profile: ModelProfile,
-                 padding_ratio: float = 0.35, min_padding: int = 32) -> Rect:
+                 padding_ratio: float = 1.0, min_padding: int = 32) -> Rect:
     """Grow the selection into the region the model will see.
 
-    Padding is proportional to the selection's larger side so small fixes get
-    a tight, high-resolution context while large fills see more of the image.
-    The result is at least ``profile.min_context`` on each side when the image
-    allows it, centered on the selection, and always inside the image.
+    The margin on each side is ``padding_ratio`` times the selection's larger
+    side (so the context is about three times the selection), at least
+    ``min_padding`` pixels and at least ``profile.min_context`` in total when
+    the image allows it; centered on the selection and always inside the
+    image. Small selections therefore get a tight crop that ``working_size``
+    upscales; large ones get a context that is downscaled.
     """
     if selection.is_empty():
         raise ValueError("selection is empty")
@@ -120,7 +128,7 @@ class WorkingSize:
 
 
 def working_size(source_w: int, source_h: int, profile: ModelProfile,
-                 max_upscale: float = 2.0) -> WorkingSize:
+                 max_upscale: float = 8.0) -> WorkingSize:
     """Resolution to generate at for a context region of ``source_w x source_h``.
 
     Downscale so the longer side fits ``profile.max_side``; upscale (at most
@@ -226,6 +234,31 @@ def mask_for_expand(plan: ExpandPlan) -> bytes:
             start = y * ctx.width + kx1
             out[start:start + len(zero)] = zero
     return bytes(out)
+
+
+@dataclass(frozen=True)
+class MaskParams:
+    """Mask sizes derived from the selection (image pixels and working pixels)."""
+
+    grow_image: int      # dilation of the selection, image px (layer mask + model mask)
+    feather_image: int   # soft edge of the layer mask, image px
+    grow_work: int       # dilation sent to the model, working px
+    blur_work: int       # model-side blur, working px, never larger than grow_work
+
+
+def mask_params(selection: Rect, scale: float, grow_percent: float = 15.0, feather_percent: float = 6.0,
+                grow_max: int = 48, feather_max: int = 24, grow_min: int = 6) -> MaskParams:
+    """Scale mask growth and feathering with the selection instead of using fixed
+    pixel radii. A fixed 24 px feather on a 38 px selection leaves no fully
+    opaque pixel, so the object shows through; a few percent, capped, does not.
+    The model-side blur never exceeds the growth so the original selection stays
+    at mask value 1.0 (ComfyUI only treats >= 1.0 as "inpaint here")."""
+    side = max(1, max(selection.width, selection.height))
+    grow_image = int(max(grow_min, min(grow_max, round(side * grow_percent / 100.0))))
+    feather_image = int(max(1, min(feather_max, round(side * feather_percent / 100.0))))
+    grow_work = max(1, int(round(grow_image * scale)))
+    blur_work = max(0, min(grow_work, int(round(feather_image * scale))))
+    return MaskParams(grow_image, feather_image, grow_work, blur_work)
 
 
 def estimate_timeout(steps: int, batch: int, pixels: int, seconds_per_step_mpx: float = 1.5,

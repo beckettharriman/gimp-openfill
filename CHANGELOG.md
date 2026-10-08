@@ -39,6 +39,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Generation now runs in a worker thread with GTK/GIMP calls marshalled to
   the main loop.
 - Unit tests for preview frame parsing, ETA estimation and frame throttling.
+- Remove object option in Generative Fill (routes to LaMa/MAT when installed,
+  otherwise a background prompt with border pre-fill); empty prompts behave
+  the same way.
+- Debug dump of the exact crop, mask and raw result (`debug` setting or
+  `SB_DEBUG_DUMP=1`).
+
+### Fixed
+
+- Small selections produced a blurry, semi-transparent blob and the removed
+  object stayed visible: mask grow and feather were fixed 16 / 24 px (larger
+  than a 40 px selection), the model-side mask was blurred past 1.0, and tiny
+  selections were sent as a 768 px 1:1 crop. Now: context of about 3x the
+  selection upscaled to the working resolution, grow/feather as a percentage
+  of the selection with the blur capped at the grow, hard masks for LaMa/MAT
+  at a 1:1 512 px context, and the layer mask built from the grown selection
+  (`docs/evidence/small-selection/`).
+- The dialogs' Model choice ignored catalog ids when the plug-in was installed
+  through a junction/symlink (catalog path not resolved), so every call used
+  the active model.
 
 ### Changed
 
