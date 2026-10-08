@@ -1,0 +1,156 @@
+{
+  "started": "2026-10-08 14:27:46",
+  "gimp_pid": 36120,
+  "gimp_version": "3.2.6",
+  "image": "C:\\repos\\gimp-stable-boy\\tests\\data\\test-scene.png",
+  "prompt": "a large grey boulder on grass, photo",
+  "steps": [
+    {
+      "step": "pdb-lookup",
+      "time": "14:27:46",
+      "registered": {
+        "python-fu-stable-boy-generative-fill": true,
+        "python-fu-stable-boy-generative-expand": true,
+        "python-fu-stable-boy-text-to-image": true,
+        "python-fu-stable-boy-settings": true,
+        "python-fu-stable-boy-stop-backend": true
+      }
+    },
+    {
+      "step": "menu",
+      "time": "14:27:46",
+      "label": "Generative _Fill...",
+      "paths": [
+        "<Image>/Filters/AI"
+      ]
+    },
+    {
+      "step": "opened",
+      "time": "14:27:46",
+      "size": [
+        1024,
+        768
+      ],
+      "layers": [
+        {
+          "name": "Background",
+          "size": [
+            1024,
+            768
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": false
+        }
+      ],
+      "display_id": 1
+    },
+    {
+      "step": "selected",
+      "time": "14:27:47",
+      "rect": [
+        420,
+        300,
+        260,
+        200
+      ],
+      "empty": false
+    },
+    {
+      "step": "generative-fill",
+      "time": "14:28:30",
+      "status": "3",
+      "seconds": 43.0,
+      "layers": [
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "size": [
+            512,
+            512
+          ],
+          "offset": [
+            294,
+            144
+          ],
+          "visible": true,
+          "has_mask": true,
+          "is_group": false
+        },
+        {
+          "name": "Background",
+          "size": [
+            1024,
+            768
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": false
+        }
+      ]
+    },
+    {
+      "step": "generative-expand",
+      "time": "14:28:43",
+      "status": "3",
+      "seconds": 11.6,
+      "size": [
+        1280,
+        768
+      ],
+      "layers": [
+        {
+          "name": "Generative Expand: grass field under a blue sky, photo",
+          "size": [
+            826,
+            768
+          ],
+          "offset": [
+            454,
+            0
+          ],
+          "visible": true,
+          "has_mask": true,
+          "is_group": false
+        },
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "size": [
+            512,
+            512
+          ],
+          "offset": [
+            294,
+            144
+          ],
+          "visible": true,
+          "has_mask": true,
+          "is_group": false
+        },
+        {
+          "name": "Background",
+          "size": [
+            1024,
+            768
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": false
+        }
+      ]
+    }
+  ],
+  "finished": "2026-10-08 14:28:45",
+  "ok": true
+}

@@ -1,0 +1,210 @@
+launched gimp pid 15688 at 14:19:36
+--- 14:19:41 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+--- 14:19:46 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:19:51 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=2184   parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:19:57 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=2184   parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:20:03 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=2184   parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:20:09 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=2184   parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:20:15 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=2184   parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:20:20 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=2184   parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:20:26 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=2184   parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:20:32 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=2184   parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:20:38 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=37748  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:20:44 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=37748  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:20:49 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:20:55 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=10256  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:21:01 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=26360  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:21:07 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=26360  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:21:12 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=26360  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:21:18 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=26360  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:21:24 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:21:29 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:21:35 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:21:41 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:21:46 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:21:52 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:21:57 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:22:03 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:22:09 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:22:14 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:22:20 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=28544  parent=35620  hwnd=0        path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=35620  parent=2184   hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:22:25 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:22:30 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:22:36 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:22:41 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:22:46 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:22:52 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:22:57 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:23:02 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:23:08 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:23:13 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:23:18 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:23:23 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:23:29 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:23:34 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:23:39 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:23:45 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:23:50 ---
+gimp-3.2   pid=15688  parent=33888  hwnd=3735874  path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=33392  parent=15688  hwnd=0        path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:23:55 ---
+
+gimp exited=True code=0 at 14:23:55

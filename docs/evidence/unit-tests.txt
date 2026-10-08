@@ -1,0 +1,8 @@
+  if method() is not None:
+  if method() is not None:
+  if method() is not None:
+...............
+----------------------------------------------------------------------
+Ran 59 tests in 6.333s
+
+OK

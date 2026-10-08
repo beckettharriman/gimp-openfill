@@ -99,8 +99,8 @@ def _prefill(g: Graph, image: list, mask: list, req: InpaintRequest, caps: Capab
     if not (req.prefill and caps.inpaint_nodes):
         return image
     if req.mode == "expand":
-        g.add("prefill", "INPAINT_MaskedFill", image=image, mask=mask, fill="navier-stokes",
-              falloff=0)
+        mode = req.prefill_mode if req.prefill_mode in ("navier-stokes", "telea", "neutral") else "navier-stokes"
+        g.add("prefill", "INPAINT_MaskedFill", image=image, mask=mask, fill=mode, falloff=0)
         g.add("preblur", "INPAINT_MaskedBlur", image=g.out("prefill"), mask=mask, blur=65,
               falloff=0)
         return g.out("preblur")
@@ -157,6 +157,13 @@ def build_inpaint(req: InpaintRequest, image_ref: str, mask_ref: str, seed: int,
           scheduler=req.sampling.scheduler, denoise=float(req.sampling.denoise))
     g.add("decode", "VAEDecode", samples=g.out("sampler"), vae=vae)
     out = g.out("decode")
+    if caps.inpaint_nodes and req.color_match > 0:
+        # Correct the global brightness/color drift of the decoded image using
+        # the untouched pixels outside the mask as the reference.
+        reference = g.out("image_scale") if req.needs_scaling else g.out("load_image", 0)
+        g.add("color_match", "INPAINT_ColorMatch", target=out, reference=reference,
+              exclude_mask=mask, strength=float(req.color_match))
+        out = g.out("color_match")
     if req.needs_scaling:
         out = _scale_image(g, "out_scale", out, req.width, req.height)
     g.add(OUTPUT_NODE, "SaveImage", images=out, filename_prefix=filename_prefix)

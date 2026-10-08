@@ -81,7 +81,19 @@ class ComfyBackend(Backend):
         graph = workflow.build_inpaint(request, image_ref, mask_ref, seed, caps,
                                        filename_prefix=f"stable-boy/{request.mode}-{job}")
         pixels = request.work_width * request.work_height
-        images = self._run(graph, request.sampling.steps, request.sampling.batch, pixels, progress)
+        try:
+            images = self._run(graph, request.sampling.steps, request.sampling.batch, pixels, progress)
+        except WorkflowRejected as err:
+            # The telea / navier-stokes pre-fill modes need OpenCV on the server.
+            # Fall back to the dependency-free neutral fill instead of failing.
+            if "cv2" not in str(err) or request.prefill_mode == "neutral":
+                raise
+            if self.log:
+                self.log.warning("server has no OpenCV; retrying with neutral pre-fill")
+            request.prefill_mode = "neutral"
+            graph = workflow.build_inpaint(request, image_ref, mask_ref, seed, caps,
+                                           filename_prefix=f"stable-boy/{request.mode}-{job}")
+            images = self._run(graph, request.sampling.steps, request.sampling.batch, pixels, progress)
         return GenerationResult(images, seed, {"job": job, "graph": graph, "backend": self.name})
 
     def txt2img(self, request: Txt2ImgRequest, progress: ProgressCallback | None = None) -> GenerationResult:

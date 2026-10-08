@@ -1,0 +1,102 @@
+{
+  "started": "2026-10-08 14:15:43",
+  "gimp_pid": 24028,
+  "gimp_version": "3.2.6",
+  "image": "C:\\repos\\gimp-stable-boy\\tests\\data\\test-scene.png",
+  "prompt": "a large grey boulder on grass, photo",
+  "steps": [
+    {
+      "step": "pdb-lookup",
+      "time": "14:15:43",
+      "registered": {
+        "python-fu-stable-boy-generative-fill": true,
+        "python-fu-stable-boy-generative-expand": true,
+        "python-fu-stable-boy-text-to-image": true,
+        "python-fu-stable-boy-settings": true,
+        "python-fu-stable-boy-stop-backend": true
+      }
+    },
+    {
+      "step": "menu",
+      "time": "14:15:43",
+      "label": "Generative _Fill...",
+      "paths": [
+        "<Image>/Filters/AI"
+      ]
+    },
+    {
+      "step": "opened",
+      "time": "14:15:44",
+      "size": [
+        1024,
+        768
+      ],
+      "layers": [
+        {
+          "name": "Background",
+          "size": [
+            1024,
+            768
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": false
+        }
+      ],
+      "display_id": 1
+    },
+    {
+      "step": "selected",
+      "time": "14:15:44",
+      "rect": [
+        420,
+        300,
+        260,
+        200
+      ],
+      "empty": false
+    },
+    {
+      "step": "generative-fill",
+      "time": "14:17:35",
+      "status": "3",
+      "seconds": 110.7,
+      "layers": [
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "size": [
+            512,
+            512
+          ],
+          "offset": [
+            294,
+            144
+          ],
+          "visible": true,
+          "has_mask": true,
+          "is_group": false
+        },
+        {
+          "name": "Background",
+          "size": [
+            1024,
+            768
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": false
+        }
+      ]
+    }
+  ],
+  "finished": "2026-10-08 14:17:36",
+  "ok": true
+}

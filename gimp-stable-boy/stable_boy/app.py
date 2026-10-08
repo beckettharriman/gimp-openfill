@@ -114,12 +114,11 @@ class App:
         self.log.info("expand: margins=%s canvas=%dx%d context=%s working=%dx%d",
                       (left, top, right, bottom), plan.new_width, plan.new_height, plan.context,
                       ws.width, ws.height)
-        image.undo_group_start()
-        try:
-            gimp_io.resize_canvas(image, plan.new_width, plan.new_height, plan.offset_x, plan.offset_y)
-            image_png = gimp_io.export_region_png(image, plan.context)
-        finally:
-            image.undo_group_end()
+        # Read the context from the unresized image (new-canvas coordinates shifted
+        # back by the offset; pixels outside the image come back transparent) so a
+        # backend failure leaves the image untouched. The canvas grows only on success.
+        source_rect = plan.context.translate(-plan.offset_x, -plan.offset_y)
+        image_png = gimp_io.export_region_png(image, source_rect, transparent_outside=True)
         mask_pixels = geometry.mask_for_expand(plan)
         mask_png = gimp_io.mask_png_from_bytes(plan.context, mask_pixels)
         request = InpaintRequest(
@@ -136,10 +135,15 @@ class App:
         finally:
             progress.done()
         self.server.touch()
-        layers = gimp_io.insert_results(image, result.images, plan.context,
-                                        _layer_name("Generative Expand", prompt),
-                                        float(self.settings.feather), self.paths.temp,
-                                        mask_pixels=mask_pixels)
+        image.undo_group_start()
+        try:
+            gimp_io.resize_canvas(image, plan.new_width, plan.new_height, plan.offset_x, plan.offset_y)
+            layers = gimp_io.insert_results(image, result.images, plan.context,
+                                            _layer_name("Generative Expand", prompt),
+                                            float(self.settings.feather), self.paths.temp,
+                                            mask_pixels=mask_pixels)
+        finally:
+            image.undo_group_end()
         self.log.info("expand: done, seed=%s, %d layer(s)", result.seed, len(layers))
         return layers
 

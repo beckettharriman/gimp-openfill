@@ -1,0 +1,108 @@
+2026-10-08 14:14:58,422 ERROR [16772 stable-boy] procedure failed: ValueError: too many values to unpack (expected 5)
+Traceback (most recent call last):
+  File "C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 107, in run_fill
+    app.generative_fill(image, config.get_property("prompt"), config.get_property("negative"),
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        config.get_property("variations"), config.get_property("strength"),
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        config.get_property("seed"), config.get_property("quality"))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\stable_boy\app.py", line 77, in generative_fill
+    selection = gimp_io.selection_rect(image)
+  File "C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\stable_boy\gimp_io.py", line 42, in selection_rect
+    non_empty, x1, y1, x2, y2 = Gimp.Selection.bounds(image)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 5)
+
+2026-10-08 14:15:45,670 INFO  [36828 stable-boy] fill: selection=Rect(x=420, y=300, width=260, height=200) context=Rect(x=294, y=144, width=512, height=512) working=512x512 model=sd-v1-5-inpainting.ckpt
+2026-10-08 14:15:47,933 INFO  [36828 stable-boy] launching supervisor (gimp pid 6980): C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\stable_boy\supervisor.py --python C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe --main C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --cwd C:\AI\ComfyUI\ComfyUI_windows_portable --host 127.0.0.1 --port 8188 --state C:\Users\becke\AppData\Roaming\GIMP\3.2\stable-boy\server-state.json --server-log C:\Users\becke\AppData\Roaming\GIMP\3.2\stable-boy\comfyui.log --log C:\Users\becke\AppData\Roaming\GIMP\3.2\stable-boy\stable-boy.log --watch-pid 6980 --idle-minutes 20
+2026-10-08 14:15:49 INFO  [12368 supervisor] starting backend: C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --dont-print-server
+2026-10-08 14:15:49 INFO  [12368 supervisor] backend pid 27932, job object ok, watching gimp pid 6980
+2026-10-08 14:17:15,832 INFO  [36828 stable-boy] backend ready at http://127.0.0.1:8188 after 88 s
+2026-10-08 14:17:15,884 INFO  [36828 stable-boy] queued prompt f5d7a9aa-9c18-4eb0-9cef-71d7960b6127 (timeout 120s, 25 steps x 1)
+2026-10-08 14:17:35,399 INFO  [36828 stable-boy] fill: done, seed=12345, 1 layer(s)
+2026-10-08 14:17:38 INFO  [12368 supervisor] shutting down: GIMP (pid 6980) is gone
+2026-10-08 14:17:39 INFO  [12368 supervisor] backend terminated
+2026-10-08 14:19:47,573 INFO  [2184 stable-boy] fill: selection=Rect(x=420, y=300, width=260, height=200) context=Rect(x=294, y=144, width=512, height=512) working=512x512 model=sd-v1-5-inpainting.ckpt
+2026-10-08 14:19:49,720 INFO  [2184 stable-boy] launching supervisor (gimp pid 15688): C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\stable_boy\supervisor.py --python C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe --main C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --cwd C:\AI\ComfyUI\ComfyUI_windows_portable --host 127.0.0.1 --port 8188 --state C:\Users\becke\AppData\Roaming\GIMP\3.2\stable-boy\server-state.json --server-log C:\Users\becke\AppData\Roaming\GIMP\3.2\stable-boy\comfyui.log --log C:\Users\becke\AppData\Roaming\GIMP\3.2\stable-boy\stable-boy.log --watch-pid 15688 --idle-minutes 1
+2026-10-08 14:19:50 INFO  [35620 supervisor] starting backend: C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --dont-print-server
+2026-10-08 14:19:50 INFO  [35620 supervisor] backend pid 28544, job object ok, watching gimp pid 15688
+2026-10-08 14:20:17,862 INFO  [2184 stable-boy] backend ready at http://127.0.0.1:8188 after 28 s
+2026-10-08 14:20:17,897 INFO  [2184 stable-boy] queued prompt a1480767-1e34-47d2-92a6-fbbc2fc8a9aa (timeout 120s, 25 steps x 1)
+2026-10-08 14:20:32,905 INFO  [2184 stable-boy] fill: done, seed=12345, 1 layer(s)
+2026-10-08 14:20:35,034 INFO  [22840 stable-boy] expand: margins=(0, 0, 256, 0) canvas=1280x768 context=Rect(x=454, y=0, width=826, height=768) working=768x712
+2026-10-08 14:20:35,309 INFO  [22840 stable-boy] queued prompt a3b4ee08-f270-468c-9357-cb4d6ebb5bda (timeout 131s, 25 steps x 1)
+2026-10-08 14:20:35,769 ERROR [22840 stable-boy] procedure failed: The backend rejected the workflow: INPAINT_MaskedFill: No module named 'cv2'
+
+Traceback (most recent call last):
+  File "C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\stable_boy\backends\comfy.py", line 111, in _run
+    entry = self.client.wait_for(prompt_id, workflow.total_steps(graph), deadline,
+                                 self._wrap(progress))
+  File "C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\stable_boy\comfy_api.py", line 227, in wait_for
+    raise ComfyExecutionError(
+    ...<2 lines>...
+        "\n".join(data.get("traceback", []) or []))
+stable_boy.comfy_api.ComfyExecutionError: No module named 'cv2'
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 122, in run_expand
+    app.generative_expand(image, config.get_property("prompt"), config.get_property("negative"),
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                          config.get_property("left"), config.get_property("top"),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                          config.get_property("right"), config.get_property("bottom"),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                          config.get_property("variations"), config.get_property("seed"),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                          config.get_property("quality"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\stable_boy\app.py", line 135, in generative_expand
+    result = backend.outpaint(request, progress)
+  File "C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\stable_boy\backend.py", line 147, in outpaint
+    return self.inpaint(request, progress)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\stable_boy\backends\comfy.py", line 84, in inpaint
+    images = self._run(graph, request.sampling.steps, request.sampling.batch, pixels, progress)
+  File "C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\stable_boy\backends\comfy.py", line 116, in _run
+    raise WorkflowRejected(f"{err.node_type or 'node'}: {err}") from err
+stable_boy.backend.WorkflowRejected: INPAINT_MaskedFill: No module named 'cv2'
+
+
+2026-10-08 14:20:37,554 INFO  [37748 stable-boy] fill: selection=Rect(x=760, y=60, width=140, height=140) context=Rect(x=574, y=0, width=512, height=512) working=512x512 model=sd-v1-5-inpainting.ckpt
+2026-10-08 14:20:37,705 INFO  [37748 stable-boy] queued prompt 837b3f0e-e7f7-4cc8-bd5c-7fd078ff23d0 (timeout 149s, 25 steps x 3)
+2026-10-08 14:20:49,161 INFO  [37748 stable-boy] fill: done, seed=99, 3 layer(s)
+2026-10-08 14:20:51,101 INFO  [10256 stable-boy] txt2img: 680x512 model=sd-v1-5-inpainting.ckpt target=layer
+2026-10-08 14:20:51,164 INFO  [10256 stable-boy] queued prompt c0fba55e-2e89-4104-a854-30bce98ee193 (timeout 120s, 25 steps x 1)
+2026-10-08 14:20:56,530 INFO  [10256 stable-boy] txt2img: done, seed=3
+2026-10-08 14:20:58,544 INFO  [26360 stable-boy] fill: selection=Rect(x=80, y=480, width=300, height=220) context=Rect(x=0, y=0, width=768, height=768) working=768x768 model=sd_xl_base_1.0.safetensors
+2026-10-08 14:20:58,808 INFO  [26360 stable-boy] queued prompt 5f85b2bb-c15a-4c59-9b91-3110a7a3d56b (timeout 134s, 25 steps x 1)
+2026-10-08 14:21:23,025 INFO  [26360 stable-boy] fill: done, seed=5, 1 layer(s)
+2026-10-08 14:22:22 INFO  [35620 supervisor] shutting down: idle for 1.0 min (limit 1)
+2026-10-08 14:22:23 INFO  [35620 supervisor] backend terminated
+2026-10-08 14:25:24,491 INFO  [35200 stable-boy] fill: selection=Rect(x=420, y=300, width=260, height=200) context=Rect(x=294, y=144, width=512, height=512) working=512x512 model=sd-v1-5-inpainting.ckpt
+2026-10-08 14:25:26,627 INFO  [35200 stable-boy] launching supervisor (gimp pid 10000): C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\stable_boy\supervisor.py --python C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe --main C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --cwd C:\AI\ComfyUI\ComfyUI_windows_portable --host 127.0.0.1 --port 8188 --state C:\Users\becke\AppData\Roaming\GIMP\3.2\stable-boy\server-state.json --server-log C:\Users\becke\AppData\Roaming\GIMP\3.2\stable-boy\comfyui.log --log C:\Users\becke\AppData\Roaming\GIMP\3.2\stable-boy\stable-boy.log --watch-pid 10000 --idle-minutes 1
+2026-10-08 14:25:26 INFO  [9368 supervisor] starting backend: C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --dont-print-server
+2026-10-08 14:25:26 INFO  [9368 supervisor] backend pid 10896, job object ok, watching gimp pid 10000
+2026-10-08 14:25:51,736 INFO  [35200 stable-boy] backend ready at http://127.0.0.1:8188 after 25 s
+2026-10-08 14:25:51,766 INFO  [35200 stable-boy] queued prompt ae75deba-527f-4564-a039-851f65b15aea (timeout 120s, 25 steps x 1)
+2026-10-08 14:26:07,758 INFO  [35200 stable-boy] fill: done, seed=12345, 1 layer(s)
+2026-10-08 14:26:09,911 INFO  [23904 stable-boy] expand: margins=(0, 0, 256, 0) canvas=1280x768 context=Rect(x=454, y=0, width=826, height=768) working=768x712
+2026-10-08 14:26:10,210 INFO  [23904 stable-boy] queued prompt 85f096a8-0e47-4762-afc4-c97f90439b1a (timeout 131s, 25 steps x 1)
+2026-10-08 14:26:20,361 INFO  [23904 stable-boy] expand: done, seed=7, 1 layer(s)
+2026-10-08 14:26:23 INFO  [9368 supervisor] shutting down: GIMP (pid 10000) is gone
+2026-10-08 14:26:24 INFO  [9368 supervisor] backend terminated
+2026-10-08 14:27:48,304 INFO  [32328 stable-boy] fill: selection=Rect(x=420, y=300, width=260, height=200) context=Rect(x=294, y=144, width=512, height=512) working=512x512 model=sd-v1-5-inpainting.ckpt
+2026-10-08 14:27:50,443 INFO  [32328 stable-boy] launching supervisor (gimp pid 16440): C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe C:\Users\becke\AppData\Roaming\GIMP\3.2\plug-ins\gimp-stable-boy\stable_boy\supervisor.py --python C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe --main C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --cwd C:\AI\ComfyUI\ComfyUI_windows_portable --host 127.0.0.1 --port 8188 --state C:\Users\becke\AppData\Roaming\GIMP\3.2\stable-boy\server-state.json --server-log C:\Users\becke\AppData\Roaming\GIMP\3.2\stable-boy\comfyui.log --log C:\Users\becke\AppData\Roaming\GIMP\3.2\stable-boy\stable-boy.log --watch-pid 16440 --idle-minutes 20
+2026-10-08 14:27:50 INFO  [32408 supervisor] starting backend: C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --dont-print-server
+2026-10-08 14:27:50 INFO  [32408 supervisor] backend pid 22460, job object ok, watching gimp pid 16440
+2026-10-08 14:28:15,067 INFO  [32328 stable-boy] backend ready at http://127.0.0.1:8188 after 25 s
+2026-10-08 14:28:15,104 INFO  [32328 stable-boy] queued prompt eca628b1-36f1-4917-a008-9d961401eb70 (timeout 120s, 25 steps x 1)
+2026-10-08 14:28:30,262 INFO  [32328 stable-boy] fill: done, seed=12345, 1 layer(s)
+2026-10-08 14:28:32,281 INFO  [34624 stable-boy] expand: margins=(0, 0, 256, 0) canvas=1280x768 context=Rect(x=454, y=0, width=826, height=768) working=768x712
+2026-10-08 14:28:32,480 INFO  [34624 stable-boy] queued prompt 90dce449-896b-466b-9ccf-8fac0bf8e646 (timeout 131s, 25 steps x 1)
+2026-10-08 14:28:42,873 INFO  [34624 stable-boy] expand: done, seed=7, 1 layer(s)
+2026-10-08 14:28:47 INFO  [32408 supervisor] shutting down: GIMP (pid 16440) is gone
+2026-10-08 14:28:48 INFO  [32408 supervisor] backend terminated

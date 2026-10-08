@@ -1,0 +1,1 @@
+"C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe" --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b "exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_fill.py').read())"

@@ -63,8 +63,8 @@ class Settings:
     @classmethod
     def load(cls, path: Path) -> "Settings":
         settings = cls()
-        try:
-            data = json.loads(Path(path).read_text(encoding="utf-8"))
+        try:  # utf-8-sig: tolerate the BOM that PowerShell's Set-Content adds
+            data = json.loads(Path(path).read_text(encoding="utf-8-sig"))
         except (OSError, ValueError):
             return settings
         if not isinstance(data, dict):

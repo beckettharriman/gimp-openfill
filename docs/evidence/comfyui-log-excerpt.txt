@@ -1,0 +1,79 @@
+# ComfyUI log excerpt (full log: %APPDATA%\GIMP\3.2\stable-boy\comfyui.log)
+11:[INFO] Found comfy_kitchen backend triton: {'available': False, 'disabled': True, 'unavailable_reason': "ImportError: No module named 'triton'", 'capabilities': []}
+15:[INFO] Total VRAM 8188 MB, total RAM 32042 MB
+16:[INFO] pytorch version: 2.14.0+cu130
+17:[INFO] Set vram state to: NORMAL_VRAM
+18:[INFO] Device: cuda:0 NVIDIA GeForce RTX 4070 Laptop GPU : cudaMallocAsync
+28:[INFO] ComfyUI version: 0.39.0
+42:Import times for custom nodes:
+44:[INFO]    0.0 seconds: C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\custom_nodes\comfyui-inpaint-nodes
+47:[INFO] got prompt
+48:[INFO] model weight dtype torch.float16, manual cast: None
+57:[INFO] Requested to load SD1ClipModel
+60:[INFO] Requested to load AutoencoderKL
+63:[INFO] Requested to load BaseModel
+67:[INFO] Prompt executed in 18.01 seconds
+76:[INFO] Found comfy_kitchen backend triton: {'available': False, 'disabled': True, 'unavailable_reason': "ImportError: No module named 'triton'", 'capabilities': []}
+82:[INFO] Total VRAM 8188 MB, total RAM 32042 MB
+83:[INFO] pytorch version: 2.14.0+cu130
+84:[INFO] Set vram state to: NORMAL_VRAM
+85:[INFO] Device: cuda:0 NVIDIA GeForce RTX 4070 Laptop GPU : cudaMallocAsync
+95:[INFO] ComfyUI version: 0.39.0
+109:Import times for custom nodes:
+111:[INFO]    0.0 seconds: C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\custom_nodes\comfyui-inpaint-nodes
+114:[INFO] got prompt
+115:[INFO] model weight dtype torch.float16, manual cast: None
+124:[INFO] Requested to load SD1ClipModel
+127:[INFO] Requested to load AutoencoderKL
+130:[INFO] Requested to load BaseModel
+134:[INFO] Prompt executed in 13.49 seconds
+135:[INFO] got prompt
+136:[ERROR] !!! Exception during processing !!! No module named 'cv2'
+137:[ERROR] Traceback (most recent call last):
+152:  File "C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\custom_nodes\comfyui-inpaint-nodes\nodes.py", line 288, in execute
+153:    import cv2
+154:ModuleNotFoundError: No module named 'cv2'
+156:[INFO] Prompt executed in 0.45 seconds
+157:[INFO] got prompt
+165:[INFO] Prompt executed in 9.49 seconds
+166:[INFO] got prompt
+172:[INFO] Prompt executed in 4.96 seconds
+173:[INFO] got prompt
+174:[INFO] model weight dtype torch.float16, manual cast: None
+183:[INFO] Requested to load SDXLClipModel
+186:[INFO] Requested to load AutoencoderKL
+189:[INFO] Requested to load SDXL
+191:[comfyui-inpaint-nodes] Injecting patched comfy.model_patcher.ModelPatcher.calculate_weight
+195:[INFO] Prompt executed in 22.99 seconds
+208:[INFO] Found comfy_kitchen backend triton: {'available': False, 'disabled': True, 'unavailable_reason': "ImportError: No module named 'triton'", 'capabilities': []}
+210:[INFO] Total VRAM 8188 MB, total RAM 32042 MB
+211:[INFO] pytorch version: 2.14.0+cu130
+212:[INFO] Set vram state to: NORMAL_VRAM
+213:[INFO] Device: cuda:0 NVIDIA GeForce RTX 4070 Laptop GPU : cudaMallocAsync
+223:[INFO] ComfyUI version: 0.39.0
+237:Import times for custom nodes:
+239:[INFO]    0.0 seconds: C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\custom_nodes\comfyui-inpaint-nodes
+242:[INFO] got prompt
+243:[INFO] model weight dtype torch.float16, manual cast: None
+252:[INFO] Requested to load SD1ClipModel
+255:[INFO] Requested to load AutoencoderKL
+258:[INFO] Requested to load BaseModel
+262:[INFO] Prompt executed in 14.49 seconds
+263:[INFO] got prompt
+271:[INFO] Prompt executed in 8.82 seconds
+280:[INFO] Found comfy_kitchen backend triton: {'available': False, 'disabled': True, 'unavailable_reason': "ImportError: No module named 'triton'", 'capabilities': []}
+286:[INFO] Total VRAM 8188 MB, total RAM 32042 MB
+287:[INFO] pytorch version: 2.14.0+cu130
+288:[INFO] Set vram state to: NORMAL_VRAM
+289:[INFO] Device: cuda:0 NVIDIA GeForce RTX 4070 Laptop GPU : cudaMallocAsync
+299:[INFO] ComfyUI version: 0.39.0
+313:Import times for custom nodes:
+315:[INFO]    0.0 seconds: C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\custom_nodes\comfyui-inpaint-nodes
+318:[INFO] got prompt
+319:[INFO] model weight dtype torch.float16, manual cast: None
+328:[INFO] Requested to load SD1ClipModel
+331:[INFO] Requested to load AutoencoderKL
+334:[INFO] Requested to load BaseModel
+338:[INFO] Prompt executed in 13.89 seconds
+339:[INFO] got prompt
+347:[INFO] Prompt executed in 8.82 seconds

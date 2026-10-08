@@ -39,25 +39,33 @@ def image_rect(image: Gimp.Image) -> Rect:
 
 def selection_rect(image: Gimp.Image) -> Rect | None:
     """Bounding box of the selection, or None when nothing is selected."""
-    non_empty, x1, y1, x2, y2 = Gimp.Selection.bounds(image)
+    # GIMP 3.2 returns (success, non_empty, x1, y1, x2, y2); older builds omit success.
+    non_empty, x1, y1, x2, y2 = tuple(Gimp.Selection.bounds(image))[-5:]
     if not non_empty:
         return None
     return Rect(x1, y1, x2 - x1, y2 - y1)
 
 
-def _read_buffer(buffer: Gegl.Buffer, rect: Rect, fmt: str) -> bytes:
+def _read_buffer(buffer: Gegl.Buffer, rect: Rect, fmt: str,
+                 abyss: Gegl.AbyssPolicy = Gegl.AbyssPolicy.CLAMP) -> bytes:
     region = Gegl.Rectangle.new(rect.x, rect.y, rect.width, rect.height)
-    data = buffer.get(region, 1.0, fmt, Gegl.AbyssPolicy.CLAMP)
+    data = buffer.get(region, 1.0, fmt, abyss)
     return bytes(data)
 
 
-def export_region_png(image: Gimp.Image, rect: Rect) -> bytes:
-    """Composite of all visible layers inside ``rect`` as an RGBA PNG."""
+def export_region_png(image: Gimp.Image, rect: Rect, transparent_outside: bool = False) -> bytes:
+    """Composite of all visible layers inside ``rect`` as an RGBA PNG.
+
+    ``rect`` may extend past the image; with ``transparent_outside`` those
+    pixels are transparent black (used by expand before the canvas grows),
+    otherwise the edge pixels are repeated.
+    """
     layer = Gimp.Layer.new_from_visible(image, image, "stable-boy export")
     if layer is None:
         raise GimpIoError("GIMP could not render the visible image")
     try:
-        pixels = _read_buffer(layer.get_buffer(), rect, RGBA)
+        abyss = Gegl.AbyssPolicy.NONE if transparent_outside else Gegl.AbyssPolicy.CLAMP
+        pixels = _read_buffer(layer.get_buffer(), rect, RGBA, abyss)
     finally:
         layer.delete()
     expected = rect.width * rect.height * 4

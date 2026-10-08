@@ -81,7 +81,8 @@ if (-not (Test-Path $configFile)) {
         fooocus_patch = "inpaint_v26.fooocus.patch"
         quality = "fast"
     }
-    ($config | ConvertTo-Json) | Set-Content -Path $configFile -Encoding UTF8
+    # UTF-8 without BOM (Set-Content -Encoding UTF8 adds one on Windows PowerShell).
+    [IO.File]::WriteAllText($configFile, (($config | ConvertTo-Json) + "`n"), (New-Object Text.UTF8Encoding $false))
     Write-Host "Wrote default config to $configFile"
 } else {
     Write-Host "Keeping existing config at $configFile"

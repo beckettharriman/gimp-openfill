@@ -1,165 +1,191 @@
-<a name="readme-top"></a>
+# Stable Boy 2 - Generative Fill for GIMP 3
 
-<div>
-<h1 align="center">Stable Boy</h1>
-  <p align="center">
-    A GIMP plugin for AUTOMATIC1111's Stable Diffusion WebUI
-  </p>
-</div>
+Photoshop-style **Generative Fill**, **Generative Expand** and **Text to Image**
+inside GIMP 3, with the AI backend fully managed by the plug-in. Select an
+area, type what should be there, press OK, and the result appears as a new
+layer with a layer mask in the same image. No terminal, no browser tab, no
+second application.
 
-## About
+Stable Boy 2 is a GIMP 3 rewrite of [Stable Boy](https://github.com/thndrbrrr/gimp-stable-boy)
+by Torben Giesselmann (thndrbrrr), the GIMP 2.10 plug-in for the AUTOMATIC1111
+WebUI. Version 2 keeps the name, the license and the idea; the code, the
+backend (ComfyUI, started and stopped by the plug-in) and the UX are new.
 
-[AUTOMATIC1111's Stable Diffusion WebUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) is one of the most powerful tools in the generative AI space. Stable Boy puts that power into GIMP 2.10 by calling into A1111 WebUI's API.
+![Generative Fill before/after placeholder](docs/screenshots/generative-fill.png)
+*(screenshot placeholder: selection on the left, filled layer with mask on the right)*
 
-Here's a short demo video (of v0.1 ... haven't found time to make a new one):
+## What it does
 
-[![A short demo](./public/images/demo-video-screenshot.png)](https://youtu.be/YMVog30OcTI)
+| Menu entry (`Filters > AI`) | What happens |
+|---|---|
+| **Generative Fill...** | Fills the current selection from a prompt. The plug-in crops a context region around the selection, generates, and adds a new layer with a feathered layer mask. 1 to 8 variations go into a layer group. Strength below 1.0 keeps part of the original. |
+| **Generative Expand...** | Grows the canvas by the margins you enter and outpaints the new border into a new masked layer. The image is untouched if generation fails. |
+| **Text to Image...** | Generates from text into a new layer (sized to the selection when there is one) or a new image. |
+| **Generative Fill Settings...** | Backend folder/URL, model tier and checkpoints, steps, CFG, sampler, mask grow/feather, idle timeout, and a "check backend now" button that lists the server's models. |
+| **Stop AI Backend** | Shuts the managed ComfyUI process down to free the GPU. It restarts on the next request. |
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+Two model tiers, switchable per call:
 
+- **Fast**: Stable Diffusion 1.5 inpainting checkpoint. A few seconds per fill on an RTX 4070 Laptop (8 GB).
+- **Quality**: SDXL base plus the Fooocus inpaint patch (via comfyui-inpaint-nodes). Slower, noticeably better for large areas.
 
-## Installation
+All generation is local. Nothing leaves the machine.
 
-1. Clone the repo:
+## How the backend is managed
+
+GIMP plug-ins are short-lived processes, so Stable Boy launches a tiny
+supervisor (`stable_boy/supervisor.py`, run with `pythonw`, no console) the
+first time you need the backend. The supervisor:
+
+- starts ComfyUI hidden (`CREATE_NO_WINDOW`, output to `comfyui.log`) and ties
+  it to a Windows Job Object so it can never outlive the supervisor;
+- watches the GIMP process and shuts the server down when GIMP exits;
+- shuts it down after the configured idle timeout (default 20 minutes) so the
+  model does not hold VRAM forever; the next request starts it again;
+- writes `server-state.json` so later plug-in runs find the running server.
+
+Progress is shown in GIMP's progress bar (step-level, via ComfyUI's websocket).
+Errors come back as plain GIMP messages: backend not found, failed to start
+(with the last log lines), missing model, out of VRAM, timeout.
+
+## Requirements
+
+- GIMP 3.2 or newer (tested with 3.2.6 on Windows 11). GIMP's bundled Python is
+  used; the plug-in needs no extra Python packages.
+- ComfyUI (tested with 0.39.0, Windows portable NVIDIA build) with
+  [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes).
+- An NVIDIA GPU with 8 GB VRAM is enough for both tiers. CPU-only works for the
+  Fast tier but is slow.
+- Models: see [docs/models.md](docs/models.md) for the exact files, sizes,
+  checksums and licenses (about 4.3 GB for the Fast tier, 12.5 GB with Quality).
+
+## Install
+
+1. **ComfyUI.** Download the official portable build from the
+   [Comfy-Org/ComfyUI releases](https://github.com/Comfy-Org/ComfyUI/releases)
+   and extract it to `C:\AI\ComfyUI` (so that
+   `C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py` exists), or point
+   the settings dialog at any other ComfyUI checkout.
+2. **Custom nodes.** `git clone https://github.com/Acly/comfyui-inpaint-nodes`
+   into `ComfyUI\custom_nodes\`. For Generative Expand's border pre-fill also
+   run `python_embeded\python.exe -s -m pip install opencv-python-headless`
+   (without it the plug-in falls back to a neutral grey pre-fill).
+3. **Models.** Put `sd-v1-5-inpainting.ckpt` into `ComfyUI\models\checkpoints\`.
+   Optionally add `sd_xl_base_1.0.safetensors` there and
+   `fooocus_inpaint_head.pth` + `inpaint_v26.fooocus.patch` into
+   `ComfyUI\models\inpaint\` for the Quality tier. Links in
+   [docs/models.md](docs/models.md).
+4. **Plug-in.** Close GIMP, then from this repository:
+
+   ```powershell
+   # Windows
+   powershell -ExecutionPolicy Bypass -File install.ps1
+   ```
    ```sh
-   git clone https://github.com/thndrbrrr/gimp-stable-boy.git
+   # Linux / macOS / Flatpak
+   sh install.sh
    ```
-1. Start GIMP, open Preferences and add the absolute path to _sub-folder_ (!) `src` to GIMP's plugin search path:
-   ```
-   /home/...and-so-on.../gimp-stable-boy/src     # MacOS, Linux
-   C:/Users/...and-so-on.../gimp-stable-boy/src  # Windows
-   ```
-   ![GIMP Preferences](public/images/gimp-prefs-plugin-path.png)
-1. Restart GIMP.
-1. Start A1111 WebUI with argument `--api`. It doesn't matter whether it's running on your local machine or somewhere in the cloud.
-1. Open Stable Boy's preferences (top menu > Stable Boy > Preferences) and copy-paste A1111 WebUI's URL (something like `https://abcdef123.gradio.com`) into the `API URL` field.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
+   Both copy `gimp-stable-boy/` into the GIMP profile
+   (`%APPDATA%\GIMP\3.2\plug-ins\gimp-stable-boy\` or `~/.config/GIMP/3.2/plug-ins/...`)
+   and write a default `stable-boy/config.json`. Add `-Link` / `--link` to
+   symlink the checkout instead of copying.
+5. Start GIMP. The entries appear under `Filters > AI`. The first request
+   starts ComfyUI (about 30 to 90 s); later requests reuse it.
 
 ## Usage
 
-Stable Boy can be found in the `Stable Boy` top menu, with the following options:
-- Preferences
-- Text to Image
-- Image to Image
-- Inpainting
-- Upscale
-- Scripts
-  - X/Y plot
+1. Open an image, make any selection (rectangle, lasso, fuzzy select, mask).
+2. `Filters > AI > Generative Fill...`, type a prompt, optionally a negative
+   prompt, number of variations, strength, seed, and the model tier.
+3. OK. The progress bar shows upload, backend start (first time), sampling
+   steps and download.
+4. A layer named `Generative Fill: <prompt>` with a layer mask appears above
+   the active layer. Paint on the mask to refine the blend, or delete the layer
+   to discard. With several variations, they sit in a group with only the first
+   visible; toggle visibility to compare.
 
-> ℹ️ Stable Boy's menu items will be grayed out if no image is open. 
+Generative Expand works the same way with margins instead of a selection.
+Text to Image needs no selection; with one, the new layer takes its size and
+position.
 
-### Model selection
+Non-interactive use (scripts, batch mode) is supported through the PDB; see
+`tests/gimp_batch_fill.py` for a complete example that opens an image, selects
+a region, runs the fill and exports the result.
 
-Stable Boy currently doesn't have an option to choose the model. You'll have to do that in WebUI. Loading an inpainting model is recommended.
+## Settings
 
-### Image size
+Stored in `<GIMP profile>/stable-boy/config.json` and edited through
+`Filters > AI > Generative Fill Settings...`.
 
-The minimum resolution is 512x512. Ideally choose dimensions that are multiples of 256.
+| Setting | Default | Notes |
+|---|---|---|
+| backend | comfyui | or `a1111` (external AUTOMATIC1111 WebUI with `--api`; not auto-started) |
+| comfy_dir | `C:\AI\ComfyUI\ComfyUI_windows_portable` | portable root or a ComfyUI checkout with a venv |
+| url / a1111_url | `http://127.0.0.1:8188` / `:7860` | host and port the plug-in talks to and starts on |
+| autostart | true | start ComfyUI when it is not running |
+| idle_timeout_minutes | 20 | 0 keeps the server until GIMP exits |
+| quality | fast | default tier; `quality` = SDXL + Fooocus |
+| checkpoint / sdxl_checkpoint | `sd-v1-5-inpainting.ckpt` / `sd_xl_base_1.0.safetensors` | pick from the server's list after "check backend" |
+| fooocus_head / fooocus_patch | `fooocus_inpaint_head.pth` / `inpaint_v26.fooocus.patch` | SDXL only |
+| steps / cfg / sampler / scheduler | 25 / 7.0 / dpmpp_2m / karras | sampling defaults |
+| grow / feather | 16 / 24 px | mask dilation sent to the model, soft edge of the layer mask |
+| prefill | true | blur/fill old content under the mask before sampling (needs inpaint nodes) |
+| max_side_sd15 / max_side_sdxl | 768 / 1024 | longest side the model sees; larger regions are scaled |
+| request_timeout / startup_timeout | 0 (auto) / 240 s | |
+| extra_server_args | | for example `--lowvram` |
 
-### Generate images or layers
+Logs: `<GIMP profile>/stable-boy/stable-boy.log` (plug-in and supervisor) and
+`comfyui.log` (server).
 
-Stable Boy can open results coming from Stable Diffusion as new images, or they can be added as new layers to the current image. The `Results as` option dropdown lets you control this.
+## Troubleshooting
 
-Using layers is very powerful, especially when inpainting large images.
+| Symptom | What to do |
+|---|---|
+| "ComfyUI was not found at ..." | Set the ComfyUI folder in the settings dialog; it must contain `ComfyUI\main.py` (portable) or `main.py` (checkout). |
+| "ComfyUI did not come up within N s" | Read the last lines shown in the message or `comfyui.log`. Typical causes: an old NVIDIA driver, a missing VC++ redistributable (`c10.dll`), another program on port 8188. Raise `startup_timeout` on slow disks (first start unpacks a lot of files). |
+| "A model file is missing on the backend" | The checkpoint named in the settings is not in `models/checkpoints` (or `models/inpaint` for the Fooocus files). Run "Check backend now" to see what the server offers. |
+| "The GPU ran out of memory" | Use a smaller selection, 1 variation, the Fast tier, or add `--lowvram` to the extra server arguments. |
+| Fill looks washed out or the seam is visible | Increase `feather`, keep `prefill` on, and make sure comfyui-inpaint-nodes is installed (it enables color matching and mask growth). |
+| Menu entry missing | Check `%APPDATA%\GIMP\3.2\pluginrc` for `python-fu-stable-boy-generative-fill`; if absent, confirm the folder name matches the file name (`gimp-stable-boy\gimp-stable-boy.py`) and restart GIMP. |
+| Backend keeps running after GIMP closed | Should not happen (the supervisor watches the GIMP pid); use `Filters > AI > Stop AI Backend` next time, or end `python.exe` from `python_embeded` in Task Manager and report a bug with `stable-boy.log`. |
+| Expand seam looks hard | Install `opencv-python-headless` into ComfyUI's Python so the navier-stokes border fill is available. |
 
-### Inpainting
+## Development
 
-Add a layer named `Inpainting Mask` to the image and make it the top layer. Use a paintbrush and paint the region you want to inpaint with black on that mask layer. Stable Boy will automatically determine the area of the image to process (multiples of 256 and at least 512x512). When results are added as layers, the inpainting mask is applied to those layers so that they really only contain the masked part.
+```sh
+python -m unittest discover -t . -s tests -v     # pure-Python tests, no GIMP needed
+powershell -File install.ps1 -Link              # junction the checkout into the GIMP profile
+```
 
-In the GIF below you can see how multiple variations of inpainting are added as layers, which can then be compared easily:
-
-<!-- ![Inpainting with layers](public/images/inpainting_with_layers.gif) -->
-![Inpainting with layers](public/images/inpainting_v5.gif)
-
-Stable Boy inserts any generated layers below the inpainting mask layer and then hides the mask layer. The mask itself remains as is.
-
-> 👉 Select the mask layer and hit `DEL` to clear the mask.
-
-### X/Y plotting
-
-X/Y plotting is an essential step in generative art workflows: since changes in parameters are not immediate and multiple parameters often work in conjunction, the best way to go about it is to compare the results of different settings in an X/Y plot. When using Image to Image for example, an X/Y plot of multiple CFG scales and denoising strengths makes it very easy to determine the right combination:
-
-![img2img XY plot CFG/denoising](public/images/img2imgxy.gif)
-
-The result of X/Y plot is a grid as well as the individual images. Use the `Grid only` option to control whether the individual images should be included. As can be seen in the GIF image above, grids are always opened as separate images, whereas individual result images are added to the existing image as nested layer groups. Each layer is named after its X/Y parameter combination.
-
-When running the X/Y plot script you'll have to choose a mode (Text to Image, Image to Image, or Inpainting). The script will then use that mode's settings from the last time that mode was run:
-
-![XY plot mode options](public/images/xy_plot_mode_selection.png)
-
-**NOTE:** For now, script support is **disabled** by default since some changes to A1111's API are necessary. The branch with the required A1111 SD WebUI API changes can be found here: `https://github.com/thndrbrrr/stable-diffusion-webui/tree/script-api`. There is also a [pull request for these API changes](https://github.com/AUTOMATIC1111/stable-diffusion-webui/pull/5940) but it hasn't been merged yet. Once you are running A1111 with the required API changes you can enable X/Y plot by editing `src/gimp_stable_boy/config.py` and setting `Config.ENABLE_SCRIPTS` to `True`.
-
-### Support for Rectangle Selection tool
-
-Use rectangular selections for selecting the region that Stable Diffusion will process. This makes it possible to work with images of arbitrary size. Note that **the selection's width and height need to be multiples of 8**. Think `512x512`, `512x768`, `1024x768`, that kinda thing.
-
-> 👉 Using GIMP's fixed-size rectangular selections makes this easy.
-
-<!-- 🔴🔴🔴 GIF GIF GIF -->
-
-If there is neither a selection nor an inpainting mask (see below), Stable Boy will process the full image. (Therefore image sizes should also be multiples of 8.)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
+Layout: `gimp-stable-boy/gimp-stable-boy.py` (GIMP entry point),
+`gimp-stable-boy/stable_boy/` (package; only `gimp_io.py` and `app.py` import
+GIMP), `tests/`, `docs/design.md` (architecture and what was learned from
+related projects), `docs/models.md`, `docs/evidence/` (end-to-end run logs).
 
 ## Roadmap
 
-- [x] ~~Rectangular selections as image sources for each mode~~
-- [x] ~~Inpainting on large images: Stable Boy determines the region to send to Stable Diffusion based on where you painted the mask~~
-- [x] ~~Script: X/Y plot~~
-- [ ] Outpainting
-- [ ] Better GUI
-- [ ] Keep metadata (seed, sampler settings and such)
-- [ ] Support for more options
-- [ ] Better documentation
+- Multi-line prompt widget and prompt history in the dialog
+- Cancel button during generation
+- ControlNet / IP-Adapter reference images
+- LoRA selection
+- Live preview of intermediate steps
+- Automatic model download from the settings dialog
+- Flatpak/Snap GIMP smoke tests on Linux
 
-See the [open issues](https://github.com/tgiesselmann/gimp-stable-boy/issues) for known issues.
+## Credits
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. If you have a suggestion that would make this better, please fork the repo and create a pull request. Thank you!
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Adding some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a pull request
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
+- **Torben Giesselmann (thndrbrrr)** wrote the original Stable Boy for GIMP
+  2.10 and the AUTOMATIC1111 integration this project started from.
+- [ComfyUI](https://github.com/comfyanonymous/ComfyUI) by comfyanonymous and
+  Comfy-Org is the backend.
+- [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes) and
+  [krita-ai-diffusion](https://github.com/Acly/krita-ai-diffusion) by Acly
+  provided the inpaint nodes and the reference for the workflow design and
+  server management.
+- Fooocus inpaint models by lllyasviel; Stable Diffusion models by
+  Runway/CompVis and Stability AI (see `docs/models.md` for licenses).
 
 ## License
 
-Distributed under the GNU General Public License v3.0. See file [`COPYING`](COPYING) for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-## Contact
-
-Mail: thndrbrrr@gmail.com
-
-Mastodon: [@torben@mastodon.sdf.org](https://mastodon.sdf.org/@torben)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-## Acknowledgments
-
-In the end, everyone stands on the shoulders of giants.
-
-* [Stable Diffusion](https://github.com/CompVis/stable-diffusion)
-* [AUTOMATIC1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui)
-* [GIMP](https://www.gimp.org/)
-* [blueturtleai's gimp-stable-diffusion](https://github.com/blueturtleai/gimp-stable-diffusion)
-* [Stack Overflow](https://stackoverflow.com/)
-* [Daniel Alcalde Puente](https://github.com/danielalcalde)
-* [beothorn](https://github.com/beothorn)
-* [Othneil Drew](https://github.com/othneildrew)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+GPL-3.0-or-later. See [COPYING](COPYING).
+Copyright (C) 2022 Torben Giesselmann, (C) 2026 Stable Boy contributors.

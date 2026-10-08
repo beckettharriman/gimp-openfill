@@ -1,0 +1,388 @@
+{
+  "started": "2026-10-08 14:19:45",
+  "gimp_pid": 33392,
+  "gimp_version": "3.2.6",
+  "image": "C:\\repos\\gimp-stable-boy\\tests\\data\\test-scene.png",
+  "prompt": "a large grey boulder on grass, photo",
+  "steps": [
+    {
+      "step": "pdb-lookup",
+      "time": "14:19:45",
+      "registered": {
+        "python-fu-stable-boy-generative-fill": true,
+        "python-fu-stable-boy-generative-expand": true,
+        "python-fu-stable-boy-text-to-image": true,
+        "python-fu-stable-boy-settings": true,
+        "python-fu-stable-boy-stop-backend": true
+      }
+    },
+    {
+      "step": "menu",
+      "time": "14:19:45",
+      "label": "Generative _Fill...",
+      "paths": [
+        "<Image>/Filters/AI"
+      ]
+    },
+    {
+      "step": "opened",
+      "time": "14:19:46",
+      "size": [
+        1024,
+        768
+      ],
+      "layers": [
+        {
+          "name": "Background",
+          "size": [
+            1024,
+            768
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": false
+        }
+      ],
+      "display_id": 1
+    },
+    {
+      "step": "selected",
+      "time": "14:19:46",
+      "rect": [
+        420,
+        300,
+        260,
+        200
+      ],
+      "empty": false
+    },
+    {
+      "step": "generative-fill",
+      "time": "14:20:32",
+      "status": "3",
+      "seconds": 46.3,
+      "layers": [
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "size": [
+            512,
+            512
+          ],
+          "offset": [
+            294,
+            144
+          ],
+          "visible": true,
+          "has_mask": true,
+          "is_group": false
+        },
+        {
+          "name": "Background",
+          "size": [
+            1024,
+            768
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": false
+        }
+      ]
+    },
+    {
+      "step": "generative-expand",
+      "time": "14:20:35",
+      "status": "0",
+      "seconds": 1.8,
+      "size": [
+        1280,
+        768
+      ],
+      "layers": [
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "size": [
+            512,
+            512
+          ],
+          "offset": [
+            294,
+            144
+          ],
+          "visible": true,
+          "has_mask": true,
+          "is_group": false
+        },
+        {
+          "name": "Background",
+          "size": [
+            1024,
+            768
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": false
+        }
+      ]
+    },
+    {
+      "step": "generative-fill-variations",
+      "time": "14:20:49",
+      "status": "3",
+      "seconds": 12.5,
+      "layers": [
+        {
+          "name": "Generative Fill: a hot air balloon in the sky, photo",
+          "size": [
+            512,
+            512
+          ],
+          "offset": [
+            574,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": true
+        },
+        {
+          "name": "  Generative Fill: a hot air balloon in the sky, photo (1)",
+          "has_mask": true,
+          "visible": true
+        },
+        {
+          "name": "  Generative Fill: a hot air balloon in the sky, photo (2)",
+          "has_mask": true,
+          "visible": false
+        },
+        {
+          "name": "  Generative Fill: a hot air balloon in the sky, photo (3)",
+          "has_mask": true,
+          "visible": false
+        },
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "size": [
+            512,
+            512
+          ],
+          "offset": [
+            294,
+            144
+          ],
+          "visible": true,
+          "has_mask": true,
+          "is_group": false
+        },
+        {
+          "name": "Background",
+          "size": [
+            1024,
+            768
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": false
+        }
+      ]
+    },
+    {
+      "step": "text-to-image-layer",
+      "time": "14:20:56",
+      "status": "3",
+      "seconds": 6.3,
+      "layers": [
+        {
+          "name": "Text to Image: a small wooden cabin in a meadow, photo",
+          "size": [
+            680,
+            512
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": false
+        },
+        {
+          "name": "Generative Fill: a hot air balloon in the sky, photo",
+          "size": [
+            512,
+            512
+          ],
+          "offset": [
+            574,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": true
+        },
+        {
+          "name": "  Generative Fill: a hot air balloon in the sky, photo (1)",
+          "has_mask": true,
+          "visible": false
+        },
+        {
+          "name": "  Generative Fill: a hot air balloon in the sky, photo (2)",
+          "has_mask": true,
+          "visible": false
+        },
+        {
+          "name": "  Generative Fill: a hot air balloon in the sky, photo (3)",
+          "has_mask": true,
+          "visible": false
+        },
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "size": [
+            512,
+            512
+          ],
+          "offset": [
+            294,
+            144
+          ],
+          "visible": true,
+          "has_mask": true,
+          "is_group": false
+        },
+        {
+          "name": "Background",
+          "size": [
+            1024,
+            768
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": false
+        }
+      ]
+    },
+    {
+      "step": "generative-fill-sdxl",
+      "time": "14:21:23",
+      "status": "3",
+      "seconds": 25.6,
+      "layers": [
+        {
+          "name": "Generative Fill: a wooden picnic table on grass, photo",
+          "size": [
+            768,
+            768
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": true,
+          "is_group": false
+        },
+        {
+          "name": "Text to Image: a small wooden cabin in a meadow, photo",
+          "size": [
+            680,
+            512
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": false
+        },
+        {
+          "name": "Generative Fill: a hot air balloon in the sky, photo",
+          "size": [
+            512,
+            512
+          ],
+          "offset": [
+            574,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": true
+        },
+        {
+          "name": "  Generative Fill: a hot air balloon in the sky, photo (1)",
+          "has_mask": true,
+          "visible": false
+        },
+        {
+          "name": "  Generative Fill: a hot air balloon in the sky, photo (2)",
+          "has_mask": true,
+          "visible": false
+        },
+        {
+          "name": "  Generative Fill: a hot air balloon in the sky, photo (3)",
+          "has_mask": true,
+          "visible": false
+        },
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "size": [
+            512,
+            512
+          ],
+          "offset": [
+            294,
+            144
+          ],
+          "visible": true,
+          "has_mask": true,
+          "is_group": false
+        },
+        {
+          "name": "Background",
+          "size": [
+            1024,
+            768
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "visible": true,
+          "has_mask": false,
+          "is_group": false
+        }
+      ]
+    },
+    {
+      "step": "idle-wait-start",
+      "time": "14:21:24",
+      "seconds": 150
+    },
+    {
+      "step": "idle-wait-end",
+      "time": "14:23:54"
+    }
+  ],
+  "finished": "2026-10-08 14:23:54",
+  "ok": true
+}

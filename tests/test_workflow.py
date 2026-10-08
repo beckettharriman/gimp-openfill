@@ -47,6 +47,18 @@ class InpaintGraphTests(unittest.TestCase):
         self.assertEqual(graph["prefill"]["inputs"]["fill"], "navier-stokes")
         self.assertEqual(graph["preblur"]["inputs"]["image"], ["prefill", 0])
 
+    def test_color_match_uses_untouched_pixels_as_reference(self):
+        graph = w.build_inpaint(_req(), "i", "m", 1, w.Capabilities(True))
+        cm = graph["color_match"]["inputs"]
+        self.assertEqual(cm["target"], ["decode", 0])
+        self.assertEqual(cm["reference"], ["image_scale", 0])
+        self.assertEqual(cm["exclude_mask"], ["mask_stable", 0])
+        self.assertEqual(graph["out_scale"]["inputs"]["image"], ["color_match", 0])
+        off = w.build_inpaint(_req(color_match=0.0), "i", "m", 1, w.Capabilities(True))
+        self.assertNotIn("color_match", off)
+        core = w.build_inpaint(_req(), "i", "m", 1, w.Capabilities(False))
+        self.assertNotIn("color_match", core)
+
     def test_prefill_disabled(self):
         graph = w.build_inpaint(_req(prefill=False), "i", "m", 1, w.Capabilities(True))
         self.assertNotIn("preblur", graph)

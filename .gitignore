@@ -132,3 +132,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Stable Boy
+*.xcf
+docs/evidence/*.xcf
+gimp-stable-boy/stable_boy/tmp/

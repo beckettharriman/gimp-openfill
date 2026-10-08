@@ -1,0 +1,123 @@
+launched gimp pid 6980 at 14:15:35
+--- 14:15:40 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+--- 14:15:45 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+--- 14:15:51 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:15:56 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=984470   title='GNU Image Manipulation Program' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:16:02 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:16:08 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:16:14 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:16:20 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:16:26 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:16:31 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:16:37 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:16:43 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:16:49 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:16:55 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:17:00 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:17:06 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:17:12 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:17:18 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:17:24 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:17:29 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 1 layer) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+python     pid=36828  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:17:35 ---
+gimp-3.2   pid=6980   parent=21768  hwnd=2362274  title='*[01-before] (exported)-1.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 2 layers) 1024x768 – GIMP' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe
+python     pid=24028  parent=6980   hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe
+python     pid=27932  parent=12368  hwnd=0        title='' path=C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe
+pythonw    pid=12368  parent=36828  hwnd=0        title='' path=C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe
+--- 14:17:41 ---
+
+gimp exited=True code=0 at 14:17:41

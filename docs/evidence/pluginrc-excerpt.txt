@@ -1,0 +1,14 @@
+# pluginrc excerpt: %APPDATA%\GIMP\3.2\pluginrc (grep stable-boy)
+5058:(plug-in-def "${gimp_dir}\\plug-ins\\gimp-stable-boy\\gimp-stable-boy.py" 1791482083
+5059:    (proc-def "python-fu-stable-boy-generative-fill" 1
+5067:        (menu-path "<Image>/Filters/AI")
+5081:    (proc-def "python-fu-stable-boy-generative-expand" 1
+5089:        (menu-path "<Image>/Filters/AI")
+5106:    (proc-def "python-fu-stable-boy-text-to-image" 1
+5114:        (menu-path "<Image>/Filters/AI")
+5130:    (proc-def "python-fu-stable-boy-settings" 1
+5138:        (menu-path "<Image>/Filters/AI")
+5170:    (proc-def "python-fu-stable-boy-stop-backend" 1
+5178:        (menu-path "<Image>/Filters/AI")
+5193:        (menu-path "<Image>/Tools/MCP")
+5207:        (menu-path "<Image>/Tools/MCP")
