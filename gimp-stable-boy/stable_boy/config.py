@@ -13,6 +13,10 @@ import os
 import sys
 from dataclasses import asdict, dataclass, field, fields
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .backend import ModelSpec
 
 CONFIG_DIRNAME = "stable-boy"
 CONFIG_FILENAME = "config.json"
@@ -23,6 +27,7 @@ MODELS_CACHE_FILENAME = "models-cache.json"
 
 
 def default_comfy_dir() -> str:
+    """The ComfyUI folder assumed when the config does not name one."""
     if sys.platform == "win32":
         return r"C:\AI\ComfyUI\ComfyUI_windows_portable"
     return str(Path.home() / "ComfyUI")
@@ -30,45 +35,53 @@ def default_comfy_dir() -> str:
 
 @dataclass
 class Settings:
-    backend: str = "comfyui"                       # "comfyui" or "a1111"
+    """User settings stored in ``config.json``.
+
+    ``hf_token`` is a secret: it is left out of ``repr()`` so it cannot end up
+    in a log line or a traceback, and :meth:`save` makes the file readable by
+    its owner only on POSIX systems.
+    """
+
+    backend: str = "comfyui"  # "comfyui" or "a1111"
     comfy_dir: str = field(default_factory=default_comfy_dir)
-    url: str = "http://127.0.0.1:8188"             # ComfyUI (or A1111) base URL
+    url: str = "http://127.0.0.1:8188"  # ComfyUI (or A1111) base URL
     a1111_url: str = "http://127.0.0.1:7860"
-    autostart: bool = True                         # start ComfyUI when needed
-    idle_timeout_minutes: int = 20                 # 0 = keep running until GIMP exits
-    startup_timeout: int = 240                     # seconds to wait for the server
-    request_timeout: int = 0                       # 0 = estimate per request
-    extra_server_args: str = ""                    # appended to the ComfyUI command
-    checkpoint: str = "sd-v1-5-inpainting.ckpt"    # default (SD 1.5) model
+    autostart: bool = True  # start ComfyUI when needed
+    idle_timeout_minutes: int = 20  # 0 = keep running until GIMP exits
+    startup_timeout: int = 240  # seconds to wait for the server
+    request_timeout: int = 0  # 0 = estimate per request
+    extra_server_args: str = ""  # appended to the ComfyUI command
+    checkpoint: str = "sd-v1-5-inpainting.ckpt"  # default (SD 1.5) model
     sdxl_checkpoint: str = "sd_xl_base_1.0.safetensors"
     fooocus_head: str = "fooocus_inpaint_head.pth"
     fooocus_patch: str = "inpaint_v26.fooocus.patch"
-    quality: str = "fast"                          # "fast" (SD 1.5) or "quality" (SDXL)
+    quality: str = "fast"  # "fast" (SD 1.5) or "quality" (SDXL)
     steps: int = 25
     cfg: float = 7.0
     sampler: str = "dpmpp_2m"
     scheduler: str = "karras"
     denoise: float = 1.0
-    grow: int = 48                                 # mask dilation cap (px); actual = grow_percent of selection
-    feather: int = 24                              # layer mask feather cap (px); actual = feather_percent
-    grow_percent: float = 15.0                     # dilation as percent of the selection's larger side (covers object rims)
-    feather_percent: float = 6.0                   # layer mask feather as percent of the larger side
+    grow: int = 48  # mask dilation cap (px); actual = grow_percent of selection
+    feather: int = 24  # layer mask feather cap (px); actual = feather_percent
+    grow_percent: float = 15.0  # dilation as percent of the selection's larger side (covers object rims)
+    feather_percent: float = 6.0  # layer mask feather as percent of the larger side
     prefill: bool = True
     max_side_sd15: int = 768
     max_side_sdxl: int = 1024
     txt2img_width: int = 768
     txt2img_height: int = 512
     debug: bool = False
-    active_model: str = "sd15-inpainting"          # catalog id used when a dialog says "active"
-    hf_token: str = ""                             # Hugging Face access token for gated files (local only)
-    progress_window: bool = True                   # floating progress/preview window
-    progress_window_x: int = -1                    # last position; -1 = top-right of the image window
+    active_model: str = "sd15-inpainting"  # catalog id used when a dialog says "active"
+    hf_token: str = field(default="", repr=False)  # Hugging Face access token for gated files (local only)
+    progress_window: bool = True  # floating progress/preview window
+    progress_window_x: int = -1  # last position; -1 = top-right of the image window
     progress_window_y: int = -1
 
     # ------------------------------------------------------------------
 
     @classmethod
-    def load(cls, path: Path) -> "Settings":
+    def load(cls, path: Path) -> Settings:
+        """Read ``path``; a missing or broken file, unknown keys and mistyped values fall back to defaults."""
         settings = cls()
         try:  # utf-8-sig: tolerate the BOM that PowerShell's Set-Content adds
             data = json.loads(Path(path).read_text(encoding="utf-8-sig"))
@@ -76,7 +89,7 @@ class Settings:
             return settings
         if not isinstance(data, dict):
             return settings
-        known = {f.name: f.type for f in fields(cls)}
+        known = {f.name for f in fields(cls)}
         for key, value in data.items():
             if key in known:
                 try:
@@ -86,32 +99,33 @@ class Settings:
         return settings
 
     def save(self, path: Path) -> None:
+        """Write atomically (temporary file, then rename); owner-only permissions on POSIX."""
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(".tmp")
         tmp.write_text(json.dumps(asdict(self), indent=2) + "\n", encoding="utf-8")
+        if os.name == "posix":
+            os.chmod(tmp, 0o600)  # the file holds the Hugging Face token
         os.replace(tmp, path)
-
-    def to_dict(self) -> dict:
-        return asdict(self)
 
     # derived -----------------------------------------------------------
 
     @property
     def active_url(self) -> str:
+        """Base URL of the selected backend."""
         return self.a1111_url if self.backend == "a1111" else self.url
 
-    def model_for(self, quality: str | None = None):
+    def model_for(self, quality: str | None = None) -> ModelSpec:
         """Return a ``ModelSpec`` for the requested quality tier."""
         from .backend import ModelSpec
+
         tier = quality or self.quality
         if tier == "quality" and self.sdxl_checkpoint:
-            return ModelSpec(self.sdxl_checkpoint, "sdxl", self.fooocus_head or None,
-                             self.fooocus_patch or None)
+            return ModelSpec(self.sdxl_checkpoint, "sdxl", self.fooocus_head or None, self.fooocus_patch or None)
         return ModelSpec(self.checkpoint, "sd15")
 
 
-def _coerce(current, value):
+def _coerce(current: Any, value: Any) -> Any:
     if isinstance(current, bool):
         if isinstance(value, str):
             return value.strip().lower() in ("1", "true", "yes", "on")
@@ -130,34 +144,42 @@ class Paths:
     base: Path
 
     @classmethod
-    def for_profile(cls, profile_dir: str | Path) -> "Paths":
+    def for_profile(cls, profile_dir: str | Path) -> Paths:
+        """Paths under ``<profile_dir>/stable-boy``."""
         return cls(Path(profile_dir) / CONFIG_DIRNAME)
 
     @property
     def config(self) -> Path:
+        """Settings file (holds the Hugging Face token)."""
         return self.base / CONFIG_FILENAME
 
     @property
     def state(self) -> Path:
+        """Supervisor state: pids, URL, status."""
         return self.base / STATE_FILENAME
 
     @property
     def log(self) -> Path:
+        """Plug-in and supervisor log."""
         return self.base / LOG_FILENAME
 
     @property
     def server_log(self) -> Path:
+        """ComfyUI stdout and stderr."""
         return self.base / SERVER_LOG_FILENAME
 
     @property
     def models_cache(self) -> Path:
+        """Model files the server listed last time (no secrets)."""
         return self.base / MODELS_CACHE_FILENAME
 
     @property
     def temp(self) -> Path:
+        """Scratch folder (debug dumps)."""
         return self.base / "tmp"
 
-    def ensure(self) -> "Paths":
+    def ensure(self) -> Paths:
+        """Create the folders; returns ``self``."""
         self.base.mkdir(parents=True, exist_ok=True)
         self.temp.mkdir(parents=True, exist_ok=True)
         return self
@@ -171,7 +193,7 @@ def comfy_layout(comfy_dir: str | Path) -> dict[str, Path] | None:
     and a checkout where the interpreter is given explicitly via PATH.
     """
     root = Path(comfy_dir)
-    candidates = []
+    candidates: list[tuple[Path, Path, Path]] = []
     if (root / "python_embeded" / "python.exe").exists() and (root / "ComfyUI" / "main.py").exists():
         candidates.append((root / "python_embeded" / "python.exe", root / "ComfyUI" / "main.py", root))
     main = root / "main.py"

@@ -1,0 +1,66 @@
+Uninstall transcript, 2026-10-09 00:30 local time
+
+=== 1. switch to a junction, then uninstall (settings kept)
+> powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -ProfileDir C:\AI\overnight-scratch\install-test\GIMP\3.2 -Link
+GIMP profile: C:\AI\overnight-scratch\install-test\GIMP\3.2
+WARNING: A GIMP process is running. Changes take effect the next time GIMP starts.
+Replacing the existing plug-in folder at C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy
+Linked C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy -> C:\repos\gimp-stable-boy\gimp-stable-boy
+Keeping existing config at C:\AI\overnight-scratch\install-test\GIMP\3.2\stable-boy\config.json
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: install.ps1 -Uninstall (add -RemoveConfig to delete the settings too).
+exit code: 0
+
+=== 1b. uninstall
+> powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -ProfileDir C:\AI\overnight-scratch\install-test\GIMP\3.2 -Uninstall
+GIMP profile: C:\AI\overnight-scratch\install-test\GIMP\3.2
+WARNING: A GIMP process is running. Changes take effect the next time GIMP starts.
+Removed plug-in junction C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy
+Kept settings folder C:\AI\overnight-scratch\install-test\GIMP\3.2\stable-boy (holds config.json and the Hugging Face token; use -RemoveConfig to delete it)
+Done. Restart GIMP; the Filters > AI entries are gone. Models in the ComfyUI folder are not touched.
+exit code: 0
+
+plug-in target: absent
+repository plug-in files before/after removing the junction: 46 / 46
+
+=== 2. uninstall again (nothing installed)
+> powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -ProfileDir C:\AI\overnight-scratch\install-test\GIMP\3.2 -Uninstall
+GIMP profile: C:\AI\overnight-scratch\install-test\GIMP\3.2
+WARNING: A GIMP process is running. Changes take effect the next time GIMP starts.
+No plug-in installed at C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy
+Kept settings folder C:\AI\overnight-scratch\install-test\GIMP\3.2\stable-boy (holds config.json and the Hugging Face token; use -RemoveConfig to delete it)
+Done. Restart GIMP; the Filters > AI entries are gone. Models in the ComfyUI folder are not touched.
+exit code: 0
+
+=== 3. copy install, then uninstall with -RemoveConfig
+> powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -ProfileDir C:\AI\overnight-scratch\install-test\GIMP\3.2
+GIMP profile: C:\AI\overnight-scratch\install-test\GIMP\3.2
+WARNING: A GIMP process is running. Changes take effect the next time GIMP starts.
+Copied plug-in (with models\catalog.json) to C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy
+Keeping existing config at C:\AI\overnight-scratch\install-test\GIMP\3.2\stable-boy\config.json
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: install.ps1 -Uninstall (add -RemoveConfig to delete the settings too).
+exit code: 0
+
+=== 3b. uninstall -RemoveConfig
+> powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -ProfileDir C:\AI\overnight-scratch\install-test\GIMP\3.2 -Uninstall -RemoveConfig
+GIMP profile: C:\AI\overnight-scratch\install-test\GIMP\3.2
+WARNING: A GIMP process is running. Changes take effect the next time GIMP starts.
+Removed plug-in folder C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy
+Removed settings folder C:\AI\overnight-scratch\install-test\GIMP\3.2\stable-boy (config.json, logs, task queue)
+Done. Restart GIMP; the Filters > AI entries are gone. Models in the ComfyUI folder are not touched.
+exit code: 0
+
+plug-in target: absent
+remaining entries in the profile: plug-ins
+tracked repository files before/after: 143 / 143

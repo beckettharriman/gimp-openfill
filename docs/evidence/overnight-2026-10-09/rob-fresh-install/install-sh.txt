@@ -1,0 +1,113 @@
+install.sh transcript, 2026-10-09 00:32 local time, run with Git Bash sh on Windows
+(the POSIX logic only; a real Linux/macOS/Flatpak GIMP was not available). FAKE_HOME=/c/AI/overnight-scratch/install-test-sh/home with space
+contains .config/GIMP/3.0 and .config/GIMP/3.2, so the newest (3.2) must be chosen; the path has a space.
+
+=== 1. fresh copy install
+> HOME="$FAKE_HOME" sh install.sh --comfy-dir /opt/Comfy "UI"
+GIMP profile: /c/AI/overnight-scratch/install-test-sh/home with space/.config/GIMP/3.2
+warning: the python3 on PATH does not run or is older than 3.10; Stable Boy needs Python 3.10 or newer
+Copied plug-in (with models/catalog.json) to /c/AI/overnight-scratch/install-test-sh/home with space/.config/GIMP/3.2/plug-ins/gimp-stable-boy
+Wrote default config to /c/AI/overnight-scratch/install-test-sh/home with space/.config/GIMP/3.2/stable-boy/config.json
+warning: ComfyUI not found at /opt/Comfy "UI". See docs/models.md for the backend setup.
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: sh install.sh --uninstall (add --remove-config to delete the settings too).
+exit code: 0
+
+plug-in target: folder with 24 files, catalog: yes
+config.json present: yes
+
+config.json:
+{
+  "backend": "comfyui",
+  "comfy_dir": "/opt/Comfy \"UI\"",
+  "url": "http://127.0.0.1:8188",
+  "autostart": true,
+  "idle_timeout_minutes": 20,
+  "checkpoint": "sd-v1-5-inpainting.ckpt",
+  "sdxl_checkpoint": "sd_xl_base_1.0.safetensors",
+  "fooocus_head": "fooocus_inpaint_head.pth",
+  "fooocus_patch": "inpaint_v26.fooocus.patch",
+  "quality": "fast"
+}
+
+=== 2. re-run: plug-in already copied
+> HOME="$FAKE_HOME" sh install.sh 
+GIMP profile: /c/AI/overnight-scratch/install-test-sh/home with space/.config/GIMP/3.2
+warning: the python3 on PATH does not run or is older than 3.10; Stable Boy needs Python 3.10 or newer
+Replaced the existing plug-in at /c/AI/overnight-scratch/install-test-sh/home with space/.config/GIMP/3.2/plug-ins/gimp-stable-boy
+Copied plug-in (with models/catalog.json) to /c/AI/overnight-scratch/install-test-sh/home with space/.config/GIMP/3.2/plug-ins/gimp-stable-boy
+Keeping existing config at /c/AI/overnight-scratch/install-test-sh/home with space/.config/GIMP/3.2/stable-boy/config.json
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: sh install.sh --uninstall (add --remove-config to delete the settings too).
+exit code: 0
+
+plug-in target: folder with 24 files, catalog: yes
+config.json present: yes
+
+=== 3. uninstall (settings kept)
+> HOME="$FAKE_HOME" sh install.sh --uninstall
+GIMP profile: /c/AI/overnight-scratch/install-test-sh/home with space/.config/GIMP/3.2
+Removed plug-in folder /c/AI/overnight-scratch/install-test-sh/home with space/.config/GIMP/3.2/plug-ins/gimp-stable-boy
+Kept settings folder /c/AI/overnight-scratch/install-test-sh/home with space/.config/GIMP/3.2/stable-boy (holds config.json and the Hugging Face token; use --remove-config to delete it)
+Done. Restart GIMP; the Filters > AI entries are gone. Models in the ComfyUI folder are not touched.
+exit code: 0
+
+plug-in target: absent
+config.json present: yes
+
+=== 4. uninstall again
+> HOME="$FAKE_HOME" sh install.sh --uninstall
+GIMP profile: /c/AI/overnight-scratch/install-test-sh/home with space/.config/GIMP/3.2
+No plug-in installed at /c/AI/overnight-scratch/install-test-sh/home with space/.config/GIMP/3.2/plug-ins/gimp-stable-boy
+Kept settings folder /c/AI/overnight-scratch/install-test-sh/home with space/.config/GIMP/3.2/stable-boy (holds config.json and the Hugging Face token; use --remove-config to delete it)
+Done. Restart GIMP; the Filters > AI entries are gone. Models in the ComfyUI folder are not touched.
+exit code: 0
+
+=== 5. explicit --profile-dir, then uninstall --remove-config
+> HOME="$FAKE_HOME" sh install.sh --profile-dir /c/AI/overnight-scratch/install-test-sh/explicit profile/3.2
+GIMP profile: /c/AI/overnight-scratch/install-test-sh/explicit profile/3.2
+warning: the python3 on PATH does not run or is older than 3.10; Stable Boy needs Python 3.10 or newer
+Copied plug-in (with models/catalog.json) to /c/AI/overnight-scratch/install-test-sh/explicit profile/3.2/plug-ins/gimp-stable-boy
+Wrote default config to /c/AI/overnight-scratch/install-test-sh/explicit profile/3.2/stable-boy/config.json
+warning: ComfyUI not found at /c/AI/overnight-scratch/install-test-sh/home with space/ComfyUI. See docs/models.md for the backend setup.
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: sh install.sh --uninstall (add --remove-config to delete the settings too).
+exit code: 0
+
+=== 5b.
+> HOME="$FAKE_HOME" sh install.sh --uninstall --remove-config --profile-dir /c/AI/overnight-scratch/install-test-sh/explicit profile/3.2
+GIMP profile: /c/AI/overnight-scratch/install-test-sh/explicit profile/3.2
+Removed plug-in folder /c/AI/overnight-scratch/install-test-sh/explicit profile/3.2/plug-ins/gimp-stable-boy
+Removed settings folder /c/AI/overnight-scratch/install-test-sh/explicit profile/3.2/stable-boy (config.json, logs, task queue)
+Done. Restart GIMP; the Filters > AI entries are gone. Models in the ComfyUI folder are not touched.
+exit code: 0
+
+remaining in explicit profile: . ./plug-ins 
+
+=== 6. unknown option
+> HOME="$FAKE_HOME" sh install.sh --bogus
+unknown option: --bogus
+  sh install.sh [--link] [--gimp-version 3.2] [--profile-dir DIR] [--comfy-dir ~/ComfyUI]
+  sh install.sh --uninstall [--remove-config] [--profile-dir DIR]
+exit code: 2
+
+=== 7. no GIMP 3 profile
+> HOME="$FAKE_HOME" sh install.sh 
+error: GIMP 3 does not seem to be installed (no 3.x profile found). Install it from https://www.gimp.org/downloads/, start it once, then re-run.
+exit code: 1
+

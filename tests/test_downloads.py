@@ -8,18 +8,25 @@ import threading
 import unittest
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+from urllib.request import Request, urlopen
 
-from stable_boy import downloads
+from stable_boy import catalog, downloads, supervisor
+from stable_boy.config import Settings
 
 PAYLOAD = bytes(range(256)) * 4096  # 1 MiB, deterministic
 SHA = hashlib.sha256(PAYLOAD).hexdigest()
+COMMIT = "5b7681746fe19e563113d27366ba85236bc1ba5b"
+REPO = "https://github.com/Acly/comfyui-inpaint-nodes"
 
 
 class State:
     requests: list[dict] = []
+    paths: list[str] = []
     gated = False
     ignore_range = False
-    drop_after: int | None = None   # close connection after N bytes (simulates a cut)
+    drop_after: int | None = None  # close connection after N bytes (simulates a cut)
+    extra_bytes = 0  # append junk and omit Content-Length (a server sending more than the catalog size)
+    range_offset_shift = 0  # answer a Range request from the wrong offset
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -28,6 +35,13 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         State.requests.append(dict(self.headers))
+        State.paths.append(self.path)
+        if self.path == "/redirect":
+            self.send_response(302)
+            self.send_header("Location", "/file.bin")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
         if State.gated and self.headers.get("Authorization") != "Bearer secret":
             self.send_response(401)
             self.end_headers()
@@ -45,16 +59,24 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_response(416)
                 self.end_headers()
                 return
+            start -= State.range_offset_shift
             status = 206
-        body = PAYLOAD[start:]
+        body = PAYLOAD[start:] + b"x" * State.extra_bytes
         if State.drop_after is not None:
-            body = body[:State.drop_after]
+            body = body[: State.drop_after]
         self.send_response(status)
-        self.send_header("Content-Length", str(len(PAYLOAD) - start))  # full length even when we cut
+        if not State.extra_bytes:  # without a length the client reads until the connection closes
+            self.send_header("Content-Length", str(len(PAYLOAD) - start))  # full length even when we cut
         if status == 206:
             self.send_header("Content-Range", f"bytes {start}-{len(PAYLOAD) - 1}/{len(PAYLOAD)}")
         self.end_headers()
         self.wfile.write(body)
+
+
+def https_to_local(req, timeout=60.0):
+    """Opener for tests: the URL says https (so the token rules apply) but the stub is plain http."""
+    req.full_url = req.full_url.replace("https://", "http://", 1)
+    return urlopen(req, timeout=timeout)
 
 
 class DownloadTests(unittest.TestCase):
@@ -63,16 +85,21 @@ class DownloadTests(unittest.TestCase):
         cls.server = HTTPServer(("127.0.0.1", 0), Handler)
         threading.Thread(target=cls.server.serve_forever, daemon=True).start()
         cls.url = f"http://127.0.0.1:{cls.server.server_port}/file.bin"
+        cls.https_url = cls.url.replace("http://", "https://")
 
     @classmethod
     def tearDownClass(cls):
         cls.server.shutdown()
+        cls.server.server_close()
 
     def setUp(self):
         State.requests = []
+        State.paths = []
         State.gated = False
         State.ignore_range = False
         State.drop_after = None
+        State.extra_bytes = 0
+        State.range_offset_shift = 0
         self.tmp = tempfile.TemporaryDirectory()
         self.dest = Path(self.tmp.name) / "models" / "inpaint" / "file.bin"
 
@@ -81,7 +108,9 @@ class DownloadTests(unittest.TestCase):
 
     def test_full_download_verified_and_atomic(self):
         events = []
-        r = downloads.download_file(self.url, self.dest, len(PAYLOAD), SHA, progress=lambda d, t, s: events.append((d, t)))
+        r = downloads.download_file(
+            self.url, self.dest, len(PAYLOAD), SHA, progress=lambda d, t, s: events.append((d, t))
+        )
         self.assertEqual(self.dest.read_bytes(), PAYLOAD)
         self.assertFalse(downloads.part_path(self.dest).exists())
         self.assertEqual(r.sha256, SHA)
@@ -98,6 +127,17 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(r.resumed_from, 300_000)
         self.assertEqual(r.bytes_written, len(PAYLOAD) - 300_000)
         self.assertEqual(self.dest.read_bytes(), PAYLOAD)
+
+    def test_resume_from_wrong_offset_is_rejected(self):
+        State.range_offset_shift = 10
+        part = downloads.part_path(self.dest)
+        part.parent.mkdir(parents=True)
+        part.write_bytes(PAYLOAD[:300_000])
+        with self.assertRaises(downloads.DownloadError) as ctx:
+            downloads.download_file(self.url, self.dest, len(PAYLOAD), SHA)
+        self.assertEqual(ctx.exception.code, "network")
+        self.assertFalse(part.exists())
+        self.assertFalse(self.dest.exists())
 
     def test_server_ignoring_range_restarts_from_zero(self):
         State.ignore_range = True
@@ -118,6 +158,20 @@ class DownloadTests(unittest.TestCase):
         downloads.download_file(self.url, self.dest, len(PAYLOAD), SHA)
         self.assertEqual(self.dest.read_bytes(), PAYLOAD)
 
+    def test_oversized_body_is_cut_and_part_deleted(self):
+        State.extra_bytes = 4096
+        with self.assertRaises(downloads.DownloadError) as ctx:
+            downloads.download_file(self.url, self.dest, len(PAYLOAD), SHA)
+        self.assertEqual(ctx.exception.code, "size")
+        self.assertFalse(downloads.part_path(self.dest).exists())
+        self.assertFalse(self.dest.exists())
+
+    def test_size_mismatch_with_catalog_is_refused_before_writing(self):
+        with self.assertRaises(downloads.DownloadError) as ctx:
+            downloads.download_file(self.url, self.dest, len(PAYLOAD) + 1, SHA)
+        self.assertEqual(ctx.exception.code, "size")
+        self.assertFalse(downloads.part_path(self.dest).exists())
+
     def test_hash_mismatch_deletes_file(self):
         with self.assertRaises(downloads.DownloadError) as ctx:
             downloads.download_file(self.url, self.dest, len(PAYLOAD), "0" * 64)
@@ -127,11 +181,37 @@ class DownloadTests(unittest.TestCase):
 
     def test_gated_without_token_and_with_token(self):
         State.gated = True
+        hosts = ("127.0.0.1",)
         with self.assertRaises(downloads.DownloadError) as ctx:
-            downloads.download_file(self.url, self.dest, len(PAYLOAD), SHA)
+            downloads.download_file(
+                self.https_url, self.dest, len(PAYLOAD), SHA, opener=https_to_local, token_hosts=hosts
+            )
         self.assertEqual(ctx.exception.code, "auth")
-        downloads.download_file(self.url, self.dest, len(PAYLOAD), SHA, token="secret")
+        downloads.download_file(
+            self.https_url, self.dest, len(PAYLOAD), SHA, token="secret", opener=https_to_local, token_hosts=hosts
+        )
         self.assertTrue(self.dest.exists())
+        self.assertEqual(State.requests[-1].get("Authorization"), "Bearer secret")
+        self.assertNotIn("secret", "".join(State.paths))  # never in the URL
+
+    def test_token_not_sent_to_other_hosts(self):
+        # Default token hosts are Hugging Face only, so the stub host never gets it.
+        downloads.download_file(self.https_url, self.dest, len(PAYLOAD), SHA, token="secret", opener=https_to_local)
+        self.assertNotIn("Authorization", State.requests[0])
+
+    def test_token_not_sent_over_plain_http(self):
+        downloads.download_file(self.url, self.dest, len(PAYLOAD), SHA, token="secret", token_hosts=("127.0.0.1",))
+        self.assertNotIn("Authorization", State.requests[0])
+
+    def test_token_not_forwarded_on_redirect(self):
+        url = self.https_url.replace("file.bin", "redirect")
+        downloads.download_file(
+            url, self.dest, len(PAYLOAD), SHA, token="secret", opener=https_to_local, token_hosts=("127.0.0.1",)
+        )
+        self.assertEqual(State.paths, ["/redirect", "/file.bin"])
+        self.assertEqual(State.requests[0].get("Authorization"), "Bearer secret")
+        self.assertNotIn("Authorization", State.requests[1])
+        self.assertEqual(self.dest.read_bytes(), PAYLOAD)
 
     def test_not_found(self):
         with self.assertRaises(downloads.DownloadError) as ctx:
@@ -169,46 +249,270 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(ctx.exception.code, "network")
 
 
+class TokenHeaderTests(unittest.TestCase):
+    def test_token_allowed(self):
+        self.assertTrue(downloads.token_allowed("https://huggingface.co/a/b/resolve/main/x"))
+        self.assertTrue(downloads.token_allowed("https://cdn-lfs.huggingface.co/x"))
+        self.assertTrue(downloads.token_allowed("https://hf.co/x"))
+        self.assertFalse(downloads.token_allowed("http://huggingface.co/x"))
+        self.assertFalse(downloads.token_allowed("https://github.com/x"))
+        self.assertFalse(downloads.token_allowed("https://huggingface.co.evil.example/x"))
+        self.assertFalse(downloads.token_allowed("https://evilhuggingface.co/x"))
+
+    def test_authorization_is_unredirected(self):
+        seen = []
+
+        def opener(req: Request, timeout=60.0):
+            seen.append(req)
+            raise OSError("offline")
+
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(downloads.DownloadError):
+            downloads.download_file(
+                "https://huggingface.co/x/y/resolve/main/f.bin", Path(tmp) / "f.bin", token="hf_secret", opener=opener
+            )
+        req = seen[0]
+        self.assertEqual(req.unredirected_hdrs.get("Authorization"), "Bearer hf_secret")
+        self.assertNotIn("Authorization", req.headers)
+        self.assertNotIn("hf_secret", req.full_url)
+
+
+class PathValidationTests(unittest.TestCase):
+    def test_safe_relative_path(self):
+        self.assertEqual(downloads.safe_relative_path("checkpoints/a.ckpt"), "checkpoints/a.ckpt")
+        self.assertEqual(downloads.safe_relative_path("clip\\b.safetensors"), "clip/b.safetensors")
+        for bad in (
+            "",
+            "../x",
+            "a/../../x",
+            "..\\x",
+            "/etc/passwd",
+            "\\x",
+            "C:/x",
+            "C:x",
+            "a//b",
+            "a/./b",
+            "a/",
+        ):
+            with self.assertRaises(ValueError, msg=bad):
+                downloads.safe_relative_path(bad)
+
+    def test_safe_join_stays_inside(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.assertEqual(downloads.safe_join(root, "inpaint/x.pt"), root / "inpaint" / "x.pt")
+            with self.assertRaises(ValueError):
+                downloads.safe_join(root, "../x.pt")
+
+    def test_validate_node_spec(self):
+        downloads.validate_node_spec(REPO, "comfyui-inpaint-nodes", COMMIT)
+        downloads.validate_node_spec(REPO + ".git", "ComfyUI-GGUF", COMMIT)
+        bad = [
+            ("http://github.com/a/b", "b", COMMIT),
+            ("https://gitlab.com/a/b", "b", COMMIT),
+            ("https://github.com/a/b;rm -rf", "b", COMMIT),
+            ("--upload-pack=x", "b", COMMIT),
+            ("https://github.com/a/b", "../b", COMMIT),
+            ("https://github.com/a/b", "a/b", COMMIT),
+            ("https://github.com/a/b", "b", "abc1234"),
+            ("https://github.com/a/b", "b", "main"),
+        ]
+        for repo, folder, commit in bad:
+            with self.assertRaises(ValueError, msg=(repo, folder, commit)):
+                downloads.validate_node_spec(repo, folder, commit)
+
+
 class NodeInstallTests(unittest.TestCase):
+    class R:
+        def __init__(self, returncode=0, stdout="", stderr=""):
+            self.returncode, self.stdout, self.stderr = returncode, stdout, stderr
+
     def test_install_runs_clone_checkout_pip(self):
         calls = []
 
-        class R:
-            returncode = 0
-            stdout = stderr = ""
-
         def runner(cmd, **kw):
             calls.append(cmd)
+            self.assertNotIn("shell", kw)
             if cmd[1] == "clone":
                 target = Path(cmd[-1])
                 (target / ".git").mkdir(parents=True)
                 (target / "requirements.txt").write_text("gguf\n")
-            return R()
+            if "rev-parse" in cmd:
+                return self.R(stdout=COMMIT + "\n")
+            return self.R()
 
         with tempfile.TemporaryDirectory() as tmp:
-            target = downloads.install_custom_node("https://example/repo", "Repo", "abc1234", Path(tmp),
-                                                   Path("py.exe"), runner=runner)
+            target = downloads.install_custom_node(REPO, "Repo", COMMIT, Path(tmp), Path("py.exe"), runner=runner)
             self.assertEqual(target, Path(tmp) / "Repo")
-            self.assertEqual(calls[0][1], "clone")
+            self.assertEqual(calls[0][1:5], ["clone", "--quiet", "--", REPO])
             self.assertIn("checkout", calls[2])
-            self.assertEqual(calls[2][-1], "abc1234")
-            self.assertEqual(calls[3][:4], ["py.exe", "-s", "-m", "pip"])
+            self.assertEqual(calls[2][-1], COMMIT)
+            self.assertIn("rev-parse", calls[3])
+            self.assertEqual(calls[4][:4], ["py.exe", "-s", "-m", "pip"])
             # second run: no clone
             calls.clear()
-            downloads.install_custom_node("https://example/repo", "Repo", "abc1234", Path(tmp),
-                                          Path("py.exe"), runner=runner)
+            downloads.install_custom_node(REPO, "Repo", COMMIT, Path(tmp), Path("py.exe"), runner=runner)
             self.assertNotEqual(calls[0][1], "clone")
 
-    def test_failure_raises(self):
-        class R:
-            returncode = 1
-            stdout = ""
-            stderr = "boom"
+    def test_wrong_head_stops_before_pip(self):
+        calls = []
 
-        with tempfile.TemporaryDirectory() as tmp:
-            with self.assertRaises(RuntimeError):
-                downloads.install_custom_node("https://example/repo", "Repo", "abc1234", Path(tmp),
-                                              Path("py.exe"), runner=lambda *a, **k: R())
+        def runner(cmd, **kw):
+            calls.append(cmd)
+            if cmd[1] == "clone":
+                (Path(cmd[-1]) / ".git").mkdir(parents=True)
+                (Path(cmd[-1]) / "requirements.txt").write_text("x\n")
+            return self.R(stdout="0" * 40 if "rev-parse" in cmd else "")
+
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(RuntimeError):
+            downloads.install_custom_node(REPO, "Repo", COMMIT, Path(tmp), Path("py.exe"), runner=runner)
+        self.assertFalse(any("pip" in c for c in calls))
+
+    def test_invalid_spec_runs_nothing(self):
+        calls = []
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(ValueError):
+            downloads.install_custom_node(
+                "https://example/repo",
+                "Repo",
+                COMMIT,
+                Path(tmp),
+                Path("py.exe"),
+                runner=lambda *a, **k: calls.append(a),
+            )
+        self.assertEqual(calls, [])
+
+    def test_failure_raises(self):
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(RuntimeError):
+            downloads.install_custom_node(
+                REPO, "Repo", COMMIT, Path(tmp), Path("py.exe"), runner=lambda *a, **k: self.R(1, "", "boom")
+            )
+
+
+class SupervisorTaskValidationTests(unittest.TestCase):
+    """The task worker re-checks queued tasks against the catalog and config.json."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        base = Path(self.tmp.name)
+        self.comfy = base / "ComfyUI_windows_portable"
+        (self.comfy / "python_embeded").mkdir(parents=True)
+        (self.comfy / "python_embeded" / "python.exe").write_bytes(b"")
+        (self.comfy / "ComfyUI" / "models").mkdir(parents=True)
+        (self.comfy / "ComfyUI" / "custom_nodes").mkdir(parents=True)
+        (self.comfy / "ComfyUI" / "main.py").write_text("")
+        self.profile = base / "stable-boy"
+        self.profile.mkdir()
+        Settings(comfy_dir=str(self.comfy)).save(self.profile / "config.json")
+        self.worker = supervisor.TaskWorker(
+            self.profile, self.profile / "config.json", supervisor.Logger(self.profile / "test.log", "test")
+        )
+        self.models_root = self.comfy / "ComfyUI" / "models"
+        self.entries = catalog.load_catalog()
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def _download_task(self, **file_overrides):
+        f = catalog.by_id(self.entries, "mat-places512").files[0]
+        entry = {"url": f.url, "dest": f.dest, "size": f.size, "sha256": f.sha256, "gated": False}
+        entry.update(file_overrides)
+        return {"type": "download", "model_id": "mat-places512", "models_root": str(self.models_root), "files": [entry]}
+
+    def test_catalog_download_is_accepted_with_catalog_values(self):
+        task = self._download_task(size=1, sha256=None)  # task values are ignored
+        ((spec, dest),) = self.worker.checked_download_files(task)
+        self.assertEqual(dest, self.models_root / "inpaint" / "MAT_Places512_G_fp16.safetensors")
+        self.assertEqual(len(spec.sha256), 64)
+        self.assertGreater(spec.size, 1)
+
+    def test_foreign_url_or_dest_is_refused(self):
+        for override in (
+            {"url": "https://evil.example/x.safetensors"},
+            {"dest": "../../evil.safetensors"},
+            {"dest": "inpaint/other.safetensors"},
+        ):
+            with self.assertRaises(ValueError, msg=override):
+                self.worker.checked_download_files(self._download_task(**override))
+
+    def test_file_of_another_entry_is_refused(self):
+        task = self._download_task()
+        task["model_id"] = "lama-big"
+        with self.assertRaises(ValueError):
+            self.worker.checked_download_files(task)
+        task["model_id"] = "ghost"
+        with self.assertRaises(catalog.CatalogError):
+            self.worker.checked_download_files(task)
+
+    def test_other_models_root_is_refused(self):
+        task = self._download_task()
+        task["models_root"] = self.tmp.name
+        with self.assertRaises(ValueError):
+            self.worker.checked_download_files(task)
+
+    def _node_task(self, **node_overrides):
+        node = {"repo": REPO, "folder": "comfyui-inpaint-nodes", "commit": COMMIT}
+        node.update(node_overrides)
+        return {
+            "type": "install_nodes",
+            "custom_nodes_dir": str(self.comfy / "ComfyUI" / "custom_nodes"),
+            "python": str(self.comfy / "python_embeded" / "python.exe"),
+            "nodes": [node],
+        }
+
+    def test_catalog_node_is_accepted(self):
+        nodes_dir, python, nodes = self.worker.checked_node_install(self._node_task())
+        self.assertEqual(nodes[0].commit, COMMIT)
+        self.assertEqual(python.name, "python.exe")
+        self.assertEqual(nodes_dir.name, "custom_nodes")
+
+    def test_foreign_node_or_interpreter_is_refused(self):
+        for override in (
+            {"repo": "https://github.com/evil/comfyui-inpaint-nodes"},
+            {"commit": "0" * 40},
+            {"folder": "other"},
+        ):
+            with self.assertRaises(ValueError, msg=override):
+                self.worker.checked_node_install(self._node_task(**override))
+        task = self._node_task()
+        task["python"] = str(Path(self.tmp.name) / "evil.exe")
+        with self.assertRaises(ValueError):
+            self.worker.checked_node_install(task)
+
+    def test_remove_only_deletes_catalog_files_inside_models_root(self):
+        (self.models_root / "inpaint").mkdir()
+        target = self.models_root / "inpaint" / "MAT_Places512_G_fp16.safetensors"
+        target.write_bytes(b"x")
+        stray = self.models_root / "inpaint" / "mine.safetensors"
+        stray.write_bytes(b"x")
+        outside = Path(self.tmp.name) / "outside.txt"
+        outside.write_bytes(b"x")
+        task = {
+            "id": "t",
+            "model_id": "mat-places512",
+            "type": "remove",
+            "models_root": str(self.models_root),
+            "files": ["inpaint/MAT_Places512_G_fp16.safetensors", "inpaint/mine.safetensors", "../../outside.txt"],
+        }
+        self.worker._remove(task)
+        self.assertFalse(target.exists())
+        self.assertTrue(stray.exists())
+        self.assertTrue(outside.exists())
+
+
+class ProcessIdentityTests(unittest.TestCase):
+    def test_own_process_is_python(self):
+        self.assertTrue(supervisor.pid_is_python(os.getpid()))
+        name = supervisor.process_name(os.getpid())
+        self.assertTrue(name is None or "python" in name)
+
+    def test_dead_pid(self):
+        self.assertFalse(supervisor.pid_is_python(0))
+        self.assertIsNone(supervisor.process_name(0))
+
+    def test_loopback(self):
+        for host in ("127.0.0.1", "localhost", "::1"):
+            self.assertTrue(supervisor.is_loopback(host), host)
+        for host in ("0.0.0.0", "192.168.1.5", "example.com"):
+            self.assertFalse(supervisor.is_loopback(host), host)
 
 
 if __name__ == "__main__":

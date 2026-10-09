@@ -1,0 +1,86 @@
+install.sh transcript on WSL Ubuntu (Ubuntu 24.04.3 LTS, Python 3.12.3), 2026-10-09 00:35
+Fake homes under /tmp/sb-install-test; GIMP itself is not installed in this WSL image.
+
+=== 1. Linux profile, symlink install
+> HOME="/tmp/sb-install-test/linux home" sh install.sh --link
+GIMP profile: /tmp/sb-install-test/linux home/.config/GIMP/3.2
+Linked /tmp/sb-install-test/linux home/.config/GIMP/3.2/plug-ins/gimp-stable-boy -> /mnt/c/repos/gimp-stable-boy/gimp-stable-boy
+Wrote default config to /tmp/sb-install-test/linux home/.config/GIMP/3.2/stable-boy/config.json
+warning: ComfyUI not found at /tmp/sb-install-test/linux home/ComfyUI. See docs/models.md for the backend setup.
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: sh install.sh --uninstall (add --remove-config to delete the settings too).
+exit code: 0
+
+gimp-stable-boy -> /mnt/c/repos/gimp-stable-boy/gimp-stable-boy
+config.json mode: 600
+
+=== 2. switch to a copy
+> HOME="/tmp/sb-install-test/linux home" sh install.sh 
+GIMP profile: /tmp/sb-install-test/linux home/.config/GIMP/3.2
+Replaced the existing plug-in at /tmp/sb-install-test/linux home/.config/GIMP/3.2/plug-ins/gimp-stable-boy
+Copied plug-in (with models/catalog.json) to /tmp/sb-install-test/linux home/.config/GIMP/3.2/plug-ins/gimp-stable-boy
+Keeping existing config at /tmp/sb-install-test/linux home/.config/GIMP/3.2/stable-boy/config.json
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: sh install.sh --uninstall (add --remove-config to delete the settings too).
+exit code: 0
+
+plug-in is a folder: yes, executable entry point: yes
+
+=== 3. back to a symlink, then uninstall: the repository must survive
+> HOME="/tmp/sb-install-test/linux home" sh install.sh --link
+GIMP profile: /tmp/sb-install-test/linux home/.config/GIMP/3.2
+Replaced the existing plug-in at /tmp/sb-install-test/linux home/.config/GIMP/3.2/plug-ins/gimp-stable-boy
+Linked /tmp/sb-install-test/linux home/.config/GIMP/3.2/plug-ins/gimp-stable-boy -> /mnt/c/repos/gimp-stable-boy/gimp-stable-boy
+Keeping existing config at /tmp/sb-install-test/linux home/.config/GIMP/3.2/stable-boy/config.json
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: sh install.sh --uninstall (add --remove-config to delete the settings too).
+exit code: 0
+
+> HOME="/tmp/sb-install-test/linux home" sh install.sh --uninstall
+GIMP profile: /tmp/sb-install-test/linux home/.config/GIMP/3.2
+Removed plug-in symlink /tmp/sb-install-test/linux home/.config/GIMP/3.2/plug-ins/gimp-stable-boy
+Kept settings folder /tmp/sb-install-test/linux home/.config/GIMP/3.2/stable-boy (holds config.json and the Hugging Face token; use --remove-config to delete it)
+Done. Restart GIMP; the Filters > AI entries are gone. Models in the ComfyUI folder are not touched.
+exit code: 0
+
+repository entry point still present: yes
+
+=== 4. Flatpak profile
+> HOME="/tmp/sb-install-test/flatpak home" sh install.sh --link
+GIMP profile: /tmp/sb-install-test/flatpak home/.var/app/org.gimp.GIMP/config/GIMP/3.2
+warning: the Flatpak sandbox may not be able to follow a symlink into /mnt/c/repos/gimp-stable-boy; use a copy if the menu entries do not appear
+Linked /tmp/sb-install-test/flatpak home/.var/app/org.gimp.GIMP/config/GIMP/3.2/plug-ins/gimp-stable-boy -> /mnt/c/repos/gimp-stable-boy/gimp-stable-boy
+Wrote default config to /tmp/sb-install-test/flatpak home/.var/app/org.gimp.GIMP/config/GIMP/3.2/stable-boy/config.json
+warning: ComfyUI not found at /tmp/sb-install-test/flatpak home/ComfyUI. See docs/models.md for the backend setup.
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: sh install.sh --uninstall (add --remove-config to delete the settings too).
+exit code: 0
+
+> HOME="/tmp/sb-install-test/flatpak home" sh install.sh --uninstall --remove-config
+GIMP profile: /tmp/sb-install-test/flatpak home/.var/app/org.gimp.GIMP/config/GIMP/3.2
+Removed plug-in symlink /tmp/sb-install-test/flatpak home/.var/app/org.gimp.GIMP/config/GIMP/3.2/plug-ins/gimp-stable-boy
+Removed settings folder /tmp/sb-install-test/flatpak home/.var/app/org.gimp.GIMP/config/GIMP/3.2/stable-boy (config.json, logs, task queue)
+Done. Restart GIMP; the Filters > AI entries are gone. Models in the ComfyUI folder are not touched.
+exit code: 0
+
+remaining in the Flatpak profile: . ./plug-ins 

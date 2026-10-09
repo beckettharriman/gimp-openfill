@@ -33,11 +33,11 @@ class PreviewFrameTests(unittest.TestCase):
 class EtaTests(unittest.TestCase):
     def test_linear_progress_estimates_remaining(self):
         eta = pr.Eta()
-        self.assertIsNone(eta.update(0.0, 0.0))        # below threshold
-        self.assertIsNone(eta.update(2.0, 0.1))        # first sample sets the baseline
-        remaining = eta.update(4.0, 0.3)               # 0.2 per 2 s -> 0.7 left = 7 s
+        self.assertIsNone(eta.update(0.0, 0.0))  # below threshold
+        self.assertIsNone(eta.update(2.0, 0.1))  # first sample sets the baseline
+        remaining = eta.update(4.0, 0.3)  # 0.2 per 2 s -> 0.7 left = 7 s
         self.assertAlmostEqual(remaining, 7.0, places=5)
-        later = eta.update(6.0, 0.5)                   # damped toward 5 s
+        later = eta.update(6.0, 0.5)  # damped toward 5 s
         self.assertLess(later, 7.0)
         self.assertGreater(later, 5.0)
 
@@ -74,8 +74,9 @@ class ThrottleTests(unittest.TestCase):
         self.assertEqual(pr.fit_within(0, 0, 320), (1, 1))
 
     def test_download_row(self):
-        text = pr.download_row({"file": "inpaint/big-lama.pt", "done": 50 * 1048576, "total": 200 * 1048576,
-                                "speed": 5 * 1048576})
+        text = pr.download_row(
+            {"file": "inpaint/big-lama.pt", "done": 50 * 1048576, "total": 200 * 1048576, "speed": 5 * 1048576}
+        )
         self.assertEqual(text, "big-lama.pt  25%  5.0 MB/s")
         self.assertIn("...", pr.download_row({"model_id": "x"}))
 

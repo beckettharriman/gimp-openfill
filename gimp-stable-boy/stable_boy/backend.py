@@ -11,12 +11,12 @@ modules stay free of GIMP imports.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Callable, Optional
 
 ProgressCallback = Callable[[float, str], None]
-PreviewCallback = Callable[[bytes], None]      # raw ComfyUI binary frame (see progress.parse_preview_frame)
-CancelCallback = Callable[[], bool]            # polled; True aborts the running job
+PreviewCallback = Callable[[bytes], None]  # raw ComfyUI binary frame (see progress.parse_preview_frame)
+CancelCallback = Callable[[], bool]  # polled; True aborts the running job
 
 
 class BackendError(RuntimeError):
@@ -49,72 +49,88 @@ class WorkflowRejected(BackendError):
 
 @dataclass
 class Sampling:
+    """Sampler settings shared by all backends."""
+
     steps: int = 25
     cfg: float = 7.0
     sampler: str = "dpmpp_2m"
     scheduler: str = "karras"
     denoise: float = 1.0
-    seed: int = -1          # negative = random
-    batch: int = 1          # number of variations
+    seed: int = -1  # negative = random
+    batch: int = 1  # number of variations
 
 
 @dataclass
 class ModelSpec:
+    """The model files a request runs with (file names as the server lists them)."""
+
     checkpoint: str = ""
-    arch: str = "sd15"                        # sd15 | sdxl | flux | qwen_image | inpaint_model
-    fooocus_head: Optional[str] = None        # SDXL only
-    fooocus_patch: Optional[str] = None       # SDXL only
-    template: str = ""                        # catalog template id; "" = derive from arch
-    unet: str = ""                            # diffusion model file (FLUX / Qwen, safetensors or gguf)
-    clip1: str = ""                           # text encoder 1 (T5 / Qwen2.5-VL)
-    clip2: str = ""                           # text encoder 2 (CLIP-L)
-    vae: str = ""                             # separate VAE file
-    inpaint_model: str = ""                   # LaMa / MAT file for prompt-free removal
+    arch: str = "sd15"  # sd15 | sdxl | flux | qwen_image | inpaint_model
+    fooocus_head: str | None = None  # SDXL only
+    fooocus_patch: str | None = None  # SDXL only
+    template: str = ""  # catalog template id; "" = derive from arch
+    unet: str = ""  # diffusion model file (FLUX / Qwen, safetensors or gguf)
+    clip1: str = ""  # text encoder 1 (T5 / Qwen2.5-VL)
+    clip2: str = ""  # text encoder 2 (CLIP-L)
+    vae: str = ""  # separate VAE file
+    inpaint_model: str = ""  # LaMa / MAT file for prompt-free removal
 
     @property
     def uses_fooocus(self) -> bool:
+        """SDXL with both Fooocus inpaint files configured."""
         return self.arch == "sdxl" and bool(self.fooocus_head and self.fooocus_patch)
 
     @property
     def effective_template(self) -> str:
+        """Workflow template id: the explicit one, else derived from ``arch``."""
         if self.template:
             return self.template
-        return {"sdxl": "sdxl_fooocus", "flux": "flux_fill", "qwen_image": "qwen_edit",
-                "inpaint_model": "inpaint_model"}.get(self.arch, "sd15_inpaint")
+        return {
+            "sdxl": "sdxl_fooocus",
+            "flux": "flux_fill",
+            "qwen_image": "qwen_edit",
+            "inpaint_model": "inpaint_model",
+        }.get(self.arch, "sd15_inpaint")
 
     @property
     def prompt_free(self) -> bool:
+        """LaMa / MAT style models that ignore the prompt."""
         return self.effective_template == "inpaint_model"
 
 
 @dataclass
 class InpaintRequest:
-    image_png: bytes             # context crop, RGB or RGBA PNG
-    mask_png: bytes              # 8-bit gray PNG, 255 = generate here
-    width: int                   # crop size in image pixels
+    """A fill or expand job: encoded crop and mask plus generation parameters."""
+
+    image_png: bytes  # context crop, RGB or RGBA PNG
+    mask_png: bytes  # 8-bit gray PNG, 255 = generate here
+    width: int  # crop size in image pixels
     height: int
-    work_width: int              # resolution the model samples at
+    work_width: int  # resolution the model samples at
     work_height: int
     prompt: str
     negative: str
     model: ModelSpec
     sampling: Sampling = field(default_factory=Sampling)
-    mode: str = "fill"           # "fill" or "expand"
-    grow: int = 16               # mask dilation in working pixels
-    feather: int = 24            # mask blur in working pixels
-    prefill: bool = True         # pre-fill masked area before sampling
+    mode: str = "fill"  # "fill" or "expand"
+    grow: int = 16  # mask dilation in working pixels
+    feather: int = 24  # mask blur in working pixels
+    prefill: bool = True  # pre-fill masked area before sampling
     prefill_mode: str = "navier-stokes"  # border pre-fill algorithm: navier-stokes | telea | neutral
-    prefill_style: str = "blur"          # "blur": soften existing content (fill); "border": paint the area
-                                         # from its surroundings first (expand, object removal)
-    color_match: float = 1.0     # strength of the post color correction (0 = off)
+    prefill_style: str = "blur"  # "blur": soften existing content (fill); "border": paint the area
+    # from its surroundings first (expand, object removal)
+    color_match: float = 1.0  # strength of the post color correction (0 = off)
 
     @property
     def needs_scaling(self) -> bool:
+        """The model works at a different resolution than the crop."""
         return (self.work_width, self.work_height) != (self.width, self.height)
 
 
 @dataclass
 class Txt2ImgRequest:
+    """A text-to-image job."""
+
     width: int
     height: int
     prompt: str
@@ -125,13 +141,17 @@ class Txt2ImgRequest:
 
 @dataclass
 class GenerationResult:
-    images: list[bytes]          # PNG bytes, one per variation
+    """Images returned by a backend."""
+
+    images: list[bytes]  # PNG bytes, one per variation
     seed: int
     info: dict = field(default_factory=dict)
 
 
 @dataclass
 class HealthStatus:
+    """What a health check found out about the server."""
+
     ok: bool
     detail: str = ""
     version: str = ""
@@ -145,6 +165,8 @@ class HealthStatus:
 
 @dataclass
 class Progress:
+    """Snapshot of the running job."""
+
     fraction: float = 0.0
     text: str = ""
     running: bool = False
@@ -160,19 +182,34 @@ class Backend(ABC):
         """Return server status and the models it can offer."""
 
     @abstractmethod
-    def inpaint(self, request: InpaintRequest, progress: ProgressCallback | None = None,
-                preview: PreviewCallback | None = None, cancel: CancelCallback | None = None) -> GenerationResult:
+    def inpaint(
+        self,
+        request: InpaintRequest,
+        progress: ProgressCallback | None = None,
+        preview: PreviewCallback | None = None,
+        cancel: CancelCallback | None = None,
+    ) -> GenerationResult:
         """Fill the masked part of ``request.image_png``."""
 
-    def outpaint(self, request: InpaintRequest, progress: ProgressCallback | None = None,
-                 preview: PreviewCallback | None = None, cancel: CancelCallback | None = None) -> GenerationResult:
+    def outpaint(
+        self,
+        request: InpaintRequest,
+        progress: ProgressCallback | None = None,
+        preview: PreviewCallback | None = None,
+        cancel: CancelCallback | None = None,
+    ) -> GenerationResult:
         """Expand: same as inpaint with ``mode='expand'`` semantics."""
         request.mode = "expand"
         return self.inpaint(request, progress, preview, cancel)
 
     @abstractmethod
-    def txt2img(self, request: Txt2ImgRequest, progress: ProgressCallback | None = None,
-                preview: PreviewCallback | None = None, cancel: CancelCallback | None = None) -> GenerationResult:
+    def txt2img(
+        self,
+        request: Txt2ImgRequest,
+        progress: ProgressCallback | None = None,
+        preview: PreviewCallback | None = None,
+        cancel: CancelCallback | None = None,
+    ) -> GenerationResult:
         """Generate from text only."""
 
     @abstractmethod
@@ -191,8 +228,9 @@ def describe_error(error: BaseException) -> str:
     if isinstance(error, ModelMissing):
         return f"A model file is missing on the backend: {error}"
     if isinstance(error, OutOfMemory):
-        return ("The GPU ran out of memory. Try a smaller selection, fewer "
-                "variations, or the SD 1.5 model instead of SDXL.")
+        return (
+            "The GPU ran out of memory. Try a smaller selection, fewer variations, or the SD 1.5 model instead of SDXL."
+        )
     if isinstance(error, GenerationTimeout):
         return f"The request timed out: {error}"
     if isinstance(error, GenerationCancelled):

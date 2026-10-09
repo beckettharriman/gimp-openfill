@@ -11,16 +11,20 @@ the supervisor's state file, health-check the URL and launch the supervisor.
 from __future__ import annotations
 
 import json
+import logging
 import os
 import subprocess
 import sys
 import time
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
+from typing import Any
+from urllib.parse import urlparse
 
 from .backend import BackendUnavailable
 from .comfy_api import ComfyClient
 from .config import Paths, Settings, comfy_layout
+from .supervisor import pid_is_python
 
 ProgressCallback = Callable[[float, str], None]
 IS_WINDOWS = sys.platform == "win32"
@@ -38,20 +42,23 @@ def _hidden_python() -> str:
 
 
 class ServerManager:
-    def __init__(self, settings: Settings, paths: Paths, logger=None) -> None:
+    """Reads the supervisor's state, health-checks the backend and starts it hidden when needed."""
+
+    def __init__(self, settings: Settings, paths: Paths, logger: logging.Logger | None = None) -> None:
         self.settings = settings
         self.paths = paths
         self.log = logger
 
     # state ---------------------------------------------------------------
 
-    def read_state(self) -> dict:
+    def read_state(self) -> dict[str, Any]:
+        """``server-state.json`` as written by the supervisor; ``{}`` when absent or broken."""
         try:
             return json.loads(self.paths.state.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             return {}
 
-    def _write_state(self, state: dict) -> None:
+    def _write_state(self, state: dict[str, Any]) -> None:
         tmp = self.paths.state.with_suffix(".tmp")
         tmp.write_text(json.dumps(state, indent=2), encoding="utf-8")
         os.replace(tmp, self.paths.state)
@@ -83,12 +90,15 @@ class ServerManager:
     # health --------------------------------------------------------------
 
     def url(self) -> str:
+        """URL of the running managed backend, else the configured one."""
         state = self.read_state()
         return state.get("url") or self.settings.active_url
 
     def is_healthy(self, url: str | None = None) -> bool:
+        """True when the selected backend answers at ``url``."""
         if self.settings.backend == "a1111":
             from .backends.a1111 import A1111Backend
+
             return A1111Backend(url or self.settings.a1111_url).health().ok
         return ComfyClient(url or self.url()).is_alive()
 
@@ -103,28 +113,47 @@ class ServerManager:
         if self.settings.backend == "a1111":
             raise BackendUnavailable(
                 f"AUTOMATIC1111 WebUI is not answering at {self.settings.a1111_url}. "
-                "Start it with --api, or switch the backend to ComfyUI in the settings.")
+                "Start it with --api, or switch the backend to ComfyUI in the settings."
+            )
         if not self.settings.autostart:
-            raise BackendUnavailable(
-                f"ComfyUI is not answering at {url} and auto-start is disabled in the settings.")
+            raise BackendUnavailable(f"ComfyUI is not answering at {url} and auto-start is disabled in the settings.")
         return self.start(progress)
 
     def start(self, progress: ProgressCallback | None = None) -> str:
+        """Launch the backend supervisor detached and wait until ComfyUI answers."""
         layout = comfy_layout(self.settings.comfy_dir)
         if layout is None:
             raise BackendUnavailable(
                 f"ComfyUI was not found at '{self.settings.comfy_dir}'. Install the portable "
-                "build there or set the ComfyUI folder in Filters > AI > Generative Fill Settings.")
+                "build there or set the ComfyUI folder in Filters > AI > Generative Fill Settings."
+            )
         self.paths.ensure()
         url = self.settings.url
         host, port = _split_host_port(url)
         gimp_pid = os.getppid()
         cmd = [
-            _hidden_python(), str(Path(__file__).with_name("supervisor.py")), "--mode", "backend",
-            "--python", str(layout["python"]), "--main", str(layout["main"]),
-            "--cwd", str(layout["cwd"]), "--host", host, "--port", str(port),
-            "--base", str(self.paths.base), "--config", str(self.paths.config),
-            "--watch-pid", str(gimp_pid), "--idle-minutes", str(self.settings.idle_timeout_minutes),
+            _hidden_python(),
+            str(Path(__file__).with_name("supervisor.py")),
+            "--mode",
+            "backend",
+            "--python",
+            str(layout["python"]),
+            "--main",
+            str(layout["main"]),
+            "--cwd",
+            str(layout["cwd"]),
+            "--host",
+            host,
+            "--port",
+            str(port),
+            "--base",
+            str(self.paths.base),
+            "--config",
+            str(self.paths.config),
+            "--watch-pid",
+            str(gimp_pid),
+            "--idle-minutes",
+            str(self.settings.idle_timeout_minutes),
         ]
         if self.settings.extra_server_args.strip():
             cmd += ["--extra-args", self.settings.extra_server_args.strip()]
@@ -137,22 +166,19 @@ class ServerManager:
 
     @property
     def tasks_dir(self) -> Path:
+        """Queue folder the supervisor's task worker polls."""
         return self.paths.base / "tasks"
-
-    def supervisor_alive(self) -> bool:
-        state = self.read_state()
-        pid = int(state.get("supervisor_pid") or 0)
-        return bool(pid) and _pid_alive(pid)
 
     def task_worker_alive(self) -> bool:
         """A worker is a tasks-mode supervisor, or a backend supervisor that
-        announced itself in tasks-status.json (older supervisors did not)."""
+        announced itself in tasks-status.json (older supervisors did not).
+        Pids are checked against the process name, so a reused pid does not count."""
         for name, key in (("tasks-worker.json", "pid"), ("tasks-status.json", "worker_pid")):
             try:
                 info = json.loads((self.paths.base / name).read_text(encoding="utf-8"))
             except (OSError, ValueError):
                 continue
-            if _pid_alive(int(info.get(key) or 0)):
+            if pid_is_python(int(info.get(key) or 0)):
                 return True
         return False
 
@@ -160,13 +186,22 @@ class ServerManager:
         """Make sure something will process queued tasks."""
         if self.task_worker_alive():
             return
-        cmd = [_hidden_python(), str(Path(__file__).with_name("supervisor.py")), "--mode", "tasks",
-               "--base", str(self.paths.base), "--config", str(self.paths.config)]
+        cmd = [
+            _hidden_python(),
+            str(Path(__file__).with_name("supervisor.py")),
+            "--mode",
+            "tasks",
+            "--base",
+            str(self.paths.base),
+            "--config",
+            str(self.paths.config),
+        ]
         if self.log:
             self.log.info("launching task worker: %s", " ".join(cmd))
         self._spawn_detached(cmd)
 
-    def queue_task(self, task: dict) -> str:
+    def queue_task(self, task: dict[str, Any]) -> str:
+        """Write ``task`` to the queue (atomically) and make sure a worker runs; returns its id."""
         self.tasks_dir.mkdir(parents=True, exist_ok=True)
         task_id = task.get("id") or f"{int(time.time() * 1000)}-{task.get('type', 'task')}"
         task["id"] = task_id
@@ -179,13 +214,15 @@ class ServerManager:
             self.log.info("queued task %s (%s)", task_id, task.get("type"))
         return task_id
 
-    def task_status(self) -> dict:
+    def task_status(self) -> dict[str, Any]:
+        """The worker's ``tasks-status.json`` (current task, queue, history)."""
         try:
             return json.loads((self.paths.base / "tasks-status.json").read_text(encoding="utf-8"))
         except (OSError, ValueError):
             return {}
 
     def request_cancel(self) -> None:
+        """Cancel the running task and drop everything still queued."""
         self.tasks_dir.mkdir(parents=True, exist_ok=True)
         (self.tasks_dir / "cancel").write_text(str(time.time()), encoding="utf-8")
         # also drop anything still waiting in the queue
@@ -196,7 +233,8 @@ class ServerManager:
                 except OSError:
                     pass
 
-    def pending_tasks(self) -> list[dict]:
+    def pending_tasks(self) -> list[dict[str, Any]]:
+        """Decoded queued tasks, oldest first."""
         out = []
         for p in sorted(self.tasks_dir.glob("*.json")) if self.tasks_dir.is_dir() else []:
             try:
@@ -206,14 +244,17 @@ class ServerManager:
         return out
 
     def _spawn_detached(self, cmd: list[str]) -> None:
-        kwargs: dict = dict(stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                            stderr=subprocess.DEVNULL, close_fds=True)
+        kwargs: dict[str, Any] = {
+            "stdin": subprocess.DEVNULL,
+            "stdout": subprocess.DEVNULL,
+            "stderr": subprocess.DEVNULL,
+            "close_fds": True,
+        }
         env = dict(os.environ)
         env.pop("PYTHONPATH", None)
         kwargs["env"] = env
         if IS_WINDOWS:
-            flags = (subprocess.CREATE_NO_WINDOW | subprocess.DETACHED_PROCESS
-                     | subprocess.CREATE_NEW_PROCESS_GROUP)
+            flags = subprocess.CREATE_NO_WINDOW | subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
             try:
                 subprocess.Popen(cmd, creationflags=flags | subprocess.CREATE_BREAKAWAY_FROM_JOB, **kwargs)
                 return
@@ -242,10 +283,11 @@ class ServerManager:
                 break
             time.sleep(1.5)
         raise BackendUnavailable(
-            f"ComfyUI did not come up at {url} within {timeout} s. "
-            f"Last log lines:\n{self.server_log_tail()}")
+            f"ComfyUI did not come up at {url} within {timeout} s. Last log lines:\n{self.server_log_tail()}"
+        )
 
     def server_log_tail(self, lines: int = 8) -> str:
+        """Last ``lines`` lines of the ComfyUI log, for error messages."""
         try:
             text = self.paths.server_log.read_text(encoding="utf-8", errors="replace")
         except OSError:
@@ -253,29 +295,6 @@ class ServerManager:
         return "\n".join(text.strip().splitlines()[-lines:])
 
 
-def _pid_alive(pid: int) -> bool:
-    if pid <= 0:
-        return False
-    if IS_WINDOWS:
-        import ctypes
-        k32 = ctypes.windll.kernel32  # type: ignore[attr-defined]
-        handle = k32.OpenProcess(0x00100000, False, pid)  # SYNCHRONIZE
-        if not handle:
-            return False
-        try:
-            return k32.WaitForSingleObject(handle, 0) == 0x102
-        finally:
-            k32.CloseHandle(handle)
-    try:
-        os.kill(pid, 0)
-        return True
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True
-
-
 def _split_host_port(url: str) -> tuple[str, int]:
-    from urllib.parse import urlparse
     parsed = urlparse(url)
     return parsed.hostname or "127.0.0.1", parsed.port or 8188

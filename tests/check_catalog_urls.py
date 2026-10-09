@@ -1,12 +1,16 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Network check (not a unit test): HEAD every URL in models/catalog.json.
 
-    python tests/check_catalog_urls.py [--token HF_TOKEN]
+    HF_TOKEN=hf_xxx python tests/check_catalog_urls.py
 
 Gated Hugging Face files answer 401/403 without a token; that counts as
-"resolves" because the host exists and the gating is expected.
+"resolves" because the host exists and the gating is expected. The token is
+read from the HF_TOKEN environment variable (``--token`` still works but puts
+it in the process list) and is only sent to https Hugging Face hosts, never
+to GitHub or license pages and never on a redirect.
 """
-import json
+
+import os
 import sys
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -14,14 +18,16 @@ from urllib.request import Request, urlopen
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "gimp-stable-boy"))
 from stable_boy.catalog import load_catalog  # noqa: E402
+from stable_boy.downloads import token_allowed  # noqa: E402
 
 
-def head(url, token=None):
-    headers = {"User-Agent": "gimp-stable-boy url check"}
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
+def head(url: str, token: str | None = None) -> tuple[int | None, str | None]:
+    """HEAD ``url``; returns ``(status, size header)`` or ``(None, error text)``."""
+    req = Request(url, headers={"User-Agent": "gimp-stable-boy url check"}, method="HEAD")
+    if token and token_allowed(url):
+        req.add_unredirected_header("Authorization", f"Bearer {token}")
     try:
-        with urlopen(Request(url, headers=headers, method="HEAD"), timeout=30) as r:
+        with urlopen(req, timeout=30) as r:
             return r.status, r.headers.get("Content-Length") or r.headers.get("X-Linked-Size")
     except HTTPError as e:
         return e.code, e.headers.get("X-Linked-Size")
@@ -29,8 +35,9 @@ def head(url, token=None):
         return None, str(e)
 
 
-def main():
-    token = sys.argv[sys.argv.index("--token") + 1] if "--token" in sys.argv else None
+def main() -> None:
+    """Check every page, license and file URL; exit 1 when any is broken."""
+    token = sys.argv[sys.argv.index("--token") + 1] if "--token" in sys.argv else os.environ.get("HF_TOKEN")
     entries = load_catalog(Path(__file__).resolve().parent.parent / "models" / "catalog.json")
     bad = 0
     for e in entries:
@@ -44,7 +51,9 @@ def main():
             ok = status in (200, 302) or (f.gated and status in (401, 403))
             size_ok = size is None or f.size is None or int(size) == f.size or status in (401, 403)
             bad += not (ok and size_ok)
-            print(f"{'ok ' if ok and size_ok else 'BAD'} {e.id:28s} {f.role:8s} {status} size={size} expected={f.size} {f.url}")
+            print(
+                f"{'ok ' if ok and size_ok else 'BAD'} {e.id:28s} {f.role:8s} {status} size={size} expected={f.size} {f.url}"
+            )
     print("problems:", bad)
     sys.exit(1 if bad else 0)
 
