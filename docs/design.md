@@ -108,6 +108,24 @@ exits". The design therefore splits responsibilities:
 - The plug-in process reads `os.getppid()` to learn GIMP's pid and passes it
   to the supervisor as `--watch-pid`.
 
+Two GIMP instances sharing one profile are the awkward case: both plug-ins
+can find no state file at the same moment, and the GIMP that started the
+backend may exit while the other still generates. Two pieces handle it:
+
+- **Start lock.** The supervisor creates `supervisor.lock` in the profile's
+  `stable-boy` folder exclusively, with its pid inside
+  (`supervisor.acquire_start_lock`), and holds it for its lifetime; a second
+  supervisor that finds the lock held exits at once. A lock whose pid is dead
+  or not a Python process is stale and taken over. Without it, two requests
+  1 s apart started two supervisors and two ComfyUI servers
+  (`rob-two-requests-first-gimp-exits`).
+- **Watchers.** Every plug-in run that uses the managed backend touches
+  `watchers/<gimp pid>` (`server.ServerManager.register_watcher`, called from
+  `touch()`), and the supervisor keeps ComfyUI up while
+  `supervisor.live_watchers` finds any of those pids alive and still a GIMP
+  process, not only the `--watch-pid` it was started with. Otherwise closing
+  the first GIMP killed the second one's generation.
+
 Krita's `ai_diffusion/server.py` does the same thing in-process because the
 Krita plug-in is long-lived; the Job Object trick (`win32.py`) is borrowed as
 an idea and reimplemented with `ctypes`.
@@ -139,14 +157,16 @@ untested-on-this-machine because A1111 is not installed here.
    Indexed images are refused with a hint to convert them to RGB.
 2. `geometry.context_rect()` grows the selection by a margin proportional to
    its larger side (`geometry.fill_padding`: 0.5x for prompted fills, 1x for
-   removal, at least 32 px), enforces the model's minimum context, centres it
+   removal with a generation model, 0.5x for the LaMa/MAT removal models, at
+   least 32 px), enforces the model's minimum context, centres it
    on the selection and clamps it to the image. The tighter margin for
    prompted fills came from the SD 1.5 prompt-adherence ablation
    (`docs/evidence/overnight-2026-10-09/sd15-prompt-ablation/`).
 3. `geometry.working_size()` picks the resolution the model will actually see:
    the context region is downscaled so that its longer side fits the model's
-   maximum (768 for SD 1.5, 1024 for SDXL, FLUX and Qwen), upscaled (at most
-   8x) so that small selections reach the model's minimum side, and snapped
+   maximum (768 for SD 1.5, 1024 for SDXL, FLUX and Qwen, 512 for LaMa and
+   MAT), upscaled (at most 8x) so that small selections reach the model's
+   minimum side, and snapped
    to the latent multiple (8, or 16 for FLUX and Qwen).
 4. `gimp_io.export_region_png()` composites the visible image
    (`Gimp.Layer.new_from_visible`, from a throw-away duplicate with channels
@@ -203,11 +223,39 @@ nodes, mask growth and feathering fall back to core `GrowMask` +
 `MaskToImage` / `ImageBlur` / `ImageToMask`, and pre-fill is skipped. The
 Fooocus path is only offered when the nodes and both model files are present.
 
+Pre-fill per tier (`geometry.prefill_for`): removal always gets the border
+fill (navier-stokes), and a partial Change amount gets a blur so the original
+still guides the result. For full-strength prompted fills SD 1.5 gets a
+neutral grey hole, because with a border fill it continues the surrounding
+sky instead of drawing the prompt; the SDXL tier with the Fooocus patch gets
+the border fill, because it reads a flat grey rectangle as a separate picture
+and paints a framed photo into it (`photo-ab/README.md`, section 2).
+
+Removal models (LaMa, MAT) have their own profile (`geometry.INPAINT_MODEL`:
+working size at most 512 px, a 0.5x margin): the removal node always runs on
+a 512 px square, so a larger crop was shrunk with nearest-neighbour sampling
+inside the node and came back soft, with ghosts.
+
 Outpaint ("Generative Expand") is the same graph with a different mask: the
 canvas is resized in GIMP, the new area plus an overlap band becomes the mask,
 and pre-fill uses `INPAINT_MaskedFill(navier-stokes)` followed by
 `INPAINT_MaskedBlur` (Krita's `FillMode.border`), which removes the hard seam
 between old content and the gray/transparent new area before sampling.
+
+Expand context band (`geometry.plan_expand`, `_strip_context`): a
+one-sided expansion sends the new strip plus a band of the old image twice
+as deep as the strip (at least the model's minimum context, and at least half
+the edge length) instead of the whole canvas. The generic context turned a
+256 px strip along a 1440 px edge into the whole canvas at 0.47x, where the
+new area was a thin band the model filled with a flat bar. Expansions on two
+or more sides still use the whole canvas.
+
+PNG upload padding (`workflow.probe_safe_png`): ComfyUI 0.39's `LoadImage`
+decodes uploads with PyAV, which guesses the format from the first 2048
+bytes. A mask with identical rows (an expansion strip) deflates into a
+periodic byte stream that the MPEG-TS probe scores above PNG, and the load
+fails with "End of file". Both uploads therefore get a `tEXt` chunk of 2048
+spaces right after `IHDR`; decoders ignore it and the pixels are unchanged.
 
 Text-to-image is `CheckpointLoaderSimple -> CLIPTextEncode x2 ->
 EmptyLatentImage(batch) -> KSampler -> VAEDecode -> SaveImage`, inserted as a
@@ -235,9 +283,25 @@ ComfyUI picks `NORMAL_VRAM` on this GPU and offloads automatically; no
   `--preview-method taesd`, binary websocket frames, at most four per
   second). GTK and GIMP calls from the worker are marshalled to the main
   loop.
-- Cancel: the window's Cancel button sets a flag that
-  `ComfyClient.wait_for` checks every loop; it sends `/interrupt`, clears the
-  queue and raises, and nothing is inserted, so the image stays unchanged.
+- Cancel: the window's Cancel button sets a flag that every phase checks,
+  and nothing is inserted, so the image stays unchanged:
+  - while the backend starts, `server.ServerManager.ensure_running`, `start`
+    and `_wait_ready` take the cancel callback (`App.backend` passes it), so
+    Cancel takes effect within a few seconds instead of when sampling begins;
+  - while uploading and sampling, `ComfyClient.wait_for` checks it every loop,
+    sends `/interrupt`, clears the queue and stops, and `ComfyBackend`
+    raises `GenerationCancelled`;
+  - after the result has arrived (downloading it), `Runner.run` drops the
+    result when Cancel was pressed, because the window has already promised
+    an unchanged image;
+  - a cancel ends the procedure with the CANCEL status and an info log line,
+    not an error dialog; only a job stopped from ComfyUI itself (its own
+    Cancel or `/interrupt`) gets a message (`ui_text.INTERRUPTED_OUTSIDE`),
+    since the user did not press anything in GIMP.
+- A ComfyUI that dies mid-job shows up as a transport error with no HTTP
+  status while the server no longer answers; `ComfyBackend` maps that to a
+  plain "ComfyUI stopped while it was generating" message instead of the raw
+  socket error.
   `request_timeout` (0 = estimated per request) remains as a safety net, and
   `/interrupt` is also sent when the plug-in gives up or hits an exception.
 - Errors are plain sentences that end with a next step

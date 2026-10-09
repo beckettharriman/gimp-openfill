@@ -263,12 +263,18 @@ progress window. The most common ones:
 | "Nothing is selected." | Select the area first. To regenerate the whole image use `Select > All`. |
 | "ComfyUI was not found at ..." | Settings > General > **AI backend folder** > **Browse...**; the folder must contain `ComfyUI\main.py` (portable) or `main.py` (checkout). |
 | "... auto-start is disabled" | Turn on **Start backend automatically**, or start ComfyUI yourself. |
-| "... did not come up ..." | Try again (the first start can take a few minutes). The message names another program on the port when there is one; otherwise read `comfyui.log`. |
+| "ComfyUI did not start at ... (gave up after N s)" | Try again (the first start can take a few minutes). Check the ComfyUI folder and Extra ComfyUI options; the message quotes the last lines of `comfyui.log`. |
+| "Port 8188 is used by another program (it is not ComfyUI)." | Close that program, or set a free port in the ComfyUI URL in Settings (for example `http://127.0.0.1:8190`). |
+| "ComfyUI stopped while it was generating (it crashed or was closed), so the image was not changed." | Run the command again to restart it; if it keeps happening, read `comfyui.log` in the `stable-boy` folder of your GIMP profile. |
+| "Your settings file could not be read and was moved aside to '...config.json.corrupt-...'; defaults are in use." | Open Generative Fill Settings and set the backend folder and options again. The old file is kept next to the new one. |
+| "Generation was cancelled." / "The generation was stopped in ComfyUI ..." | Nothing in the image was changed. Run the command again. The second form means Cancel or Interrupt was used in ComfyUI itself. |
+| "Could not reach huggingface.co: ..." (model download) | Check the internet connection and any proxy or firewall, then press **Download** again; the part already downloaded resumes. |
+| "not enough disk space on ...: the download needs ..." | Free up space on that drive, then press **Download** again. |
 | "... is not downloaded yet" / model missing | Settings > Models: **Download**, then **Set active**. |
 | "The GPU ran out of memory" | Smaller selection, one variation, SD 1.5, or `--lowvram` in Extra ComfyUI options. |
-| "... timed out" | Smaller selection or fewer variations, or raise Generation time limit in Connection and troubleshooting. |
+| "The request timed out" | Smaller selection or fewer variations, or raise **Generation time limit** in Connection and troubleshooting (0 estimates it per request). |
 | "Convert it with Image > Mode > RGB" | Indexed images are not supported; convert to RGB first. |
-| The fill shows sky or background instead of the prompt | Known SD 1.5 limitation on flat or small areas (see below). Use an SDXL model (Advanced > Model), a more specific prompt, or another seed. |
+| The fill shows sky or background instead of the prompt | Known SD 1.5 limitation on flat or small areas (see below). Use an SDXL model (**Advanced** > Model), a more specific prompt, or another seed. |
 | Visible seam or pale band | Keep **Hide old content before generating** on, make sure comfyui-inpaint-nodes is installed, raise Edge softness. |
 | Menu entries missing | Check `pluginrc` in the profile for `python-fu-stable-boy-generative-fill`; the folder must be `plug-ins/gimp-stable-boy/gimp-stable-boy.py`. Restart GIMP. |
 | Backend still running after GIMP closed | Should not happen (the supervisor watches GIMP). Use **Stop AI Backend**, and report it with `stable-boy.log`. |
@@ -278,14 +284,21 @@ For a bug report, turn on **Verbose log**, reproduce, and attach
 
 ### Known limitations
 
-- **SD 1.5 prompt adherence.** On flat or synthetic areas (an empty sky, a
-  small selection at the image edge) the SD 1.5 inpainting checkpoint often
-  continues the background instead of drawing the prompt. An ablation on the
-  exact crop the plug-in sent showed no graph step responsible
-  (`docs/evidence/overnight-2026-10-09/sd15-prompt-ablation/`). Prompted fills
-  now use a tighter context and a neutral pre-fill, which improved the
-  ablation crops; on the same scene the SDXL models drew the prompt
-  (`mode-tier-sdxl-fooocus`, `mode-tier-juggernaut`). This is still open.
+- **SD 1.5 (Fast tier) prompt adherence.** On flat or featureless regions and
+  small selections it often continues the background instead of drawing the
+  prompt. An ablation on the exact crop the plug-in sent found no graph step
+  responsible (`docs/evidence/overnight-2026-10-09/sd15-prompt-ablation/`).
+  Use the Quality tier (an SDXL model under **Advanced** > Model).
+- The Quality tier can return a flat tinted area on some structured
+  backgrounds (a bare wall next to a facade) instead of the prompt.
+- Generative Expand on all sides at once fails on the Quality tier (a blurred
+  frame); expand one side at a time, or use SD 1.5.
+- Fine textures such as fabric come back softer in large fills and
+  expansions, which are generated below 1:1 resolution.
+- **Remove object** with MAT cannot rebuild structured backgrounds (window
+  frames behind an air conditioner).
+- Out-of-VRAM and disk-full handling is covered by unit tests only; neither
+  could be provoked on the 8 GB development machine.
 - Generative Expand's Discard removes the new layers but keeps the larger
   canvas; `Edit > Undo` twice restores it.
 - AUTOMATIC1111, FLUX, Qwen and the Linux/macOS installs are implemented but
@@ -311,18 +324,37 @@ For a bug report, turn on **Verbose log**, reproduce, and attach
   never touches your real settings
   ([CONTRIBUTING.md](CONTRIBUTING.md#isolated-profile-gimp3_directory)).
 - **Evidence**: `docs/evidence/<run>/<case-id>/` holds the exact command,
-  `report.json` (inputs, checks, timings, memory), downscaled before/after
-  images and the plug-in log lines. The 2026-10-09 run covers selections,
-  image modes and sizes, all modes and tiers, prompts and robustness cases;
-  each was scored visually in
-  [quality-ledger.md](docs/evidence/overnight-2026-10-09/quality-ledger.md),
-  which is deliberately blunt (it records 23 FAILs, most of them the SD 1.5
-  limitation above). Defects it found and that were fixed: fills without a
-  selection, transparent areas turning black, a visible channel tinting the
-  fill, colour cast on whole-image fills, the pale band around fills, Text to
-  Image layers at the wrong size, indexed images, Text to Image without a
-  display. See the [CHANGELOG](CHANGELOG.md). The ledger predates those fixes;
-  it has not been re-scored yet.
+  `report.json`, downscaled before/after images and the plug-in log lines;
+  the index of the 2026-10-09 run is
+  [docs/evidence/overnight-2026-10-09/README.md](docs/evidence/overnight-2026-10-09/README.md).
+
+**Synthetic matrix.** 64 cases (selections, image modes and sizes, every
+mode and tier, prompts) were scored visually in the deliberately blunt
+[quality ledger](docs/evidence/overnight-2026-10-09/quality-ledger.md): **11 PASS, 31 PASS-WITH-NOTES,
+22 FAIL**. 14 of the FAILs are model behaviour (SD 1.5 ignoring the prompt on
+flat sky or a 20 px selection, where the Quality tier draws it); the other 8
+are plug-in-side weaknesses still open (flat untextured blocks, washed-out
+fine texture, a too-short working crop on a 16:1 strip, `sel-feathered`).
+
+**Real photos.** 28 remove, replace and extend cases on six Wikimedia
+Commons photographs (face, fabric, landscape, architecture, text, product)
+score **8 PASS, 10 PASS-WITH-NOTES, 10 FAIL** after the fixes they prompted
+(MAT working size, Quality-tier pre-fill, expand context band, PNG upload
+padding; A/B crops in [photo-ab](docs/evidence/overnight-2026-10-09/photo-ab/README.md)). Sources and
+selections: [photos-README.md](docs/evidence/overnight-2026-10-09/photos-README.md). The photos are CC0
+(five) and public domain (one NASA portrait); they are not stored in the
+repository.
+
+**Robustness**, verified end to end in GIMP 3.2.6 (`rob-*` folders, all
+PASS): backend folder missing, `config.json` missing or corrupt, autostart
+off with the backend down, port in use (an HTTP server, a silent listener,
+and offline), extra server options starting with a dash, ComfyUI killed
+mid-job, an external ComfyUI, a missing model (with and without a running
+server), two GIMP instances at once and the first one exiting mid-job,
+Cancel while starting, uploading, sampling and downloading, Interrupt from
+ComfyUI itself, GIMP killed mid-generation, the idle timeout, a corrupt
+`.part` file and downloads without network. Out-of-VRAM could not be
+provoked on 8 GB and disk-full is unit-tested only.
 
 ## Security
 

@@ -57,6 +57,17 @@ Total on disk: about 12.5 GB.
   of the 8 GB; ComfyUI's model management offloads to RAM automatically
   (`NORMAL_VRAM` mode on this GPU, no `--lowvram` flag needed). Expect 30 to
   60 s per fill versus 5 to 10 s for SD 1.5.
+- **LaMa and MAT** are prompt-free removal models used by Remove object when
+  installed. They run at a working size of at most 512 px, the size the
+  removal node uses internally; larger crops came back soft.
+
+Which tier for what, from the 2026-10-09 evidence
+(`docs/evidence/overnight-2026-10-09/quality-ledger.md`): SD 1.5 often
+ignores the prompt on flat or featureless regions and small selections, where
+the Quality tier draws it; the Quality tier can leave a flat tinted area on
+some structured backgrounds and fails on all-sides expansion (expand one side
+at a time); MAT removes objects cleanly from texture and flat surfaces but
+cannot rebuild structured backgrounds.
 
 ### VRAM budget (8 GB RTX 4070 Laptop)
 
@@ -74,7 +85,8 @@ fewer variations, or the Fast tier. `--lowvram` can be added through
 ## The catalog (`models/catalog.json`)
 
 Everything the Models tab offers comes from this file. Each entry records
-id, display name, tier, capabilities, architecture, workflow template, page,
+id, display name (messages use only the part before the packaging details in
+parentheses, `workflow.model_display_name`), tier, capabilities, architecture, workflow template, page,
 license (name + URL), gated flag, source type (`first-party` or
 `community-quantization` with the uploader named), minimum VRAM, required
 custom nodes (repo, folder, pinned commit) and the files (URL, destination

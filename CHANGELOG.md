@@ -80,8 +80,27 @@ downloader, and fixes from an end-to-end test matrix run in a real GIMP 3.2.6
   ..." instead of a bare exception name. Settings labels match the messages
   (Start backend automatically, Check backend).
 - Prompted fills use a tighter context (a margin of 0.5x the selection instead
-  of 1x) and a neutral pre-fill; removal keeps the wide context and the border
-  pre-fill.
+  of 1x). The pre-fill depends on the tier: SD 1.5 gets a neutral grey hole,
+  SDXL-tier models get the border pre-fill (a grey hole made Juggernaut paint
+  a framed picture into the selection). Removal with a generation model keeps
+  the wide context and the border pre-fill.
+- The removal models (LaMa, MAT) work at a 512 px working size with a 0.5x
+  margin, the size their node uses internally; the old 1024 px crop was
+  shrunk inside the node and came back soft, with ghosts.
+- A one-sided Generative Expand sends a local band of the old image next to
+  the new strip as context instead of the whole canvas.
+- One backend supervisor per GIMP profile (a start lock), and ComfyUI stays up
+  while any GIMP that used it is still running.
+- Cancel ends the command quietly (no error dialog, no traceback in the log);
+  a message appears only when the job was stopped from outside GIMP.
+- Previewing variations in the picker no longer adds undo steps: the fill is
+  one undo step, and Discard is one more.
+- Messages about a missing model use the short catalog name (for example
+  "FLUX.1 Fill [dev]") instead of the packaging details.
+- Messages no longer repeat the next step twice; the timeout advice names the
+  real field, "Generation time limit".
+- The Models tab shows failures of Cancel, Install nodes and Delete
+  downloaded files in the tab, and keeps polling after a failed refresh.
 - The layer mask of a prompted fill grows only by the feather radius, so it is
   opaque over the selection and fades outward; removal keeps the full grow.
 - ComfyUI is started with `--preview-method taesd`; extra server arguments are
@@ -120,6 +139,33 @@ downloader, and fixes from an end-to-end test matrix run in a real GIMP 3.2.6
   holds the port, reports the real elapsed time and strips ANSI codes from log
   excerpts.
 - The Settings dialog reports a failing save instead of losing it.
+- A ComfyUI that crashed or was closed during a job produced a raw connection
+  error; it now gives a plain message and the image is left unchanged
+  (`rob-backend-crash-mid-job`).
+- Two GIMP instances requesting a fill at the same moment started two
+  supervisors and two ComfyUI servers, and the backend shut down when the
+  first GIMP closed while the second was still generating
+  (`rob-two-requests`, `rob-two-requests-first-gimp-exits`).
+- Cancel while the backend was starting took effect only after about 23 s; it
+  now stops within a few seconds (`rob-cancel-starting-backend`).
+- Cancel while the result was downloading still inserted the layer
+  (`rob-cancel-downloading`).
+- Cancels were reported as errors with a traceback.
+- A resumed download whose checksum failed stopped for good; it is now fetched
+  once more from zero (`rob-download-corrupt-part`).
+- Download network errors showed raw socket text; they now say what to check.
+  Disk-space errors use readable sizes.
+- Some uploads, such as the mask of a one-sided expansion, failed with
+  "LoadImage: End of file": ComfyUI's PyAV-based image loader took the PNG
+  for a video stream. Uploaded PNGs now carry a padding chunk.
+- Removal with MAT came back soft and left ghosts of the removed object
+  (`photo-*-remove`).
+- Quality-tier fills painted a framed picture into the selection
+  (`photo-fabric-replace`, `photo-landscape-replace`).
+- One-sided Generative Expand came back as a flat colour bar
+  (`photo-*-extend`).
+- A GLib "Source ID was not found" warning when the progress window closed,
+  and picker timers that fired after the picker had closed.
 - HTTP error responses were not closed (ResourceWarning).
 
 ### Security
@@ -135,13 +181,29 @@ downloader, and fixes from an end-to-end test matrix run in a real GIMP 3.2.6
 - Supervisor tasks are re-validated against the catalog and the config; pids
   from state files only count when they belong to a Python process.
 - Multipart upload parameters are escaped.
+- A stale supervisor start lock or GIMP watcher entry only counts while its
+  pid belongs to a live Python or GIMP process.
+- A resumed download that fails its sha256 check is discarded and never used.
 
 ### Known issues
 
-- SD 1.5 inpainting often continues the background instead of drawing the
-  prompt on flat or small areas (`sd15-prompt-ablation` evidence); the SDXL
-  models do better on the same scene. The tighter context reduces it but does
-  not remove it.
+- SD 1.5 (the Fast tier) often ignores the prompt on flat or featureless
+  regions and on small selections and continues the background instead
+  (`sd15-prompt-ablation`). Use the Quality tier (an SDXL model under
+  Advanced > Model) for new content there.
+- The Quality tier can return a flat tinted area instead of the requested
+  content on some structured backgrounds (`photo-architecture-replace`).
+- Generative Expand on all sides at once fails on the Quality tier (a blurred
+  frame, `photo-landscape-extend-all`); expand one side at a time, or use the
+  Fast tier.
+- Fine textures (fabric) come back softer in large fills and expansions,
+  which are generated below 1:1 resolution.
+- MAT cannot rebuild structured backgrounds such as window frames behind a
+  removed object (`photo-architecture-remove`).
+- The out-of-VRAM and disk-full paths are covered by unit tests only; neither
+  could be reproduced end to end on the 8 GB development machine.
+- Generative Expand's Discard removes the new layers but keeps the larger
+  canvas; `Edit > Undo` twice restores it.
 - AUTOMATIC1111, FLUX, Qwen and the Linux, macOS and Flatpak installs are
   not verified end to end.
 
