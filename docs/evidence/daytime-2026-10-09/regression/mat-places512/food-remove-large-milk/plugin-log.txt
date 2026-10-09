@@ -1,0 +1,6 @@
+2026-10-09 17:52:08,429 INFO  [19568 stable-boy] fill: selection=Rect(x=1306, y=372, width=288, height=372) context=Rect(x=1120, y=186, width=660, height=744) working=456x512 scale=0.69 mask(grow=16/11px feather=22/11px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=mat-places512 template=inpaint_model
+2026-10-09 17:52:08,944 INFO  [19568 stable-boy] timing: upload image=827475 mask=6088 bytes in 0.023 s
+2026-10-09 17:52:08,947 INFO  [19568 stable-boy] timeout estimate 120 s (model files 0.1 GB, warm)
+2026-10-09 17:52:08,955 INFO  [19568 stable-boy] queued prompt 0a9943eb-0153-476c-8e1f-2b70bed6056e (timeout 120s, 25 steps x 1)
+2026-10-09 17:52:10,130 INFO  [19568 stable-boy] timing: queue->first step 0.868 s, sampling 0.294 s, download 578201 bytes in 0.013 s
+2026-10-09 17:52:10,653 INFO  [19568 stable-boy] fill: done, seed=1234, 1 layer(s)

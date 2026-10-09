@@ -1,0 +1,59 @@
+{
+  "model": "juggernaut-xl-v9",
+  "family": "sdxl",
+  "case": "illustration-remove-large-baby",
+  "op": "remove-large",
+  "proc": "fill",
+  "image": "illustration.jpg",
+  "prompt": "",
+  "seed": 1234,
+  "status": "success",
+  "ok": true,
+  "message": "success",
+  "driver_error": null,
+  "seconds": 5.4,
+  "cold": false,
+  "index_in_process": 4,
+  "image_size": [
+    1920,
+    2635
+  ],
+  "size_after": [
+    1920,
+    2635
+  ],
+  "selection_bounds": [
+    1267,
+    1238,
+    461,
+    659
+  ],
+  "working_sizes": [
+    [
+      432,
+      512
+    ]
+  ],
+  "vram_peak_mib": 4221,
+  "vram_before_mib": 4221,
+  "vram_samples": 6,
+  "vram_total_mib": 8188,
+  "comfy_staged_mb": {},
+  "comfy_offload_lines": [],
+  "oom": false,
+  "oom_lines": [],
+  "started_epoch": 1791584232.4094455,
+  "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+  },
+  "files": {},
+  "crop_box": [
+    1103,
+    1074,
+    1892,
+    2061
+  ]
+}

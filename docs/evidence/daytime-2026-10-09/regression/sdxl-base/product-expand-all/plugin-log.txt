@@ -1,0 +1,7 @@
+2026-10-09 18:28:33,505 INFO  [5456 stable-boy] expand: SDXL model sdxl-base -> using SD 1.5 dreamshaper-8-inpainting
+2026-10-09 18:28:33,506 INFO  [5456 stable-boy] expand: margins=(192, 192, 192, 192) canvas=1664x1237 context=Rect(x=0, y=0, width=1664, height=1237) working=768x568 model=dreamshaper-8-inpainting prompt=user cfg=7.0
+2026-10-09 18:28:35,069 INFO  [5456 stable-boy] timing: upload image=477303 mask=17473 bytes in 0.020 s
+2026-10-09 18:28:35,072 INFO  [5456 stable-boy] timeout estimate 600 s (model files 2.1 GB, cold)
+2026-10-09 18:28:35,081 INFO  [5456 stable-boy] queued prompt 2082a3c7-0858-44e6-abee-7005593fb185 (timeout 600s, 25 steps x 1)
+2026-10-09 18:28:45,082 INFO  [5456 stable-boy] timing: queue->first step 3.469 s, sampling 6.518 s, download 477865 bytes in 0.014 s
+2026-10-09 18:28:45,664 INFO  [5456 stable-boy] expand: done, seed=1234, 1 layer(s)

@@ -1,0 +1,9 @@
+2026-10-09 18:03:21,723 INFO  [36204 stable-boy] fill: selection=Rect(x=160, y=51, width=1620, height=89) context=Rect(x=0, y=0, width=2000, height=1273) working=640x408 scale=0.32 mask(grow=16/5px feather=24/5px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=dreamshaper-8-inpainting template=sd15_inpaint
+2026-10-09 18:03:21,723 INFO  [36204 stable-boy] fill: tiles=4 at scale 1.00: [(80, 0, 640, 385, 640, 384), (460, 0, 640, 385, 640, 384), (840, 0, 640, 385, 640, 384), (1220, 0, 640, 385, 640, 384)]
+2026-10-09 18:03:22,302 INFO  [36204 stable-boy] timing: upload image=6744715 mask=13740 bytes in 0.068 s
+2026-10-09 18:03:22,323 INFO  [36204 stable-boy] timeout estimate 199 s (model files 2.1 GB, warm)
+2026-10-09 18:03:22,350 INFO  [36204 stable-boy] queued prompt 459dc10c-e4db-4543-9808-de46a35e758e (timeout 199s, 25 steps x 1)
+2026-10-09 18:03:45,633 INFO  [36204 stable-boy] timing: queue->first step 2.072 s, sampling 21.176 s, download 4650630 bytes in 0.035 s
+2026-10-09 18:03:47,102 INFO  [36204 stable-boy] fill: grain ring 1.97, layer 1 1.73, adding 0.00
+2026-10-09 18:03:47,102 INFO  [36204 stable-boy] fill: grain matched in 0.92 s
+2026-10-09 18:03:47,104 INFO  [36204 stable-boy] fill: done, seed=1234, 1 layer(s)

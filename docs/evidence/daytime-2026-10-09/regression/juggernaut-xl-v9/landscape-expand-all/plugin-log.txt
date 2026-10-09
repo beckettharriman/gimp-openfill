@@ -1,0 +1,7 @@
+2026-10-09 18:07:55,153 INFO  [11980 stable-boy] expand: SDXL model juggernaut-xl-v9 -> using SD 1.5 dreamshaper-8-inpainting
+2026-10-09 18:07:55,154 INFO  [11980 stable-boy] expand: margins=(256, 256, 256, 256) canvas=2432x1952 context=Rect(x=0, y=0, width=2432, height=1952) working=768x616 model=dreamshaper-8-inpainting prompt=user cfg=7.0
+2026-10-09 18:07:59,225 INFO  [11980 stable-boy] timing: upload image=6243094 mask=35804 bytes in 0.079 s
+2026-10-09 18:07:59,229 INFO  [11980 stable-boy] timeout estimate 600 s (model files 2.1 GB, cold)
+2026-10-09 18:07:59,238 INFO  [11980 stable-boy] queued prompt 1d24cd7c-6000-4293-ab98-48f3881ec7b0 (timeout 600s, 25 steps x 1)
+2026-10-09 18:08:11,215 INFO  [11980 stable-boy] timing: queue->first step 4.192 s, sampling 7.763 s, download 4615960 bytes in 0.022 s
+2026-10-09 18:08:12,119 INFO  [11980 stable-boy] expand: done, seed=1234, 1 layer(s)

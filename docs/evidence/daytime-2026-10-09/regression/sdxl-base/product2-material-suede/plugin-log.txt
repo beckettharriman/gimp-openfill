@@ -1,0 +1,8 @@
+2026-10-09 18:31:42,057 INFO  [19092 stable-boy] fill: selection=Rect(x=80, y=273, width=1722, height=898) context=Rect(x=0, y=0, width=1920, height=1443) working=1024x768 scale=0.53 mask(grow=16/9px feather=24/9px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=sdxl-base template=sdxl_fooocus
+2026-10-09 18:31:42,057 INFO  [19092 stable-boy] fill: tiles=2 at scale 0.85: [(0, 123, 1204, 1198, 1024, 1016), (716, 123, 1204, 1198, 1024, 1016)]
+2026-10-09 18:31:42,396 INFO  [19092 stable-boy] timing: upload image=2996136 mask=21461 bytes in 0.036 s
+2026-10-09 18:31:42,400 INFO  [19092 stable-boy] timeout estimate 600 s (model files 8.3 GB, cold)
+2026-10-09 18:31:42,412 INFO  [19092 stable-boy] queued prompt 87357aa2-f5a4-4a9f-a483-0a06a78af336 (timeout 600s, 25 steps x 1)
+2026-10-09 18:32:41,467 INFO  [19092 stable-boy] timing: queue->first step 10.723 s, sampling 48.315 s, download 1470312 bytes in 0.016 s
+2026-10-09 18:32:42,560 INFO  [19092 stable-boy] fill: grain 0.33 around the selection; nothing to match
+2026-10-09 18:32:42,560 INFO  [19092 stable-boy] fill: done, seed=1234, 1 layer(s)

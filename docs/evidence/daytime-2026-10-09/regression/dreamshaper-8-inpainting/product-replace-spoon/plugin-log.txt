@@ -1,0 +1,7 @@
+2026-10-09 18:04:04,021 INFO  [16072 stable-boy] fill: selection=Rect(x=922, y=384, width=256, height=256) context=Rect(x=768, y=256, width=512, height=512) working=512x512 scale=1.00 mask(grow=16/16px feather=15/15px layer grow=15px) prefill=border/navier-stokes color_match=1.0 model=dreamshaper-8-inpainting template=sd15_inpaint
+2026-10-09 18:04:04,122 INFO  [16072 stable-boy] timing: upload image=50768 mask=4041 bytes in 0.017 s
+2026-10-09 18:04:04,125 INFO  [16072 stable-boy] timeout estimate 600 s (model files 2.1 GB, cold)
+2026-10-09 18:04:04,133 INFO  [16072 stable-boy] queued prompt 0220c1bd-dc28-42cd-a709-c9d4081bb684 (timeout 600s, 25 steps x 1)
+2026-10-09 18:04:11,774 INFO  [16072 stable-boy] timing: queue->first step 2.746 s, sampling 4.864 s, download 152861 bytes in 0.029 s
+2026-10-09 18:04:12,279 INFO  [16072 stable-boy] fill: grain 0.00 around the selection; nothing to match
+2026-10-09 18:04:12,280 INFO  [16072 stable-boy] fill: done, seed=1234, 1 layer(s)

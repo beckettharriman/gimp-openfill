@@ -1,0 +1,6 @@
+2026-10-09 18:04:49,838 INFO  [22292 stable-boy] expand: margins=(384, 0, 0, 0) canvas=2304x1280 context=Rect(x=0, y=0, width=1248, height=1280) working=752x768 model=dreamshaper-8-inpainting prompt=user cfg=7.0
+2026-10-09 18:04:51,283 INFO  [22292 stable-boy] timing: upload image=2892189 mask=13917 bytes in 0.037 s
+2026-10-09 18:04:51,286 INFO  [22292 stable-boy] timeout estimate 600 s (model files 2.1 GB, cold)
+2026-10-09 18:04:51,309 INFO  [22292 stable-boy] queued prompt 749fbcf9-1b91-4cdd-bcc3-00b65aa336e7 (timeout 600s, 25 steps x 1)
+2026-10-09 18:05:03,856 INFO  [22292 stable-boy] timing: queue->first step 3.814 s, sampling 8.700 s, download 2311348 bytes in 0.032 s
+2026-10-09 18:05:04,511 INFO  [22292 stable-boy] expand: done, seed=1234, 1 layer(s)

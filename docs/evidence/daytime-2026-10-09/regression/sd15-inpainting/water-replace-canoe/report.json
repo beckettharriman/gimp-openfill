@@ -1,0 +1,59 @@
+{
+  "model": "sd15-inpainting",
+  "family": "sd15",
+  "case": "water-replace-canoe",
+  "op": "replace-into-empty",
+  "proc": "fill",
+  "image": "water.jpg",
+  "prompt": "a red canoe on the calm lake",
+  "seed": 1234,
+  "status": "success",
+  "ok": true,
+  "message": "success",
+  "driver_error": null,
+  "seconds": 11.93,
+  "cold": false,
+  "index_in_process": 11,
+  "image_size": [
+    1920,
+    1280
+  ],
+  "size_after": [
+    1920,
+    1280
+  ],
+  "selection_bounds": [
+    576,
+    704,
+    384,
+    102
+  ],
+  "working_sizes": [
+    [
+      768,
+      488
+    ]
+  ],
+  "vram_peak_mib": 3101,
+  "vram_before_mib": 477,
+  "vram_samples": 12,
+  "vram_total_mib": 8188,
+  "comfy_staged_mb": {},
+  "comfy_offload_lines": [],
+  "oom": false,
+  "oom_lines": [],
+  "started_epoch": 1791582941.2526574,
+  "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+  },
+  "files": {},
+  "crop_box": [
+    480,
+    608,
+    1056,
+    902
+  ]
+}

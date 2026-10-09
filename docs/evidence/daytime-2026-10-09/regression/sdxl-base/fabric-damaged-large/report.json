@@ -1,0 +1,59 @@
+{
+  "model": "sdxl-base",
+  "family": "sdxl",
+  "case": "fabric-damaged-large",
+  "op": "damaged",
+  "proc": "fill",
+  "image": "fabric.jpg",
+  "prompt": "close-up of tweed wool fabric weave",
+  "seed": 1234,
+  "status": "success",
+  "ok": true,
+  "message": "success",
+  "driver_error": null,
+  "seconds": 32.59,
+  "cold": false,
+  "index_in_process": 8,
+  "image_size": [
+    1920,
+    1677
+  ],
+  "size_after": [
+    1920,
+    1677
+  ],
+  "selection_bounds": [
+    576,
+    503,
+    672,
+    587
+  ],
+  "working_sizes": [
+    [
+      1024,
+      960
+    ]
+  ],
+  "vram_peak_mib": 7279,
+  "vram_before_mib": 2559,
+  "vram_samples": 31,
+  "vram_total_mib": 8188,
+  "comfy_staged_mb": {},
+  "comfy_offload_lines": [],
+  "oom": false,
+  "oom_lines": [],
+  "started_epoch": 1791584926.3088884,
+  "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+  },
+  "files": {},
+  "crop_box": [
+    408,
+    335,
+    1416,
+    1258
+  ]
+}

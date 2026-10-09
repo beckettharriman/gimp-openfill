@@ -1,0 +1,59 @@
+{
+  "model": "mat-places512",
+  "family": "inpaint_model",
+  "case": "product-remove-small-handle",
+  "op": "remove-small",
+  "proc": "fill",
+  "image": "product.jpg",
+  "prompt": "",
+  "seed": 1234,
+  "status": "success",
+  "ok": true,
+  "message": "success",
+  "driver_error": null,
+  "seconds": 2.36,
+  "cold": false,
+  "index_in_process": 6,
+  "image_size": [
+    1280,
+    853
+  ],
+  "size_after": [
+    1280,
+    853
+  ],
+  "selection_bounds": [
+    146,
+    316,
+    170,
+    204
+  ],
+  "working_sizes": [
+    [
+      512,
+      512
+    ]
+  ],
+  "vram_peak_mib": 1725,
+  "vram_before_mib": 541,
+  "vram_samples": 3,
+  "vram_total_mib": 8188,
+  "comfy_staged_mb": {},
+  "comfy_offload_lines": [],
+  "oom": false,
+  "oom_lines": [],
+  "started_epoch": 1791582703.3249145,
+  "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+  },
+  "files": {},
+  "crop_box": [
+    95,
+    265,
+    367,
+    571
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "model": "realvisxl-v5",
+  "family": "sdxl",
+  "case": "landscape-remove-small-barn",
+  "op": "remove-small",
+  "proc": "fill",
+  "image": "landscape.jpg",
+  "prompt": "",
+  "seed": 1234,
+  "status": "success",
+  "ok": true,
+  "message": "success",
+  "driver_error": null,
+  "seconds": 4.69,
+  "cold": true,
+  "index_in_process": 0,
+  "image_size": [
+    1920,
+    1440
+  ],
+  "size_after": [
+    1920,
+    1440
+  ],
+  "selection_bounds": [
+    893,
+    454,
+    269,
+    130
+  ],
+  "working_sizes": [
+    [
+      512,
+      488
+    ]
+  ],
+  "vram_peak_mib": 477,
+  "vram_before_mib": 477,
+  "vram_samples": 5,
+  "vram_total_mib": 8188,
+  "comfy_staged_mb": {},
+  "comfy_offload_lines": [],
+  "oom": false,
+  "oom_lines": [],
+  "started_epoch": 1791584268.8173053,
+  "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+  },
+  "files": {},
+  "crop_box": [
+    826,
+    387,
+    1229,
+    651
+  ]
+}

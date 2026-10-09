@@ -1,0 +1,59 @@
+{
+  "model": "juggernaut-xl-v9",
+  "family": "sdxl",
+  "case": "night-street-remove-large-car",
+  "op": "remove-large",
+  "proc": "fill",
+  "image": "night-street.jpg",
+  "prompt": "",
+  "seed": 1234,
+  "status": "success",
+  "ok": true,
+  "message": "success",
+  "driver_error": null,
+  "seconds": 5.1,
+  "cold": false,
+  "index_in_process": 15,
+  "image_size": [
+    1920,
+    1268
+  ],
+  "size_after": [
+    1920,
+    1268
+  ],
+  "selection_bounds": [
+    192,
+    913,
+    806,
+    355
+  ],
+  "working_sizes": [
+    [
+      512,
+      368
+    ]
+  ],
+  "vram_peak_mib": 2557,
+  "vram_before_mib": 2557,
+  "vram_samples": 6,
+  "vram_total_mib": 8188,
+  "comfy_staged_mb": {},
+  "comfy_offload_lines": [],
+  "oom": false,
+  "oom_lines": [],
+  "started_epoch": 1791583897.4567244,
+  "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+  },
+  "files": {},
+  "crop_box": [
+    87,
+    712,
+    1111,
+    1268
+  ]
+}

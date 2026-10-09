@@ -1,0 +1,8 @@
+2026-10-09 18:12:07,083 INFO  [36480 stable-boy] fill: selection=Rect(x=384, y=1022, width=422, height=217) context=Rect(x=173, y=639, width=844, height=639) working=1016x768 scale=1.20 mask(grow=16/19px feather=24/19px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=juggernaut-xl-v9 template=sdxl_fooocus
+2026-10-09 18:12:07,277 INFO  [36480 stable-boy] timing: upload image=1104872 mask=5596 bytes in 0.047 s
+2026-10-09 18:12:07,292 INFO  [36480 stable-boy] timeout estimate 289 s (model files 8.4 GB, warm)
+2026-10-09 18:12:07,301 INFO  [36480 stable-boy] queued prompt 53a2d364-8d37-4916-8d38-edc6d1a43106 (timeout 289s, 25 steps x 1)
+2026-10-09 18:12:30,368 INFO  [36480 stable-boy] timing: queue->first step 7.128 s, sampling 15.922 s, download 1068390 bytes in 0.017 s
+2026-10-09 18:12:30,987 INFO  [36480 stable-boy] fill: grain ring 2.75, layer 1 3.15, adding 0.00
+2026-10-09 18:12:30,987 INFO  [36480 stable-boy] fill: grain matched in 0.18 s
+2026-10-09 18:12:30,988 INFO  [36480 stable-boy] fill: done, seed=1234, 1 layer(s)

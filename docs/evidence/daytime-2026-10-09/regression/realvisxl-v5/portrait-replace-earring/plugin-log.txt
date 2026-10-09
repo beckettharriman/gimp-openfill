@@ -1,0 +1,8 @@
+2026-10-09 18:20:27,894 INFO  [20724 stable-boy] fill: selection=Rect(x=1248, y=1072, width=77, height=94) context=Rect(x=1158, y=991, width=256, height=256) working=768x768 scale=3.00 mask(grow=9/27px feather=6/18px layer grow=6px) prefill=border/navier-stokes color_match=1.0 model=realvisxl-v5 template=sdxl_fooocus
+2026-10-09 18:20:28,011 INFO  [20724 stable-boy] timing: upload image=135187 mask=2679 bytes in 0.017 s
+2026-10-09 18:20:28,015 INFO  [20724 stable-boy] timeout estimate 600 s (model files 8.3 GB, cold)
+2026-10-09 18:20:28,024 INFO  [20724 stable-boy] queued prompt 64b6978a-0bae-4419-87f0-ce24adc79ea6 (timeout 600s, 25 steps x 1)
+2026-10-09 18:20:48,534 INFO  [20724 stable-boy] timing: queue->first step 8.762 s, sampling 11.720 s, download 96091 bytes in 0.028 s
+2026-10-09 18:20:48,928 INFO  [20724 stable-boy] fill: grain ring 1.35, layer 1 0.83, adding 1.06
+2026-10-09 18:20:48,975 INFO  [20724 stable-boy] fill: grain matched in 0.07 s
+2026-10-09 18:20:48,975 INFO  [20724 stable-boy] fill: done, seed=1234, 1 layer(s)

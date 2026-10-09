@@ -1,0 +1,59 @@
+{
+  "model": "lama-big",
+  "family": "inpaint_model",
+  "case": "architecture-remove-large-laundry",
+  "op": "remove-large",
+  "proc": "fill",
+  "image": "architecture.jpg",
+  "prompt": "",
+  "seed": 1234,
+  "status": "success",
+  "ok": true,
+  "message": "success",
+  "driver_error": null,
+  "seconds": 2.73,
+  "cold": false,
+  "index_in_process": 4,
+  "image_size": [
+    2000,
+    1273
+  ],
+  "size_after": [
+    2000,
+    1273
+  ],
+  "selection_bounds": [
+    400,
+    573,
+    540,
+    318
+  ],
+  "working_sizes": [
+    [
+      512,
+      408
+    ]
+  ],
+  "vram_peak_mib": 475,
+  "vram_before_mib": 475,
+  "vram_samples": 3,
+  "vram_total_mib": 8188,
+  "comfy_staged_mb": {},
+  "comfy_offload_lines": [],
+  "oom": false,
+  "oom_lines": [],
+  "started_epoch": 1791582570.315519,
+  "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+  },
+  "files": {},
+  "crop_box": [
+    265,
+    438,
+    1075,
+    1026
+  ]
+}

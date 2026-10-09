@@ -1,0 +1,59 @@
+{
+  "model": "juggernaut-xl-v9",
+  "family": "sdxl",
+  "case": "interior-remove-small-portrait",
+  "op": "remove-small",
+  "proc": "fill",
+  "image": "interior.jpg",
+  "prompt": "",
+  "seed": 1234,
+  "status": "success",
+  "ok": true,
+  "message": "success",
+  "driver_error": null,
+  "seconds": 4.32,
+  "cold": false,
+  "index_in_process": 13,
+  "image_size": [
+    1920,
+    1280
+  ],
+  "size_after": [
+    1920,
+    1280
+  ],
+  "selection_bounds": [
+    893,
+    512,
+    163,
+    256
+  ],
+  "working_sizes": [
+    [
+      512,
+      512
+    ]
+  ],
+  "vram_peak_mib": 4925,
+  "vram_before_mib": 4925,
+  "vram_samples": 5,
+  "vram_total_mib": 8188,
+  "comfy_staged_mb": {},
+  "comfy_offload_lines": [],
+  "oom": false,
+  "oom_lines": [],
+  "started_epoch": 1791583876.3640153,
+  "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+  },
+  "files": {},
+  "crop_box": [
+    829,
+    448,
+    1120,
+    832
+  ]
+}

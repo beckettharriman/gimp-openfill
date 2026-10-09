@@ -1,0 +1,6816 @@
+{
+ "generated": "2026-10-09 18:36:54",
+ "root": "docs/evidence/daytime-2026-10-09/regression",
+ "spec": "docs/evidence/daytime-2026-10-09/benchmark/benchmark-spec.json",
+ "count": 184,
+ "entries": [
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "architecture-material-roof-tiles",
+   "op": "material",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "red clay roof tiles",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 26.21,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     408
+    ]
+   ],
+   "vram_peak_mib": 2845,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/architecture-material-roof-tiles",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "crowd-remove-large-monument",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "crowd.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.0,
+   "cold": false,
+   "working_sizes": [
+    [
+     344,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/crowd-remove-large-monument",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "fabric-damaged-large",
+   "op": "damaged",
+   "proc": "fill",
+   "image": "fabric.jpg",
+   "prompt": "close-up of tweed wool fabric weave",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 10.82,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     640
+    ]
+   ],
+   "vram_peak_mib": 2973,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/fabric-damaged-large",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "food-remove-small-fork",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.82,
+   "cold": false,
+   "working_sizes": [
+    [
+     352,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/food-remove-small-fork",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "hands-replace-strawberry",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "hands.jpg",
+   "prompt": "a ripe red strawberry",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 10.32,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     632
+    ]
+   ],
+   "vram_peak_mib": 2973,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/hands-replace-strawberry",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "handwriting-remove-large-lines",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "handwriting.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.92,
+   "cold": false,
+   "working_sizes": [
+    [
+     488,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/handwriting-remove-large-lines",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "interior-expand-left",
+   "op": "expand-side",
+   "proc": "expand",
+   "image": "interior.jpg",
+   "prompt": "elegant drawing room with blue damask walls, gold molding and red chairs, photo",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 15.51,
+   "cold": false,
+   "working_sizes": [
+    [
+     752,
+     768
+    ]
+   ],
+   "vram_peak_mib": 3037,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/interior-expand-left",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "landscape-replace-balloon",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "landscape.jpg",
+   "prompt": "a colorful hot air balloon",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 11.55,
+   "cold": true,
+   "working_sizes": [
+    [
+     640,
+     584
+    ]
+   ],
+   "vram_peak_mib": 2877,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/landscape-replace-balloon",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "pet-replace-ladybug",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "pet.jpg",
+   "prompt": "a red ladybug on a blade of grass",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 7.6,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2877,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/pet-replace-ladybug",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "product-remove-large-cup",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "product.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.33,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     344
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/product-remove-large-cup",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "product-replace-spoon",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "product.jpg",
+   "prompt": "a silver teaspoon",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 9.05,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 3165,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/product-replace-spoon",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "product2-material-suede",
+   "op": "material",
+   "proc": "fill",
+   "image": "product2.jpg",
+   "prompt": "a brown suede leather shoe",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 35.12,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     480
+    ]
+   ],
+   "vram_peak_mib": 2973,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/product2-material-suede",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "signage-replace-text",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "signage.jpg",
+   "prompt": "white text that says Desert Museum",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 11.32,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     368
+    ]
+   ],
+   "vram_peak_mib": 2749,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/signage-replace-text",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "snow-replace-fox",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "snow.jpg",
+   "prompt": "a red fox walking on the snow",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 8.36,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     488
+    ]
+   ],
+   "vram_peak_mib": 2813,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/snow-replace-fox",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "text-replace-text-20h",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "text.jpg",
+   "prompt": "the text 20H in bold black italic letters",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 9.48,
+   "cold": false,
+   "working_sizes": [
+    [
+     728,
+     512
+    ]
+   ],
+   "vram_peak_mib": 3005,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/text-replace-text-20h",
+   "paths": {}
+  },
+  {
+   "model": "dreamshaper-8-inpainting",
+   "family": "sd15",
+   "case": "texture-damaged-huge",
+   "op": "damaged",
+   "proc": "fill",
+   "image": "texture.jpg",
+   "prompt": "red brick wall",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 36.36,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     480
+    ]
+   ],
+   "vram_peak_mib": 3069,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "dreamshaper-8-inpainting/texture-damaged-huge",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "architecture-material-roof-tiles",
+   "op": "material",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "red clay roof tiles",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 47.53,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     656
+    ]
+   ],
+   "vram_peak_mib": 7117,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/architecture-material-roof-tiles",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "clouds-remove-large-palm",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "clouds.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.06,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     480
+    ]
+   ],
+   "vram_peak_mib": 605,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/clouds-remove-large-palm",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "face-remove-small-patch",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "face.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.28,
+   "cold": true,
+   "working_sizes": [
+    [
+     512,
+     424
+    ]
+   ],
+   "vram_peak_mib": 733,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/face-remove-small-patch",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "face-replace-sunglasses",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "face.jpg",
+   "prompt": "dark aviator sunglasses",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 30.34,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     664
+    ]
+   ],
+   "vram_peak_mib": 6829,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/face-replace-sunglasses",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "food-remove-small-fork",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.86,
+   "cold": false,
+   "working_sizes": [
+    [
+     352,
+     512
+    ]
+   ],
+   "vram_peak_mib": 5277,
+   "vram_before_mib": 5277,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/food-remove-small-fork",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "food-replace-watermelon",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "a slice of watermelon",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 26.06,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     728
+    ]
+   ],
+   "vram_peak_mib": 6701,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/food-replace-watermelon",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "handwriting-remove-large-lines",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "handwriting.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.87,
+   "cold": false,
+   "working_sizes": [
+    [
+     488,
+     512
+    ]
+   ],
+   "vram_peak_mib": 4381,
+   "vram_before_mib": 4381,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/handwriting-remove-large-lines",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "illustration-remove-large-baby",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "illustration.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.4,
+   "cold": false,
+   "working_sizes": [
+    [
+     432,
+     512
+    ]
+   ],
+   "vram_peak_mib": 4221,
+   "vram_before_mib": 4221,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/illustration-remove-large-baby",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "interior-expand-left",
+   "op": "expand-side",
+   "proc": "expand",
+   "image": "interior.jpg",
+   "prompt": "elegant drawing room with blue damask walls, gold molding and red chairs, photo",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 15.69,
+   "cold": false,
+   "working_sizes": [
+    [
+     752,
+     768
+    ]
+   ],
+   "vram_peak_mib": 3101,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/interior-expand-left",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "interior-remove-small-portrait",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "interior.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.32,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 4925,
+   "vram_before_mib": 4925,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/interior-remove-small-portrait",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "landscape-expand-all",
+   "op": "expand-all",
+   "proc": "expand",
+   "image": "landscape.jpg",
+   "prompt": "green meadow and evening sky with trees, photo",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 17.91,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     616
+    ]
+   ],
+   "vram_peak_mib": 2973,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/landscape-expand-all",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "landscape-remove-small-barn",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "landscape.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.86,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     488
+    ]
+   ],
+   "vram_peak_mib": 5053,
+   "vram_before_mib": 5053,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/landscape-remove-small-barn",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "night-street-remove-large-car",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "night-street.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.1,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     368
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/night-street-remove-large-car",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "night-street-replace-moon",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "night-street.jpg",
+   "prompt": "a full moon in the night sky",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 22.63,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     768
+    ]
+   ],
+   "vram_peak_mib": 6893,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/night-street-replace-moon",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "pet-replace-ladybug",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "pet.jpg",
+   "prompt": "a red ladybug on a blade of grass",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 21.42,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     768
+    ]
+   ],
+   "vram_peak_mib": 7389,
+   "vram_before_mib": 5245,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/pet-replace-ladybug",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "portrait-remove-large-shuttle",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "portrait.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 7.17,
+   "cold": false,
+   "working_sizes": [
+    [
+     368,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/portrait-remove-large-shuttle",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "portrait-replace-earring",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "portrait.jpg",
+   "prompt": "a small gold hoop earring",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 24.73,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     768
+    ]
+   ],
+   "vram_peak_mib": 7277,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/portrait-replace-earring",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "product-expand-all",
+   "op": "expand-all",
+   "proc": "expand",
+   "image": "product.jpg",
+   "prompt": "white tea cup on a saucer, plain white background, product photo",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 14.2,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     568
+    ]
+   ],
+   "vram_peak_mib": 2941,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/product-expand-all",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "product-remove-large-cup",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "product.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.22,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     344
+    ]
+   ],
+   "vram_peak_mib": 4989,
+   "vram_before_mib": 4989,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/product-remove-large-cup",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "product2-material-suede",
+   "op": "material",
+   "proc": "fill",
+   "image": "product2.jpg",
+   "prompt": "a brown suede leather shoe",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 50.97,
+   "cold": true,
+   "working_sizes": [
+    [
+     1024,
+     768
+    ]
+   ],
+   "vram_peak_mib": 7101,
+   "vram_before_mib": 4893,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/product2-material-suede",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "signage-replace-text",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "signage.jpg",
+   "prompt": "white text that says Desert Museum",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 23.73,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     592
+    ]
+   ],
+   "vram_peak_mib": 7181,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/signage-replace-text",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "snow-replace-fox",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "snow.jpg",
+   "prompt": "a red fox walking on the snow",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 24.7,
+   "cold": false,
+   "working_sizes": [
+    [
+     1016,
+     768
+    ]
+   ],
+   "vram_peak_mib": 7485,
+   "vram_before_mib": 5245,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/snow-replace-fox",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "text-replace-text-20h",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "text.jpg",
+   "prompt": "the text 20H in bold black italic letters",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 25.46,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     720
+    ]
+   ],
+   "vram_peak_mib": 6637,
+   "vram_before_mib": 5309,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/text-replace-text-20h",
+   "paths": {}
+  },
+  {
+   "model": "juggernaut-xl-v9",
+   "family": "sdxl",
+   "case": "texture-damaged-huge",
+   "op": "damaged",
+   "proc": "fill",
+   "image": "texture.jpg",
+   "prompt": "red brick wall",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 119.06,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     768
+    ]
+   ],
+   "vram_peak_mib": 6861,
+   "vram_before_mib": 5213,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "juggernaut-xl-v9/texture-damaged-huge",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "architecture-remove-large-laundry",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.73,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     408
+    ]
+   ],
+   "vram_peak_mib": 475,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/architecture-remove-large-laundry",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "architecture-remove-small-ac",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.46,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 475,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/architecture-remove-small-ac",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "clouds-remove-large-palm",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "clouds.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.13,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     480
+    ]
+   ],
+   "vram_peak_mib": 571,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/clouds-remove-large-palm",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "crowd-remove-large-monument",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "crowd.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.19,
+   "cold": false,
+   "working_sizes": [
+    [
+     344,
+     512
+    ]
+   ],
+   "vram_peak_mib": 571,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/crowd-remove-large-monument",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "crowd-remove-small-screen",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "crowd.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.53,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 635,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/crowd-remove-small-screen",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "fabric-remove-tiny",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "fabric.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.29,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 539,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/fabric-remove-tiny",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "face-remove-large-shuttle",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "face.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 8.29,
+   "cold": true,
+   "working_sizes": [
+    [
+     408,
+     512
+    ]
+   ],
+   "vram_peak_mib": 571,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/face-remove-large-shuttle",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "food-remove-large-milk",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.22,
+   "cold": false,
+   "working_sizes": [
+    [
+     456,
+     512
+    ]
+   ],
+   "vram_peak_mib": 731,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/food-remove-large-milk",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "food-remove-small-fork",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.18,
+   "cold": false,
+   "working_sizes": [
+    [
+     352,
+     512
+    ]
+   ],
+   "vram_peak_mib": 539,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/food-remove-small-fork",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "handwriting-remove-large-lines",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "handwriting.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.98,
+   "cold": false,
+   "working_sizes": [
+    [
+     488,
+     512
+    ]
+   ],
+   "vram_peak_mib": 475,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/handwriting-remove-large-lines",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "handwriting-remove-small-stain",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "handwriting.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.3,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 475,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/handwriting-remove-small-stain",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "illustration-remove-large-baby",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "illustration.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.31,
+   "cold": false,
+   "working_sizes": [
+    [
+     432,
+     512
+    ]
+   ],
+   "vram_peak_mib": 475,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/illustration-remove-large-baby",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "illustration-remove-small-stamp",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "illustration.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.61,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 667,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/illustration-remove-small-stamp",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "interior-remove-large-tv",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "interior.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.95,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     400
+    ]
+   ],
+   "vram_peak_mib": 571,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/interior-remove-large-tv",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "interior-remove-small-portrait",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "interior.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.51,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 603,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/interior-remove-small-portrait",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "landscape-remove-large-birch",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "landscape.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.93,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     400
+    ]
+   ],
+   "vram_peak_mib": 475,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/landscape-remove-large-birch",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "landscape-remove-small-barn",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "landscape.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.56,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     488
+    ]
+   ],
+   "vram_peak_mib": 731,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/landscape-remove-small-barn",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "night-street-remove-large-car",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "night-street.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.29,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     368
+    ]
+   ],
+   "vram_peak_mib": 475,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/night-street-remove-large-car",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "pet-remove-small-scar",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "pet.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.07,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 475,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/pet-remove-small-scar",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "product-remove-large-cup",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "product.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.48,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     344
+    ]
+   ],
+   "vram_peak_mib": 475,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/product-remove-large-cup",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "product2-remove-small-knob",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "product2.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.23,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 635,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/product2-remove-small-knob",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "signage-remove-large-sign",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "signage.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.77,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     400
+    ]
+   ],
+   "vram_peak_mib": 731,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/signage-remove-large-sign",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "signage-remove-small-logo",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "signage.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.26,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 731,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/signage-remove-small-logo",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "snow-remove-small-sun",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "snow.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.26,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 539,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/snow-remove-small-sun",
+   "paths": {}
+  },
+  {
+   "model": "lama-big",
+   "family": "inpaint_model",
+   "case": "water-remove-small-plants",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "water.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.39,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     384
+    ]
+   ],
+   "vram_peak_mib": 475,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "lama-big/water-remove-small-plants",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "architecture-remove-large-laundry",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.34,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     408
+    ]
+   ],
+   "vram_peak_mib": 733,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/architecture-remove-large-laundry",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "architecture-remove-small-ac",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.61,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2045,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/architecture-remove-small-ac",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "clouds-remove-large-palm",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "clouds.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.2,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     480
+    ]
+   ],
+   "vram_peak_mib": 1725,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/clouds-remove-large-palm",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "crowd-remove-small-screen",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "crowd.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.88,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2045,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/crowd-remove-small-screen",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "face-remove-large-shuttle",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "face.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 6.57,
+   "cold": false,
+   "working_sizes": [
+    [
+     408,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2013,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/face-remove-large-shuttle",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "face-remove-small-patch",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "face.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.99,
+   "cold": true,
+   "working_sizes": [
+    [
+     512,
+     424
+    ]
+   ],
+   "vram_peak_mib": 1275,
+   "vram_before_mib": 475,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/face-remove-small-patch",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "food-remove-large-milk",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.03,
+   "cold": false,
+   "working_sizes": [
+    [
+     456,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2013,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/food-remove-large-milk",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "food-remove-small-fork",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.9,
+   "cold": false,
+   "working_sizes": [
+    [
+     352,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2045,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/food-remove-small-fork",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "hands-remove-large-bracelet",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "hands.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.06,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     424
+    ]
+   ],
+   "vram_peak_mib": 1725,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/hands-remove-large-bracelet",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "handwriting-remove-large-lines",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "handwriting.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.99,
+   "cold": false,
+   "working_sizes": [
+    [
+     488,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2045,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/handwriting-remove-large-lines",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "handwriting-remove-small-stain",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "handwriting.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.29,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 1725,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/handwriting-remove-small-stain",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "illustration-remove-large-baby",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "illustration.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.57,
+   "cold": false,
+   "working_sizes": [
+    [
+     432,
+     512
+    ]
+   ],
+   "vram_peak_mib": 701,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/illustration-remove-large-baby",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "illustration-remove-small-stamp",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "illustration.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.71,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2045,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/illustration-remove-small-stamp",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "interior-remove-large-tv",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "interior.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.15,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     400
+    ]
+   ],
+   "vram_peak_mib": 1853,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/interior-remove-large-tv",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "interior-remove-small-portrait",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "interior.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.46,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2045,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/interior-remove-small-portrait",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "landscape-remove-large-birch",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "landscape.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.08,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     400
+    ]
+   ],
+   "vram_peak_mib": 1725,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/landscape-remove-large-birch",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "night-street-remove-large-car",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "night-street.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.62,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     368
+    ]
+   ],
+   "vram_peak_mib": 733,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/night-street-remove-large-car",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "night-street-remove-small-light",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "night-street.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.47,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2045,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/night-street-remove-small-light",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "portrait-remove-large-shuttle",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "portrait.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.63,
+   "cold": false,
+   "working_sizes": [
+    [
+     368,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2013,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/portrait-remove-large-shuttle",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "portrait-remove-small-badge",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "portrait.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.86,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 1725,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/portrait-remove-small-badge",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "product-remove-large-cup",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "product.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.69,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     344
+    ]
+   ],
+   "vram_peak_mib": 2013,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/product-remove-large-cup",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "product-remove-small-handle",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "product.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.36,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 1725,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/product-remove-small-handle",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "product2-remove-small-knob",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "product2.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.27,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 541,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/product2-remove-small-knob",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "signage-remove-large-sign",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "signage.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.25,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     400
+    ]
+   ],
+   "vram_peak_mib": 733,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/signage-remove-large-sign",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "signage-remove-small-logo",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "signage.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.99,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 637,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/signage-remove-small-logo",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "text-remove-large-signs",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "text.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.66,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     384
+    ]
+   ],
+   "vram_peak_mib": 701,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/text-remove-large-signs",
+   "paths": {}
+  },
+  {
+   "model": "mat-places512",
+   "family": "inpaint_model",
+   "case": "water-remove-small-plants",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "water.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.59,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     384
+    ]
+   ],
+   "vram_peak_mib": 541,
+   "vram_before_mib": 541,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "mat-places512/water-remove-small-plants",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "architecture-material-roof-tiles",
+   "op": "material",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "red clay roof tiles",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 25.49,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     408
+    ]
+   ],
+   "vram_peak_mib": 3197,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/architecture-material-roof-tiles",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "architecture-remove-small-ac",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.07,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/architecture-remove-small-ac",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "clouds-remove-large-palm",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "clouds.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.18,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     480
+    ]
+   ],
+   "vram_peak_mib": 477,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/clouds-remove-large-palm",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "crowd-remove-large-monument",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "crowd.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.16,
+   "cold": false,
+   "working_sizes": [
+    [
+     344,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/crowd-remove-large-monument",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "fabric-damaged-large",
+   "op": "damaged",
+   "proc": "fill",
+   "image": "fabric.jpg",
+   "prompt": "close-up of tweed wool fabric weave",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 10.6,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     640
+    ]
+   ],
+   "vram_peak_mib": 3645,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/fabric-damaged-large",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "food-remove-small-fork",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.72,
+   "cold": false,
+   "working_sizes": [
+    [
+     352,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/food-remove-small-fork",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "food-replace-watermelon",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "a slice of watermelon",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 9.59,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     456
+    ]
+   ],
+   "vram_peak_mib": 2813,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/food-replace-watermelon",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "hands-replace-strawberry",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "hands.jpg",
+   "prompt": "a ripe red strawberry",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 9.68,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     632
+    ]
+   ],
+   "vram_peak_mib": 3069,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/hands-replace-strawberry",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "handwriting-remove-large-lines",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "handwriting.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.97,
+   "cold": false,
+   "working_sizes": [
+    [
+     488,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/handwriting-remove-large-lines",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "illustration-remove-large-baby",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "illustration.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.24,
+   "cold": false,
+   "working_sizes": [
+    [
+     432,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/illustration-remove-large-baby",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "interior-remove-small-portrait",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "interior.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.2,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/interior-remove-small-portrait",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "landscape-expand-all",
+   "op": "expand-all",
+   "proc": "expand",
+   "image": "landscape.jpg",
+   "prompt": "green meadow and evening sky with trees, photo",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 15.1,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     616
+    ]
+   ],
+   "vram_peak_mib": 3037,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/landscape-expand-all",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "landscape-remove-small-barn",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "landscape.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.49,
+   "cold": true,
+   "working_sizes": [
+    [
+     512,
+     488
+    ]
+   ],
+   "vram_peak_mib": 733,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/landscape-remove-small-barn",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "landscape-replace-balloon",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "landscape.jpg",
+   "prompt": "a colorful hot air balloon",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 10.29,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     584
+    ]
+   ],
+   "vram_peak_mib": 2877,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/landscape-replace-balloon",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "night-street-remove-large-car",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "night-street.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.37,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     368
+    ]
+   ],
+   "vram_peak_mib": 477,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/night-street-remove-large-car",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "portrait-remove-large-shuttle",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "portrait.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 6.72,
+   "cold": false,
+   "working_sizes": [
+    [
+     368,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/portrait-remove-large-shuttle",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "portrait-replace-earring",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "portrait.jpg",
+   "prompt": "a small gold hoop earring",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 8.65,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2781,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/portrait-replace-earring",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "product-remove-large-cup",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "product.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.49,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     344
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/product-remove-large-cup",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "product-replace-spoon",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "product.jpg",
+   "prompt": "a silver teaspoon",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 9.3,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2781,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/product-replace-spoon",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "product2-material-suede",
+   "op": "material",
+   "proc": "fill",
+   "image": "product2.jpg",
+   "prompt": "a brown suede leather shoe",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 33.4,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     480
+    ]
+   ],
+   "vram_peak_mib": 3069,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/product2-material-suede",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "signage-replace-text",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "signage.jpg",
+   "prompt": "white text that says Desert Museum",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 10.99,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     368
+    ]
+   ],
+   "vram_peak_mib": 2749,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/signage-replace-text",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "snow-replace-fox",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "snow.jpg",
+   "prompt": "a red fox walking on the snow",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 8.19,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     488
+    ]
+   ],
+   "vram_peak_mib": 2941,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/snow-replace-fox",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "text-replace-text-20h",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "text.jpg",
+   "prompt": "the text 20H in bold black italic letters",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 9.48,
+   "cold": false,
+   "working_sizes": [
+    [
+     728,
+     512
+    ]
+   ],
+   "vram_peak_mib": 3101,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/text-replace-text-20h",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "texture-damaged-huge",
+   "op": "damaged",
+   "proc": "fill",
+   "image": "texture.jpg",
+   "prompt": "red brick wall",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 36.64,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     480
+    ]
+   ],
+   "vram_peak_mib": 3069,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/texture-damaged-huge",
+   "paths": {}
+  },
+  {
+   "model": "realistic-vision-v6-inpainting",
+   "family": "sd15",
+   "case": "water-replace-canoe",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "water.jpg",
+   "prompt": "a red canoe on the calm lake",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 9.24,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     488
+    ]
+   ],
+   "vram_peak_mib": 3485,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realistic-vision-v6-inpainting/water-replace-canoe",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "architecture-material-roof-tiles",
+   "op": "material",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "red clay roof tiles",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 45.11,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     656
+    ]
+   ],
+   "vram_peak_mib": 6669,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/architecture-material-roof-tiles",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "architecture-remove-small-ac",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.24,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/architecture-remove-small-ac",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "clouds-remove-large-palm",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "clouds.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.18,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     480
+    ]
+   ],
+   "vram_peak_mib": 4285,
+   "vram_before_mib": 4285,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/clouds-remove-large-palm",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "crowd-remove-large-monument",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "crowd.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.27,
+   "cold": false,
+   "working_sizes": [
+    [
+     344,
+     512
+    ]
+   ],
+   "vram_peak_mib": 4893,
+   "vram_before_mib": 4893,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/crowd-remove-large-monument",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "fabric-damaged-large",
+   "op": "damaged",
+   "proc": "fill",
+   "image": "fabric.jpg",
+   "prompt": "close-up of tweed wool fabric weave",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 33.03,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     960
+    ]
+   ],
+   "vram_peak_mib": 7117,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/fabric-damaged-large",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "food-remove-small-fork",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.95,
+   "cold": false,
+   "working_sizes": [
+    [
+     352,
+     512
+    ]
+   ],
+   "vram_peak_mib": 5245,
+   "vram_before_mib": 5245,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/food-remove-small-fork",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "food-replace-watermelon",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "a slice of watermelon",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 25.45,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     728
+    ]
+   ],
+   "vram_peak_mib": 7277,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/food-replace-watermelon",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "handwriting-remove-large-lines",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "handwriting.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.01,
+   "cold": false,
+   "working_sizes": [
+    [
+     488,
+     512
+    ]
+   ],
+   "vram_peak_mib": 4349,
+   "vram_before_mib": 4349,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/handwriting-remove-large-lines",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "interior-expand-left",
+   "op": "expand-side",
+   "proc": "expand",
+   "image": "interior.jpg",
+   "prompt": "elegant drawing room with blue damask walls, gold molding and red chairs, photo",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 15.2,
+   "cold": false,
+   "working_sizes": [
+    [
+     752,
+     768
+    ]
+   ],
+   "vram_peak_mib": 3101,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/interior-expand-left",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "interior-remove-small-portrait",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "interior.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.4,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 4925,
+   "vram_before_mib": 4925,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/interior-remove-small-portrait",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "landscape-expand-all",
+   "op": "expand-all",
+   "proc": "expand",
+   "image": "landscape.jpg",
+   "prompt": "green meadow and evening sky with trees, photo",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 16.47,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     616
+    ]
+   ],
+   "vram_peak_mib": 2973,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/landscape-expand-all",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "landscape-remove-small-barn",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "landscape.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.69,
+   "cold": true,
+   "working_sizes": [
+    [
+     512,
+     488
+    ]
+   ],
+   "vram_peak_mib": 477,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/landscape-remove-small-barn",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "night-street-remove-large-car",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "night-street.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.23,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     368
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/night-street-remove-large-car",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "night-street-replace-moon",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "night-street.jpg",
+   "prompt": "a full moon in the night sky",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 22.14,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     768
+    ]
+   ],
+   "vram_peak_mib": 7277,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/night-street-replace-moon",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "portrait-remove-large-shuttle",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "portrait.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 7.04,
+   "cold": false,
+   "working_sizes": [
+    [
+     368,
+     512
+    ]
+   ],
+   "vram_peak_mib": 4445,
+   "vram_before_mib": 4445,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/portrait-remove-large-shuttle",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "portrait-replace-earring",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "portrait.jpg",
+   "prompt": "a small gold hoop earring",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 21.88,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     768
+    ]
+   ],
+   "vram_peak_mib": 7117,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/portrait-replace-earring",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "product-expand-all",
+   "op": "expand-all",
+   "proc": "expand",
+   "image": "product.jpg",
+   "prompt": "white tea cup on a saucer, plain white background, product photo",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 12.76,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     568
+    ]
+   ],
+   "vram_peak_mib": 2941,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/product-expand-all",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "product-remove-large-cup",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "product.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.57,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     344
+    ]
+   ],
+   "vram_peak_mib": 4989,
+   "vram_before_mib": 4989,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/product-remove-large-cup",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "product2-material-suede",
+   "op": "material",
+   "proc": "fill",
+   "image": "product2.jpg",
+   "prompt": "a brown suede leather shoe",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 60.93,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     768
+    ]
+   ],
+   "vram_peak_mib": 6797,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/product2-material-suede",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "signage-replace-text",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "signage.jpg",
+   "prompt": "white text that says Desert Museum",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 25.95,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     592
+    ]
+   ],
+   "vram_peak_mib": 7117,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/signage-replace-text",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "snow-replace-fox",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "snow.jpg",
+   "prompt": "a red fox walking on the snow",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 24.08,
+   "cold": false,
+   "working_sizes": [
+    [
+     1016,
+     768
+    ]
+   ],
+   "vram_peak_mib": 7485,
+   "vram_before_mib": 5245,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/snow-replace-fox",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "text-replace-text-20h",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "text.jpg",
+   "prompt": "the text 20H in bold black italic letters",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 23.18,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     720
+    ]
+   ],
+   "vram_peak_mib": 6861,
+   "vram_before_mib": 5309,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/text-replace-text-20h",
+   "paths": {}
+  },
+  {
+   "model": "realvisxl-v5",
+   "family": "sdxl",
+   "case": "texture-damaged-huge",
+   "op": "damaged",
+   "proc": "fill",
+   "image": "texture.jpg",
+   "prompt": "red brick wall",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 119.9,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     768
+    ]
+   ],
+   "vram_peak_mib": 7101,
+   "vram_before_mib": 5213,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "realvisxl-v5/texture-damaged-huge",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "architecture-material-roof-tiles",
+   "op": "material",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "red clay roof tiles",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 32.34,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     408
+    ]
+   ],
+   "vram_peak_mib": 3005,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/architecture-material-roof-tiles",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "architecture-remove-small-ac",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.73,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/architecture-remove-small-ac",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "crowd-remove-large-monument",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "crowd.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.27,
+   "cold": false,
+   "working_sizes": [
+    [
+     344,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/crowd-remove-large-monument",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "face-replace-sunglasses",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "face.jpg",
+   "prompt": "dark aviator sunglasses",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 13.92,
+   "cold": true,
+   "working_sizes": [
+    [
+     640,
+     464
+    ]
+   ],
+   "vram_peak_mib": 3069,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/face-replace-sunglasses",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "food-replace-watermelon",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "a slice of watermelon",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 8.04,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     456
+    ]
+   ],
+   "vram_peak_mib": 2909,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/food-replace-watermelon",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "hands-replace-strawberry",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "hands.jpg",
+   "prompt": "a ripe red strawberry",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 10.27,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     632
+    ]
+   ],
+   "vram_peak_mib": 2909,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/hands-replace-strawberry",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "handwriting-remove-large-lines",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "handwriting.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.24,
+   "cold": false,
+   "working_sizes": [
+    [
+     488,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/handwriting-remove-large-lines",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "illustration-remove-large-baby",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "illustration.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.51,
+   "cold": false,
+   "working_sizes": [
+    [
+     432,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/illustration-remove-large-baby",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "interior-expand-left",
+   "op": "expand-side",
+   "proc": "expand",
+   "image": "interior.jpg",
+   "prompt": "elegant drawing room with blue damask walls, gold molding and red chairs, photo",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 16.32,
+   "cold": false,
+   "working_sizes": [
+    [
+     752,
+     768
+    ]
+   ],
+   "vram_peak_mib": 4125,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/interior-expand-left",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "interior-remove-small-portrait",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "interior.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.58,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/interior-remove-small-portrait",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "night-street-remove-large-car",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "night-street.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.62,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     368
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/night-street-remove-large-car",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "product-remove-large-cup",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "product.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.05,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     344
+    ]
+   ],
+   "vram_peak_mib": 2557,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/product-remove-large-cup",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "product-replace-spoon",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "product.jpg",
+   "prompt": "a silver teaspoon",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 11.84,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 3037,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/product-replace-spoon",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "product2-material-suede",
+   "op": "material",
+   "proc": "fill",
+   "image": "product2.jpg",
+   "prompt": "a brown suede leather shoe",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 33.98,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     480
+    ]
+   ],
+   "vram_peak_mib": 3645,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/product2-material-suede",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "signage-replace-text",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "signage.jpg",
+   "prompt": "white text that says Desert Museum",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 13.54,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     368
+    ]
+   ],
+   "vram_peak_mib": 3037,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/signage-replace-text",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "snow-replace-fox",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "snow.jpg",
+   "prompt": "a red fox walking on the snow",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 7.6,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     488
+    ]
+   ],
+   "vram_peak_mib": 2941,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/snow-replace-fox",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "text-replace-text-20h",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "text.jpg",
+   "prompt": "the text 20H in bold black italic letters",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 10.09,
+   "cold": false,
+   "working_sizes": [
+    [
+     728,
+     512
+    ]
+   ],
+   "vram_peak_mib": 2877,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/text-replace-text-20h",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "texture-damaged-huge",
+   "op": "damaged",
+   "proc": "fill",
+   "image": "texture.jpg",
+   "prompt": "red brick wall",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 34.23,
+   "cold": false,
+   "working_sizes": [
+    [
+     640,
+     480
+    ]
+   ],
+   "vram_peak_mib": 3645,
+   "vram_before_mib": 2557,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/texture-damaged-huge",
+   "paths": {}
+  },
+  {
+   "model": "sd15-inpainting",
+   "family": "sd15",
+   "case": "water-replace-canoe",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "water.jpg",
+   "prompt": "a red canoe on the calm lake",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 11.93,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     488
+    ]
+   ],
+   "vram_peak_mib": 3101,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sd15-inpainting/water-replace-canoe",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "architecture-material-roof-tiles",
+   "op": "material",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "red clay roof tiles",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 44.79,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     656
+    ]
+   ],
+   "vram_peak_mib": 6799,
+   "vram_before_mib": 479,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/architecture-material-roof-tiles",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "architecture-remove-small-ac",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "architecture.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 2.3,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 607,
+   "vram_before_mib": 479,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/architecture-remove-small-ac",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "clouds-remove-large-palm",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "clouds.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 3.23,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     480
+    ]
+   ],
+   "vram_peak_mib": 735,
+   "vram_before_mib": 479,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/clouds-remove-large-palm",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "crowd-remove-large-monument",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "crowd.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.32,
+   "cold": false,
+   "working_sizes": [
+    [
+     344,
+     512
+    ]
+   ],
+   "vram_peak_mib": 4895,
+   "vram_before_mib": 4895,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/crowd-remove-large-monument",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "fabric-damaged-large",
+   "op": "damaged",
+   "proc": "fill",
+   "image": "fabric.jpg",
+   "prompt": "close-up of tweed wool fabric weave",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 32.59,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     960
+    ]
+   ],
+   "vram_peak_mib": 7279,
+   "vram_before_mib": 2559,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/fabric-damaged-large",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "face-expand-right",
+   "op": "expand-side",
+   "proc": "expand",
+   "image": "face.jpg",
+   "prompt": "studio portrait of an astronaut in a blue flight suit, dark grey backdrop, photo",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 15.0,
+   "cold": false,
+   "working_sizes": [
+    [
+     384,
+     768
+    ]
+   ],
+   "vram_peak_mib": 2815,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/face-expand-right",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "face-remove-small-patch",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "face.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.76,
+   "cold": true,
+   "working_sizes": [
+    [
+     512,
+     424
+    ]
+   ],
+   "vram_peak_mib": 605,
+   "vram_before_mib": 477,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/face-remove-small-patch",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "food-remove-small-fork",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.93,
+   "cold": false,
+   "working_sizes": [
+    [
+     352,
+     512
+    ]
+   ],
+   "vram_peak_mib": 5247,
+   "vram_before_mib": 5247,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/food-remove-small-fork",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "food-replace-watermelon",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "food.jpg",
+   "prompt": "a slice of watermelon",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 25.56,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     728
+    ]
+   ],
+   "vram_peak_mib": 7279,
+   "vram_before_mib": 479,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/food-replace-watermelon",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "handwriting-remove-large-lines",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "handwriting.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.96,
+   "cold": false,
+   "working_sizes": [
+    [
+     488,
+     512
+    ]
+   ],
+   "vram_peak_mib": 4351,
+   "vram_before_mib": 4351,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/handwriting-remove-large-lines",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "illustration-remove-large-baby",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "illustration.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.52,
+   "cold": false,
+   "working_sizes": [
+    [
+     432,
+     512
+    ]
+   ],
+   "vram_peak_mib": 4319,
+   "vram_before_mib": 4319,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/illustration-remove-large-baby",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "interior-expand-left",
+   "op": "expand-side",
+   "proc": "expand",
+   "image": "interior.jpg",
+   "prompt": "elegant drawing room with blue damask walls, gold molding and red chairs, photo",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 15.41,
+   "cold": false,
+   "working_sizes": [
+    [
+     752,
+     768
+    ]
+   ],
+   "vram_peak_mib": 3967,
+   "vram_before_mib": 479,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/interior-expand-left",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "interior-remove-small-portrait",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "interior.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.43,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     512
+    ]
+   ],
+   "vram_peak_mib": 4927,
+   "vram_before_mib": 4927,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/interior-remove-small-portrait",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "landscape-remove-small-barn",
+   "op": "remove-small",
+   "proc": "fill",
+   "image": "landscape.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.19,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     488
+    ]
+   ],
+   "vram_peak_mib": 2559,
+   "vram_before_mib": 2559,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/landscape-remove-small-barn",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "night-street-remove-large-car",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "night-street.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 5.14,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     368
+    ]
+   ],
+   "vram_peak_mib": 2559,
+   "vram_before_mib": 2559,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/night-street-remove-large-car",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "night-street-replace-moon",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "night-street.jpg",
+   "prompt": "a full moon in the night sky",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 21.9,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     768
+    ]
+   ],
+   "vram_peak_mib": 7119,
+   "vram_before_mib": 479,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/night-street-replace-moon",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "pet-replace-ladybug",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "pet.jpg",
+   "prompt": "a red ladybug on a blade of grass",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 21.99,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     768
+    ]
+   ],
+   "vram_peak_mib": 7279,
+   "vram_before_mib": 479,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/pet-replace-ladybug",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "portrait-remove-large-shuttle",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "portrait.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 6.99,
+   "cold": false,
+   "working_sizes": [
+    [
+     368,
+     512
+    ]
+   ],
+   "vram_peak_mib": 4223,
+   "vram_before_mib": 4223,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/portrait-remove-large-shuttle",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "product-expand-all",
+   "op": "expand-all",
+   "proc": "expand",
+   "image": "product.jpg",
+   "prompt": "white tea cup on a saucer, plain white background, product photo",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 13.02,
+   "cold": false,
+   "working_sizes": [
+    [
+     768,
+     568
+    ]
+   ],
+   "vram_peak_mib": 2943,
+   "vram_before_mib": 479,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/product-expand-all",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "product-remove-large-cup",
+   "op": "remove-large",
+   "proc": "fill",
+   "image": "product.jpg",
+   "prompt": "",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 4.58,
+   "cold": false,
+   "working_sizes": [
+    [
+     512,
+     344
+    ]
+   ],
+   "vram_peak_mib": 4991,
+   "vram_before_mib": 4991,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/product-remove-large-cup",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "product2-material-suede",
+   "op": "material",
+   "proc": "fill",
+   "image": "product2.jpg",
+   "prompt": "a brown suede leather shoe",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 61.3,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     768
+    ]
+   ],
+   "vram_peak_mib": 6863,
+   "vram_before_mib": 479,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/product2-material-suede",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "signage-replace-text",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "signage.jpg",
+   "prompt": "white text that says Desert Museum",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 25.16,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     592
+    ]
+   ],
+   "vram_peak_mib": 7183,
+   "vram_before_mib": 479,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/signage-replace-text",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "snow-replace-fox",
+   "op": "replace-into-empty",
+   "proc": "fill",
+   "image": "snow.jpg",
+   "prompt": "a red fox walking on the snow",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 24.17,
+   "cold": false,
+   "working_sizes": [
+    [
+     1016,
+     768
+    ]
+   ],
+   "vram_peak_mib": 7487,
+   "vram_before_mib": 5247,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/snow-replace-fox",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "text-replace-text-20h",
+   "op": "replace-object",
+   "proc": "fill",
+   "image": "text.jpg",
+   "prompt": "the text 20H in bold black italic letters",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 23.18,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     720
+    ]
+   ],
+   "vram_peak_mib": 7103,
+   "vram_before_mib": 5311,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/text-replace-text-20h",
+   "paths": {}
+  },
+  {
+   "model": "sdxl-base",
+   "family": "sdxl",
+   "case": "texture-damaged-huge",
+   "op": "damaged",
+   "proc": "fill",
+   "image": "texture.jpg",
+   "prompt": "red brick wall",
+   "seed": 1234,
+   "status": "success",
+   "ok": true,
+   "message": "success",
+   "seconds": 120.42,
+   "cold": false,
+   "working_sizes": [
+    [
+     1024,
+     768
+    ]
+   ],
+   "vram_peak_mib": 7615,
+   "vram_before_mib": 5215,
+   "comfy_staged_mb": {},
+   "comfy_offload_lines": [],
+   "oom": false,
+   "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+   },
+   "plugin_commit": null,
+   "model_used": null,
+   "model_used_differs": null,
+   "dir": "sdxl-base/texture-damaged-huge",
+   "paths": {}
+  }
+ ]
+}

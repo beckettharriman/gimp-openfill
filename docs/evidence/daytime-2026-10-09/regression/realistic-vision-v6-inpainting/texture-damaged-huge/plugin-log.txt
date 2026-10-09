@@ -1,0 +1,9 @@
+2026-10-09 18:01:55,834 INFO  [30100 stable-boy] fill: selection=Rect(x=64, y=40, width=1792, height=1360) context=Rect(x=0, y=0, width=1920, height=1440) working=640x480 scale=0.33 mask(grow=16/5px feather=24/5px layer grow=16px) prefill=border/navier-stokes color_match=0.0 model=realistic-vision-v6-inpainting template=sd15_inpaint
+2026-10-09 18:01:55,834 INFO  [30100 stable-boy] fill: tiles=4 at scale 0.60: [(0, 0, 1066, 1066, 640, 640), (854, 0, 1066, 1066, 640, 640), (0, 374, 1066, 1066, 640, 640), (854, 374, 1066, 1066, 640, 640)]
+2026-10-09 18:01:56,400 INFO  [30100 stable-boy] timing: upload image=7253133 mask=30058 bytes in 0.063 s
+2026-10-09 18:01:56,404 INFO  [30100 stable-boy] timeout estimate 248 s (model files 2.1 GB, warm)
+2026-10-09 18:01:56,416 INFO  [30100 stable-boy] queued prompt b3ef3920-e4ed-4543-af80-15a046603484 (timeout 248s, 25 steps x 1)
+2026-10-09 18:02:28,297 INFO  [30100 stable-boy] timing: queue->first step 2.965 s, sampling 28.898 s, download 3427231 bytes in 0.018 s
+2026-10-09 18:02:30,065 INFO  [30100 stable-boy] fill: grain ring 3.40, layer 1 0.80, adding 3.31
+2026-10-09 18:02:31,684 INFO  [30100 stable-boy] fill: grain matched in 2.68 s
+2026-10-09 18:02:31,685 INFO  [30100 stable-boy] fill: done, seed=1234, 1 layer(s)

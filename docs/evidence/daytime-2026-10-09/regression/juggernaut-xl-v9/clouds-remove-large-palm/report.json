@@ -1,0 +1,59 @@
+{
+  "model": "juggernaut-xl-v9",
+  "family": "sdxl",
+  "case": "clouds-remove-large-palm",
+  "op": "remove-large",
+  "proc": "fill",
+  "image": "clouds.jpg",
+  "prompt": "",
+  "seed": 1234,
+  "status": "success",
+  "ok": true,
+  "message": "success",
+  "driver_error": null,
+  "seconds": 3.06,
+  "cold": false,
+  "index_in_process": 5,
+  "image_size": [
+    1804,
+    1208
+  ],
+  "size_after": [
+    1804,
+    1208
+  ],
+  "selection_bounds": [
+    1118,
+    0,
+    271,
+    1027
+  ],
+  "working_sizes": [
+    [
+      512,
+      480
+    ]
+  ],
+  "vram_peak_mib": 605,
+  "vram_before_mib": 477,
+  "vram_samples": 4,
+  "vram_total_mib": 8188,
+  "comfy_staged_mb": {},
+  "comfy_offload_lines": [],
+  "oom": false,
+  "oom_lines": [],
+  "started_epoch": 1791584238.443997,
+  "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+  },
+  "files": {},
+  "crop_box": [
+    862,
+    92,
+    1645,
+    1116
+  ]
+}

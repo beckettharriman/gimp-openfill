@@ -1,0 +1,59 @@
+{
+  "model": "mat-places512",
+  "family": "inpaint_model",
+  "case": "hands-remove-large-bracelet",
+  "op": "remove-large",
+  "proc": "fill",
+  "image": "hands.jpg",
+  "prompt": "",
+  "seed": 1234,
+  "status": "success",
+  "ok": true,
+  "message": "success",
+  "driver_error": null,
+  "seconds": 4.06,
+  "cold": false,
+  "index_in_process": 10,
+  "image_size": [
+    1920,
+    2880
+  ],
+  "size_after": [
+    1920,
+    2880
+  ],
+  "selection_bounds": [
+    710,
+    1584,
+    864,
+    576
+  ],
+  "working_sizes": [
+    [
+      512,
+      424
+    ]
+  ],
+  "vram_peak_mib": 1725,
+  "vram_before_mib": 541,
+  "vram_samples": 5,
+  "vram_total_mib": 8188,
+  "comfy_staged_mb": {},
+  "comfy_offload_lines": [],
+  "oom": false,
+  "oom_lines": [],
+  "started_epoch": 1791582719.620351,
+  "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+  },
+  "files": {},
+  "crop_box": [
+    630,
+    1368,
+    1654,
+    2376
+  ]
+}

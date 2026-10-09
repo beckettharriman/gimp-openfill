@@ -1,0 +1,6 @@
+2026-10-09 17:55:18,987 INFO  [27288 stable-boy] expand: margins=(384, 0, 0, 0) canvas=2304x1280 context=Rect(x=0, y=0, width=1248, height=1280) working=752x768 model=sd15-inpainting prompt=user cfg=7.0
+2026-10-09 17:55:20,410 INFO  [27288 stable-boy] timing: upload image=2892189 mask=13917 bytes in 0.033 s
+2026-10-09 17:55:20,414 INFO  [27288 stable-boy] timeout estimate 600 s (model files 4.3 GB, cold)
+2026-10-09 17:55:20,423 INFO  [27288 stable-boy] queued prompt 277b9f66-7cfb-4145-b5fc-ace20cbae8cf (timeout 600s, 25 steps x 1)
+2026-10-09 17:55:33,772 INFO  [27288 stable-boy] timing: queue->first step 5.689 s, sampling 7.642 s, download 2356623 bytes in 0.017 s
+2026-10-09 17:55:34,538 INFO  [27288 stable-boy] expand: done, seed=1234, 1 layer(s)

@@ -1,0 +1,7 @@
+2026-10-09 17:54:25,837 INFO  [23712 stable-boy] fill: selection=Rect(x=1363, y=743, width=346, height=143) context=Rect(x=1190, y=570, width=692, height=489) working=728x512 scale=1.05 mask(grow=16/17px feather=21/17px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+2026-10-09 17:54:26,348 INFO  [23712 stable-boy] timing: upload image=418706 mask=4254 bytes in 0.022 s
+2026-10-09 17:54:26,352 INFO  [23712 stable-boy] timeout estimate 189 s (model files 4.3 GB, warm)
+2026-10-09 17:54:26,369 INFO  [23712 stable-boy] queued prompt 91ea01e7-2c4a-4702-b7f5-816f1b779e1b (timeout 189s, 25 steps x 1)
+2026-10-09 17:54:34,302 INFO  [23712 stable-boy] timing: queue->first step 2.108 s, sampling 5.785 s, download 327870 bytes in 0.039 s
+2026-10-09 17:54:34,814 INFO  [23712 stable-boy] fill: grain 0.49 around the selection; nothing to match
+2026-10-09 17:54:35,098 INFO  [23712 stable-boy] fill: done, seed=1234, 1 layer(s)

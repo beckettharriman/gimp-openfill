@@ -1,0 +1,6 @@
+2026-10-09 17:49:19,632 INFO  [12924 stable-boy] fill: selection=Rect(x=893, y=454, width=269, height=130) context=Rect(x=759, y=263, width=537, height=512) working=512x488 scale=0.95 mask(grow=16/15px feather=16/15px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=lama-big template=inpaint_model
+2026-10-09 17:49:19,816 INFO  [12924 stable-boy] timing: upload image=580212 mask=3923 bytes in 0.054 s
+2026-10-09 17:49:19,819 INFO  [12924 stable-boy] timeout estimate 120 s (model files 0.2 GB, warm)
+2026-10-09 17:49:19,828 INFO  [12924 stable-boy] queued prompt 358281c3-698c-47fe-a36c-27c0afe05ed9 (timeout 120s, 25 steps x 1)
+2026-10-09 17:49:20,915 INFO  [12924 stable-boy] timing: queue->first step 0.755 s, sampling 0.285 s, download 477694 bytes in 0.047 s
+2026-10-09 17:49:21,365 INFO  [12924 stable-boy] fill: done, seed=1234, 1 layer(s)

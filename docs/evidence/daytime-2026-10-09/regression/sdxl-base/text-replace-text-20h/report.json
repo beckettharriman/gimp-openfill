@@ -1,0 +1,59 @@
+{
+  "model": "sdxl-base",
+  "family": "sdxl",
+  "case": "text-replace-text-20h",
+  "op": "replace-object",
+  "proc": "fill",
+  "image": "text.jpg",
+  "prompt": "the text 20H in bold black italic letters",
+  "seed": 1234,
+  "status": "success",
+  "ok": true,
+  "message": "success",
+  "driver_error": null,
+  "seconds": 23.18,
+  "cold": false,
+  "index_in_process": 5,
+  "image_size": [
+    1920,
+    1429
+  ],
+  "size_after": [
+    1920,
+    1429
+  ],
+  "selection_bounds": [
+    1363,
+    743,
+    346,
+    143
+  ],
+  "working_sizes": [
+    [
+      1024,
+      720
+    ]
+  ],
+  "vram_peak_mib": 7103,
+  "vram_before_mib": 5311,
+  "vram_samples": 22,
+  "vram_total_mib": 8188,
+  "comfy_staged_mb": {},
+  "comfy_offload_lines": [],
+  "oom": false,
+  "oom_lines": [],
+  "started_epoch": 1791584883.916089,
+  "plugin_code_sha256_12": {
+    "stable_boy/app.py": "c973a0a2822f",
+    "stable_boy/geometry.py": "c0d7ccbcc686",
+    "stable_boy/workflow.py": "ea1d8f192f8a",
+    "gimp-stable-boy.py": "ca0983a11aa6"
+  },
+  "files": {},
+  "crop_box": [
+    1277,
+    657,
+    1795,
+    972
+  ]
+}

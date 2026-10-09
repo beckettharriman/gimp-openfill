@@ -1,0 +1,7 @@
+2026-10-09 18:17:54,864 INFO  [29072 stable-boy] expand: SDXL model realvisxl-v5 -> using SD 1.5 dreamshaper-8-inpainting
+2026-10-09 18:17:54,865 INFO  [29072 stable-boy] expand: margins=(256, 256, 256, 256) canvas=2432x1952 context=Rect(x=0, y=0, width=2432, height=1952) working=768x616 model=dreamshaper-8-inpainting prompt=user cfg=7.0
+2026-10-09 18:17:58,786 INFO  [29072 stable-boy] timing: upload image=6243094 mask=35804 bytes in 0.060 s
+2026-10-09 18:17:58,789 INFO  [29072 stable-boy] timeout estimate 600 s (model files 2.1 GB, cold)
+2026-10-09 18:17:58,797 INFO  [29072 stable-boy] queued prompt b321efed-ef06-4eb4-b0b5-9ab1c3044cd7 (timeout 600s, 25 steps x 1)
+2026-10-09 18:18:09,610 INFO  [29072 stable-boy] timing: queue->first step 3.921 s, sampling 6.851 s, download 4615960 bytes in 0.041 s
+2026-10-09 18:18:10,519 INFO  [29072 stable-boy] expand: done, seed=1234, 1 layer(s)

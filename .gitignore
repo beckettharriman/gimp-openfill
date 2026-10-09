@@ -145,3 +145,4 @@ gimp-stable-boy/stable_boy/tmp/
 # Never commit a GIMP profile config (it holds the Hugging Face token) or partial downloads
 **/stable-boy/config.json
 *.part
+docs/evidence/daytime-2026-10-09/benchmark/*/

@@ -1,0 +1,6 @@
+2026-10-09 17:58:23,609 INFO  [22716 stable-boy] expand: margins=(256, 256, 256, 256) canvas=2432x1952 context=Rect(x=0, y=0, width=2432, height=1952) working=768x616 model=realistic-vision-v6-inpainting prompt=user cfg=7.0
+2026-10-09 17:58:27,500 INFO  [22716 stable-boy] timing: upload image=6243094 mask=35804 bytes in 0.057 s
+2026-10-09 17:58:27,502 INFO  [22716 stable-boy] timeout estimate 161 s (model files 2.1 GB, warm)
+2026-10-09 17:58:27,509 INFO  [22716 stable-boy] queued prompt 6bc5ccf9-b2c7-49ab-83e6-278dba5bb2b8 (timeout 161s, 25 steps x 1)
+2026-10-09 17:58:37,078 INFO  [22716 stable-boy] timing: queue->first step 2.886 s, sampling 6.653 s, download 4307733 bytes in 0.031 s
+2026-10-09 17:58:37,939 INFO  [22716 stable-boy] expand: done, seed=1234, 1 layer(s)
