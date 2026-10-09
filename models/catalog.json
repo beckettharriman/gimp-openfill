@@ -201,6 +201,65 @@
       "files": [
         {"role": "inpaint_model", "url": "https://huggingface.co/Acly/MAT/resolve/main/MAT_Places512_G_fp16.safetensors", "dest": "inpaint/MAT_Places512_G_fp16.safetensors", "size": 125280278, "sha256": "309dd6ce6e04034dc4b6b15c7bd2a4844d158e03eb2a139e0eca6b366e40c0de"}
       ]
+    },
+    {
+      "id": "realistic-vision-v6-inpainting",
+      "name": "Realistic Vision V6.0 B1 Inpainting (SD 1.5, fp16)",
+      "tier": "fast",
+      "capabilities": ["fill", "expand", "txt2img"],
+      "arch": "sd15",
+      "template": "sd15_inpaint",
+      "page": "https://huggingface.co/SG161222/Realistic_Vision_V6.0_B1_noVAE",
+      "license": {"name": "CreativeML OpenRAIL-M", "url": "https://huggingface.co/spaces/CompVis/stable-diffusion-license"},
+      "gated": false,
+      "source_type": "first-party",
+      "uploader": "SG161222 (model author)",
+      "min_vram_gb": 4,
+      "requires_nodes": [],
+      "requires_models": [],
+      "files": [
+        {"role": "checkpoint", "url": "https://huggingface.co/SG161222/Realistic_Vision_V6.0_B1_noVAE/resolve/main/Realistic_Vision_V6.0_NV_B1_inpainting_fp16.safetensors", "dest": "checkpoints/Realistic_Vision_V6.0_NV_B1_inpainting_fp16.safetensors", "size": 2136906350, "sha256": "d939cbdbce19a9d8837794acd06ef8db1ad4a2f2bcf1418432d897eac98f1afd"}
+      ]
+    },
+    {
+      "id": "dreamshaper-8-inpainting",
+      "name": "DreamShaper 8 Inpainting (SD 1.5)",
+      "tier": "fast",
+      "capabilities": ["fill", "expand", "txt2img"],
+      "arch": "sd15",
+      "template": "sd15_inpaint",
+      "page": "https://huggingface.co/Lykon/dreamshaper-8-inpainting",
+      "license": {"name": "CreativeML OpenRAIL-M", "url": "https://huggingface.co/Lykon/dreamshaper-8-inpainting"},
+      "gated": false,
+      "source_type": "first-party",
+      "uploader": "Lykon (model author; single-file checkpoint from the Lykon/DreamShaper repository)",
+      "min_vram_gb": 4,
+      "requires_nodes": [],
+      "requires_models": [],
+      "files": [
+        {"role": "checkpoint", "url": "https://huggingface.co/Lykon/DreamShaper/resolve/main/DreamShaper_8_INPAINTING.inpainting.safetensors", "dest": "checkpoints/DreamShaper_8_INPAINTING.inpainting.safetensors", "size": 2132703862, "sha256": "ac84e05d5039d7a8aea3ced335ac7c56da6d3c6816465651f928b137c3a7b24a"}
+      ]
+    },
+    {
+      "id": "realvisxl-v5",
+      "name": "RealVisXL V5.0 (fp16, with Fooocus inpaint patch)",
+      "tier": "quality",
+      "capabilities": ["fill", "expand", "txt2img"],
+      "arch": "sdxl",
+      "template": "sdxl_fooocus",
+      "page": "https://huggingface.co/SG161222/RealVisXL_V5.0",
+      "license": {"name": "CreativeML OpenRAIL++-M (repository tag openrail++)", "url": "https://huggingface.co/SG161222/RealVisXL_V5.0"},
+      "gated": false,
+      "source_type": "first-party",
+      "uploader": "SG161222 (model author)",
+      "min_vram_gb": 8,
+      "requires_nodes": [
+        {"repo": "https://github.com/Acly/comfyui-inpaint-nodes", "folder": "comfyui-inpaint-nodes", "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b", "license": "GPL-3.0"}
+      ],
+      "requires_models": ["fooocus-inpaint-patch"],
+      "files": [
+        {"role": "checkpoint", "url": "https://huggingface.co/SG161222/RealVisXL_V5.0/resolve/main/RealVisXL_V5.0_fp16.safetensors", "dest": "checkpoints/RealVisXL_V5.0_fp16.safetensors", "size": 6938065488, "sha256": "6a35a7855770ae9820a3c931d4964c3817b6d9e3c6f9c4dabb5b3a94e5643b80"}
+      ]
     }
   ]
 }

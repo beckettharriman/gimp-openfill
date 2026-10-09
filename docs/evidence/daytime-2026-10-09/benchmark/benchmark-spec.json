@@ -1,0 +1,4193 @@
+{
+ "version": 1,
+ "seed": 1234,
+ "negative": "blurry, lowres, watermark, text artifacts",
+ "cases": [
+  {
+   "id": "face-remove-small-patch",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+    "w": 2400,
+    "h": 3000,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.34,
+     0.495,
+     0.135,
+     0.07
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    816,
+    1485,
+    324,
+    210
+   ],
+   "core": true
+  },
+  {
+   "id": "face-remove-large-shuttle",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+    "w": 2400,
+    "h": 3000,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.0,
+     0.3,
+     0.3,
+     0.68
+    ],
+    "units": "frac",
+    "feather": 12
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    0,
+    900,
+    720,
+    2040
+   ],
+   "core": false
+  },
+  {
+   "id": "face-replace-sunglasses",
+   "op": "replace-object",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+    "w": 2400,
+    "h": 3000,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.46,
+     0.19,
+     0.25,
+     0.06
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "dark aviator sunglasses",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    1104,
+    570,
+    600,
+    180
+   ],
+   "core": true
+  },
+  {
+   "id": "face-material-red-leather",
+   "op": "material",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+    "w": 2400,
+    "h": 3000,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.62,
+     0.4,
+     0.33,
+     0.45
+    ],
+    "units": "frac",
+    "feather": 24
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red leather jacket sleeve",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    1488,
+    1200,
+    792,
+    1350
+   ],
+   "core": false
+  },
+  {
+   "id": "face-damaged-tiny-hair",
+   "op": "damaged",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+    "w": 2400,
+    "h": 3000,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.53,
+     0.1,
+     0.03,
+     0.025
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "short dark brown hair",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "tiny",
+   "selection_px": [
+    1272,
+    300,
+    72,
+    75
+   ],
+   "core": false
+  },
+  {
+   "id": "face-expand-right",
+   "op": "expand-side",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+    "w": 2400,
+    "h": 3000,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "studio portrait of an astronaut in a blue flight suit, dark grey backdrop, photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 0,
+    "top": 0,
+    "right": 384,
+    "bottom": 0
+   },
+   "core": true
+  },
+  {
+   "id": "landscape-remove-small-barn",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.465,
+     0.315,
+     0.14,
+     0.09
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    893,
+    454,
+    269,
+    130
+   ],
+   "core": true
+  },
+  {
+   "id": "landscape-remove-large-birch",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.79,
+     0.0,
+     0.21,
+     1.0
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    1517,
+    0,
+    403,
+    1440
+   ],
+   "core": false
+  },
+  {
+   "id": "landscape-replace-balloon",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.25,
+     0.03,
+     0.18,
+     0.2
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a colorful hot air balloon",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    480,
+    43,
+    346,
+    288
+   ],
+   "core": true
+  },
+  {
+   "id": "landscape-replace-horse",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.3,
+     0.52,
+     0.18,
+     0.22
+    ],
+    "units": "frac",
+    "feather": 16
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a brown horse grazing",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    576,
+    749,
+    346,
+    317
+   ],
+   "core": false
+  },
+  {
+   "id": "landscape-damaged-tiny-grass",
+   "op": "damaged",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.5,
+     0.8,
+     0.02,
+     0.03
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "green grass",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "tiny",
+   "selection_px": [
+    960,
+    1152,
+    38,
+    43
+   ],
+   "core": false
+  },
+  {
+   "id": "landscape-expand-all",
+   "op": "expand-all",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "green meadow and evening sky with trees, photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 256,
+    "top": 256,
+    "right": 256,
+    "bottom": 256
+   },
+   "core": true
+  },
+  {
+   "id": "architecture-remove-small-ac",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+    "w": 2000,
+    "h": 1273,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.495,
+     0.335,
+     0.09,
+     0.15
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    990,
+    426,
+    180,
+    191
+   ],
+   "core": true
+  },
+  {
+   "id": "architecture-remove-large-laundry",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+    "w": 2000,
+    "h": 1273,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.2,
+     0.45,
+     0.27,
+     0.25
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    400,
+    573,
+    540,
+    318
+   ],
+   "core": false
+  },
+  {
+   "id": "architecture-replace-flowerbox",
+   "op": "replace-object",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+    "w": 2000,
+    "h": 1273,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.09,
+     0.36,
+     0.1,
+     0.11
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a window box with red geraniums",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    180,
+    458,
+    200,
+    140
+   ],
+   "core": false
+  },
+  {
+   "id": "architecture-material-roof-tiles",
+   "op": "material",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+    "w": 2000,
+    "h": 1273,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.08,
+     0.04,
+     0.81,
+     0.07
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red clay roof tiles",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    160,
+    51,
+    1620,
+    89
+   ],
+   "core": true
+  },
+  {
+   "id": "architecture-expand-top",
+   "op": "expand-side",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+    "w": 2000,
+    "h": 1273,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "old apartment building facade with windows and laundry, photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 0,
+    "top": 256,
+    "right": 0,
+    "bottom": 0
+   },
+   "core": false
+  },
+  {
+   "id": "text-remove-small-logo",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+    "w": 1920,
+    "h": 1429,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.03,
+     0.85,
+     0.35,
+     0.06
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    58,
+    1215,
+    672,
+    86
+   ],
+   "core": true
+  },
+  {
+   "id": "text-remove-large-signs",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+    "w": 1920,
+    "h": 1429,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.17,
+     0.65,
+     0.66,
+     0.17
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    326,
+    929,
+    1267,
+    243
+   ],
+   "core": false
+  },
+  {
+   "id": "text-replace-text-20h",
+   "op": "replace-object",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+    "w": 1920,
+    "h": 1429,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.71,
+     0.52,
+     0.18,
+     0.1
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "the text 20H in bold black italic letters",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    1363,
+    743,
+    346,
+    143
+   ],
+   "core": true
+  },
+  {
+   "id": "text-damaged-tiny-yellow",
+   "op": "damaged",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+    "w": 1920,
+    "h": 1429,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.5,
+     0.215,
+     0.03,
+     0.03
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "plain yellow painted metal",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "tiny",
+   "selection_px": [
+    960,
+    307,
+    58,
+    43
+   ],
+   "core": false
+  },
+  {
+   "id": "text-expand-bottom",
+   "op": "expand-side",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+    "w": 1920,
+    "h": 1429,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "yellow road sign with black lettering in a metal frame, on a city street",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 0,
+    "top": 0,
+    "right": 0,
+    "bottom": 256
+   },
+   "core": false
+  },
+  {
+   "id": "product-remove-small-handle",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+    "w": 1280,
+    "h": 853,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.12,
+     0.38,
+     0.12,
+     0.22
+    ],
+    "units": "frac",
+    "feather": 8
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    154,
+    324,
+    154,
+    188
+   ],
+   "core": false
+  },
+  {
+   "id": "product-remove-large-cup",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+    "w": 1280,
+    "h": 853,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.09,
+     0.14,
+     0.62,
+     0.72
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "huge",
+   "selection_px": [
+    115,
+    119,
+    794,
+    614
+   ],
+   "core": true
+  },
+  {
+   "id": "product-replace-spoon",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+    "w": 1280,
+    "h": 853,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.72,
+     0.45,
+     0.2,
+     0.3
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a silver teaspoon",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    922,
+    384,
+    256,
+    256
+   ],
+   "core": true
+  },
+  {
+   "id": "product-material-coffee",
+   "op": "material",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+    "w": 1280,
+    "h": 853,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.22,
+     0.21,
+     0.36,
+     0.24
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "black coffee with milk foam",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    282,
+    179,
+    461,
+    205
+   ],
+   "core": false
+  },
+  {
+   "id": "product-expand-all",
+   "op": "expand-all",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+    "w": 1280,
+    "h": 853,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "white tea cup on a saucer, plain white background, product photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 192,
+    "top": 192,
+    "right": 192,
+    "bottom": 192
+   },
+   "core": true
+  },
+  {
+   "id": "fabric-damaged-large",
+   "op": "damaged",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\fabric.jpg",
+    "w": 1920,
+    "h": 1677,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.3,
+     0.3,
+     0.35,
+     0.35
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "close-up of tweed wool fabric weave",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    576,
+    503,
+    672,
+    587
+   ],
+   "core": true
+  },
+  {
+   "id": "fabric-damaged-huge",
+   "op": "damaged",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\fabric.jpg",
+    "w": 1920,
+    "h": 1677,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.08,
+     0.08,
+     0.84,
+     0.84
+    ],
+    "units": "frac",
+    "feather": 32
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "close-up of tweed wool fabric weave",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "huge",
+   "selection_px": [
+    154,
+    134,
+    1613,
+    1409
+   ],
+   "core": false
+  },
+  {
+   "id": "fabric-replace-button",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\fabric.jpg",
+    "w": 1920,
+    "h": 1677,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.45,
+     0.45,
+     0.1,
+     0.1
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a round brass button",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    864,
+    755,
+    192,
+    168
+   ],
+   "core": false
+  },
+  {
+   "id": "fabric-remove-tiny",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\fabric.jpg",
+    "w": 1920,
+    "h": 1677,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.5,
+     0.5,
+     0.015,
+     0.015
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "tiny",
+   "selection_px": [
+    960,
+    838,
+    29,
+    25
+   ],
+   "core": false
+  },
+  {
+   "id": "fabric-expand-right",
+   "op": "expand-side",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\fabric.jpg",
+    "w": 1920,
+    "h": 1677,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "close-up of tweed wool fabric weave",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 0,
+    "top": 0,
+    "right": 256,
+    "bottom": 0
+   },
+   "core": false
+  },
+  {
+   "id": "portrait-remove-small-badge",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\portrait.jpg",
+    "w": 1920,
+    "h": 2681,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.43,
+     0.64,
+     0.17,
+     0.12
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    826,
+    1716,
+    326,
+    322
+   ],
+   "core": false
+  },
+  {
+   "id": "portrait-remove-large-shuttle",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\portrait.jpg",
+    "w": 1920,
+    "h": 2681,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.04,
+     0.34,
+     0.32,
+     0.58
+    ],
+    "units": "frac",
+    "feather": 12
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    77,
+    912,
+    614,
+    1555
+   ],
+   "core": true
+  },
+  {
+   "id": "portrait-replace-earring",
+   "op": "replace-object",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\portrait.jpg",
+    "w": 1920,
+    "h": 2681,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.65,
+     0.4,
+     0.04,
+     0.035
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a small gold hoop earring",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "tiny",
+   "selection_px": [
+    1248,
+    1072,
+    77,
+    94
+   ],
+   "core": true
+  },
+  {
+   "id": "portrait-material-velvet",
+   "op": "material",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\portrait.jpg",
+    "w": 1920,
+    "h": 2681,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.62,
+     0.62,
+     0.36,
+     0.33
+    ],
+    "units": "frac",
+    "feather": 24
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "green velvet fabric",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    1190,
+    1662,
+    691,
+    885
+   ],
+   "core": false
+  },
+  {
+   "id": "portrait-expand-all",
+   "op": "expand-all",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\portrait.jpg",
+    "w": 1920,
+    "h": 2681,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "studio portrait of a smiling woman astronaut in a blue flight suit, grey backdrop, photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 256,
+    "top": 256,
+    "right": 256,
+    "bottom": 256
+   },
+   "core": false
+  },
+  {
+   "id": "hands-replace-strawberry",
+   "op": "replace-object",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\hands.jpg",
+    "w": 1920,
+    "h": 2880,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.38,
+     0.44,
+     0.29,
+     0.17
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a ripe red strawberry",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    730,
+    1267,
+    557,
+    490
+   ],
+   "core": true
+  },
+  {
+   "id": "hands-remove-large-bracelet",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\hands.jpg",
+    "w": 1920,
+    "h": 2880,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.37,
+     0.55,
+     0.45,
+     0.2
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    710,
+    1584,
+    864,
+    576
+   ],
+   "core": false
+  },
+  {
+   "id": "hands-damaged-tiny-thumbnail",
+   "op": "damaged",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\hands.jpg",
+    "w": 1920,
+    "h": 2880,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.56,
+     0.31,
+     0.06,
+     0.04
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "fingertip with a clean fingernail",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    1075,
+    893,
+    115,
+    115
+   ],
+   "core": false
+  },
+  {
+   "id": "hands-expand-left",
+   "op": "expand-side",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\hands.jpg",
+    "w": 1920,
+    "h": 2880,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "a hand holding a red pepper, blurred green garden background, photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 384,
+    "top": 0,
+    "right": 0,
+    "bottom": 0
+   },
+   "core": false
+  },
+  {
+   "id": "pet-remove-small-scar",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\pet.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.56,
+     0.62,
+     0.04,
+     0.08
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    1075,
+    794,
+    77,
+    102
+   ],
+   "core": false
+  },
+  {
+   "id": "pet-replace-ladybug",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\pet.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.86,
+     0.75,
+     0.1,
+     0.15
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a red ladybug on a blade of grass",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    1651,
+    960,
+    192,
+    192
+   ],
+   "core": true
+  },
+  {
+   "id": "pet-material-tabby",
+   "op": "material",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\pet.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.0,
+     0.15,
+     0.3,
+     0.5
+    ],
+    "units": "frac",
+    "feather": 24
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "orange tabby cat fur",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    0,
+    192,
+    576,
+    640
+   ],
+   "core": false
+  },
+  {
+   "id": "pet-expand-top",
+   "op": "expand-side",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\pet.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "a grey cat lying on green grass, photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 0,
+    "top": 256,
+    "right": 0,
+    "bottom": 0
+   },
+   "core": false
+  },
+  {
+   "id": "food-remove-small-fork",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\food.jpg",
+    "w": 1920,
+    "h": 1239,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.23,
+     0.52,
+     0.06,
+     0.3
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    442,
+    644,
+    115,
+    372
+   ],
+   "core": true
+  },
+  {
+   "id": "food-remove-large-milk",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\food.jpg",
+    "w": 1920,
+    "h": 1239,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.68,
+     0.3,
+     0.15,
+     0.3
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    1306,
+    372,
+    288,
+    372
+   ],
+   "core": false
+  },
+  {
+   "id": "food-replace-watermelon",
+   "op": "replace-object",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\food.jpg",
+    "w": 1920,
+    "h": 1239,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.42,
+     0.47,
+     0.2,
+     0.13
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a slice of watermelon",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    806,
+    582,
+    384,
+    161
+   ],
+   "core": true
+  },
+  {
+   "id": "food-replace-vase",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\food.jpg",
+    "w": 1920,
+    "h": 1239,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.1,
+     0.08,
+     0.15,
+     0.35
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a small glass vase with a red rose",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    192,
+    99,
+    288,
+    434
+   ],
+   "core": false
+  },
+  {
+   "id": "food-material-checkered",
+   "op": "material",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\food.jpg",
+    "w": 1920,
+    "h": 1239,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.08,
+     0.82,
+     0.84,
+     0.1
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a blue and white checkered cloth placemat",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    154,
+    1016,
+    1613,
+    124
+   ],
+   "core": false
+  },
+  {
+   "id": "interior-remove-small-portrait",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\interior.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.465,
+     0.4,
+     0.085,
+     0.2
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    893,
+    512,
+    163,
+    256
+   ],
+   "core": true
+  },
+  {
+   "id": "interior-remove-large-tv",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\interior.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.78,
+     0.58,
+     0.22,
+     0.19
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    1498,
+    742,
+    422,
+    243
+   ],
+   "core": false
+  },
+  {
+   "id": "interior-replace-fire",
+   "op": "replace-object",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\interior.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.18,
+     0.75,
+     0.14,
+     0.18
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a crackling log fire in the fireplace",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    346,
+    960,
+    269,
+    230
+   ],
+   "core": false
+  },
+  {
+   "id": "interior-material-marble",
+   "op": "material",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\interior.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.47,
+     0.82,
+     0.18,
+     0.08
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a white marble table top",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    902,
+    1050,
+    346,
+    102
+   ],
+   "core": false
+  },
+  {
+   "id": "interior-expand-left",
+   "op": "expand-side",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\interior.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "elegant drawing room with blue damask walls, gold molding and red chairs, photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 384,
+    "top": 0,
+    "right": 0,
+    "bottom": 0
+   },
+   "core": true
+  },
+  {
+   "id": "night-street-remove-small-light",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\night-street.jpg",
+    "w": 1920,
+    "h": 1268,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.48,
+     0.09,
+     0.08,
+     0.17
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    922,
+    114,
+    154,
+    216
+   ],
+   "core": false
+  },
+  {
+   "id": "night-street-remove-large-car",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\night-street.jpg",
+    "w": 1920,
+    "h": 1268,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.1,
+     0.72,
+     0.42,
+     0.28
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    192,
+    913,
+    806,
+    355
+   ],
+   "core": true
+  },
+  {
+   "id": "night-street-replace-moon",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\night-street.jpg",
+    "w": 1920,
+    "h": 1268,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.2,
+     0.03,
+     0.12,
+     0.18
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a full moon in the night sky",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    384,
+    38,
+    230,
+    228
+   ],
+   "core": true
+  },
+  {
+   "id": "night-street-replace-neon",
+   "op": "replace-object",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\night-street.jpg",
+    "w": 1920,
+    "h": 1268,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.22,
+     0.36,
+     0.17,
+     0.06
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a glowing white neon sign that says BOOKS",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    422,
+    456,
+    326,
+    76
+   ],
+   "core": false
+  },
+  {
+   "id": "night-street-expand-top",
+   "op": "expand-side",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\night-street.jpg",
+    "w": 1920,
+    "h": 1268,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "city street at night under a dark sky, photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 0,
+    "top": 256,
+    "right": 0,
+    "bottom": 0
+   },
+   "core": false
+  },
+  {
+   "id": "water-remove-small-plants",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\water.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.42,
+     0.85,
+     0.2,
+     0.15
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    806,
+    1088,
+    384,
+    192
+   ],
+   "core": false
+  },
+  {
+   "id": "water-replace-canoe",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\water.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.3,
+     0.55,
+     0.2,
+     0.08
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a red canoe on the calm lake",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    576,
+    704,
+    384,
+    102
+   ],
+   "core": true
+  },
+  {
+   "id": "water-damaged-large",
+   "op": "damaged",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\water.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.05,
+     0.5,
+     0.4,
+     0.3
+    ],
+    "units": "frac",
+    "feather": 32
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "calm lake water reflecting white clouds",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    96,
+    640,
+    768,
+    384
+   ],
+   "core": false
+  },
+  {
+   "id": "water-expand-all",
+   "op": "expand-all",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\water.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "mountain lake with reflections of clouds and dark forest, photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 256,
+    "top": 256,
+    "right": 256,
+    "bottom": 256
+   },
+   "core": false
+  },
+  {
+   "id": "snow-remove-small-sun",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\snow.jpg",
+    "w": 1920,
+    "h": 1278,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.66,
+     0.18,
+     0.09,
+     0.13
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    1267,
+    230,
+    173,
+    166
+   ],
+   "core": false
+  },
+  {
+   "id": "snow-replace-fox",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\snow.jpg",
+    "w": 1920,
+    "h": 1278,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.2,
+     0.8,
+     0.22,
+     0.17
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a red fox walking on the snow",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    384,
+    1022,
+    422,
+    217
+   ],
+   "core": true
+  },
+  {
+   "id": "snow-damaged-tiny",
+   "op": "damaged",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\snow.jpg",
+    "w": 1920,
+    "h": 1278,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.3,
+     0.9,
+     0.02,
+     0.03
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "fresh white snow",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "tiny",
+   "selection_px": [
+    576,
+    1150,
+    38,
+    38
+   ],
+   "core": false
+  },
+  {
+   "id": "snow-expand-bottom",
+   "op": "expand-side",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\snow.jpg",
+    "w": 1920,
+    "h": 1278,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "snow covered ground with blue tree shadows on a sunny winter day, photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 0,
+    "top": 0,
+    "right": 0,
+    "bottom": 256
+   },
+   "core": false
+  },
+  {
+   "id": "crowd-remove-small-screen",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\crowd.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.33,
+     0.77,
+     0.09,
+     0.08
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    634,
+    986,
+    173,
+    102
+   ],
+   "core": false
+  },
+  {
+   "id": "crowd-remove-large-monument",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\crowd.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.62,
+     0.04,
+     0.05,
+     0.6
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    1190,
+    51,
+    96,
+    768
+   ],
+   "core": true
+  },
+  {
+   "id": "crowd-replace-birds",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\crowd.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.1,
+     0.05,
+     0.3,
+     0.25
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a large flock of birds flying",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    192,
+    64,
+    576,
+    320
+   ],
+   "core": false
+  },
+  {
+   "id": "crowd-damaged-people",
+   "op": "damaged",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\crowd.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.4,
+     0.85,
+     0.2,
+     0.12
+    ],
+    "units": "frac",
+    "feather": 8
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a dense crowd of people in winter coats",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    768,
+    1088,
+    384,
+    154
+   ],
+   "core": false
+  },
+  {
+   "id": "crowd-expand-left",
+   "op": "expand-side",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\crowd.jpg",
+    "w": 1920,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "huge crowd on the National Mall in winter, city skyline, photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 256,
+    "top": 0,
+    "right": 0,
+    "bottom": 0
+   },
+   "core": false
+  },
+  {
+   "id": "product2-remove-small-knob",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\product2.jpg",
+    "w": 1920,
+    "h": 1443,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.09,
+     0.2,
+     0.06,
+     0.09
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    173,
+    289,
+    115,
+    130
+   ],
+   "core": false
+  },
+  {
+   "id": "product2-replace-wallet",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\product2.jpg",
+    "w": 1920,
+    "h": 1443,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.62,
+     0.05,
+     0.3,
+     0.2
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a brown leather wallet",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    1190,
+    72,
+    576,
+    289
+   ],
+   "core": false
+  },
+  {
+   "id": "product2-material-suede",
+   "op": "material",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\product2.jpg",
+    "w": 1920,
+    "h": 1443,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.05,
+     0.2,
+     0.88,
+     0.6
+    ],
+    "units": "frac",
+    "feather": 16
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a brown suede leather shoe",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "huge",
+   "selection_px": [
+    96,
+    289,
+    1690,
+    866
+   ],
+   "core": true
+  },
+  {
+   "id": "product2-expand-all",
+   "op": "expand-all",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\product2.jpg",
+    "w": 1920,
+    "h": 1443,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "a black leather shoe on a plain white background, product photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 192,
+    "top": 192,
+    "right": 192,
+    "bottom": 192
+   },
+   "core": false
+  },
+  {
+   "id": "handwriting-remove-small-stain",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\handwriting.jpg",
+    "w": 1052,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.22,
+     0.03,
+     0.08,
+     0.05
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    231,
+    38,
+    84,
+    64
+   ],
+   "core": false
+  },
+  {
+   "id": "handwriting-remove-large-lines",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\handwriting.jpg",
+    "w": 1052,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.05,
+     0.47,
+     0.9,
+     0.12
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    53,
+    602,
+    947,
+    154
+   ],
+   "core": true
+  },
+  {
+   "id": "handwriting-replace-word",
+   "op": "replace-object",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\handwriting.jpg",
+    "w": 1052,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.7,
+     0.04,
+     0.25,
+     0.07
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "the handwritten word Second in brown ink cursive",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    736,
+    51,
+    263,
+    90
+   ],
+   "core": false
+  },
+  {
+   "id": "handwriting-damaged-edge",
+   "op": "damaged",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\handwriting.jpg",
+    "w": 1052,
+    "h": 1280,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.0,
+     0.6,
+     0.06,
+     0.3
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "aged yellowed paper",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    0,
+    768,
+    63,
+    384
+   ],
+   "core": false
+  },
+  {
+   "id": "signage-remove-small-logo",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\signage.jpg",
+    "w": 1920,
+    "h": 1277,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.63,
+     0.36,
+     0.06,
+     0.15
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    1210,
+    460,
+    115,
+    192
+   ],
+   "core": false
+  },
+  {
+   "id": "signage-remove-large-sign",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\signage.jpg",
+    "w": 1920,
+    "h": 1277,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.29,
+     0.3,
+     0.43,
+     0.63
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    557,
+    383,
+    826,
+    805
+   ],
+   "core": false
+  },
+  {
+   "id": "signage-replace-text",
+   "op": "replace-object",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\signage.jpg",
+    "w": 1920,
+    "h": 1277,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.34,
+     0.54,
+     0.27,
+     0.06
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "white text that says Desert Museum",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    653,
+    690,
+    518,
+    77
+   ],
+   "core": true
+  },
+  {
+   "id": "signage-replace-cactus",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\signage.jpg",
+    "w": 1920,
+    "h": 1277,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.78,
+     0.66,
+     0.12,
+     0.25
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a saguaro cactus",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    1498,
+    843,
+    230,
+    319
+   ],
+   "core": false
+  },
+  {
+   "id": "signage-expand-right",
+   "op": "expand-side",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\signage.jpg",
+    "w": 1920,
+    "h": 1277,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "desert road at sunset with mountains, photo",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 0,
+    "top": 0,
+    "right": 384,
+    "bottom": 0
+   },
+   "core": false
+  },
+  {
+   "id": "texture-damaged-medium",
+   "op": "damaged",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\texture.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.4,
+     0.4,
+     0.15,
+     0.15
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    768,
+    576,
+    288,
+    216
+   ],
+   "core": false
+  },
+  {
+   "id": "texture-damaged-huge",
+   "op": "damaged",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\texture.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.05,
+     0.05,
+     0.9,
+     0.9
+    ],
+    "units": "frac",
+    "feather": 32
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "huge",
+   "selection_px": [
+    96,
+    72,
+    1728,
+    1296
+   ],
+   "core": true
+  },
+  {
+   "id": "texture-replace-window",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\texture.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.35,
+     0.3,
+     0.25,
+     0.3
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a small square window with a white frame",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    672,
+    432,
+    480,
+    432
+   ],
+   "core": false
+  },
+  {
+   "id": "texture-material-stone",
+   "op": "material",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\texture.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.6,
+     0.2,
+     0.3,
+     0.6
+    ],
+    "units": "frac",
+    "feather": 16
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "grey stone wall",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    1152,
+    288,
+    576,
+    864
+   ],
+   "core": false
+  },
+  {
+   "id": "texture-expand-all",
+   "op": "expand-all",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\texture.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 256,
+    "top": 256,
+    "right": 256,
+    "bottom": 256
+   },
+   "core": false
+  },
+  {
+   "id": "illustration-remove-large-baby",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\illustration.jpg",
+    "w": 1920,
+    "h": 2635,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.66,
+     0.47,
+     0.24,
+     0.25
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    1267,
+    1238,
+    461,
+    659
+   ],
+   "core": true
+  },
+  {
+   "id": "illustration-remove-small-stamp",
+   "op": "remove-small",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\illustration.jpg",
+    "w": 1920,
+    "h": 2635,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.72,
+     0.31,
+     0.11,
+     0.06
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    1382,
+    817,
+    211,
+    158
+   ],
+   "core": false
+  },
+  {
+   "id": "illustration-replace-top-hat",
+   "op": "replace-object",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\illustration.jpg",
+    "w": 1920,
+    "h": 2635,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.55,
+     0.3,
+     0.13,
+     0.07
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a black top hat",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    1056,
+    790,
+    250,
+    184
+   ],
+   "core": false
+  },
+  {
+   "id": "illustration-replace-caption",
+   "op": "replace-object",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\illustration.jpg",
+    "w": 1920,
+    "h": 2635,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.38,
+     0.95,
+     0.24,
+     0.03
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "the text MAMAS PET in small serif capital letters",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    730,
+    2503,
+    461,
+    79
+   ],
+   "core": false
+  },
+  {
+   "id": "illustration-expand-bottom",
+   "op": "expand-side",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\illustration.jpg",
+    "w": 1920,
+    "h": 2635,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "vintage color lithograph cartoon on cream paper",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 0,
+    "top": 0,
+    "right": 0,
+    "bottom": 256
+   },
+   "core": false
+  },
+  {
+   "id": "clouds-remove-large-palm",
+   "op": "remove-large",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\clouds.jpg",
+    "w": 1804,
+    "h": 1208,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image",
+    "inpaint_model"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.62,
+     0.0,
+     0.15,
+     0.85
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "large",
+   "selection_px": [
+    1118,
+    0,
+    271,
+    1027
+   ],
+   "core": true
+  },
+  {
+   "id": "clouds-replace-airplane",
+   "op": "replace-into-empty",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\clouds.jpg",
+    "w": 1804,
+    "h": 1208,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.75,
+     0.15,
+     0.12,
+     0.1
+    ],
+    "units": "frac",
+    "feather": 0
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a small airplane flying",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "small",
+   "selection_px": [
+    1353,
+    181,
+    216,
+    121
+   ],
+   "core": false
+  },
+  {
+   "id": "clouds-damaged-cloud",
+   "op": "damaged",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\clouds.jpg",
+    "w": 1804,
+    "h": 1208,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.25,
+     0.25,
+     0.3,
+     0.25
+    ],
+    "units": "frac",
+    "feather": 24
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "towering cumulus cloud lit by the sun",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "remove": false
+   },
+   "size_class": "medium",
+   "selection_px": [
+    451,
+    302,
+    541,
+    302
+   ],
+   "core": false
+  },
+  {
+   "id": "clouds-expand-top",
+   "op": "expand-side",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\day\\benchmark\\photos\\clouds.jpg",
+    "w": 1804,
+    "h": 1208,
+    "scale": false
+   },
+   "families": [
+    "sd15",
+    "sdxl",
+    "flux",
+    "qwen_image"
+   ],
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "deep blue sky with scattered clouds",
+    "negative": "blurry, lowres, watermark, text artifacts",
+    "variations": 1,
+    "seed": 1234,
+    "left": 0,
+    "top": 256,
+    "right": 0,
+    "bottom": 0
+   },
+   "core": false
+  }
+ ]
+}
