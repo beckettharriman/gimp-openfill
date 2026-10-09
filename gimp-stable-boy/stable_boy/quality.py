@@ -13,8 +13,8 @@ on small buffers (a downsampled context, see ``caption.sample``):
   above it);
 - frame: colour difference between a thin band just inside the edge and one
   just outside it (a pale frame or a pasted panel);
-- colour: mean and spread of the whole inside against the ring (removal only;
-  a prompted fill is supposed to differ from its surroundings);
+- colour: mean and spread of the whole inside against the ring (for removal
+  lower is better; a prompted fill that hardly differs drew little);
 - leak: change outside the selection, where the layer mask's feather shows
   the generated pixels.
 
@@ -28,6 +28,11 @@ import random
 from dataclasses import dataclass
 
 INF = 1 << 20
+
+
+# Inside-against-ring colour distance below which a prompted fill counts as
+# having drawn little (calibrated on 4 x 4 variations of strawberry and balloon).
+PROMPT_CONTENT = 0.35
 
 
 @dataclass(frozen=True)
@@ -188,6 +193,10 @@ def score(
     if removal:
         penalty += 0.6 * max(0.0, math.log(max(lap_ratio, 1e-6) / 1.5))  # busier: something was invented
         penalty += 3.0 * colour
+    else:
+        # a prompted fill should put something there: a fill that barely
+        # differs from its surroundings (no object, or a tiny one) ranks lower
+        penalty += 3.0 * max(0.0, PROMPT_CONTENT - colour)
     penalty += 6.0 * frame + 8.0 * leak
     return Score(seam, lap_ratio, frame, colour, leak, penalty)
 

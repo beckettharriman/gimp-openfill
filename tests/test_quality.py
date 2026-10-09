@@ -108,6 +108,18 @@ class RankTest(unittest.TestCase):
         s_remove = quality.score(ORIGINAL, obj, MASK, removal=True)
         self.assertLess(s_prompt.total, s_remove.total)
 
+    def test_prompted_fill_that_draws_nothing_ranks_last(self):
+        # the selection just continues the texture
+        empty = make(lambda x, y: texture(x, y, seed=5) if inside(x, y) else texture(x, y))
+        drawn = make(
+            lambda x, y: (220, 30, 40)
+            if inside(x, y, (21, 21, 6, 6))
+            else (texture(x, y, 5) if inside(x, y) else texture(x, y))
+        )
+        self.assertEqual(quality.rank(ORIGINAL, [empty, drawn], MASK, removal=False), [1, 0])
+        # for removal the empty continuation is the better one
+        self.assertEqual(quality.rank(ORIGINAL, [empty, drawn], MASK, removal=True), [0, 1])
+
     def test_single_candidate_and_stable_order(self):
         a = make(lambda x, y: texture(x, y))
         self.assertEqual(quality.rank(ORIGINAL, [a], MASK, True), [0])

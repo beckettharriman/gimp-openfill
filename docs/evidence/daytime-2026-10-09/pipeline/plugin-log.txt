@@ -1,0 +1,112 @@
+# plug-in log lines of the headless verification runs (gimp-console-3.2, profile gimp-profile-fix)
+## gimp-v1b-sd15.log
+gimp done in 101s
+architecture-material-roof-tiles
+   ('success', 'success', 32.74)
+   2026-10-09 16:57:06,375 INFO  [12552 stable-boy] fill: selection=Rect(x=160, y=51, width=1620, height=89) context=Rect(x=0, y=0, width=2000, height=1273) working=640x408 scale=0.32 mask(grow=16/5px feather=24/5px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+   2026-10-09 16:57:06,375 INFO  [12552 stable-boy] fill: tiles=4 at scale 1.00: [(80, 0, 640, 385, 640, 384), (460, 0, 640, 385, 640, 384), (840, 0, 640, 385, 640, 384), (1220, 0, 640, 385, 640, 384)]
+   2026-10-09 16:57:06,916 INFO  [12552 stable-boy] timeout estimate 600 s (model files 4.3 GB, cold)
+   2026-10-09 16:57:06,931 INFO  [12552 stable-boy] queued prompt 1bf9ff2c-98f3-4977-b334-7928595a612c (timeout 600s, 25 steps x 1)
+   2026-10-09 16:57:36,712 INFO  [12552 stable-boy] fill: grain ring 1.97, layer 1 1.39, adding 1.39
+   2026-10-09 16:57:38,320 INFO  [12552 stable-boy] fill: grain matched in 2.58 s
+texture-damaged-huge
+   ('success', 'success', 41.61)
+   2026-10-09 16:57:46,143 INFO  [28168 stable-boy] fill: selection=Rect(x=64, y=40, width=1792, height=1360) context=Rect(x=0, y=0, width=1920, height=1440) working=640x480 scale=0.33 mask(grow=16/5px feather=24/5px layer grow=16px) prefill=border/navier-stokes color_match=0.0 model=sd15-inpainting template=sd15_inpaint
+   2026-10-09 16:57:46,144 INFO  [28168 stable-boy] fill: tiles=4 at scale 0.60: [(0, 0, 1066, 1066, 640, 640), (854, 0, 1066, 1066, 640, 640), (0, 374, 1066, 1066, 640, 640), (854, 374, 1066, 1066, 640, 640)]
+   2026-10-09 16:57:46,761 INFO  [28168 stable-boy] timeout estimate 600 s (model files 4.3 GB, cold)
+   2026-10-09 16:57:46,774 INFO  [28168 stable-boy] queued prompt a54e1dc7-8cd8-4374-929a-08c43e9377bc (timeout 600s, 25 steps x 1)
+   2026-10-09 16:58:25,223 INFO  [28168 stable-boy] fill: grain ring 3.40, layer 1 1.09, adding 3.22
+   2026-10-09 16:58:26,958 INFO  [28168 stable-boy] fill: grain matched in 2.90 s
+night-street-remove-large-car
+   ('success', 'success', 5.84)
+   2026-10-09 16:57:39,672 INFO  [36424 stable-boy] fill: empty prompt -> using lama-big
+   2026-10-09 16:57:39,673 INFO  [36424 stable-boy] fill: selection=Rect(x=192, y=913, width=806, height=355) context=Rect(x=0, y=107, width=1612, height=1161) working=512x368 scale=0.32 mask(grow=16/5px feather=24/5px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=lama-big template=inpaint_model
+   2026-10-09 16:57:40,092 INFO  [36424 stable-boy] timeout estimate 600 s (model files 0.2 GB, cold)
+   2026-10-09 16:57:40,102 INFO  [36424 stable-boy] queued prompt 0f15a4d5-c9de-49e2-acc4-6beb495494a9 (timeout 600s, 25 steps x 1)
+   2026-10-09 16:57:44,728 INFO  [36424 stable-boy] fill: done, seed=1234, 1 layer(s)
+face-remove-large-shuttle
+   ('success', 'success', 10.22)
+   2026-10-09 16:56:55,676 INFO  [16832 stable-boy] fill: empty prompt -> using lama-big
+   2026-10-09 16:56:55,677 INFO  [16832 stable-boy] fill: selection=Rect(x=0, y=888, width=732, height=2064) context=Rect(x=0, y=0, width=2400, height=3000) working=408x512 scale=0.17 mask(grow=16/3px feather=24/3px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=lama-big template=inpaint_model
+   2026-10-09 16:56:56,902 INFO  [16832 stable-boy] timeout estimate 600 s (model files 0.2 GB, cold)
+   2026-10-09 16:56:56,910 INFO  [16832 stable-boy] queued prompt 33880627-990b-4184-a9aa-682a9ad37093 (timeout 600s, 25 steps x 1)
+   2026-10-09 16:57:04,637 INFO  [16832 stable-boy] fill: done, seed=1234, 1 layer(s)
+## gimp-v1b-jugg.log
+gimp done in 211s
+face-material-red-leather
+   ('success', 'success', 81.07)
+   2026-10-09 16:58:39,017 INFO  [38252 stable-boy] fill: selection=Rect(x=1464, y=1176, width=840, height=1398) context=Rect(x=162, y=204, width=2238, height=2796) working=816x1024 scale=0.36 mask(grow=16/6px feather=24/6px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=juggernaut-xl-v9 template=sdxl_fooocus
+   2026-10-09 16:58:39,017 INFO  [38252 stable-boy] fill: tiles=2 at scale 0.90: [(1114, 830, 1124, 1137, 1008, 1024), (1114, 1375, 1124, 1137, 1008, 1024)]
+   2026-10-09 16:58:40,164 INFO  [38252 stable-boy] timeout estimate 600 s (model files 8.4 GB, cold)
+   2026-10-09 16:58:40,180 INFO  [38252 stable-boy] queued prompt 5035e8cd-000d-4c17-a034-b41e6d3c325d (timeout 600s, 25 steps x 1)
+   2026-10-09 16:59:55,383 INFO  [38252 stable-boy] fill: grain ring 2.38, layer 1 0.46, adding 2.34
+   2026-10-09 16:59:59,136 INFO  [38252 stable-boy] fill: grain matched in 6.27 s
+texture-damaged-huge
+   ('success', 'success', 120.82)
+   2026-10-09 17:00:00,848 INFO  [37976 stable-boy] fill: selection=Rect(x=64, y=40, width=1792, height=1360) context=Rect(x=0, y=0, width=1920, height=1440) working=1024x768 scale=0.53 mask(grow=16/9px feather=24/9px layer grow=16px) prefill=border/navier-stokes color_match=0.0 model=juggernaut-xl-v9 template=sdxl_fooocus
+   2026-10-09 17:00:00,848 INFO  [37976 stable-boy] fill: tiles=4 at scale 1.00: [(0, 0, 1024, 1024, 1024, 1024), (896, 0, 1024, 1024, 1024, 1024), (0, 416, 1024, 1024, 1024, 1024), (896, 416, 1024, 1024, 1024, 1024)]
+   2026-10-09 17:00:01,415 INFO  [37976 stable-boy] timeout estimate 545 s (model files 8.4 GB, warm)
+   2026-10-09 17:00:01,431 INFO  [37976 stable-boy] queued prompt 0508ec99-2826-4260-b3dd-58cf02a70437 (timeout 545s, 25 steps x 1)
+   2026-10-09 17:01:59,075 INFO  [37976 stable-boy] fill: grain ring 3.40, layer 1 0.33, adding 3.38
+   2026-10-09 17:02:00,873 INFO  [37976 stable-boy] fill: grain matched in 2.88 s
+## gimp-v4.log
+gimp done in 63s
+hands-replace-strawberry
+   ('success', 'success', 27.17)
+   2026-10-09 17:02:39,153 INFO  [21856 stable-boy] fill: selection=Rect(x=730, y=1267, width=557, height=490) context=Rect(x=476, y=989, width=1065, height=1046) working=640x632 scale=0.60 mask(grow=16/10px feather=24/10px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+   2026-10-09 17:02:39,788 INFO  [21856 stable-boy] timeout estimate 282 s (model files 4.3 GB, warm)
+   2026-10-09 17:02:39,806 INFO  [21856 stable-boy] queued prompt 3ab3af5e-8bde-4342-a90d-d492ef2d0473 (timeout 282s, 25 steps x 4)
+   2026-10-09 17:03:04,929 INFO  [21856 stable-boy] fill: grain 0.36 around the selection; nothing to match
+   2026-10-09 17:03:05,524 INFO  [21856 stable-boy] fill: ranked variations [1, 2, 4, 3] (scores [0.518, 0.558, 1.044, 0.773]) in 0.59 s
+   2026-10-09 17:03:05,528 INFO  [21856 stable-boy] fill: done, seed=1234, 4 layer(s)
+landscape-replace-balloon
+   ('success', 'success', 27.67)
+   2026-10-09 17:02:09,991 INFO  [3576 stable-boy] fill: selection=Rect(x=480, y=43, width=346, height=288) context=Rect(x=307, y=0, width=692, height=634) working=640x584 scale=0.92 mask(grow=16/15px feather=21/15px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+   2026-10-09 17:02:10,139 INFO  [3576 stable-boy] timeout estimate 600 s (model files 4.3 GB, cold)
+   2026-10-09 17:02:10,169 INFO  [3576 stable-boy] queued prompt ecb76b56-f657-4018-b4a5-567139205cac (timeout 600s, 25 steps x 4)
+   2026-10-09 17:02:36,475 INFO  [3576 stable-boy] fill: grain 1.00 around the selection; nothing to match
+   2026-10-09 17:02:36,785 INFO  [3576 stable-boy] fill: ranked variations [3, 2, 1, 4] (scores [0.435, 0.227, 0.201, 1.878]) in 0.31 s
+   2026-10-09 17:02:36,808 INFO  [3576 stable-boy] fill: done, seed=1234, 4 layer(s)
+
+## gimp-v4s7.log
+gimp done in 65s
+hands-replace-strawberry
+   ('success', 'success', 27.13)
+   2026-10-09 17:40:45,622 INFO  [26424 stable-boy] fill: selection=Rect(x=730, y=1267, width=557, height=490) context=Rect(x=476, y=989, width=1065, height=1046) working=640x632 scale=0.60 mask(grow=16/10px feather=24/10px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+   2026-10-09 17:40:46,254 INFO  [26424 stable-boy] timeout estimate 282 s (model files 4.3 GB, warm)
+   2026-10-09 17:40:46,263 INFO  [26424 stable-boy] queued prompt 1d65c966-0c75-40c7-9cdf-6bfbc8536f9e (timeout 282s, 25 steps x 4)
+   2026-10-09 17:41:11,268 INFO  [26424 stable-boy] fill: grain 0.36 around the selection; nothing to match
+   2026-10-09 17:41:11,829 INFO  [26424 stable-boy] fill: ranked variations [4, 1, 3, 2] (scores [0.569, 0.803, 0.618, 0.526]) in 0.56 s
+   2026-10-09 17:41:11,897 INFO  [26424 stable-boy] fill: done, seed=7, 4 layer(s)
+landscape-replace-balloon
+   ('success', 'success', 27.96)
+   2026-10-09 17:40:16,231 INFO  [32444 stable-boy] fill: selection=Rect(x=480, y=43, width=346, height=288) context=Rect(x=307, y=0, width=692, height=634) working=640x584 scale=0.92 mask(grow=16/15px feather=21/15px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+   2026-10-09 17:40:16,376 INFO  [32444 stable-boy] timeout estimate 600 s (model files 4.3 GB, cold)
+   2026-10-09 17:40:16,408 INFO  [32444 stable-boy] queued prompt dece6b5e-c61c-49b1-bb2e-b070dedaf183 (timeout 600s, 25 steps x 4)
+   2026-10-09 17:40:42,989 INFO  [32444 stable-boy] fill: grain 1.00 around the selection; nothing to match
+   2026-10-09 17:40:43,285 INFO  [32444 stable-boy] fill: ranked variations [2, 4, 3, 1] (scores [0.251, 0.152, 0.216, 0.166]) in 0.30 s
+   2026-10-09 17:40:43,298 INFO  [32444 stable-boy] fill: done, seed=7, 4 layer(s)
+## gimp-v4s42.log
+gimp done in 52s
+hands-replace-strawberry
+   ('success', 'success', 24.11)
+   2026-10-09 17:42:46,751 INFO  [21596 stable-boy] fill: selection=Rect(x=730, y=1267, width=557, height=490) context=Rect(x=476, y=989, width=1065, height=1046) working=640x632 scale=0.60 mask(grow=16/10px feather=24/10px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+   2026-10-09 17:42:47,340 INFO  [21596 stable-boy] timeout estimate 282 s (model files 4.3 GB, warm)
+   2026-10-09 17:42:47,349 INFO  [21596 stable-boy] queued prompt d5d5cc77-eb52-4853-a2fd-f09280aa4648 (timeout 282s, 25 steps x 4)
+   2026-10-09 17:43:09,384 INFO  [21596 stable-boy] fill: grain 0.36 around the selection; nothing to match
+   2026-10-09 17:43:09,934 INFO  [21596 stable-boy] fill: ranked variations [4, 2, 3, 1] (scores [1.27, 1.081, 1.111, 1.048]) in 0.55 s
+   2026-10-09 17:43:10,008 INFO  [21596 stable-boy] fill: done, seed=42, 4 layer(s)
+landscape-replace-balloon
+   ('success', 'success', 19.28)
+   2026-10-09 17:42:26,054 INFO  [11548 stable-boy] fill: selection=Rect(x=480, y=43, width=346, height=288) context=Rect(x=307, y=0, width=692, height=634) working=640x584 scale=0.92 mask(grow=16/15px feather=21/15px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+   2026-10-09 17:42:26,201 INFO  [11548 stable-boy] timeout estimate 273 s (model files 4.3 GB, warm)
+   2026-10-09 17:42:26,209 INFO  [11548 stable-boy] queued prompt d74e3788-7f0a-4c3d-9776-41adb881fb63 (timeout 273s, 25 steps x 4)
+   2026-10-09 17:42:44,123 INFO  [11548 stable-boy] fill: grain 1.00 around the selection; nothing to match
+   2026-10-09 17:42:44,422 INFO  [11548 stable-boy] fill: ranked variations [4, 3, 2, 1] (scores [0.654, 0.639, 0.543, 0.22]) in 0.30 s
+   2026-10-09 17:42:44,438 INFO  [11548 stable-boy] fill: done, seed=42, 4 layer(s)
+## gimp-v5.log
+gimp done in 19s
+product-expand-all
+   ('success', 'success', 12.14)
+   2026-10-09 17:41:38,625 INFO  [9272 stable-boy] timeout estimate 194 s (model files 4.3 GB, warm)
+   2026-10-09 17:41:38,634 INFO  [9272 stable-boy] queued prompt 97f20462-53f6-4882-84e0-bb6fabcb2946 (timeout 194s, 25 steps x 1)
