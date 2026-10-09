@@ -49,7 +49,9 @@ pixel-identical (max diff 0) and added no layer. This is not repeated per row.
 At 00:51, before the fixes, 55 cases were scored: 5 PASS, 27 PASS-WITH-NOTES,
 23 FAIL. This pass scores 64 cases (the 55 plus nine new ones: err-model-missing,
 three *-quality cases and five extra seeds): **11 PASS, 31 PASS-WITH-NOTES,
-22 FAIL**. On the same 55 cases as before, the counts are 10 PASS,
+22 FAIL**; after the 04:33 re-run of img-3000 and img-6000 with the 640 px
+working-size rule (see "SD 1.5 and expand A/B") the totals are 11 PASS,
+33 PASS-WITH-NOTES, 20 FAIL. On the same 55 cases as before, the counts are 10 PASS,
 28 PASS-WITH-NOTES, 17 FAIL. Of the nine new cases, one passes
 (err-model-missing), three are PASS-WITH-NOTES (the quality tier at positions
 where SD 1.5 fails) and five fail (sel-tiny-20px-quality and four SD 1.5 seed
@@ -77,9 +79,9 @@ contain no brick, so they are FAIL here even though report.json says pass.
 | img-1024 | sd15-inpainting | 2026-10-09T01:39:16 | pass / success | 3 | 4 | 4 | 3 | 3 | 1 | FAIL | Box removed and sky/grass continued, but no brick; a small green-grey stub stands on the horizon; pale rectangle in the sky. The report passes only because the box was removed. Unchanged from 00:51. |
 | img-16bit-int | sd15-inpainting | 2026-10-09T01:25:30 | pass / success | 3 | 3 | 4 | 4 | 3 | 4 | PASS-WITH-NOTES | Matches mode-fill (max diff 3/255); 16-bit integer precision handled. |
 | img-256 | sd15-inpainting | 2026-10-09T01:24:19 | pass / success | 3 | 4 | 3 | 4 | 3 | 1 | FAIL | 256x256: box removed, no brick; soft pale box clearly visible in the sky. Unchanged from 00:51. |
-| img-3000 | sd15-inpainting | 2026-10-09T01:24:34 | pass / success | 3 | 4 | 2 | 3 | 3 | 2 | FAIL | Flat terracotta rectangle with no brick, mortar or any texture (Laplacian var 3.4 inside); faint pale halo. Working size 768x648 at scale 0.50. Worse than 00:51 (it had windows then). |
+| img-3000 | sd15-inpainting | 2026-10-09T04:33 | pass / success | 3 | 4 | 4 | 3 | 3 | 4 | PASS-WITH-NOTES | Re-run after the 640 px working-size rule (see "SD 1.5 and expand A/B"): brick courses and mortar where there was a flat terracotta block; faint lighter rectangle in the mask band. |
 | img-32bit-float | sd15-inpainting | 2026-10-09T01:25:38 | pass / success | 3 | 3 | 4 | 4 | 3 | 4 | PASS-WITH-NOTES | Matches mode-fill (max diff 3/255); float precision handled. |
-| img-6000 | sd15-inpainting | 2026-10-09T01:24:45 | pass / success | 3 | 4 | 2 | 3 | 3 | 2 | FAIL | Same flat terracotta block as img-3000 (Laplacian var 0.43), scale 0.25, visible pale halo box. 11.6 s. Worse than 00:51. |
+| img-6000 | sd15-inpainting | 2026-10-09T04:33 | pass / success | 4 | 4 | 4 | 3 | 3 | 4 | PASS-WITH-NOTES | Re-run after the 640 px working-size rule: brick wall with coping at 640x536 (was a flat block). 11.6 s on the first run. |
 | img-alpha-transparent | sd15-inpainting | 2026-10-09T01:25:53 | pass / success | 3 | 3 | 4 | 3 | 3 | 4 | PASS-WITH-NOTES | Over the transparent hole the fill is a flat grey-green rounded block, not black (acceptable per the harness note). Over the dark box there is brick, with a flat grey-green strip on top. Fixed since 00:51. |
 | img-aspect-tall | sd15-inpainting | 2026-10-09T01:39:23 | fail / success | 4 | 4 | 3 | 3 | 4 | 1 | FAIL | 256x4096: the selected part of the pole is reproduced, no brick (mean diff 4.7); faint striped ghosts beside it. |
 | img-aspect-wide | sd15-inpainting | 2026-10-09T01:25:01 | pass / success | 3 | 3 | 4 | 2 | 3 | 1 | FAIL | 4096x256: the selection became a dark stepped slab that rises into the sky, with green fill in its middle; no brick. The report passes on mean diff 52.7. Worse than 00:51. |
@@ -125,7 +127,7 @@ contain no brick, so they are FAIL here even though report.json says pass.
 | sel-edge-top | sd15-inpainting | 2026-10-09T01:38:40 | fail / success | 2 | 3 | 4 | 4 | 3 | 1 | FAIL | Sky continued, no brick; a darker blue rectangle is clearly visible at the top edge (more visible than at 00:51). |
 | sel-edge-top-quality | juggernaut-xl-v9 | 2026-10-09T01:31:05 | pass / success | 4 | 4 | 5 | 4 | 3 | 5 | PASS-WITH-NOTES | New case. Crisp brick panel; soft dark fringe along the bottom edge. |
 | sel-feathered | sd15-inpainting | 2026-10-09T01:23:33 | pass / success | 3 | 4 | 4 | 4 | 3 | 1 | FAIL | 20 px feather: box removed, sky and grass continued, no brick; pale box in the sky. The report passes on mean diff 74 (box removal). Worse than 00:51 (weak red wall then). |
-| sel-huge-85pct | sd15-inpainting | 2026-10-09T01:38:24 | pass / success | 3 | 3 | 4 | 3 | 3 | 5 | PASS-WITH-NOTES | Large brick wall with grass tufts at its foot; the sun was inside the selection and is gone (correct). The regenerated grass below is greyer than the border grass and the 4% border ring is faintly visible. Fixed since 00:51. |
+| sel-huge-85pct | sd15-inpainting | 2026-10-09T04:33 | pass / success | 3 | 3 | 4 | 3 | 3 | 4 | PASS-WITH-NOTES | Re-run after the 640 px working-size rule (guard case): brick wall; the top of the selection is a darker sky panel with a visible edge. Previously brick over the whole selection with greyer grass. |
 | sel-layer-in-group | sd15-inpainting | 2026-10-09T01:23:57 | pass / success | 2 | 2 | 3 | 3 | 3 | 1 | FAIL | Layer offsets correct, but the selected part of the vivid mosaic becomes a washed-out grey-beige mosaic, an obvious rectangle; no brick. |
 | sel-layer-mask-active | sd15-inpainting | 2026-10-09T01:24:05 | pass / success | 3 | 3 | 4 | 4 | 3 | 4 | PASS-WITH-NOTES | Pixel-identical to mode-fill; an active layer mask does not redirect the fill. |
 | sel-layer-offset | sd15-inpainting | 2026-10-09T01:23:49 | pass / success | 2 | 2 | 3 | 3 | 3 | 1 | FAIL | Same as sel-layer-in-group: aligned correctly, washed-out mosaic rectangle, no brick. |
@@ -348,7 +350,7 @@ are visual.
 | photo-architecture-extend | 4 | 4 | 3 | 4 | 4 | 5 | PASS-WITH-NOTES | Facade continues with windows and curtains, softer than the original. Before: a blurred yellow block (FAIL). |
 | photo-text-extend | 4 | 4 | 3 | 4 | 4 | 4 | PASS-WITH-NOTES | Sign frame continues, a blurred path and grass beyond it. Before: a flat pale field. |
 | photo-product-extend | 5 | 5 | 5 | 5 | 5 | 5 | PASS | White background continues. |
-| photo-landscape-extend-all | 1 | 2 | 1 | 1 | 2 | 1 | FAIL | Quality tier, all four sides: the border is a smeared radial blur of green and sky, like a vignette frame; nothing generated. Unchanged by the fixes (all-sides still uses the whole canvas). |
+| photo-landscape-extend-all | 4 | 2 | 4 | 3 | 2 | 4 | FAIL | Re-run after sequential expand for SDXL tiers: meadow, trees and sky generated on all four sides (was a blurred vignette). The left strip has a different horizon and a hard vertical seam; right, top and bottom blend. Details in "SD 1.5 and expand A/B". |
 | photo-landscape-extend-all-fast | 4 | 4 | 3 | 4 | 4 | 5 | PASS-WITH-NOTES | Same expansion with SD 1.5: birch, meadow and sky extended on all sides; soft (0.42x working scale), bottom-left corner darker. |
 
 Totals: 8 PASS, 10 PASS-WITH-NOTES, 10 FAIL.
