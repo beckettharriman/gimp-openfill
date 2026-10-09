@@ -91,7 +91,7 @@ class App:
         self.server = ServerManager(self.settings, self.paths, self.log)
         self.plugin_dir = Path(__file__).resolve().parent.parent
         try:
-            self.catalog = cat.load_catalog(plugin_dir=self.plugin_dir)
+            self.catalog = cat.load_merged(plugin_dir=self.plugin_dir, base=self.paths.base)
         except cat.CatalogError as err:
             self.log.warning("catalog unavailable: %s", err)
             self.catalog = []
@@ -165,6 +165,8 @@ class App:
             )
         status = cat.install_status(entry, self.models_root, self.custom_nodes_dir, self.catalog)
         if not status.installed:
+            if not self.has_model_for("fill"):
+                raise ModelMissing(cat.NO_MODEL_MESSAGE)
             raise ModelMissing(
                 f"'{model_display_name(entry.name)}' is not downloaded yet. Open Filters > AI > Generative Fill "
                 "Settings > Models and press Download."
@@ -277,12 +279,17 @@ class App:
             self.log.error("settings not saved: %s", err)
             raise BackendError(f"The settings could not be saved: {err}") from err
 
+    def has_model_for(self, operation: str) -> bool:
+        """True when a downloaded model can run ``operation`` (fill, expand, txt2img, remove, edit)."""
+        return bool(cat.runnable_installed(self.catalog, self.models_root, self.custom_nodes_dir, operation))
+
     def queue_download(self, model_id: str, include_dependencies: bool = True) -> list[str]:
         entry = cat.by_id(self.catalog, model_id)
-        if entry.gated and not self.settings.hf_token:
+        if cat.gated_files_missing(entry, self.models_root) and not self.settings.hf_token:
+            pages = ", ".join(cat.login_pages(entry, self.models_root)) or entry.page
             raise ModelMissing(
-                f"'{model_display_name(entry.name)}' is gated on Hugging Face. Accept the license at {entry.page} "
-                "and enter your access token (huggingface.co/settings/tokens) in the Models tab."
+                f"'{model_display_name(entry.name)}' needs a free Hugging Face login: accept the license at {pages} "
+                "and paste your access key in the Models tab (the Download button shows the steps)."
             )
         self.models_root.mkdir(parents=True, exist_ok=True)
         free = shutil.disk_usage(self.models_root).free

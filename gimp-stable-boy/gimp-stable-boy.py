@@ -574,6 +574,26 @@ def _test_progress_demo(image: Gimp.Image | None, seconds: float) -> None:
 # ------------------------------------------------------------------ runs ----
 
 
+def _ensure_model(operation: str, run_mode: Gimp.RunMode, hooks: dict) -> bool:
+    """First run: when no downloaded model can do ``operation``, say so and open the download manager."""
+    if run_mode != Gimp.RunMode.INTERACTIVE or hooks.get("skip_model_check"):
+        return True
+    from stable_boy.app import App
+
+    try:
+        app = App()
+        if app.has_model_for(operation):
+            return True
+    except Exception:  # noqa: BLE001 - the generation path reports backend problems itself
+        return True
+    from stable_boy import catalog as cat
+    from stable_boy.models_ui import run_models_dialog
+
+    GimpUi.init("gimp-stable-boy")
+    run_models_dialog(app, cat.NO_MODEL_MESSAGE)
+    return app.has_model_for(operation)
+
+
 def run_fill(
     procedure: Gimp.Procedure,
     run_mode: Gimp.RunMode,
@@ -590,6 +610,8 @@ def run_fill(
     if hooks.get("progress_demo"):
         _test_progress_demo(image, float(hooks["progress_demo"]))
         return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
+    if not _ensure_model("remove", run_mode, hooks):
+        return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
     if run_mode == Gimp.RunMode.INTERACTIVE and not _ask("fill", "Generative Fill", procedure, config, image, hooks):
         return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
     if _dry_run("fill", config, hooks):
@@ -625,6 +647,8 @@ def run_expand(
 ) -> Gimp.ValueArray:
     """Filters > AI > Generative Expand: grow the canvas and outpaint the new border."""
     hooks = _test_hooks() if run_mode == Gimp.RunMode.INTERACTIVE else {}
+    if not _ensure_model("expand", run_mode, hooks):
+        return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
     if run_mode == Gimp.RunMode.INTERACTIVE and not _ask(
         "expand", "Generative Expand", procedure, config, image, hooks
     ):
@@ -666,6 +690,8 @@ def run_txt2img(
 ) -> Gimp.ValueArray:
     """Filters > AI > Text to Image: a new layer (or a new image) from a prompt."""
     hooks = _test_hooks() if run_mode == Gimp.RunMode.INTERACTIVE else {}
+    if not _ensure_model("txt2img", run_mode, hooks):
+        return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
     if run_mode == Gimp.RunMode.INTERACTIVE and not _ask("txt2img", "Text to Image", procedure, config, image, hooks):
         return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
     if _dry_run("txt2img", config, hooks):
@@ -773,7 +799,7 @@ def _settings_dialog(procedure: Gimp.Procedure, config: Gimp.ProcedureConfig) ->
         models_panel_factory=lambda: ModelsPanel(App()),
         test_backend=lambda v, report: _settings_test_backend(test_app, v, report),
         autoclose_seconds=float(hooks.get("autoclose") or 0),
-        tab=str(hooks.get("settings_tab") or ""),
+        tab=str(hooks.get("settings_tab") or "") or ("" if test_app.has_model_for("remove") else "models"),
         show_advanced=bool(hooks.get("advanced")),
         select_model=str(hooks.get("select_model") or ""),
         test_steps=hooks.get("settings_steps"),
