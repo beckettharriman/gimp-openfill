@@ -1,6 +1,6 @@
 set GIMP3_DIRECTORY=C:\AI\overnight-scratch\gimp-profile-test
 set SB_MATRIX_SPEC=C:\AI\overnight-scratch\photo-lane\photo-spec.json
 set SB_MATRIX_OUT=C:\AI\overnight-scratch\runs
-set SB_MATRIX_ONLY=photo-face-remove,photo-fabric-remove,photo-landscape-remove,photo-architecture-remove,photo-text-remove,photo-product-remove,photo-landscape-remove-quality,photo-architecture-remove-quality,photo-face-replace,photo-fabric-replace,photo-landscape-replace,photo-architecture-replace,photo-text-replace,photo-product-replace,photo-face-extend,photo-fabric-extend,photo-landscape-extend,photo-architecture-extend,photo-text-extend,photo-product-extend,photo-landscape-extend-all
+set SB_MATRIX_ONLY=photo-landscape-extend-all
 "C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe" --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b "exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_matrix.py').read())"
-(launcher: python C:\AI\overnight-scratch\runs\run_matrix.py --spec C:\AI\overnight-scratch\photo-lane\photo-spec.json --only photo-face-remove,photo-fabric-remove,photo-landscape-remove,photo-architecture-remove,photo-text-remove,photo-product-remove,photo-landscape-remove-quality,photo-architecture-remove-quality,photo-face-replace,photo-fabric-replace,photo-landscape-replace,photo-architecture-replace,photo-text-replace,photo-product-replace,photo-face-extend,photo-fabric-extend,photo-landscape-extend,photo-architecture-extend,photo-text-extend,photo-product-extend,photo-landscape-extend-all)
+(launcher: python C:\AI\overnight-scratch\runs\run_matrix.py --spec C:\AI\overnight-scratch\photo-lane\photo-spec.json --only photo-landscape-extend-all)

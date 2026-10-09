@@ -166,6 +166,42 @@ class ExpandTests(unittest.TestCase):
             g.plan_expand(100, 100, -1, 0, 0, 0, g.SD15)
 
 
+class ExpandStepsTests(unittest.TestCase):
+    def test_one_pass_for_one_side_or_sd15(self):
+        self.assertEqual(g.expand_steps(0, 0, 256, 0, "sdxl"), [(0, 0, 256, 0)])
+        self.assertEqual(g.expand_steps(256, 256, 256, 256, "sd15"), [(256, 256, 256, 256)])
+        self.assertEqual(g.expand_steps(64, 0, 0, 32, "flux"), [(64, 0, 0, 32)])
+
+    def test_sdxl_all_sides_one_at_a_time_horizontal_first(self):
+        self.assertEqual(
+            g.expand_steps(256, 128, 64, 32, "sdxl"),
+            [(256, 0, 0, 0), (0, 0, 64, 0), (0, 128, 0, 0), (0, 0, 0, 32)],
+        )
+
+    def test_sdxl_two_sides_skips_zero_margins(self):
+        self.assertEqual(g.expand_steps(0, 100, 0, 200, "sdxl"), [(0, 100, 0, 0), (0, 0, 0, 200)])
+
+
+class FillProfileTests(unittest.TestCase):
+    def test_large_prompted_sd15_fill_is_capped(self):
+        ctx = g.Rect(849, 399, 1524, 1282)  # img-3000
+        prof = g.fill_profile(g.SD15, ctx, "sd15", removal=False)
+        self.assertEqual(prof.max_side, g.SD15_PROMPT_MAX_SIDE)
+        ws = g.working_size(ctx.width, ctx.height, prof)
+        self.assertEqual((ws.width, ws.height), (640, 536))
+
+    def test_small_context_removal_and_other_archs_unchanged(self):
+        small = g.Rect(0, 0, 409, 396)
+        self.assertIs(g.fill_profile(g.SD15, small, "sd15", removal=False), g.SD15)
+        big = g.Rect(0, 0, 1524, 1282)
+        self.assertIs(g.fill_profile(g.SD15, big, "sd15", removal=True), g.SD15)
+        self.assertIs(g.fill_profile(g.SDXL, big, "sdxl", removal=False), g.SDXL)
+
+    def test_lower_user_max_side_is_kept(self):
+        prof = g.fill_profile(g.ModelProfile("sd15", 512, 576, 192), g.Rect(0, 0, 2000, 1500), "sd15", False)
+        self.assertEqual(prof.max_side, 576)
+
+
 class MiscTests(unittest.TestCase):
     def test_round_to_multiple(self):
         self.assertEqual(g.round_to_multiple(515, 8), 512)

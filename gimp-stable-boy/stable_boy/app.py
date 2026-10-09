@@ -428,7 +428,9 @@ class App:
         ctx = geometry.context_rect(
             target, full, profile, padding_ratio=geometry.fill_padding(removal_intent, model.prompt_free)
         )
-        ws = geometry.working_size(ctx.width, ctx.height, profile)
+        ws = geometry.working_size(
+            ctx.width, ctx.height, geometry.fill_profile(profile, ctx, model.arch, removal_intent)
+        )
         mp = geometry.mask_params(
             target,
             ws.scale,
@@ -530,6 +532,26 @@ class App:
     ) -> list:
         self._check_image(image)
         entry, model = self.resolve_model(model_choice)
+        steps = geometry.expand_steps(left, top, right, bottom, model.arch)
+        if len(steps) > 1:
+            self.log.info(
+                "expand: margins=%s on %s, one side at a time (%d passes)",
+                (left, top, right, bottom),
+                model.arch,
+                len(steps),
+            )
+            # Each pass reads the visible result of the previous one. Only the last
+            # pass makes the requested number of variations; its layers are the
+            # ones returned (and offered by the variations picker).
+            layers: list = []
+            image.undo_group_start()
+            try:
+                for index, margins in enumerate(steps):
+                    count = variations if index == len(steps) - 1 else 1
+                    layers = self.generative_expand(image, prompt, negative, *margins, count, seed, model_choice)
+            finally:
+                image.undo_group_end()
+            return layers
         profile = self.profile_for(model)
         plan = geometry.plan_expand(image.get_width(), image.get_height(), left, top, right, bottom, profile)
         ws = geometry.working_size(plan.context.width, plan.context.height, profile)

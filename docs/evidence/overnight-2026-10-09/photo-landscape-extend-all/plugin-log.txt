@@ -1,3 +1,26 @@
-2026-10-09 03:24:43,474 INFO  [11852 stable-boy] expand: margins=(256, 256, 256, 256) canvas=2432x1952 context=Rect(x=0, y=0, width=2432, height=1952) working=1024x824 model=juggernaut-xl-v9
-2026-10-09 03:24:47,678 INFO  [11852 stable-boy] queued prompt 98ce3c46-ee73-4b8f-bc10-67a979fc99ed (timeout 141s, 20 steps x 1)
-2026-10-09 03:25:08,918 INFO  [11852 stable-boy] expand: done, seed=1234, 1 layer(s)
+2026-10-09 04:34:48,761 INFO  [33608 stable-boy] expand: margins=(256, 256, 256, 256) on sdxl, one side at a time (4 passes)
+2026-10-09 04:34:48,764 INFO  [33608 stable-boy] expand: margins=(256, 0, 0, 0) canvas=2176x1440 context=Rect(x=0, y=0, width=864, height=1440) working=616x1024 model=juggernaut-xl-v9
+2026-10-09 04:34:51,339 INFO  [33608 stable-boy] launching supervisor (gimp pid 10988): C:/Users/becke/AppData/Local/Programs/GIMP 3/bin/pythonw.exe C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/supervisor.py --mode backend --python C:/AI/ComfyUI/ComfyUI_windows_portable/python_embeded/python.exe --main C:/AI/ComfyUI/ComfyUI_windows_portable/ComfyUI/main.py --cwd C:/AI/ComfyUI/ComfyUI_windows_portable --host 127.0.0.1 --port 8188 --base C:/AI/overnight-scratch/gimp-profile-test/stable-boy --config C:/AI/overnight-scratch/gimp-profile-test/stable-boy/config.json --watch-pid 10988 --idle-minutes 20
+2026-10-09 04:34:51 INFO  [21304 supervisor] starting backend: C:/AI/ComfyUI/ComfyUI_windows_portable/python_embeded/python.exe -s C:/AI/ComfyUI/ComfyUI_windows_portable/ComfyUI/main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --dont-print-server --preview-method taesd
+2026-10-09 04:34:51 INFO  [21304 supervisor] backend pid 18456, job object ok
+2026-10-09 04:34:51 INFO  [21304 supervisor] watching gimp pid 10988 (gimp-console-3.2.exe)
+2026-10-09 04:35:13,501 INFO  [33608 stable-boy] backend ready at http://127.0.0.1:8188 after 22 s
+2026-10-09 04:35:13,555 INFO  [33608 stable-boy] timing: upload image=1782697 mask=12326 bytes in 0.050 s
+2026-10-09 04:35:13,565 INFO  [33608 stable-boy] queued prompt b3d97678-e17c-4946-939f-9f80993a64a0 (timeout 137s, 25 steps x 1)
+2026-10-09 04:35:34,061 INFO  [33608 stable-boy] timing: queue->first step 10.329 s, sampling 10.135 s, download 1731408 bytes in 0.032 s
+2026-10-09 04:35:34,742 INFO  [33608 stable-boy] expand: done, seed=1234, 1 layer(s)
+2026-10-09 04:35:34,744 INFO  [33608 stable-boy] expand: margins=(0, 0, 256, 0) canvas=2432x1440 context=Rect(x=1568, y=0, width=864, height=1440) working=616x1024 model=juggernaut-xl-v9
+2026-10-09 04:35:35,840 INFO  [33608 stable-boy] timing: upload image=2170665 mask=12324 bytes in 0.044 s
+2026-10-09 04:35:35,869 INFO  [33608 stable-boy] queued prompt e7c3c5e6-9ffc-4e4d-9d71-44ff977a2d04 (timeout 137s, 25 steps x 1)
+2026-10-09 04:35:51,180 INFO  [33608 stable-boy] timing: queue->first step 5.020 s, sampling 10.257 s, download 1927187 bytes in 0.034 s
+2026-10-09 04:35:51,671 INFO  [33608 stable-boy] expand: done, seed=1234, 1 layer(s)
+2026-10-09 04:35:51,673 INFO  [33608 stable-boy] expand: margins=(0, 256, 0, 0) canvas=2432x1696 context=Rect(x=0, y=0, width=2432, height=1216) working=1024x512 model=juggernaut-xl-v9
+2026-10-09 04:35:54,225 INFO  [33608 stable-boy] timing: upload image=5004886 mask=15636 bytes in 0.052 s
+2026-10-09 04:35:54,236 INFO  [33608 stable-boy] queued prompt fd5b0c84-cc8e-43fc-a5eb-296df4d6ea9a (timeout 129s, 25 steps x 1)
+2026-10-09 04:36:09,513 INFO  [33608 stable-boy] timing: queue->first step 5.400 s, sampling 9.860 s, download 2823856 bytes in 0.016 s
+2026-10-09 04:36:10,141 INFO  [33608 stable-boy] expand: done, seed=1234, 1 layer(s)
+2026-10-09 04:36:10,143 INFO  [33608 stable-boy] expand: margins=(0, 0, 0, 256) canvas=2432x1952 context=Rect(x=0, y=736, width=2432, height=1216) working=1024x512 model=juggernaut-xl-v9
+2026-10-09 04:36:12,701 INFO  [33608 stable-boy] timing: upload image=6171664 mask=15636 bytes in 0.050 s
+2026-10-09 04:36:12,710 INFO  [33608 stable-boy] queued prompt 5d22b166-063e-4c6a-b2f3-a950528e3dc5 (timeout 129s, 25 steps x 1)
+2026-10-09 04:36:28,046 INFO  [33608 stable-boy] timing: queue->first step 5.221 s, sampling 10.099 s, download 3494853 bytes in 0.017 s
+2026-10-09 04:36:28,684 INFO  [33608 stable-boy] expand: done, seed=1234, 1 layer(s)

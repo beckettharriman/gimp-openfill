@@ -7,8 +7,11 @@
       "value": "success success"
     },
     "new_layer_or_group": {
-      "ok": true,
+      "ok": false,
       "value": [
+        "Generative Expand: green meadow and evening sky with trees, photo #3",
+        "Generative Expand: green meadow and evening sky with trees, photo #2",
+        "Generative Expand: green meadow and evening sky with trees, photo #1",
         "Generative Expand: green meadow and evening sky with trees, photo"
       ]
     },
@@ -28,16 +31,16 @@
       "value": 255.0
     },
     "no_hard_seam_at_old_edge": {
-      "ok": false,
-      "value": 38.62
+      "ok": true,
+      "value": 9.88
     },
     "new_area_not_empty": {
       "ok": true,
-      "value": 95.9
+      "value": 75.9
     },
     "old_pixels_outside_mask_unchanged": {
-      "ok": true,
-      "value": 0
+      "ok": false,
+      "value": 253
     },
     "selection_state_after": {
       "ok": true,
@@ -47,31 +50,31 @@
   "metrics": {
     "status": "success",
     "message": "success",
-    "seconds": 26.15,
+    "seconds": 100.6,
     "layer_size": [
       2432,
-      1952
+      1216
     ],
     "layer_offset": [
       0,
-      0
+      736
     ],
-    "laplacian_var_new_area": 0.72,
-    "laplacian_var_old_area": 2455.83,
-    "seam_mean_abs_diff_max": 38.62,
+    "laplacian_var_new_area": 20.0,
+    "laplacian_var_old_area": 2463.41,
+    "seam_mean_abs_diff_max": 9.88,
     "new_area_mean_rgb": [
-      97.2,
-      121.4,
-      69.1
+      71.8,
+      104.0,
+      52.1
     ],
-    "old_pixels_outside_mask_max_abs_diff": 0,
-    "old_pixels_outside_mask_count": 2369424
+    "old_pixels_outside_mask_max_abs_diff": 253,
+    "old_pixels_outside_mask_count": 2657280
   },
   "memory": {
-    "samples": 25,
-    "peak_gimp_tree_mb": 600,
-    "peak_comfyui_mb": 4579,
-    "peak_gpu_mib": 7292
+    "samples": 92,
+    "peak_gimp_tree_mb": 619,
+    "peak_comfyui_mb": 4103,
+    "peak_gpu_mib": 6948
   },
   "evidence_files": {
     "before.jpg/after.jpg": "longest side 1024 px, JPEG q85",
@@ -136,7 +139,7 @@
         "bottom": 256
       }
     },
-    "started": "2026-10-09 03:24:42",
+    "started": "2026-10-09 04:34:47",
     "gimp_version": "3.2.6",
     "runs": [
       {
@@ -181,12 +184,12 @@
         "drawables": [
           "Background"
         ],
-        "seconds": 26.15,
+        "seconds": 100.6,
         "status": "success",
         "message": "success",
         "layers_before": [
           {
-            "id": 202,
+            "id": 2,
             "name": "Background",
             "size": [
               1920,
@@ -203,11 +206,26 @@
         ],
         "layers_after": [
           {
-            "id": 207,
-            "name": "Generative Expand: green meadow and evening sky with trees, photo",
+            "id": 25,
+            "name": "Generative Expand: green meadow and evening sky with trees, photo #3",
             "size": [
               2432,
-              1952
+              1216
+            ],
+            "offset": [
+              0,
+              736
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 19,
+            "name": "Generative Expand: green meadow and evening sky with trees, photo #2",
+            "size": [
+              2432,
+              1216
             ],
             "offset": [
               0,
@@ -218,7 +236,37 @@
             "has_mask": true
           },
           {
-            "id": 202,
+            "id": 13,
+            "name": "Generative Expand: green meadow and evening sky with trees, photo #1",
+            "size": [
+              864,
+              1440
+            ],
+            "offset": [
+              1568,
+              256
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 7,
+            "name": "Generative Expand: green meadow and evening sky with trees, photo",
+            "size": [
+              864,
+              1440
+            ],
+            "offset": [
+              0,
+              256
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 2,
             "name": "Background",
             "size": [
               1920,
@@ -234,7 +282,7 @@
           }
         ],
         "layer_count_before": 1,
-        "layer_count_after": 2,
+        "layer_count_after": 5,
         "channels_before": [],
         "channels_after": [],
         "size_after": [
@@ -245,15 +293,60 @@
         "selection_after_empty": true,
         "new_top_level": [
           {
-            "id": 207,
-            "name": "Generative Expand: green meadow and evening sky with trees, photo",
+            "id": 25,
+            "name": "Generative Expand: green meadow and evening sky with trees, photo #3",
             "size": [
               2432,
-              1952
+              1216
+            ],
+            "offset": [
+              0,
+              736
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 19,
+            "name": "Generative Expand: green meadow and evening sky with trees, photo #2",
+            "size": [
+              2432,
+              1216
             ],
             "offset": [
               0,
               0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 13,
+            "name": "Generative Expand: green meadow and evening sky with trees, photo #1",
+            "size": [
+              864,
+              1440
+            ],
+            "offset": [
+              1568,
+              256
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 7,
+            "name": "Generative Expand: green meadow and evening sky with trees, photo",
+            "size": [
+              864,
+              1440
+            ],
+            "offset": [
+              0,
+              256
             ],
             "visible": true,
             "is_group": false,
@@ -263,24 +356,24 @@
         "raw_layer": {
           "file": "layer.raw",
           "width": 2432,
-          "height": 1952,
+          "height": 1216,
           "channels": 4,
           "offset": [
             0,
-            0
+            736
           ],
-          "md5": "ad5c8a0a4e9342b88a95091ed704ff84"
+          "md5": "d9ae0f339e5db1a88614cec10ee570f9"
         },
         "raw_mask": {
           "file": "mask.raw",
           "width": 2432,
-          "height": 1952,
+          "height": 1216,
           "channels": 1,
           "offset": [
             0,
-            0
+            736
           ],
-          "md5": "17a65e1e8b179a72f113e812824b2688"
+          "md5": "66b060338e9b1f08dc4fcbdd69664e08"
         },
         "raw_after": {
           "file": "after.raw",
@@ -291,13 +384,13 @@
             0,
             0
           ],
-          "md5": "fcf67966eef5c364eea77bb63e821a84"
+          "md5": "ba46ffb961bc56156f9777525fdb5b90"
         },
         "new_images": []
       }
     ],
     "driver_error": null,
-    "total_seconds": 26.79
+    "total_seconds": 101.48
   },
   "analysis_error": null,
   "region_scale": 0.4211

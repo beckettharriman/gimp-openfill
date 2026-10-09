@@ -1,3 +1,5 @@
-2026-10-09 01:23:34,829 INFO  [27504 stable-boy] fill: selection=Rect(x=400, y=280, width=300, height=240) context=Rect(x=250, y=130, width=600, height=540) working=600x544 scale=1.00 mask(grow=16/16px feather=18/16px layer grow=16px) prefill=border/neutral color_match=1.0 model=sd15-inpainting template=sd15_inpaint
-2026-10-09 01:23:34,938 INFO  [27504 stable-boy] queued prompt d488e0a8-4a9e-4ec0-a15c-2ddf71cb937e (timeout 120s, 25 steps x 1)
-2026-10-09 01:23:41,494 INFO  [27504 stable-boy] fill: done, seed=1234, 1 layer(s)
+2026-10-09 04:33:43,103 INFO  [11592 stable-boy] fill: selection=Rect(x=400, y=280, width=300, height=240) context=Rect(x=250, y=130, width=600, height=540) working=600x544 scale=1.00 mask(grow=16/16px feather=18/16px layer grow=16px) prefill=border/neutral color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+2026-10-09 04:33:43,232 INFO  [11592 stable-boy] timing: upload image=44126 mask=8871 bytes in 0.014 s
+2026-10-09 04:33:43,239 INFO  [11592 stable-boy] queued prompt 5c117d40-f957-45c2-a5dc-f3174264d362 (timeout 120s, 25 steps x 1)
+2026-10-09 04:33:49,389 INFO  [11592 stable-boy] timing: queue->first step 1.469 s, sampling 4.653 s, download 195838 bytes in 0.028 s
+2026-10-09 04:33:49,827 INFO  [11592 stable-boy] fill: done, seed=1234, 1 layer(s)

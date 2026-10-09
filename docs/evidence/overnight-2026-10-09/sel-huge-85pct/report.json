@@ -46,7 +46,7 @@
     },
     "content_changed_in_selection": {
       "ok": true,
-      "value": 64.4
+      "value": 55.08
     },
     "outside_grown_mask_unchanged": {
       "ok": true,
@@ -54,7 +54,7 @@
     },
     "not_a_flat_blob": {
       "ok": true,
-      "value": 18.53
+      "value": 32.7
     },
     "selection_restored": {
       "ok": true,
@@ -64,7 +64,7 @@
   "metrics": {
     "status": "success",
     "message": "success",
-    "seconds": 7.83,
+    "seconds": 36.01,
     "layer_size": [
       1024,
       768
@@ -77,20 +77,20 @@
     "mask_opaque_fraction_in_fully_selected": 0.9999,
     "mask_pixels_gt0": 784187,
     "selection_pixels_ge128": 665994,
-    "mean_abs_diff_in_selection": 64.4,
+    "mean_abs_diff_in_selection": 55.08,
     "outside_max_abs_diff": 0,
     "outside_changed_pixels": 0,
-    "laplacian_var_in_after": 18.53,
+    "laplacian_var_in_after": 32.7,
     "laplacian_var_out_after": 0.64,
     "laplacian_var_in_before": 68.69,
-    "detail_ratio_in_vs_out": 28.953,
+    "detail_ratio_in_vs_out": 51.094,
     "blur_flag": false
   },
   "memory": {
-    "samples": 9,
-    "peak_gimp_tree_mb": 391,
-    "peak_comfyui_mb": 6525,
-    "peak_gpu_mib": 3512
+    "samples": 35,
+    "peak_gimp_tree_mb": 386,
+    "peak_comfyui_mb": 6473,
+    "peak_gpu_mib": 2836
   },
   "evidence_files": {
     "before.png scale": 1.0,
@@ -160,7 +160,7 @@
         "remove": false
       }
     },
-    "started": "2026-10-09 01:38:24",
+    "started": "2026-10-09 04:32:58",
     "gimp_version": "3.2.6",
     "runs": [
       {
@@ -210,12 +210,12 @@
         "drawables": [
           "Background"
         ],
-        "seconds": 7.83,
+        "seconds": 36.01,
         "status": "success",
         "message": "success",
         "layers_before": [
           {
-            "id": 12,
+            "id": 2,
             "name": "Background",
             "size": [
               1024,
@@ -232,7 +232,7 @@
         ],
         "layers_after": [
           {
-            "id": 18,
+            "id": 8,
             "name": "Generative Fill: red brick wall",
             "size": [
               1024,
@@ -247,7 +247,7 @@
             "has_mask": true
           },
           {
-            "id": 12,
+            "id": 2,
             "name": "Background",
             "size": [
               1024,
@@ -273,7 +273,7 @@
         "selection_restored": true,
         "new_top_level": [
           {
-            "id": 18,
+            "id": 8,
             "name": "Generative Fill: red brick wall",
             "size": [
               1024,
@@ -297,7 +297,7 @@
             0,
             0
           ],
-          "md5": "684dff1f958403b470a4e6c71c92680a"
+          "md5": "aaf6212e7340b8518b37eb07f69c5400"
         },
         "raw_mask": {
           "file": "mask.raw",
@@ -319,13 +319,13 @@
             0,
             0
           ],
-          "md5": "838e88248c208d6d1d263dc8d49c22e4"
+          "md5": "aab7c53e3550d887ae7090175fffc610"
         },
         "new_images": []
       }
     ],
     "driver_error": null,
-    "total_seconds": 8.23
+    "total_seconds": 36.57
   },
   "analysis_error": null
 }

@@ -9,7 +9,7 @@ No GIMP imports. Every function here is unit-tested under system Python.
 from __future__ import annotations
 
 import random
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 
 @dataclass(frozen=True)
@@ -255,6 +255,32 @@ def _strip_context(
     return Rect(0, y, canvas.width, height)
 
 
+# Tiers that expand several sides one side at a time. With the whole canvas as
+# context, the SDXL tier (Fooocus patch) reads the old image inside a pre-filled
+# ring as a picture in a frame and returns the blurred pre-fill unchanged (a
+# vignette); one-sided strips work. SD 1.5 handles the ring and keeps one pass.
+SEQUENTIAL_EXPAND_ARCHS = ("sdxl",)
+
+
+def expand_steps(left: int, top: int, right: int, bottom: int, arch: str) -> list[tuple[int, int, int, int]]:
+    """Margins (left, top, right, bottom) of each expand pass.
+
+    One pass with all margins, except for ``SEQUENTIAL_EXPAND_ARCHS`` with two or
+    more growing sides: one pass per side, left and right first so the top and
+    bottom passes span the widened canvas and also fill the corners.
+    """
+    margins = (left, top, right, bottom)
+    if arch not in SEQUENTIAL_EXPAND_ARCHS or sum(1 for m in margins if m > 0) < 2:
+        return [margins]
+    steps = []
+    for index in (0, 2, 1, 3):
+        if margins[index] > 0:
+            step = [0, 0, 0, 0]
+            step[index] = margins[index]
+            steps.append((step[0], step[1], step[2], step[3]))
+    return steps
+
+
 def mask_for_expand(plan: ExpandPlan) -> bytes:
     """8-bit mask covering ``plan.context``: 255 where new content goes."""
     ctx = plan.context
@@ -358,6 +384,22 @@ def prefill_for(removal: bool, strength: float, arch: str) -> tuple[str, str]:
     if arch in NEUTRAL_PREFILL_ARCHS:
         return "border", "neutral"
     return "border", "navier-stokes"
+
+
+# Longest working side for prompted SD 1.5 fills whose context is downscaled
+# anyway. At 768 px (above the model's native 512) a large selection came back
+# as a flat, untextured block; at 640 px the same fill has brick texture.
+SD15_PROMPT_MAX_SIDE = 640
+
+
+def fill_profile(profile: ModelProfile, context: Rect, arch: str, removal: bool) -> ModelProfile:
+    """Profile for the working size of a fill: for a prompted SD 1.5 fill whose
+    context needs no upscaling (shorter side at least ``profile.min_side``) the
+    longest side is capped at ``SD15_PROMPT_MAX_SIDE``. Small contexts keep the
+    full ``max_side`` so their upscale to ``min_side`` is not limited."""
+    if removal or arch != "sd15" or min(context.width, context.height) < profile.min_side:
+        return profile
+    return replace(profile, max_side=min(profile.max_side, max(profile.min_side, SD15_PROMPT_MAX_SIDE)))
 
 
 def color_match_useful(selection: Rect, context: Rect, image: Rect, min_reference: float = 0.15) -> bool:

@@ -407,3 +407,26 @@ Totals: 8 PASS, 10 PASS-WITH-NOTES, 10 FAIL.
   (photo-landscape-remove-quality); MAT is the better default, which is what
   the Remove checkbox already uses.
 - MAT cannot rebuild structured backgrounds (photo-architecture-remove).
+
+## SD 1.5 and expand A/B
+
+Details, grids and the variant definitions: `sd15-ab/README.md`. Scores are
+content / seams / blur (1 to 5), seed 1234.
+
+| Case | A (committed) | B (blur pre-fill, CM 0.5) | C (CM off) | D (640 px cap) |
+|---|---|---|---|---|
+| sel-edge-bottom | 2/3/2 | 1/4/3 | 2/3/2 | 2/3/2 (unchanged) |
+| img-3000 | 2/3/2 | 2/3/2 | 2/3/2 | 4/3/4 |
+| sel-feathered | 1/3/3 | 4/2/4 | 1/3/3 | 1/3/3 (unchanged) |
+| sel-layer-offset | 1/4/2 | 1/4/2 | 1/4/2 | 1/4/2 (unchanged) |
+| sel-huge-85pct (guard) | 5/4/4 | 1/3/3 | 5/4/4 | 4/3/4 |
+
+Kept D (`geometry.fill_profile`). Final run with the change:
+
+| Case | Content | Seams | Blur | Verdict | Notes |
+|---|---|---|---|---|---|
+| img-3000 | 4 | 3 | 4 | PASS-WITH-NOTES | Brick courses and mortar (was a flat block); faint lighter rectangle in the mask band. |
+| img-6000 | 4 | 4 | 4 | PASS-WITH-NOTES | Brick wall with coping at 640x536 (was a flat block). |
+| sel-huge-85pct | 4 | 3 | 4 | PASS-WITH-NOTES | Brick wall; the top of the selection is a darker sky panel with a visible edge (was brick over the whole selection). |
+| sel-edge-bottom, sel-feathered, sel-layer-offset | - | - | - | unchanged | Contexts below 640 px; same parameters as before, same failures (A column). |
+| photo-landscape-extend-all | 4 | 2 | 4 | FAIL (seams) | Now four one-sided passes: meadow, trees, birch foliage and sky generated on all sides (was a blurred vignette, content 1). The left strip is a separate picture with a different horizon and a hard vertical seam at the old edge; right, top and bottom blend. Harness checks new_layer_or_group and old_pixels_outside_mask_unchanged fail by construction (four layers; they test one layer's mask); measured instead: old pixels farther than 64 px from the old edge are unchanged (0 changed). |

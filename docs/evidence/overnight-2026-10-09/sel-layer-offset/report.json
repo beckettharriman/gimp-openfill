@@ -64,7 +64,7 @@
   "metrics": {
     "status": "success",
     "message": "success",
-    "seconds": 7.35,
+    "seconds": 7.15,
     "layer_size": [
       615,
       538
@@ -87,10 +87,10 @@
     "blur_flag": false
   },
   "memory": {
-    "samples": 9,
-    "peak_gimp_tree_mb": 367,
-    "peak_comfyui_mb": 6556,
-    "peak_gpu_mib": 3996
+    "samples": 8,
+    "peak_gimp_tree_mb": 397,
+    "peak_comfyui_mb": 6523,
+    "peak_gpu_mib": 2646
   },
   "evidence_files": {
     "before.png scale": 1.0,
@@ -186,7 +186,7 @@
         "remove": false
       }
     },
-    "started": "2026-10-09 01:23:49",
+    "started": "2026-10-09 04:33:49",
     "gimp_version": "3.2.6",
     "runs": [
       {
@@ -248,12 +248,12 @@
         "drawables": [
           "offset layer"
         ],
-        "seconds": 7.35,
+        "seconds": 7.15,
         "status": "success",
         "message": "success",
         "layers_before": [
           {
-            "id": 128,
+            "id": 33,
             "name": "offset layer",
             "size": [
               400,
@@ -268,7 +268,7 @@
             "has_mask": false
           },
           {
-            "id": 127,
+            "id": 32,
             "name": "Background",
             "size": [
               1024,
@@ -285,7 +285,7 @@
         ],
         "layers_after": [
           {
-            "id": 134,
+            "id": 39,
             "name": "Generative Fill: red brick wall",
             "size": [
               615,
@@ -300,7 +300,7 @@
             "has_mask": true
           },
           {
-            "id": 128,
+            "id": 33,
             "name": "offset layer",
             "size": [
               400,
@@ -315,7 +315,7 @@
             "has_mask": false
           },
           {
-            "id": 127,
+            "id": 32,
             "name": "Background",
             "size": [
               1024,
@@ -341,7 +341,7 @@
         "selection_restored": true,
         "new_top_level": [
           {
-            "id": 134,
+            "id": 39,
             "name": "Generative Fill: red brick wall",
             "size": [
               615,
@@ -393,7 +393,7 @@
       }
     ],
     "driver_error": null,
-    "total_seconds": 7.81
+    "total_seconds": 7.61
   },
   "analysis_error": null
 }

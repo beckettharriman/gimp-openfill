@@ -64,7 +64,7 @@
   "metrics": {
     "status": "success",
     "message": "success",
-    "seconds": 6.77,
+    "seconds": 6.8,
     "layer_size": [
       409,
       396
@@ -88,9 +88,9 @@
   },
   "memory": {
     "samples": 8,
-    "peak_gimp_tree_mb": 419,
-    "peak_comfyui_mb": 6513,
-    "peak_gpu_mib": 3386
+    "peak_gimp_tree_mb": 390,
+    "peak_comfyui_mb": 6477,
+    "peak_gpu_mib": 2612
   },
   "evidence_files": {
     "before.png scale": 1.0,
@@ -160,7 +160,7 @@
         "remove": false
       }
     },
-    "started": "2026-10-09 01:38:54",
+    "started": "2026-10-09 04:33:34",
     "gimp_version": "3.2.6",
     "runs": [
       {
@@ -210,12 +210,12 @@
         "drawables": [
           "Background"
         ],
-        "seconds": 6.77,
+        "seconds": 6.8,
         "status": "success",
         "message": "success",
         "layers_before": [
           {
-            "id": 52,
+            "id": 12,
             "name": "Background",
             "size": [
               1024,
@@ -232,7 +232,7 @@
         ],
         "layers_after": [
           {
-            "id": 58,
+            "id": 18,
             "name": "Generative Fill: red brick wall",
             "size": [
               409,
@@ -247,7 +247,7 @@
             "has_mask": true
           },
           {
-            "id": 52,
+            "id": 12,
             "name": "Background",
             "size": [
               1024,
@@ -273,7 +273,7 @@
         "selection_restored": true,
         "new_top_level": [
           {
-            "id": 58,
+            "id": 18,
             "name": "Generative Fill: red brick wall",
             "size": [
               409,
@@ -325,7 +325,7 @@
       }
     ],
     "driver_error": null,
-    "total_seconds": 7.15
+    "total_seconds": 7.18
   },
   "analysis_error": null
 }

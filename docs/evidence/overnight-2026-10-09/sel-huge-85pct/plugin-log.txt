@@ -1,3 +1,10 @@
-2026-10-09 01:38:25,528 INFO  [30688 stable-boy] fill: selection=Rect(x=41, y=31, width=942, height=707) context=Rect(x=0, y=0, width=1024, height=768) working=768x576 scale=0.75 mask(grow=16/12px feather=24/12px layer grow=16px) prefill=border/neutral color_match=1.0 model=sd15-inpainting template=sd15_inpaint
-2026-10-09 01:38:25,699 INFO  [30688 stable-boy] queued prompt 9bf538b0-6ad4-4dfd-9840-78243bd41602 (timeout 123s, 25 steps x 1)
-2026-10-09 01:38:32,694 INFO  [30688 stable-boy] fill: done, seed=1234, 1 layer(s)
+2026-10-09 04:32:59,395 INFO  [23584 stable-boy] fill: selection=Rect(x=41, y=31, width=942, height=707) context=Rect(x=0, y=0, width=1024, height=768) working=640x480 scale=0.62 mask(grow=16/10px feather=24/10px layer grow=16px) prefill=border/neutral color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+2026-10-09 04:33:00,984 INFO  [23584 stable-boy] launching supervisor (gimp pid 35480): C:/Users/becke/AppData/Local/Programs/GIMP 3/bin/pythonw.exe C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/supervisor.py --mode backend --python C:/AI/ComfyUI/ComfyUI_windows_portable/python_embeded/python.exe --main C:/AI/ComfyUI/ComfyUI_windows_portable/ComfyUI/main.py --cwd C:/AI/ComfyUI/ComfyUI_windows_portable --host 127.0.0.1 --port 8188 --base C:/AI/overnight-scratch/gimp-profile-test/stable-boy --config C:/AI/overnight-scratch/gimp-profile-test/stable-boy/config.json --watch-pid 35480 --idle-minutes 20
+2026-10-09 04:33:01 INFO  [27668 supervisor] starting backend: C:/AI/ComfyUI/ComfyUI_windows_portable/python_embeded/python.exe -s C:/AI/ComfyUI/ComfyUI_windows_portable/ComfyUI/main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --dont-print-server --preview-method taesd
+2026-10-09 04:33:01 INFO  [27668 supervisor] backend pid 34796, job object ok
+2026-10-09 04:33:01 INFO  [27668 supervisor] watching gimp pid 35480 (gimp-console-3.2.exe)
+2026-10-09 04:33:23,175 INFO  [23584 stable-boy] backend ready at http://127.0.0.1:8188 after 22 s
+2026-10-09 04:33:23,242 INFO  [23584 stable-boy] timing: upload image=85946 mask=6814 bytes in 0.052 s
+2026-10-09 04:33:23,249 INFO  [23584 stable-boy] queued prompt 15307619-8991-4f00-aef6-638b42369069 (timeout 120s, 25 steps x 1)
+2026-10-09 04:33:34,205 INFO  [23584 stable-boy] timing: queue->first step 6.164 s, sampling 4.779 s, download 489945 bytes in 0.013 s
+2026-10-09 04:33:34,694 INFO  [23584 stable-boy] fill: done, seed=1234, 1 layer(s)
