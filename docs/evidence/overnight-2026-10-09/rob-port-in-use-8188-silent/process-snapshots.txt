@@ -1,0 +1,24 @@
+--- 02:05:27 before GIMP start (gpu used 848 MiB)
+   35808 ppid  38768 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py silent 8188
+--- 02:05:27 GIMP running 0 s (gpu used 848 MiB)
+   14944 ppid  38768 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+   35808 ppid  38768 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py silent 8188
+--- 02:05:32 GIMP running 5 s (gpu used 848 MiB)
+   14944 ppid  38768 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+   35808 ppid  38768 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py silent 8188
+--- 02:05:37 GIMP running 10 s (gpu used 848 MiB)
+   14944 ppid  38768 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+   35112 ppid  14944 python.exe             C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py -gimp 279 9 7 -run 0
+   35808 ppid  38768 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py silent 8188
+--- 02:05:42 GIMP running 15 s (gpu used 848 MiB)
+   14944 ppid  38768 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+   35112 ppid  14944 python.exe             C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py -gimp 279 9 7 -run 0
+   35808 ppid  38768 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py silent 8188
+--- 02:05:47 GIMP running 20 s (gpu used 848 MiB)
+   14944 ppid  38768 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+   35112 ppid  14944 python.exe             C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py -gimp 279 9 7 -run 0
+   35808 ppid  38768 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py silent 8188
+--- 02:05:51 at GIMP exit (gpu used 848 MiB)
+   35808 ppid  38768 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py silent 8188
+--- 02:06:01 10 s after GIMP exit (gpu used 848 MiB)
+   35808 ppid  38768 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py silent 8188

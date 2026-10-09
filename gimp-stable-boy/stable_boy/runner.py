@@ -31,6 +31,17 @@ FAIL_WINDOW_TIMEOUT_MS = 20000  # a failed run closes its window after this even
 Job = Callable[[Callable, Callable | None, Callable | None], object]
 
 
+def _test_cancel_step() -> str:
+    path = os.environ.get("SB_TEST_CANCEL_FILE")
+    if not path:
+        return ""
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return fh.read().strip()
+    except OSError:
+        return ""
+
+
 class Runner:
     def __init__(self, app, title: str, model_name: str, interactive: bool = True) -> None:
         self.app = app
@@ -41,6 +52,12 @@ class Runner:
         self._downloads_timer = 0
         # Non-interactive runs (scripts, batch) never open the window: nobody is there to close it.
         self.use_window = bool(app.settings.progress_window) and bool(interactive)
+        # Test hooks for cancel tests in batch runs: SB_TEST_CANCEL_FILE names a file holding the text of the
+        # progress step at which Cancel is pressed (read per run, so one GIMP can warm up first);
+        # a run with such a step opens the window even when non-interactive.
+        self._cancel_on = _test_cancel_step()
+        if self._cancel_on:
+            self.use_window = True
         self._closed = False
         self._window_gone = False
         self._fallback = 0
@@ -100,6 +117,10 @@ class Runner:
             auto = os.environ.get("SB_TEST_CANCEL_AT")
             if auto and fraction >= float(auto) and "step" in text and not self.window.cancelled:
                 GLib.idle_add(lambda: (self.window._cancel_clicked(), False)[1])
+            phase = self._cancel_on
+            if phase and phase in text and not self.window.cancelled:
+                self.app.log.info("test hook: cancel at '%s'", text)
+                GLib.idle_add(lambda: (self.window._cancel_clicked(), False)[1])
         else:
             self.status(fraction, text)
 
@@ -134,6 +155,10 @@ class Runner:
         self.status.done()
         if "error" in box:
             raise box["error"]  # the caller reports it through fail()
+        if self._cancelled():
+            # Cancel pressed after the last backend check (while the result was downloading): the window
+            # promised an unchanged image, so the result is dropped.
+            raise GenerationCancelled("cancelled by the user after the result arrived")
         return box["result"]
 
     @staticmethod

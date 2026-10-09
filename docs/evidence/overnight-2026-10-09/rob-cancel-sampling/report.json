@@ -1,0 +1,139 @@
+{
+  "case": "rob-cancel-sampling",
+  "verdict": "PASS",
+  "verdict_reason": "Cancel at step 10/40 honoured at once (interrupt + queue cleared); no layer; nothing left running.",
+  "acceptance_rule": "plain words plus a next step, no traceback, image and processes clean",
+  "status": "cancel",
+  "user_message_verbatim": [],
+  "seconds_in_procedure": [
+    5.27
+  ],
+  "checks": {
+    "traceback_in_gimp_output": false,
+    "image_untouched": [
+      true
+    ],
+    "layers_after": [
+      [
+        "Background"
+      ]
+    ],
+    "selection_unchanged": [
+      true
+    ],
+    "processes_alive_10s_after_gimp_exit": 0,
+    "cleanup_seconds_after_exit": null
+  },
+  "events": [
+    "02:48:44 gimp-console pid 21764 (instance 1/1)",
+    "02:49:39 GIMP exited after 54.5 s"
+  ],
+  "launcher": {
+    "config_mode": "set",
+    "config_written": "{\n  \"backend\": \"comfyui\",\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\n  \"url\": \"http://127.0.0.1:8188\",\n  \"a1111_url\": \"http://127.0.0.1:7860\",\n  \"autostart\": true,\n  \"idle_timeout_minutes\": 20,\n  \"startup_timeout\": 240,\n  \"request_timeout\": 0,\n  \"extra_server_args\": \"\",\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\n  \"quality\": \"fast\",\n  \"steps\": 40,\n  \"cfg\": 7.0,\n  \"sampler\": \"dpmpp_2m\",\n  \"scheduler\": \"karras\",\n  \"denoise\": 1.0,\n  \"grow\": 16,\n  \"feather\": 24,\n  \"grow_percent\": 10.0,\n  \"feather_percent\": 6.0,\n  \"prefill\": true,\n  \"max_side_sd15\": 768,\n  \"max_side_sdxl\": 1024,\n  \"txt2img_width\": 768,\n  \"txt2img_height\": 512,\n  \"debug\": false,\n  \"active_model\": \"mat-places512\",\n  \"hf_token\": \"<redacted>\",\n  \"progress_window\": false,\n  \"progress_window_x\": 1694,\n  \"progress_window_y\": 2328\n}",
+    "profile_listing_before": [
+      "config.json 984",
+      "stable-boy.log 132095",
+      "tmp <dir>",
+      "watchers <dir>"
+    ],
+    "gimp_seconds": 54.5,
+    "gimp_exit_codes": [
+      0
+    ],
+    "processes_10s_after_exit": [],
+    "server_state_10s_after_exit": "(absent)",
+    "dummy_hits_8199": 3,
+    "dummy_hits_8188": 3,
+    "profile_listing_after": [
+      "comfyui.log 12518",
+      "config.json 1011",
+      "stable-boy.log 134822",
+      "supervisor-stderr.log 0",
+      "tasks <dir>",
+      "tasks-status.json 115",
+      "tmp <dir>",
+      "watchers <dir>"
+    ],
+    "config_after": "{\n  \"backend\": \"comfyui\",\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\n  \"url\": \"http://127.0.0.1:8188\",\n  \"a1111_url\": \"http://127.0.0.1:7860\",\n  \"autostart\": true,\n  \"idle_timeout_minutes\": 20,\n  \"startup_timeout\": 240,\n  \"request_timeout\": 0,\n  \"extra_server_args\": \"\",\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\n  \"quality\": \"fast\",\n  \"steps\": 40,\n  \"cfg\": 7.0,\n  \"sampler\": \"dpmpp_2m\",\n  \"scheduler\": \"karras\",\n  \"denoise\": 1.0,\n  \"grow\": 16,\n  \"feather\": 24,\n  \"grow_percent\": 10.0,\n  \"feather_percent\": 6.0,\n  \"prefill\": true,\n  \"max_side_sd15\": 768,\n  \"max_side_sdxl\": 1024,\n  \"txt2img_width\": 768,\n  \"txt2img_height\": 512,\n  \"debug\": false,\n  \"active_model\": \"mat-places512\",\n  \"hf_token\": \"<redacted>\",\n  \"progress_window\": false,\n  \"progress_window_x\": 1705,\n  \"progress_window_y\": 1027,\n  \"prompt_history\": \"\"\n}\n",
+    "restored": "config.json = baseline; state/task files removed; corrupt backups moved to scratch",
+    "total_seconds": 65.3
+  },
+  "driver": {
+    "case": "rob-cancel-sampling",
+    "started": "2026-10-09 02:48:50",
+    "gimp_pid": 17252,
+    "gimp_version": "3.2.6",
+    "profile": "C:\\AI\\overnight-scratch\\gimp-profile-rob",
+    "procedure": "python-fu-stable-boy-generative-fill",
+    "before": {
+      "size": [
+        512,
+        384
+      ],
+      "layers": [
+        "Background"
+      ],
+      "layer_count": 1,
+      "channels": [],
+      "selection": {
+        "empty": false,
+        "bounds": [
+          200,
+          140,
+          120,
+          100
+        ],
+        "md5": "e4b93e7537a7f238fcfadaa370994efb"
+      },
+      "dirty": false,
+      "undo_enabled": true,
+      "composite_md5": "9fd24d98f5e3b9854773b770d928239d"
+    },
+    "args": {
+      "prompt": "a red brick wall, photo",
+      "negative": "blurry",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "fast"
+    },
+    "warmup": {
+      "status": "success",
+      "message": "success",
+      "seconds": 38.66
+    },
+    "call_started": 1791528571.393509,
+    "status": "cancel",
+    "return_message": "cancelled",
+    "seconds": 5.27,
+    "call_finished": 1791528576.6625469,
+    "after": {
+      "size": [
+        512,
+        384
+      ],
+      "layers": [
+        "Background"
+      ],
+      "layer_count": 1,
+      "channels": [],
+      "selection": {
+        "empty": false,
+        "bounds": [
+          200,
+          140,
+          120,
+          100
+        ],
+        "md5": "e4b93e7537a7f238fcfadaa370994efb"
+      },
+      "dirty": false,
+      "undo_enabled": true,
+      "composite_md5": "9fd24d98f5e3b9854773b770d928239d"
+    },
+    "image_untouched": true,
+    "finished": "2026-10-09 02:49:38"
+  },
+  "gimp_stderr": "=== instance 1\nGIMP-Message: Welcome to GIMP 3.2.6!\n\ngimp_ui_theme_changed: error loading C:\\AI\\overnight-scratch\\gimp-profile-rob\\theme.css: Error opening file C:\\AI\\overnight-scratch\\gimp-profile-rob\\theme.css: No such file or directory\ngimp_ui_theme_changed: error parsing C:\\AI\\overnight-scratch\\gimp-profile-rob\\theme.css: <broken file>:1:0Failed to import: Error opening file C:\\AI\\overnight-scratch\\gimp-profile-rob\\theme.css: No such file or directory\n"
+}

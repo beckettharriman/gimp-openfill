@@ -1,0 +1,65 @@
+{
+  "case": "rob-download-corrupt-part",
+  "verdict": "PASS",
+  "verdict_reason": "4 MiB of random bytes in big-lama.pt.part: the download resumed, failed the SHA-256, and (fix in downloads.download_file) fetched the file once more from zero; task 'done', hash verified, no .part left. Before the fix the task failed with 'checksum mismatch ... the file was deleted' (reproduced by tests/test_downloads.py test_corrupt_part_is_replaced_by_one_fresh_download before the change).",
+  "mode": "corrupt-part",
+  "model": "lama-big",
+  "dest": "C:/AI/ComfyUI/ComfyUI_windows_portable/ComfyUI/models/inpaint/big-lama.pt",
+  "events": [
+    "02:39:04 wrote 4 MiB of random bytes to big-lama.pt.part",
+    "02:39:04 attempt 1: queued task 1791527944260-download",
+    "02:39:26 attempt 1: {\"task_id\": \"1791527944260-download\", \"type\": \"download\", \"model_id\": \"lama-big\", \"state\": \"done\", \"message\": \"1 file(s) ready\", \"finished\": 1791527965.9755712, \"files\": [{\"dest\": \"inpaint/big-lama.pt\", \"sha256\": \"344c77bbcb158f17dd143070d1e789f38a66c04202311ae3a258ef66667a9ea9\", \"skipped\": false, \"resumed_from\": 0}]}"
+  ],
+  "attempts": [
+    {
+      "task": "1791527944260-download",
+      "history": {
+        "task_id": "1791527944260-download",
+        "type": "download",
+        "model_id": "lama-big",
+        "state": "done",
+        "message": "1 file(s) ready",
+        "finished": 1791527965.9755712,
+        "files": [
+          {
+            "dest": "inpaint/big-lama.pt",
+            "sha256": "344c77bbcb158f17dd143070d1e789f38a66c04202311ae3a258ef66667a9ea9",
+            "skipped": false,
+            "resumed_from": 0
+          }
+        ]
+      },
+      "seconds": 22.0,
+      "part_exists": false,
+      "part_size": null,
+      "dest_exists": true
+    }
+  ],
+  "final_dest_exists": true,
+  "final_sha256_ok": true,
+  "task_worker_alive_after_60s": false,
+  "tasks_status": {
+    "worker_pid": 10416,
+    "current": null,
+    "queue": [],
+    "history": [
+      {
+        "task_id": "1791527944260-download",
+        "type": "download",
+        "model_id": "lama-big",
+        "state": "done",
+        "message": "1 file(s) ready",
+        "finished": 1791527965.9755712,
+        "files": [
+          {
+            "dest": "inpaint/big-lama.pt",
+            "sha256": "344c77bbcb158f17dd143070d1e789f38a66c04202311ae3a258ef66667a9ea9",
+            "skipped": false,
+            "resumed_from": 0
+          }
+        ]
+      }
+    ],
+    "updated": 1791527965.9755852
+  }
+}

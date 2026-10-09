@@ -1,0 +1,142 @@
+{
+  "case": "rob-model-missing-server-running",
+  "verdict": "PASS",
+  "verdict_reason": "Same with ComfyUI already running (warm-up fill first, then the checkpoint renamed): plain message, no layer, checkpoint restored.",
+  "acceptance_rule": "plain words plus a next step, no traceback, image and processes clean",
+  "status": "execution-error",
+  "user_message_verbatim": [
+    "A model file is missing on the backend: 'Stable Diffusion 1.5 Inpainting' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download."
+  ],
+  "seconds_in_procedure": [
+    0.7
+  ],
+  "checks": {
+    "traceback_in_gimp_output": false,
+    "image_untouched": [
+      true
+    ],
+    "layers_after": [
+      [
+        "Background"
+      ]
+    ],
+    "selection_unchanged": [
+      true
+    ],
+    "processes_alive_10s_after_gimp_exit": 0,
+    "cleanup_seconds_after_exit": null
+  },
+  "events": [
+    "02:06:29 gimp-console pid 11952 (instance 1/1)",
+    "02:07:14 warm-up fill finished",
+    "02:07:14 renamed sd-v1-5-inpainting.ckpt -> sd-v1-5-inpainting.ckpt.rob-hidden",
+    "02:07:17 GIMP exited after 48.1 s",
+    "02:07:17 restored sd-v1-5-inpainting.ckpt (4265437280 bytes)"
+  ],
+  "launcher": {
+    "config_mode": "set",
+    "config_written": "{\n  \"backend\": \"comfyui\",\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\n  \"url\": \"http://127.0.0.1:8188\",\n  \"a1111_url\": \"http://127.0.0.1:7860\",\n  \"autostart\": true,\n  \"idle_timeout_minutes\": 20,\n  \"startup_timeout\": 240,\n  \"request_timeout\": 0,\n  \"extra_server_args\": \"\",\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\n  \"quality\": \"fast\",\n  \"steps\": 25,\n  \"cfg\": 7.0,\n  \"sampler\": \"dpmpp_2m\",\n  \"scheduler\": \"karras\",\n  \"denoise\": 1.0,\n  \"grow\": 16,\n  \"feather\": 24,\n  \"grow_percent\": 10.0,\n  \"feather_percent\": 6.0,\n  \"prefill\": true,\n  \"max_side_sd15\": 768,\n  \"max_side_sdxl\": 1024,\n  \"txt2img_width\": 768,\n  \"txt2img_height\": 512,\n  \"debug\": false,\n  \"active_model\": \"mat-places512\",\n  \"hf_token\": \"<redacted>\",\n  \"progress_window\": false,\n  \"progress_window_x\": 1694,\n  \"progress_window_y\": 2328\n}",
+    "profile_listing_before": [
+      "config.json 984",
+      "stable-boy.log 60700",
+      "tmp <dir>"
+    ],
+    "gimp_seconds": 48.1,
+    "gimp_exit_codes": [
+      0
+    ],
+    "processes_10s_after_exit": [],
+    "server_state_10s_after_exit": "(absent)",
+    "dummy_hits_8199": 3,
+    "dummy_hits_8188": 3,
+    "profile_listing_after": [
+      "comfyui.log 10162",
+      "config.json 984",
+      "stable-boy.log 63667",
+      "supervisor-stderr.log 0",
+      "tasks <dir>",
+      "tasks-status.json 115",
+      "tmp <dir>"
+    ],
+    "config_after": "{\n  \"backend\": \"comfyui\",\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\n  \"url\": \"http://127.0.0.1:8188\",\n  \"a1111_url\": \"http://127.0.0.1:7860\",\n  \"autostart\": true,\n  \"idle_timeout_minutes\": 20,\n  \"startup_timeout\": 240,\n  \"request_timeout\": 0,\n  \"extra_server_args\": \"\",\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\n  \"quality\": \"fast\",\n  \"steps\": 25,\n  \"cfg\": 7.0,\n  \"sampler\": \"dpmpp_2m\",\n  \"scheduler\": \"karras\",\n  \"denoise\": 1.0,\n  \"grow\": 16,\n  \"feather\": 24,\n  \"grow_percent\": 10.0,\n  \"feather_percent\": 6.0,\n  \"prefill\": true,\n  \"max_side_sd15\": 768,\n  \"max_side_sdxl\": 1024,\n  \"txt2img_width\": 768,\n  \"txt2img_height\": 512,\n  \"debug\": false,\n  \"active_model\": \"mat-places512\",\n  \"hf_token\": \"<redacted>\",\n  \"progress_window\": false,\n  \"progress_window_x\": 1694,\n  \"progress_window_y\": 2328\n}",
+    "restored": "config.json = baseline; state/task files removed; corrupt backups moved to scratch",
+    "total_seconds": 58.5
+  },
+  "driver": {
+    "case": "rob-model-missing-server-running",
+    "started": "2026-10-09 02:06:34",
+    "gimp_pid": 25824,
+    "gimp_version": "3.2.6",
+    "profile": "C:\\AI\\overnight-scratch\\gimp-profile-rob",
+    "procedure": "python-fu-stable-boy-generative-fill",
+    "before": {
+      "size": [
+        512,
+        384
+      ],
+      "layers": [
+        "Background"
+      ],
+      "layer_count": 1,
+      "channels": [],
+      "selection": {
+        "empty": false,
+        "bounds": [
+          200,
+          140,
+          120,
+          100
+        ],
+        "md5": "e4b93e7537a7f238fcfadaa370994efb"
+      },
+      "dirty": false,
+      "undo_enabled": true,
+      "composite_md5": "8b19673d41207ebcb60d580aa4699bd4"
+    },
+    "args": {
+      "prompt": "a red brick wall, photo",
+      "negative": "blurry",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "fast"
+    },
+    "warmup": {
+      "status": "success",
+      "message": "success",
+      "seconds": 36.65
+    },
+    "call_started": 1791526034.616886,
+    "status": "execution-error",
+    "return_message": "A model file is missing on the backend: 'Stable Diffusion 1.5 Inpainting' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download.",
+    "seconds": 0.7,
+    "call_finished": 1791526035.3219824,
+    "after": {
+      "size": [
+        512,
+        384
+      ],
+      "layers": [
+        "Background"
+      ],
+      "layer_count": 1,
+      "channels": [],
+      "selection": {
+        "empty": false,
+        "bounds": [
+          200,
+          140,
+          120,
+          100
+        ],
+        "md5": "e4b93e7537a7f238fcfadaa370994efb"
+      },
+      "dirty": false,
+      "undo_enabled": true,
+      "composite_md5": "8b19673d41207ebcb60d580aa4699bd4"
+    },
+    "image_untouched": true,
+    "finished": "2026-10-09 02:07:17"
+  },
+  "gimp_stderr": "=== instance 1\nGIMP-Message: Welcome to GIMP 3.2.6!\n\nGenerative Fill-Warning: A model file is missing on the backend: 'Stable Diffusion 1.5 Inpainting' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download.\n\n"
+}

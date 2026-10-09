@@ -1,0 +1,8 @@
+set GIMP3_DIRECTORY=C:\AI\overnight-scratch\gimp-profile-rob
+set SB_REPO=C:\repos\gimp-stable-boy
+set SB_ROB_CASE=rob-two-requests-first-gimp-exits
+set SB_ROB_OUT=C:\repos\gimp-stable-boy\docs\evidence\overnight-2026-10-09\rob-two-requests-first-gimp-exits
+set SB_ROB_VARIATIONS=(instance b only) 4
+set SB_TEST_CANCEL_FILE=C:\AI\overnight-scratch\rob\logs\rob-two-requests-first-gimp-exits\cancel-step.txt
+"C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe" --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b "exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())"   (x2, 1 s apart; instance b writes to instance-b\)
+(launcher: python C:\AI\overnight-scratch\rob\run_case.py rob-two-requests-first-gimp-exits; scenario: {"instances": 2, "env_b": {"SB_ROB_VARIATIONS": "4"}}; config overrides: {"comfy_dir": "C:\\AI\\ComfyUI\\ComfyUI_windows_portable", "url": "http://127.0.0.1:8188", "autostart": true, "progress_window": false, "idle_timeout_minutes": 20, "steps": 30})

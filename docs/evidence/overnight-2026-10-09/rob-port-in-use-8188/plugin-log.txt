@@ -1,0 +1,28 @@
+2026-10-09 02:05:03,459 INFO  [36348 stable-boy] fill: selection=Rect(x=200, y=140, width=120, height=100) context=Rect(x=140, y=80, width=240, height=220) working=560x512 scale=2.33 mask(grow=12/28px feather=7/16px layer grow=7px) prefill=border/neutral color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+2026-10-09 02:05:03,552 WARNING [36348 stable-boy] port 8188 on 127.0.0.1 is taken by a program that is not ComfyUI
+2026-10-09 02:05:03,557 ERROR [36348 stable-boy] procedure failed: The AI backend is not available: Port 8188 is used by another program (it is not ComfyUI). Close that program, or set a free port in the ComfyUI URL in Filters > AI > Generative Fill Settings (for example http://127.0.0.1:8190).
+Traceback (most recent call last):
+  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 455, in run_fill
+    layers = app.generative_fill(
+        image,
+    ...<6 lines>...
+        remove=bool(config.get_property("remove")),
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 497, in generative_fill
+    result = runner.run(
+        lambda progress, preview, cancel: self.backend(progress).inpaint(request, progress, preview, cancel)
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/runner.py", line 136, in run
+    return job(self.status, None, None)
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 498, in <lambda>
+    lambda progress, preview, cancel: self.backend(progress).inpaint(request, progress, preview, cancel)
+                                      ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 111, in backend
+    url = self.server.ensure_running(progress)
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/server.py", line 150, in ensure_running
+    return self.start(progress)
+           ~~~~~~~~~~^^^^^^^^^^
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/server.py", line 171, in start
+    raise BackendUnavailable(port_in_use_message(host, port))
+stable_boy.backend.BackendUnavailable: Port 8188 is used by another program (it is not ComfyUI). Close that program, or set a free port in the ComfyUI URL in Filters > AI > Generative Fill Settings (for example http://127.0.0.1:8190).
+

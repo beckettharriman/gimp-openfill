@@ -1,19 +1,20 @@
-2026-10-09 00:58:52,398 ERROR [32976 stable-boy] procedure failed: A model file is missing on the backend: 'Stable Diffusion 1.5 Inpainting' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download.
+2026-10-09 02:46:27,563 ERROR [27156 stable-boy] procedure failed: The AI backend is not available: ComfyUI was not found in 'C:\AI\overnight-scratch\rob\empty-comfy'. Set the ComfyUI folder in Filters > AI > Generative Fill Settings, or install ComfyUI there (see the README, Install).
 Traceback (most recent call last):
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 118, in run_fill
-    app.generative_fill(image, config.get_property("prompt"), config.get_property("negative"),
-    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                        config.get_property("variations"), config.get_property("strength"),
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                        config.get_property("seed"), config.get_property("model"),
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                        remove=bool(config.get_property("remove")))
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\app.py", line 302, in generative_fill
+  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 462, in run_fill
+    layers = app.generative_fill(
+        image,
+    ...<6 lines>...
+        remove=bool(config.get_property("remove")),
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 420, in generative_fill
     entry, model = self.resolve_model(model_choice)
                    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\app.py", line 141, in resolve_model
-    raise ModelMissing(f"'{entry.name}' is not downloaded yet. Open Filters > AI > Generative Fill "
-                       "Settings > Models and press Download.")
-stable_boy.backend.ModelMissing: 'Stable Diffusion 1.5 Inpainting' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download.
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 152, in resolve_model
+    self.require_backend_install()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 216, in require_backend_install
+    raise BackendUnavailable(
+    ...<2 lines>...
+    )
+stable_boy.backend.BackendUnavailable: ComfyUI was not found in 'C:\AI\overnight-scratch\rob\empty-comfy'. Set the ComfyUI folder in Filters > AI > Generative Fill Settings, or install ComfyUI there (see the README, Install).
 

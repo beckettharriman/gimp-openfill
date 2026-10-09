@@ -1,0 +1,10 @@
+2026-10-09 02:28:56,050 INFO  [6060 stable-boy] fill: selection=Rect(x=200, y=140, width=120, height=100) context=Rect(x=140, y=80, width=240, height=220) working=560x512 scale=2.33 mask(grow=12/28px feather=7/16px layer grow=7px) prefill=border/neutral color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+2026-10-09 02:28:59,643 INFO  [6060 stable-boy] launching supervisor (gimp pid 13912): C:/Users/becke/AppData/Local/Programs/GIMP 3/bin/pythonw.exe C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/supervisor.py --mode backend --python C:/AI/ComfyUI/ComfyUI_windows_portable/python_embeded/python.exe --main C:/AI/ComfyUI/ComfyUI_windows_portable/ComfyUI/main.py --cwd C:/AI/ComfyUI/ComfyUI_windows_portable --host 127.0.0.1 --port 8188 --base C:/AI/overnight-scratch/gimp-profile-rob/stable-boy --config C:/AI/overnight-scratch/gimp-profile-rob/stable-boy/config.json --watch-pid 13912 --idle-minutes 20
+2026-10-09 02:28:59,665 INFO  [6060 stable-boy] test hook: cancel at 'Starting the AI backend... 0 s'
+2026-10-09 02:28:59,678 INFO  [6060 stable-boy] cancel requested from the progress window
+2026-10-09 02:28:59 INFO  [33228 supervisor] starting backend: C:/AI/ComfyUI/ComfyUI_windows_portable/python_embeded/python.exe -s C:/AI/ComfyUI/ComfyUI_windows_portable/ComfyUI/main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --dont-print-server --preview-method taesd
+2026-10-09 02:28:59 INFO  [33228 supervisor] backend pid 37008, job object ok
+2026-10-09 02:28:59 INFO  [33228 supervisor] watching gimp pid 13912 (gimp-console-3.2.exe)
+2026-10-09 02:29:03,168 INFO  [6060 stable-boy] cancelled while the backend was starting (4 s)
+2026-10-09 02:29:03,169 INFO  [6060 stable-boy] progress window: 0 preview frame(s) shown, finishing with GenerationCancelled
+2026-10-09 02:29:04,689 INFO  [6060 stable-boy] procedure cancelled: cancelled while the AI backend was starting

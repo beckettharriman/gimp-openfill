@@ -1,0 +1,17 @@
+2026-10-09 02:06:13,626 ERROR [37912 stable-boy] procedure failed: A model file is missing on the backend: 'Stable Diffusion 1.5 Inpainting' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download.
+Traceback (most recent call last):
+  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 455, in run_fill
+    layers = app.generative_fill(
+        image,
+    ...<6 lines>...
+        remove=bool(config.get_property("remove")),
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 420, in generative_fill
+    entry, model = self.resolve_model(model_choice)
+                   ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 165, in resolve_model
+    raise ModelMissing(
+    ...<2 lines>...
+    )
+stable_boy.backend.ModelMissing: 'Stable Diffusion 1.5 Inpainting' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download.
+

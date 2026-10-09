@@ -1,0 +1,25 @@
+--- 02:02:27 before GIMP start (gpu used 960 MiB)
+   37440 ppid  24156 python.exe             C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --preview-method taesd
+--- 02:02:27 GIMP running 0 s (gpu used 960 MiB)
+   33676 ppid  24156 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+   37440 ppid  24156 python.exe             C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --preview-method taesd
+--- 02:02:33 GIMP running 5 s (gpu used 960 MiB)
+   33676 ppid  24156 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+   37440 ppid  24156 python.exe             C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --preview-method taesd
+--- 02:02:38 GIMP running 10 s (gpu used 960 MiB)
+   33036 ppid  33676 python.exe             C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py -gimp 279 9 7 -run 0
+   33676 ppid  24156 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+   37440 ppid  24156 python.exe             C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --preview-method taesd
+--- 02:02:43 GIMP running 15 s (gpu used 3640 MiB)
+   33036 ppid  33676 python.exe             C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py -gimp 279 9 7 -run 0
+   33676 ppid  24156 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+   37440 ppid  24156 python.exe             C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --preview-method taesd
+--- 02:02:48 GIMP running 20 s (gpu used 3160 MiB)
+   33676 ppid  24156 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+   37440 ppid  24156 python.exe             C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --preview-method taesd
+--- 02:02:50 at GIMP exit (gpu used 3160 MiB)
+   37440 ppid  24156 python.exe             C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --preview-method taesd
+--- 02:03:00 10 s after GIMP exit (gpu used 3160 MiB)
+   37440 ppid  24156 python.exe             C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --preview-method taesd
+--- 02:03:21 after stopping the external ComfyUI (gpu used 848 MiB)
+  (no robustness-related python/gimp processes)

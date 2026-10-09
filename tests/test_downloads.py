@@ -247,6 +247,73 @@ class DownloadTests(unittest.TestCase):
         with self.assertRaises(downloads.DownloadError) as ctx:
             downloads.download_file("http://127.0.0.1:1/x", self.dest)
         self.assertEqual(ctx.exception.code, "network")
+        # rob-download-network-off: plain words and a next step, no urlopen/WinError dump
+        self.assertIn("Could not reach 127.0.0.1", str(ctx.exception))
+        self.assertIn("press Download again", str(ctx.exception))
+        self.assertNotIn("urlopen", str(ctx.exception))
+
+    def test_corrupt_part_is_replaced_by_one_fresh_download(self):
+        # rob-download-corrupt-part: a .part holding garbage resumes, fails the checksum, and is then
+        # downloaded once more from zero instead of failing the whole task
+        part = downloads.part_path(self.dest)
+        part.parent.mkdir(parents=True)
+        part.write_bytes(b"#garbage" * 1000)
+        r = downloads.download_file(self.url, self.dest, len(PAYLOAD), SHA)
+        self.assertEqual(self.dest.read_bytes(), PAYLOAD)
+        self.assertEqual(State.requests[0].get("Range"), "bytes=8000-")
+        self.assertNotIn("Range", State.requests[-1])
+        self.assertEqual(r.resumed_from, 0)
+        self.assertFalse(part.exists())
+
+    # rob-disk-nearly-full (no free-space override exists, so this is checked here, not end to end)
+    def test_disk_nearly_full_refuses_before_writing(self):
+        from collections import namedtuple
+        from unittest import mock
+
+        usage = namedtuple("usage", "total used free")(10**9, 10**9 - 1000, 1000)
+        with (
+            mock.patch.object(downloads.shutil, "disk_usage", return_value=usage),
+            self.assertRaises(downloads.DownloadError) as ctx,
+        ):
+            downloads.download_file(self.url, self.dest, len(PAYLOAD), SHA)
+        self.assertEqual(ctx.exception.code, "disk")
+        self.assertIn("Free up space", str(ctx.exception))
+        self.assertIn("1.0 KB is free", str(ctx.exception))
+        self.assertFalse(downloads.part_path(self.dest).exists())
+        self.assertFalse(self.dest.exists())
+
+    def test_disk_full_while_writing_keeps_part(self):
+        import errno as errno_
+        from unittest import mock
+
+        real_open = open
+        calls = {"n": 0}
+
+        class Full:
+            def __init__(self, fh):
+                self.fh = fh
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                self.fh.close()
+
+            def write(self, block):
+                calls["n"] += 1
+                self.fh.write(block[:1000])  # part of it lands, then the disk is full
+                raise OSError(errno_.ENOSPC, "No space left on device")
+
+        def fake_open(path, mode="r", *a, **k):
+            fh = real_open(path, mode, *a, **k)
+            return Full(fh) if str(path).endswith(".part") and "b" in mode and "r" not in mode else fh
+
+        with mock.patch("builtins.open", fake_open), self.assertRaises(downloads.DownloadError) as ctx:
+            downloads.download_file(self.url, self.dest, len(PAYLOAD), SHA)
+        self.assertEqual(ctx.exception.code, "disk")
+        self.assertIn("press Download again", str(ctx.exception))
+        self.assertTrue(downloads.part_path(self.dest).exists())  # resumable once space is free
+        self.assertFalse(self.dest.exists())
 
 
 class TokenHeaderTests(unittest.TestCase):

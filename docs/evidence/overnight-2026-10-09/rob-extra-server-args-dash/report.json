@@ -1,35 +1,70 @@
 {
   "case": "rob-extra-server-args-dash",
+  "verdict": "PASS",
+  "verdict_reason": "extra_server_args '--cpu' now reaches ComfyUI (F6 fixed): the supervisor started ComfyUI on the CPU; the CPU generation then hit the estimated 120 s time limit and the user got the plain timeout message with the setting to raise; supervisor and ComfyUI gone after GIMP exit.",
   "acceptance_rule": "plain words plus a next step, no traceback, image and processes clean",
-  "verdict": "FAIL",
-  "verdict_reason": "Found while preparing rob-port-in-use-offline: extra_server_args '--cpu' (any single ComfyUI flag) makes the supervisor exit at once. ServerManager.start passes ['--extra-args', '--cpu'] and argparse in supervisor.py reads '--cpu' as an option ('argument --extra-args: expected one argument'). The supervisor's stderr goes to DEVNULL, so the only trace is the plug-in message after 15 s: 'ComfyUI did not come up at http://127.0.0.1:8199 within 240 s. Last log lines: (no backend log yet)'. Processes clean, image untouched.",
-  "message_shown_in_progress_window": null,
-  "notes": [
-    "Reproduced outside GIMP: python supervisor.py --mode backend --base X --extra-args --cpu -> 'supervisor.py: error: argument --extra-args: expected one argument'. Values with a space ('--cpu --verbose INFO') pass because argparse treats them as values."
-  ],
   "status": "execution-error",
   "user_message_verbatim": [
-    "The AI backend is not available: ComfyUI did not come up at http://127.0.0.1:8199 within 240 s. Last log lines:\n(no backend log yet)"
+    "The request timed out (no result after 120 s). Try a smaller selection or fewer variations, or raise \"Generation time limit\" in Filters > AI > Generative Fill Settings > Connection and troubleshooting (0 means it is estimated per request)."
   ],
-  "return_message": "The AI backend is not available: ComfyUI did not come up at http://127.0.0.1:8199 within 240 s. Last log lines:\n(no backend log yet)",
-  "seconds_in_procedure": 15.94,
+  "seconds_in_procedure": [
+    146.32
+  ],
   "checks": {
     "traceback_in_gimp_output": false,
-    "image_untouched": true,
-    "layer_count_before_after": [
-      1,
-      1
+    "image_untouched": [
+      true
     ],
-    "selection_unchanged": true,
-    "dirty_after (undo step added)": false,
+    "layers_after": [
+      [
+        "Background"
+      ]
+    ],
+    "selection_unchanged": [
+      true
+    ],
     "processes_alive_10s_after_gimp_exit": 0,
-    "cleanup_seconds_after_exit": null,
-    "gimp_killed_by_launcher": false
+    "cleanup_seconds_after_exit": null
+  },
+  "events": [
+    "02:50:58 gimp-console pid 21480 (instance 1/1)",
+    "02:53:35 GIMP exited after 157.1 s"
+  ],
+  "launcher": {
+    "config_mode": "set",
+    "config_written": "{\n  \"backend\": \"comfyui\",\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\n  \"url\": \"http://127.0.0.1:8199\",\n  \"a1111_url\": \"http://127.0.0.1:7860\",\n  \"autostart\": true,\n  \"idle_timeout_minutes\": 2,\n  \"startup_timeout\": 240,\n  \"request_timeout\": 0,\n  \"extra_server_args\": \"--cpu\",\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\n  \"quality\": \"fast\",\n  \"steps\": 25,\n  \"cfg\": 7.0,\n  \"sampler\": \"dpmpp_2m\",\n  \"scheduler\": \"karras\",\n  \"denoise\": 1.0,\n  \"grow\": 16,\n  \"feather\": 24,\n  \"grow_percent\": 10.0,\n  \"feather_percent\": 6.0,\n  \"prefill\": true,\n  \"max_side_sd15\": 768,\n  \"max_side_sdxl\": 1024,\n  \"txt2img_width\": 768,\n  \"txt2img_height\": 512,\n  \"debug\": false,\n  \"active_model\": \"mat-places512\",\n  \"hf_token\": \"<redacted>\",\n  \"progress_window\": false,\n  \"progress_window_x\": 1694,\n  \"progress_window_y\": 2328\n}",
+    "profile_listing_before": [
+      "config.json 988",
+      "stable-boy.log 138196",
+      "tmp <dir>",
+      "watchers <dir>"
+    ],
+    "gimp_seconds": 157.1,
+    "gimp_exit_codes": [
+      0
+    ],
+    "processes_10s_after_exit": [],
+    "server_state_10s_after_exit": "(absent)",
+    "dummy_hits_8199": 3,
+    "dummy_hits_8188": 3,
+    "profile_listing_after": [
+      "comfyui.log 7727",
+      "config.json 988",
+      "stable-boy.log 142573",
+      "supervisor-stderr.log 0",
+      "tasks <dir>",
+      "tasks-status.json 113",
+      "tmp <dir>",
+      "watchers <dir>"
+    ],
+    "config_after": "{\n  \"backend\": \"comfyui\",\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\n  \"url\": \"http://127.0.0.1:8199\",\n  \"a1111_url\": \"http://127.0.0.1:7860\",\n  \"autostart\": true,\n  \"idle_timeout_minutes\": 2,\n  \"startup_timeout\": 240,\n  \"request_timeout\": 0,\n  \"extra_server_args\": \"--cpu\",\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\n  \"quality\": \"fast\",\n  \"steps\": 25,\n  \"cfg\": 7.0,\n  \"sampler\": \"dpmpp_2m\",\n  \"scheduler\": \"karras\",\n  \"denoise\": 1.0,\n  \"grow\": 16,\n  \"feather\": 24,\n  \"grow_percent\": 10.0,\n  \"feather_percent\": 6.0,\n  \"prefill\": true,\n  \"max_side_sd15\": 768,\n  \"max_side_sdxl\": 1024,\n  \"txt2img_width\": 768,\n  \"txt2img_height\": 512,\n  \"debug\": false,\n  \"active_model\": \"mat-places512\",\n  \"hf_token\": \"<redacted>\",\n  \"progress_window\": false,\n  \"progress_window_x\": 1694,\n  \"progress_window_y\": 2328\n}",
+    "restored": "config.json = baseline; state/task files removed; corrupt backups moved to scratch",
+    "total_seconds": 167.5
   },
   "driver": {
     "case": "rob-extra-server-args-dash",
-    "started": "2026-10-09 00:59:48",
-    "gimp_pid": 10472,
+    "started": "2026-10-09 02:51:04",
+    "gimp_pid": 38460,
     "gimp_version": "3.2.6",
     "profile": "C:\\AI\\overnight-scratch\\gimp-profile-rob",
     "procedure": "python-fu-stable-boy-generative-fill",
@@ -55,7 +90,7 @@
       },
       "dirty": false,
       "undo_enabled": true,
-      "composite_md5": "8a376b48cf8630a8a27a31f3666d201b"
+      "composite_md5": "c9283fdd72389273f4465c88a38315a1"
     },
     "args": {
       "prompt": "a red brick wall, photo",
@@ -65,11 +100,11 @@
       "seed": 1234,
       "model": "fast"
     },
-    "call_started": 1791521991.2926633,
+    "call_started": 1791528666.7748725,
     "status": "execution-error",
-    "return_message": "The AI backend is not available: ComfyUI did not come up at http://127.0.0.1:8199 within 240 s. Last log lines:\n(no backend log yet)",
-    "seconds": 15.94,
-    "call_finished": 1791522007.2340639,
+    "return_message": "The request timed out (no result after 120 s). Try a smaller selection or fewer variations, or raise \"Generation time limit\" in Filters > AI > Generative Fill Settings > Connection and troubleshooting (0 means it is estimated per request).",
+    "seconds": 146.32,
+    "call_finished": 1791528813.0943272,
     "after": {
       "size": [
         512,
@@ -92,44 +127,10 @@
       },
       "dirty": false,
       "undo_enabled": true,
-      "composite_md5": "8a376b48cf8630a8a27a31f3666d201b"
+      "composite_md5": "c9283fdd72389273f4465c88a38315a1"
     },
     "image_untouched": true,
-    "finished": "2026-10-09 01:00:09"
+    "finished": "2026-10-09 02:53:35"
   },
-  "launcher": {
-    "case": "rob-port-in-use-offline",
-    "started": "2026-10-09T00:59:41",
-    "harness": [
-      "dummy http500 listener on 127.0.0.1:8199, pid 26868"
-    ],
-    "events": [
-      "00:59:43 gimp-console pid 13368",
-      "01:00:09 gimp exited after 26.8 s (killed=False)"
-    ],
-    "config_mode": "set",
-    "config_written": "{\r\n  \"backend\": \"comfyui\",\r\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\r\n  \"url\": \"http://127.0.0.1:8199\",\r\n  \"a1111_url\": \"http://127.0.0.1:7860\",\r\n  \"autostart\": true,\r\n  \"idle_timeout_minutes\": 2,\r\n  \"startup_timeout\": 240,\r\n  \"request_timeout\": 0,\r\n  \"extra_server_args\": \"--cpu\",\r\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\r\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\r\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\r\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\r\n  \"quality\": \"fast\",\r\n  \"steps\": 25,\r\n  \"cfg\": 7.0,\r\n  \"sampler\": \"dpmpp_2m\",\r\n  \"scheduler\": \"karras\",\r\n  \"denoise\": 1.0,\r\n  \"grow\": 16,\r\n  \"feather\": 24,\r\n  \"grow_percent\": 10.0,\r\n  \"feather_percent\": 6.0,\r\n  \"prefill\": true,\r\n  \"max_side_sd15\": 768,\r\n  \"max_side_sdxl\": 1024,\r\n  \"txt2img_width\": 768,\r\n  \"txt2img_height\": 512,\r\n  \"debug\": false,\r\n  \"active_model\": \"mat-places512\",\r\n  \"hf_token\": \"<redacted>\",\r\n  \"progress_window\": false,\r\n  \"progress_window_x\": 1694,\r\n  \"progress_window_y\": 2328\r\n}",
-    "profile_listing_before": [
-      "tmp 1",
-      "config.json 988",
-      "stable-boy.log 4244"
-    ],
-    "gimp_seconds": 26.8,
-    "gimp_exit_code": 0,
-    "gimp_killed_by_launcher": false,
-    "window_screenshot": null,
-    "processes_10s_after_exit": [],
-    "server_state_10s_after_exit": "(absent)",
-    "cleanup_seconds_after_exit": null,
-    "dummy_hits": 12,
-    "profile_listing_after": [
-      "tmp 1",
-      "config.json 988",
-      "stable-boy.log 7818"
-    ],
-    "config_after": "{\r\n  \"backend\": \"comfyui\",\r\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\r\n  \"url\": \"http://127.0.0.1:8199\",\r\n  \"a1111_url\": \"http://127.0.0.1:7860\",\r\n  \"autostart\": true,\r\n  \"idle_timeout_minutes\": 2,\r\n  \"startup_timeout\": 240,\r\n  \"request_timeout\": 0,\r\n  \"extra_server_args\": \"--cpu\",\r\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\r\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\r\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\r\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\r\n  \"quality\": \"fast\",\r\n  \"steps\": 25,\r\n  \"cfg\": 7.0,\r\n  \"sampler\": \"dpmpp_2m\",\r\n  \"scheduler\": \"karras\",\r\n  \"denoise\": 1.0,\r\n  \"grow\": 16,\r\n  \"feather\": 24,\r\n  \"grow_percent\": 10.0,\r\n  \"feather_percent\": 6.0,\r\n  \"prefill\": true,\r\n  \"max_side_sd15\": 768,\r\n  \"max_side_sdxl\": 1024,\r\n  \"txt2img_width\": 768,\r\n  \"txt2img_height\": 512,\r\n  \"debug\": false,\r\n  \"active_model\": \"mat-places512\",\r\n  \"hf_token\": \"<redacted>\",\r\n  \"progress_window\": false,\r\n  \"progress_window_x\": 1694,\r\n  \"progress_window_y\": 2328\r\n}",
-    "restored": "config.json = baseline copy; state, task and comfyui.log files removed",
-    "finished": "2026-10-09T01:00:20"
-  },
-  "gimp_stderr": "GIMP-Message: Welcome to GIMP 3.2.6!\n\nGenerative Fill-Warning: The AI backend is not available: ComfyUI did not come up at http://127.0.0.1:8199 within 240 s. Last log lines:\n(no backend log yet)\n\n"
+  "gimp_stderr": "=== instance 1\nGIMP-Message: Welcome to GIMP 3.2.6!\n\nGenerative Fill-Warning: The request timed out (no result after 120 s). Try a smaller selection or fewer variations, or raise \"Generation time limit\" in Filters > AI > Generative Fill Settings > Connection and troubleshooting (0 means it is estimated per request).\n\n"
 }

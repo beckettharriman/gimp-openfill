@@ -1,0 +1,15 @@
+--- 02:04:54 before GIMP start (gpu used 848 MiB)
+   11696 ppid  20064 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py http500 8188
+--- 02:04:54 GIMP running 0 s (gpu used 848 MiB)
+   11696 ppid  20064 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py http500 8188
+   27232 ppid  20064 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+--- 02:05:00 GIMP running 5 s (gpu used 848 MiB)
+   11696 ppid  20064 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py http500 8188
+   27232 ppid  20064 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+--- 02:05:05 GIMP running 10 s (gpu used 848 MiB)
+   11696 ppid  20064 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py http500 8188
+   27232 ppid  20064 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+--- 02:05:05 at GIMP exit (gpu used 848 MiB)
+   11696 ppid  20064 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py http500 8188
+--- 02:05:16 10 s after GIMP exit (gpu used 848 MiB)
+   11696 ppid  20064 python.exe             C:\Users\becke\AppData\Local\Programs\Python\Python313\python.exe C:\AI\overnight-scratch\rob\dummy_listener.py http500 8188

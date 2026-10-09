@@ -1,0 +1,2 @@
+No GIMP is involved in this case; the task worker is the only process.
+Observed: task_worker_alive_after_60s = false in report.json, and the plug-in log shows "task worker exiting" about 30 s after the task finished.

@@ -29,6 +29,12 @@ from ..backend import (
 from ..comfy_api import ComfyApiError, ComfyClient, ComfyExecutionError
 from ..geometry import estimate_timeout, seed_or_random
 
+CONNECTION_LOST = (
+    "ComfyUI stopped while it was generating (it crashed or was closed), so the image was not changed. "
+    "Run the command again to restart it; if this keeps happening, read comfyui.log in the stable-boy "
+    "folder of your GIMP profile."
+)
+
 
 class ComfyBackend(Backend):
     name = "comfyui"
@@ -192,6 +198,8 @@ class ComfyBackend(Backend):
             if "timed out" in text:
                 self.cancel()
                 raise GenerationTimeout(f"no result after {timeout:.0f} s") from err
+            if self._connection_lost(err):
+                raise BackendUnavailable(CONNECTION_LOST) from err
             raise BackendUnavailable(text) from err
         finally:
             self._progress = Progress(1.0, "done", False)
@@ -199,10 +207,16 @@ class ComfyBackend(Backend):
         try:
             images = self.client.output_images(entry, workflow.OUTPUT_NODE)
         except ComfyApiError as err:
+            if self._connection_lost(err):
+                raise BackendUnavailable(CONNECTION_LOST) from err
             raise BackendUnavailable(f"could not download the result: {err}") from err
         if not images:
             raise WorkflowRejected("the workflow finished without producing an image")
         return images
+
+    def _connection_lost(self, err: ComfyApiError) -> bool:
+        """A transport failure (no HTTP status) while ComfyUI no longer answers: it stopped mid-job."""
+        return not err.status and not self.client.is_alive(timeout=2.0)
 
     def _wrap(self, progress: ProgressCallback | None) -> ProgressCallback:
         def cb(fraction: float, text: str) -> None:

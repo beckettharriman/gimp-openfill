@@ -3,6 +3,7 @@
 """ServerManager: messages, the port check, argument passing and log handling (no ComfyUI needed)."""
 
 import json
+import os
 import socket
 import sys
 import tempfile
@@ -93,7 +94,9 @@ class PortProbeTests(ManagerCase):
         spawn.assert_not_called()
         text = str(ctx.exception)
         self.assertIn(f"Port {self.port} is used by another program (it is not ComfyUI)", text)
-        self.assertIn("Close that program, or set a free port in the ComfyUI URL in Settings", text)
+        self.assertIn(
+            "Close that program, or set a free port in the ComfyUI URL in Filters > AI > Generative Fill Settings", text
+        )
         self.assertIn("http://127.0.0.1:8190", text)
 
     def test_slow_comfyui_on_the_port_is_used_not_rejected(self):
@@ -190,3 +193,26 @@ class WaitReadyTests(ManagerCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CancelAndWatcherTests(ManagerCase):
+    """rob-cancel-starting-backend and rob-two-requests-first-gimp-exits."""
+
+    def test_cancel_while_starting_returns_at_once(self):
+        from stable_boy.backend import GenerationCancelled
+
+        with (
+            mock.patch.object(server.ComfyClient, "is_alive", return_value=False),
+            self.assertRaises(GenerationCancelled),
+        ):
+            self.manager._wait_ready(self.settings.url, None, cancel=lambda: True)
+
+    def test_touch_registers_this_gimp_with_a_managed_backend(self):
+        self.manager._write_state({"supervisor_pid": 1, "url": self.settings.url})
+        self.manager.touch()
+        watchers = self.paths.base / "watchers"
+        self.assertTrue((watchers / str(os.getppid())).exists())
+
+    def test_no_registration_without_a_managed_backend(self):
+        self.manager.touch()
+        self.assertFalse((self.paths.base / "watchers").exists())

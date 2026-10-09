@@ -1,0 +1,2 @@
+"C:/Users/becke/AppData/Local/Programs/GIMP 3/bin/python.exe" C:/AI/overnight-scratch/rob/download_case.py rob-download-corrupt-part corrupt-part
+(queues lama-big via ServerManager.queue_task in the profile C:\AI\overnight-scratch\gimp-profile-rob; no GIMP involved)

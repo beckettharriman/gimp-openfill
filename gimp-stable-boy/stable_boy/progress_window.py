@@ -359,6 +359,7 @@ class ProgressWindow(Gtk.Window):
 
     def _tick(self) -> bool:
         if self._finished:
+            self._timer = 0  # returning False removes the source; close_now must not remove it again
             return False
         elapsed = time.monotonic() - self._started
         remaining = self._eta.update(elapsed, self.bar.get_fraction())

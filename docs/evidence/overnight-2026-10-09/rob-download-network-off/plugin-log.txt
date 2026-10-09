@@ -1,0 +1,6 @@
+2026-10-09 02:38:28,861 INFO  [4240 stable-boy] launching task worker: C:/Users/becke/AppData/Local/Programs/GIMP 3/bin/pythonw.exe C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/supervisor.py --mode tasks --base C:/AI/overnight-scratch/gimp-profile-rob/stable-boy --config C:/AI/overnight-scratch/gimp-profile-rob/stable-boy/config.json
+2026-10-09 02:38:28,876 INFO  [4240 stable-boy] queued task 1791527908860-download (download)
+2026-10-09 02:38:29 INFO  [12284 supervisor] task worker started (no backend)
+2026-10-09 02:38:29 INFO  [12284 supervisor] download https://github.com/Sanster/models/releases/download/add_big_lama/big-lama.pt -> C:/AI/ComfyUI/ComfyUI_windows_portable/ComfyUI/models/inpaint/big-lama.pt
+2026-10-09 02:38:31 INFO  [12284 supervisor] task 1791527908860-download error: Could not reach github.com: the connection was refused (a proxy or firewall may be blocking it). Check the internet connection and any proxy or firewall, then press Download again (a partly downloaded file is kept and resumes).
+2026-10-09 02:39:03 INFO  [12284 supervisor] task worker exiting

@@ -4,8 +4,11 @@
 
 import contextlib
 import io
+import os
 import unittest
+from pathlib import Path
 
+from stable_boy import supervisor
 from stable_boy.supervisor import build_parser
 
 
@@ -40,3 +43,55 @@ class ParserTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class StartLockAndWatcherTests(unittest.TestCase):
+    """rob-two-requests-first-gimp-exits: one supervisor per profile, kept alive by every GIMP using it."""
+
+    def setUp(self):
+        import tempfile
+
+        self.tmp = tempfile.TemporaryDirectory()
+        self.base = Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_lock_is_exclusive_and_released(self):
+        lock = self.base / supervisor.START_LOCK_FILENAME
+        self.assertTrue(supervisor.acquire_start_lock(lock))
+        self.assertEqual(lock.read_text(encoding="utf-8"), str(os.getpid()))
+        supervisor.release_start_lock(lock)
+        self.assertFalse(lock.exists())
+
+    def test_lock_held_by_a_live_python_is_respected(self):
+        import subprocess
+        import sys
+
+        holder = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+        try:
+            lock = self.base / supervisor.START_LOCK_FILENAME
+            lock.write_text(str(holder.pid), encoding="utf-8")
+            self.assertFalse(supervisor.acquire_start_lock(lock))
+            supervisor.release_start_lock(lock)  # not ours: stays
+            self.assertTrue(lock.exists())
+        finally:
+            holder.kill()
+            holder.wait()
+
+    def test_stale_lock_is_taken_over(self):
+        lock = self.base / supervisor.START_LOCK_FILENAME
+        lock.write_text("999999", encoding="utf-8")  # no such process
+        self.assertTrue(supervisor.acquire_start_lock(lock))
+        self.assertEqual(lock.read_text(encoding="utf-8"), str(os.getpid()))
+
+    def test_live_watchers(self):
+        folder = self.base / supervisor.WATCHERS_DIRNAME
+        folder.mkdir()
+        (folder / str(os.getpid())).touch()
+        (folder / "999999").touch()
+        (folder / "junk").touch()
+        self.assertEqual(supervisor.live_watchers(self.base, names=("python",)), [os.getpid()])
+        self.assertFalse((folder / "999999").exists())  # dead entry removed
+        self.assertEqual(supervisor.live_watchers(self.base), [])  # this process is not a GIMP
+        self.assertFalse((folder / str(os.getpid())).exists())

@@ -281,8 +281,8 @@ def describe_error(error: BaseException) -> str:
     if isinstance(error, GenerationTimeout):
         return _with_next_step(
             f"The request timed out ({text})." if text else "The request timed out.",
-            "Try a smaller selection or fewer steps, or raise the request timeout in "
-            f"{SETTINGS_MENU} (0 means it is estimated per request).",
+            'Try a smaller selection or fewer variations, or raise "Generation time limit" in '
+            f"{SETTINGS_MENU} > Connection and troubleshooting (0 means it is estimated per request).",
         )
     if isinstance(error, GenerationCancelled):
         return "Generation was cancelled. Run the command again to try once more."

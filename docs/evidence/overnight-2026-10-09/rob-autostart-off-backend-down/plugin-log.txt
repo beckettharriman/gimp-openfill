@@ -1,26 +1,28 @@
-2026-10-09 00:59:21,194 INFO  [22756 stable-boy] fill: selection=Rect(x=200, y=140, width=120, height=100) context=Rect(x=80, y=20, width=360, height=340) working=544x512 scale=1.51 mask(grow=12/18px feather=7/11px) model=sd15-inpainting template=sd15_inpaint
-2026-10-09 00:59:23,352 ERROR [22756 stable-boy] procedure failed: The AI backend is not available: ComfyUI is not answering at http://127.0.0.1:8199 and auto-start is disabled in the settings.
+2026-10-09 02:46:52,280 INFO  [23152 stable-boy] fill: selection=Rect(x=200, y=140, width=120, height=100) context=Rect(x=140, y=80, width=240, height=220) working=560x512 scale=2.33 mask(grow=12/28px feather=7/16px layer grow=7px) prefill=border/neutral color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+2026-10-09 02:46:54,390 ERROR [23152 stable-boy] procedure failed: The AI backend is not available: ComfyUI is not running at http://127.0.0.1:8199. Start ComfyUI yourself, or turn on 'Start backend automatically' in Filters > AI > Generative Fill Settings, then press Check backend.
 Traceback (most recent call last):
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 118, in run_fill
-    app.generative_fill(image, config.get_property("prompt"), config.get_property("negative"),
-    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                        config.get_property("variations"), config.get_property("strength"),
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                        config.get_property("seed"), config.get_property("model"),
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                        remove=bool(config.get_property("remove")))
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\app.py", line 333, in generative_fill
-    result = runner.run(lambda progress, preview, cancel:
-                        self.backend(progress).inpaint(request, progress, preview, cancel))
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\runner.py", line 102, in run
+  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 462, in run_fill
+    layers = app.generative_fill(
+        image,
+    ...<6 lines>...
+        remove=bool(config.get_property("remove")),
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 497, in generative_fill
+    result = runner.run(
+        lambda progress, preview, cancel: self.backend(progress, cancel).inpaint(
+            request, progress, preview, cancel
+        )
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/runner.py", line 136, in run
     return job(self.status, None, None)
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\app.py", line 334, in <lambda>
-    self.backend(progress).inpaint(request, progress, preview, cancel))
-    ~~~~~~~~~~~~^^^^^^^^^^
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\app.py", line 93, in backend
-    url = self.server.ensure_running(progress)
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\server.py", line 119, in ensure_running
-    raise BackendUnavailable(f"ComfyUI is not answering at {url} and auto-start is disabled in the settings.")
-stable_boy.backend.BackendUnavailable: ComfyUI is not answering at http://127.0.0.1:8199 and auto-start is disabled in the settings.
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 498, in <lambda>
+    lambda progress, preview, cancel: self.backend(progress, cancel).inpaint(
+                                      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 111, in backend
+    url = self.server.ensure_running(progress, cancel)
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/server.py", line 157, in ensure_running
+    raise BackendUnavailable(
+    ...<2 lines>...
+    )
+stable_boy.backend.BackendUnavailable: ComfyUI is not running at http://127.0.0.1:8199. Start ComfyUI yourself, or turn on 'Start backend automatically' in Filters > AI > Generative Fill Settings, then press Check backend.
 

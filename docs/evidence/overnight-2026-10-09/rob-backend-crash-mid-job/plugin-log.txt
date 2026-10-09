@@ -1,0 +1,106 @@
+2026-10-09 02:01:10,854 INFO  [16432 stable-boy] fill: selection=Rect(x=200, y=140, width=120, height=100) context=Rect(x=140, y=80, width=240, height=220) working=560x512 scale=2.33 mask(grow=12/28px feather=7/16px layer grow=7px) prefill=border/neutral color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+2026-10-09 02:01:13,960 INFO  [16432 stable-boy] launching supervisor (gimp pid 35776): C:/Users/becke/AppData/Local/Programs/GIMP 3/bin/pythonw.exe C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/supervisor.py --mode backend --python C:/AI/ComfyUI/ComfyUI_windows_portable/python_embeded/python.exe --main C:/AI/ComfyUI/ComfyUI_windows_portable/ComfyUI/main.py --cwd C:/AI/ComfyUI/ComfyUI_windows_portable --host 127.0.0.1 --port 8188 --base C:/AI/overnight-scratch/gimp-profile-rob/stable-boy --config C:/AI/overnight-scratch/gimp-profile-rob/stable-boy/config.json --watch-pid 35776 --idle-minutes 20
+2026-10-09 02:01:14 INFO  [19424 supervisor] starting backend: C:/AI/ComfyUI/ComfyUI_windows_portable/python_embeded/python.exe -s C:/AI/ComfyUI/ComfyUI_windows_portable/ComfyUI/main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --dont-print-server --preview-method taesd
+2026-10-09 02:01:14 INFO  [19424 supervisor] backend pid 28832, job object ok
+2026-10-09 02:01:14 INFO  [19424 supervisor] watching gimp pid 35776 (gimp-console-3.2.exe)
+2026-10-09 02:01:35,551 INFO  [16432 stable-boy] backend ready at http://127.0.0.1:8188 after 21 s
+2026-10-09 02:01:35,595 INFO  [16432 stable-boy] queued prompt 0f047acb-954d-4b37-b152-a4e12c348ef9 (timeout 124s, 40 steps x 1)
+2026-10-09 02:01:40 INFO  [19424 supervisor] shutting down: backend exited with code 15
+2026-10-09 02:01:43,994 ERROR [16432 stable-boy] procedure failed: The AI backend is not available: ComfyUI stopped while it was generating (it crashed or was closed), so the image was not changed. Run the command again to restart it; if this keeps happening, read comfyui.log in the stable-boy folder of your GIMP profile.
+Traceback (most recent call last):
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/urllib/request.py", line 1320, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              encode_chunked=req.has_header('Transfer-encoding'))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/http/client.py", line 1386, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/http/client.py", line 1432, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/http/client.py", line 1381, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/http/client.py", line 1141, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/http/client.py", line 1085, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/http/client.py", line 1051, in connect
+    self.sock = self._create_connection(
+                ~~~~~~~~~~~~~~~~~~~~~~~^
+        (self.host,self.port), self.timeout, self.source_address)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/socket.py", line 874, in create_connection
+    raise exceptions[0]
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/socket.py", line 859, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/comfy_api.py", line 69, in _request
+    with urlopen(req, timeout=timeout or self.timeout) as resp:
+         ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/urllib/request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/urllib/request.py", line 487, in open
+    response = self._open(req, data)
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/urllib/request.py", line 504, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+                              '_open', req)
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/urllib/request.py", line 464, in _call_chain
+    result = func(*args)
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/urllib/request.py", line 1349, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/Users/becke/AppData/Local/Programs/GIMP 3/lib/python3.14/urllib/request.py", line 1323, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/backends/comfy.py", line 188, in _run
+    entry = self.client.wait_for(
+        prompt_id, workflow.total_steps(graph), deadline, self._wrap(progress), preview=preview, cancel=cancel
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/comfy_api.py", line 275, in wait_for
+    entry = self.history(prompt_id)
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/comfy_api.py", line 163, in history
+    info = self._json("GET", f"/history/{prompt_id}")
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/comfy_api.py", line 94, in _json
+    raw = self._request(method, path, data, "application/json" if data else None, timeout)
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/comfy_api.py", line 90, in _request
+    raise ComfyApiError(f"{method} {path} failed: {err}") from err
+stable_boy.comfy_api.ComfyApiError: GET /history/0f047acb-954d-4b37-b152-a4e12c348ef9 failed: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 455, in run_fill
+    layers = app.generative_fill(
+        image,
+    ...<6 lines>...
+        remove=bool(config.get_property("remove")),
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 497, in generative_fill
+    result = runner.run(
+        lambda progress, preview, cancel: self.backend(progress).inpaint(request, progress, preview, cancel)
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/runner.py", line 136, in run
+    return job(self.status, None, None)
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 498, in <lambda>
+    lambda progress, preview, cancel: self.backend(progress).inpaint(request, progress, preview, cancel)
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/backends/comfy.py", line 128, in inpaint
+    images = self._run(graph, request.sampling.steps, request.sampling.batch, pixels, progress, preview, cancel)
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/backends/comfy.py", line 203, in _run
+    raise BackendUnavailable(CONNECTION_LOST) from err
+stable_boy.backend.BackendUnavailable: ComfyUI stopped while it was generating (it crashed or was closed), so the image was not changed. Run the command again to restart it; if this keeps happening, read comfyui.log in the stable-boy folder of your GIMP profile.
+

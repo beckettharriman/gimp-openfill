@@ -40,7 +40,7 @@ from gi.repository import Gimp, GimpUi, GLib, GObject  # noqa: E402
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from stable_boy import __version__, ui_text  # noqa: E402
-from stable_boy.backend import BackendError, describe_error  # noqa: E402
+from stable_boy.backend import BackendError, GenerationCancelled, describe_error  # noqa: E402
 from stable_boy.config import Paths, Settings  # noqa: E402
 
 PROC_FILL = "python-fu-stable-boy-generative-fill"
@@ -108,6 +108,13 @@ def _load_models_cache() -> dict:
 
 
 def _fail(procedure, error: BaseException, log=None):
+    if isinstance(error, GenerationCancelled):
+        # The user asked for it: no error dialog (the progress window already says so), CANCEL status.
+        if log is not None:
+            log.info("procedure cancelled: %s", error)
+        if "interrupted" in str(error):  # stopped from outside GIMP (ComfyUI's own Cancel or /interrupt)
+            Gimp.message(ui_text.INTERRUPTED_OUTSIDE)
+        return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
     if isinstance(error, BackendError):
         text = ui_text.with_next_step(describe_error(error))
     else:

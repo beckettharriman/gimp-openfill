@@ -138,7 +138,8 @@ class ErrorWordingTests(unittest.TestCase):
         for err in errors:
             text = ut.with_next_step(describe_error(err))
             self.assertTrue(text.startswith(describe_error(err).strip()), text)  # original wording kept
-            self.assertTrue("Next step" in text or "Open" in text or "Try" in text, text)
+            self.assertTrue(any(w in text.lower() for w in ("next step", "open", "try", "press")), text)
+            self.assertLessEqual(text.lower().count("generative fill settings"), 1, text)  # one step, not two
 
     def test_cancel_is_reassuring(self):
         text = ut.with_next_step(describe_error(GenerationCancelled()))

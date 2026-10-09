@@ -192,6 +192,7 @@ _NEXT_STEPS = (
         "failing, read comfyui.log in the stable-boy folder of your GIMP profile.",
     ),
     ("is not answering", ""),  # the A1111 message already says what to do
+    ("stopped while it was generating", ""),  # backends/comfy.py CONNECTION_LOST says what to do
     ("ran out of memory", ""),  # describe_error already says what to do
     (
         "timed out",
@@ -211,6 +212,12 @@ _NEXT_STEPS = (
 )
 
 
+INTERRUPTED_OUTSIDE = (
+    "The generation was stopped in ComfyUI (its Cancel or Interrupt was used outside GIMP). "
+    "Nothing in the image was changed. Run the command again to try once more."
+)
+
+
 def next_step(message: str) -> str:
     lowered = (message or "").lower()
     for needle, step in _NEXT_STEPS:
@@ -226,6 +233,8 @@ def with_next_step(message: str) -> str:
     """``message`` followed by a plain next step (unless it already has one)."""
     message = (message or "").strip()
     if "next step" in message.lower():
+        return message
+    if "generative fill settings" in message.lower():  # already points at the setting to change
         return message
     step = next_step(message)
     if not step:

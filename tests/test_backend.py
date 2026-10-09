@@ -77,7 +77,7 @@ class DescribeErrorTests(unittest.TestCase):
         )
         timeout = describe_error(GenerationTimeout("no result after 240 s"))
         self.assertTrue(timeout.startswith("The request timed out (no result after 240 s)."))
-        self.assertIn("request timeout", timeout)
+        self.assertIn("Generation time limit", timeout)
         rejected = describe_error(WorkflowRejected("KSampler: Required input is missing: model"))
         self.assertIn("ComfyUI rejected the request: KSampler", rejected)
         self.assertIn("Models", rejected)
@@ -106,3 +106,47 @@ class DescribeErrorTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ConnectionLostTests(unittest.TestCase):
+    """rob-backend-crash-mid-job: ComfyUI killed while sampling must read as a stopped backend."""
+
+    class FakeClient:
+        def __init__(self, alive, status=0):
+            self.alive, self.status = alive, status
+
+        def queue_prompt(self, graph):
+            return "p1"
+
+        def wait_for(self, *args, **kwargs):
+            from stable_boy.comfy_api import ComfyApiError
+
+            raise ComfyApiError("GET /history/p1 failed: <urlopen error [WinError 10061] refused>", self.status)
+
+        def is_alive(self, timeout=3.0):
+            return self.alive
+
+        def interrupt(self):
+            pass
+
+        def clear_queue(self):
+            pass
+
+    def run_with(self, client):
+        from stable_boy.backends.comfy import ComfyBackend
+
+        backend_ = ComfyBackend("http://x", client=client, request_timeout=30)
+        with self.assertRaises(BackendUnavailable) as ctx:
+            backend_._run({}, 20, 1, 512 * 512, None)
+        return str(ctx.exception)
+
+    def test_server_gone_gives_plain_message(self):
+        from stable_boy.backends.comfy import CONNECTION_LOST
+
+        text = self.run_with(self.FakeClient(alive=False))
+        self.assertEqual(text, CONNECTION_LOST)
+        self.assertNotIn("urlopen", describe_error(BackendUnavailable(text)))
+        self.assertTrue(has_next_step(text))
+
+    def test_server_still_up_keeps_detail(self):
+        self.assertIn("/history", self.run_with(self.FakeClient(alive=True)))

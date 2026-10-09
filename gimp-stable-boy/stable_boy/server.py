@@ -23,10 +23,10 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-from .backend import BackendUnavailable
+from .backend import BackendUnavailable, GenerationCancelled
 from .comfy_api import ComfyClient
 from .config import Paths, Settings, comfy_layout
-from .supervisor import pid_is_python
+from .supervisor import WATCHERS_DIRNAME, pid_is_python
 
 ProgressCallback = Callable[[float, str], None]
 IS_WINDOWS = sys.platform == "win32"
@@ -44,7 +44,7 @@ def port_in_use_message(host: str, port: int) -> str:
     free = 8190 if port != 8190 else 8191
     return (
         f"Port {port} is used by another program (it is not ComfyUI). Close that program, or set a free "
-        f"port in the ComfyUI URL in Settings (for example http://{host}:{free})."
+        f"port in the ComfyUI URL in Filters > AI > Generative Fill Settings (for example http://{host}:{free})."
     )
 
 
@@ -94,11 +94,22 @@ class ServerManager:
         """Record activity so the idle timeout restarts."""
         state = self.read_state()
         if state:
+            self.register_watcher()
             state["last_used"] = time.time()
             try:
                 self._write_state(state)
             except OSError:
                 pass
+
+    def register_watcher(self, gimp_pid: int | None = None) -> None:
+        """Tell the supervisor that this GIMP uses the managed backend too, so it is not shut down
+        when the GIMP that started it exits while this one still needs it."""
+        try:
+            folder = self.paths.base / WATCHERS_DIRNAME
+            folder.mkdir(parents=True, exist_ok=True)
+            (folder / str(gimp_pid or os.getppid())).touch()
+        except OSError:
+            pass
 
     def request_stop(self) -> bool:
         """Ask the supervisor to shut the backend down. Returns True if asked."""
@@ -131,7 +142,7 @@ class ServerManager:
 
     # start ---------------------------------------------------------------
 
-    def ensure_running(self, progress: ProgressCallback | None = None) -> str:
+    def ensure_running(self, progress: ProgressCallback | None = None, cancel: Callable[[], bool] | None = None) -> str:
         """Return a healthy base URL, starting the backend if allowed."""
         url = self.url()
         if self.is_healthy(url):
@@ -147,9 +158,9 @@ class ServerManager:
                 f"ComfyUI is not running at {url}. Start ComfyUI yourself, or turn on 'Start backend "
                 "automatically' in Filters > AI > Generative Fill Settings, then press Check backend."
             )
-        return self.start(progress)
+        return self.start(progress, cancel)
 
-    def start(self, progress: ProgressCallback | None = None) -> str:
+    def start(self, progress: ProgressCallback | None = None, cancel: Callable[[], bool] | None = None) -> str:
         """Launch the backend supervisor detached and wait until ComfyUI answers."""
         layout = comfy_layout(self.settings.comfy_dir)
         if layout is None:
@@ -200,7 +211,7 @@ class ServerManager:
         if self.log:
             self.log.info("launching supervisor (gimp pid %s): %s", gimp_pid, " ".join(cmd))
         self._spawn_detached(cmd)
-        return self._wait_ready(url, progress)
+        return self._wait_ready(url, progress, cancel)
 
     # tasks (downloads, node installs) -------------------------------------
 
@@ -323,12 +334,17 @@ class ServerManager:
         else:
             subprocess.Popen(cmd, start_new_session=True, **kwargs)
 
-    def _wait_ready(self, url: str, progress: ProgressCallback | None) -> str:
+    def _wait_ready(self, url: str, progress: ProgressCallback | None, cancel: Callable[[], bool] | None = None) -> str:
         client = ComfyClient(url)
         timeout = max(30, int(self.settings.startup_timeout))
         started = time.monotonic()
         while time.monotonic() - started < timeout:
             elapsed = time.monotonic() - started
+            if cancel and cancel():
+                # stop waiting at once; the backend keeps starting and serves the next run
+                if self.log:
+                    self.log.info("cancelled while the backend was starting (%.0f s)", elapsed)
+                raise GenerationCancelled("cancelled while the AI backend was starting")
             if progress:
                 progress(min(0.95, elapsed / timeout), f"Starting the AI backend... {int(elapsed)} s")
             if client.is_alive(timeout=2.0):

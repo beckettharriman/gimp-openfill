@@ -1,0 +1,50 @@
+{
+  "case": "rob-download-network-off",
+  "verdict": "PASS",
+  "verdict_reason": "Proxy pointing at a closed port: task failed in 3 s with a plain message and the next step (first run: 'could not connect: <urlopen error [WinError 10061] ...>', fixed by downloads.network_message); no partial file; worker exited.",
+  "mode": "network-off",
+  "model": "lama-big",
+  "dest": "C:/AI/ComfyUI/ComfyUI_windows_portable/ComfyUI/models/inpaint/big-lama.pt",
+  "events": [
+    "02:38:28 HTTPS_PROXY/HTTP_PROXY=http://127.0.0.1:9 in the environment the task worker inherits",
+    "02:38:28 attempt 1: queued task 1791527908860-download",
+    "02:38:31 attempt 1: {\"task_id\": \"1791527908860-download\", \"type\": \"download\", \"model_id\": \"lama-big\", \"state\": \"error\", \"message\": \"Could not reach github.com: the connection was refused (a proxy or firewall may be blocking it). Check the internet connection and any proxy or firewall, then press Download again (a partly downloaded file is kept and resumes).\", \"finished\": 1791527911.2404594, \"code\": \"network\"}"
+  ],
+  "attempts": [
+    {
+      "task": "1791527908860-download",
+      "history": {
+        "task_id": "1791527908860-download",
+        "type": "download",
+        "model_id": "lama-big",
+        "state": "error",
+        "message": "Could not reach github.com: the connection was refused (a proxy or firewall may be blocking it). Check the internet connection and any proxy or firewall, then press Download again (a partly downloaded file is kept and resumes).",
+        "finished": 1791527911.2404594,
+        "code": "network"
+      },
+      "seconds": 3.0,
+      "part_exists": false,
+      "part_size": null,
+      "dest_exists": false
+    }
+  ],
+  "final_dest_exists": false,
+  "task_worker_alive_after_60s": false,
+  "tasks_status": {
+    "worker_pid": 12284,
+    "current": null,
+    "queue": [],
+    "history": [
+      {
+        "task_id": "1791527908860-download",
+        "type": "download",
+        "model_id": "lama-big",
+        "state": "error",
+        "message": "Could not reach github.com: the connection was refused (a proxy or firewall may be blocking it). Check the internet connection and any proxy or firewall, then press Download again (a partly downloaded file is kept and resumes).",
+        "finished": 1791527911.2404594,
+        "code": "network"
+      }
+    ],
+    "updated": 1791527911.24047
+  }
+}

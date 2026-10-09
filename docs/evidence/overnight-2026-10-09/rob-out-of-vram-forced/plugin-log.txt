@@ -1,0 +1,8 @@
+2026-10-09 02:40:33,079 INFO  [36084 stable-boy] fill: selection=Rect(x=200, y=150, width=2600, height=1700) context=Rect(x=0, y=0, width=3000, height=2000) working=2048x1368 scale=0.68 mask(grow=16/11px feather=24/11px layer grow=16px) prefill=border/neutral color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+2026-10-09 02:40:38,597 INFO  [36084 stable-boy] launching supervisor (gimp pid 19028): C:/Users/becke/AppData/Local/Programs/GIMP 3/bin/pythonw.exe C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/supervisor.py --mode backend --python C:/AI/ComfyUI/ComfyUI_windows_portable/python_embeded/python.exe --main C:/AI/ComfyUI/ComfyUI_windows_portable/ComfyUI/main.py --cwd C:/AI/ComfyUI/ComfyUI_windows_portable --host 127.0.0.1 --port 8188 --base C:/AI/overnight-scratch/gimp-profile-rob/stable-boy --config C:/AI/overnight-scratch/gimp-profile-rob/stable-boy/config.json --watch-pid 19028 --idle-minutes 20
+2026-10-09 02:40:38 INFO  [29756 supervisor] starting backend: C:/AI/ComfyUI/ComfyUI_windows_portable/python_embeded/python.exe -s C:/AI/ComfyUI/ComfyUI_windows_portable/ComfyUI/main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --dont-print-server --preview-method taesd
+2026-10-09 02:40:38 INFO  [29756 supervisor] backend pid 23432, job object ok
+2026-10-09 02:40:38 INFO  [29756 supervisor] watching gimp pid 19028 (gimp-console-3.2.exe)
+2026-10-09 02:41:00,207 INFO  [36084 stable-boy] backend ready at http://127.0.0.1:8188 after 21 s
+2026-10-09 02:41:00,282 INFO  [36084 stable-boy] queued prompt 85a07c39-b7b1-4138-bc84-ed868fe250e1 (timeout 930s, 25 steps x 4)
+2026-10-09 02:45:20,059 INFO  [36084 stable-boy] fill: done, seed=1234, 4 layer(s)

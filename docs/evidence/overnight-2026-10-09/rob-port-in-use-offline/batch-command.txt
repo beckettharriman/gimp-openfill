@@ -1,5 +1,7 @@
 set GIMP3_DIRECTORY=C:\AI\overnight-scratch\gimp-profile-rob
+set SB_REPO=C:\repos\gimp-stable-boy
 set SB_ROB_CASE=rob-port-in-use-offline
 set SB_ROB_OUT=C:\repos\gimp-stable-boy\docs\evidence\overnight-2026-10-09\rob-port-in-use-offline
+set SB_TEST_CANCEL_FILE=C:\AI\overnight-scratch\rob\logs\rob-port-in-use-offline\cancel-step.txt
 "C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe" --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b "exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())"
-(launcher: pwsh -File C:\AI\overnight-scratch\rob\run-case.ps1 -Case rob-port-in-use-offline; config mode: set; dummy http500 listener on 127.0.0.1:8199, pid 37432)
+(launcher: python C:\AI\overnight-scratch\rob\run_case.py rob-port-in-use-offline; scenario: {"dummy": ["http500", 8199]}; config overrides: {"comfy_dir": "C:\\AI\\ComfyUI\\ComfyUI_windows_portable", "url": "http://127.0.0.1:8199", "autostart": true, "extra_server_args": "--cpu --verbose INFO", "idle_timeout_minutes": 2})

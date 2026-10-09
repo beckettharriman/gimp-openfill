@@ -1,33 +1,66 @@
 {
   "case": "rob-autostart-off-backend-down",
+  "verdict": "PASS",
+  "verdict_reason": "Plain message with the setting name and the next step; returned in about 2 s; nothing spawned; image untouched (F4 fixed; duplicate generic step removed).",
   "acceptance_rule": "plain words plus a next step, no traceback, image and processes clean",
-  "verdict": "FAIL",
-  "verdict_reason": "Plain words, no traceback, image untouched, nothing spawned, returned in about 2 s. But there is no next step: it says auto-start is disabled without saying where to turn it on (the checkbox is 'Start backend automatically' in Filters > AI > Generative Fill Settings) or that the user can start ComfyUI themselves and use Check backend.",
-  "message_shown_in_progress_window": null,
-  "notes": [],
   "status": "execution-error",
   "user_message_verbatim": [
-    "The AI backend is not available: ComfyUI is not answering at http://127.0.0.1:8199 and auto-start is disabled in the settings."
+    "The AI backend is not available: ComfyUI is not running at http://127.0.0.1:8199. Start ComfyUI yourself, or turn on 'Start backend automatically' in Filters > AI > Generative Fill Settings, then press Check backend."
   ],
-  "return_message": "The AI backend is not available: ComfyUI is not answering at http://127.0.0.1:8199 and auto-start is disabled in the settings.",
-  "seconds_in_procedure": 2.88,
+  "seconds_in_procedure": [
+    2.79
+  ],
   "checks": {
     "traceback_in_gimp_output": false,
-    "image_untouched": true,
-    "layer_count_before_after": [
-      1,
-      1
+    "image_untouched": [
+      true
     ],
-    "selection_unchanged": true,
-    "dirty_after (undo step added)": false,
+    "layers_after": [
+      [
+        "Background"
+      ]
+    ],
+    "selection_unchanged": [
+      true
+    ],
     "processes_alive_10s_after_gimp_exit": 0,
-    "cleanup_seconds_after_exit": null,
-    "gimp_killed_by_launcher": false
+    "cleanup_seconds_after_exit": null
+  },
+  "events": [
+    "02:46:43 gimp-console pid 31248 (instance 1/1)",
+    "02:46:56 GIMP exited after 13.5 s"
+  ],
+  "launcher": {
+    "config_mode": "set",
+    "config_written": "{\n  \"backend\": \"comfyui\",\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\n  \"url\": \"http://127.0.0.1:8199\",\n  \"a1111_url\": \"http://127.0.0.1:7860\",\n  \"autostart\": false,\n  \"idle_timeout_minutes\": 20,\n  \"startup_timeout\": 240,\n  \"request_timeout\": 0,\n  \"extra_server_args\": \"\",\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\n  \"quality\": \"fast\",\n  \"steps\": 25,\n  \"cfg\": 7.0,\n  \"sampler\": \"dpmpp_2m\",\n  \"scheduler\": \"karras\",\n  \"denoise\": 1.0,\n  \"grow\": 16,\n  \"feather\": 24,\n  \"grow_percent\": 10.0,\n  \"feather_percent\": 6.0,\n  \"prefill\": true,\n  \"max_side_sd15\": 768,\n  \"max_side_sdxl\": 1024,\n  \"txt2img_width\": 768,\n  \"txt2img_height\": 512,\n  \"debug\": false,\n  \"active_model\": \"mat-places512\",\n  \"hf_token\": \"<redacted>\",\n  \"progress_window\": false,\n  \"progress_window_x\": 1694,\n  \"progress_window_y\": 2328\n}",
+    "profile_listing_before": [
+      "config.json 985",
+      "stable-boy.log 124649",
+      "tmp <dir>",
+      "watchers <dir>"
+    ],
+    "gimp_seconds": 13.5,
+    "gimp_exit_codes": [
+      0
+    ],
+    "processes_10s_after_exit": [],
+    "server_state_10s_after_exit": "(absent)",
+    "dummy_hits_8199": 3,
+    "dummy_hits_8188": 3,
+    "profile_listing_after": [
+      "config.json 985",
+      "stable-boy.log 126840",
+      "tmp <dir>",
+      "watchers <dir>"
+    ],
+    "config_after": "{\n  \"backend\": \"comfyui\",\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\n  \"url\": \"http://127.0.0.1:8199\",\n  \"a1111_url\": \"http://127.0.0.1:7860\",\n  \"autostart\": false,\n  \"idle_timeout_minutes\": 20,\n  \"startup_timeout\": 240,\n  \"request_timeout\": 0,\n  \"extra_server_args\": \"\",\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\n  \"quality\": \"fast\",\n  \"steps\": 25,\n  \"cfg\": 7.0,\n  \"sampler\": \"dpmpp_2m\",\n  \"scheduler\": \"karras\",\n  \"denoise\": 1.0,\n  \"grow\": 16,\n  \"feather\": 24,\n  \"grow_percent\": 10.0,\n  \"feather_percent\": 6.0,\n  \"prefill\": true,\n  \"max_side_sd15\": 768,\n  \"max_side_sdxl\": 1024,\n  \"txt2img_width\": 768,\n  \"txt2img_height\": 512,\n  \"debug\": false,\n  \"active_model\": \"mat-places512\",\n  \"hf_token\": \"<redacted>\",\n  \"progress_window\": false,\n  \"progress_window_x\": 1694,\n  \"progress_window_y\": 2328\n}",
+    "restored": "config.json = baseline; state/task files removed; corrupt backups moved to scratch",
+    "total_seconds": 23.9
   },
   "driver": {
     "case": "rob-autostart-off-backend-down",
-    "started": "2026-10-09 00:59:17",
-    "gimp_pid": 18324,
+    "started": "2026-10-09 02:46:48",
+    "gimp_pid": 17852,
     "gimp_version": "3.2.6",
     "profile": "C:\\AI\\overnight-scratch\\gimp-profile-rob",
     "procedure": "python-fu-stable-boy-generative-fill",
@@ -53,7 +86,7 @@
       },
       "dirty": false,
       "undo_enabled": true,
-      "composite_md5": "9e7659519321fb3a1839013ceeb6ca5f"
+      "composite_md5": "b4b68a742f6e5af43587d2bf956b1995"
     },
     "args": {
       "prompt": "a red brick wall, photo",
@@ -63,11 +96,11 @@
       "seed": 1234,
       "model": "fast"
     },
-    "call_started": 1791521960.4773898,
+    "call_started": 1791528411.6022415,
     "status": "execution-error",
-    "return_message": "The AI backend is not available: ComfyUI is not answering at http://127.0.0.1:8199 and auto-start is disabled in the settings.",
-    "seconds": 2.88,
-    "call_finished": 1791521963.3567898,
+    "return_message": "The AI backend is not available: ComfyUI is not running at http://127.0.0.1:8199. Start ComfyUI yourself, or turn on 'Start backend automatically' in Filters > AI > Generative Fill Settings, then press Check backend.",
+    "seconds": 2.79,
+    "call_finished": 1791528414.392882,
     "after": {
       "size": [
         512,
@@ -90,41 +123,10 @@
       },
       "dirty": false,
       "undo_enabled": true,
-      "composite_md5": "9e7659519321fb3a1839013ceeb6ca5f"
+      "composite_md5": "b4b68a742f6e5af43587d2bf956b1995"
     },
     "image_untouched": true,
-    "finished": "2026-10-09 00:59:25"
+    "finished": "2026-10-09 02:46:56"
   },
-  "launcher": {
-    "case": "rob-autostart-off-backend-down",
-    "started": "2026-10-09T00:59:11",
-    "harness": [],
-    "events": [
-      "00:59:11 gimp-console pid 26288",
-      "00:59:25 gimp exited after 14.2 s (killed=False)"
-    ],
-    "config_mode": "set",
-    "config_written": "{\r\n  \"backend\": \"comfyui\",\r\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\r\n  \"url\": \"http://127.0.0.1:8199\",\r\n  \"a1111_url\": \"http://127.0.0.1:7860\",\r\n  \"autostart\": false,\r\n  \"idle_timeout_minutes\": 20,\r\n  \"startup_timeout\": 240,\r\n  \"request_timeout\": 0,\r\n  \"extra_server_args\": \"\",\r\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\r\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\r\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\r\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\r\n  \"quality\": \"fast\",\r\n  \"steps\": 25,\r\n  \"cfg\": 7.0,\r\n  \"sampler\": \"dpmpp_2m\",\r\n  \"scheduler\": \"karras\",\r\n  \"denoise\": 1.0,\r\n  \"grow\": 16,\r\n  \"feather\": 24,\r\n  \"grow_percent\": 10.0,\r\n  \"feather_percent\": 6.0,\r\n  \"prefill\": true,\r\n  \"max_side_sd15\": 768,\r\n  \"max_side_sdxl\": 1024,\r\n  \"txt2img_width\": 768,\r\n  \"txt2img_height\": 512,\r\n  \"debug\": false,\r\n  \"active_model\": \"mat-places512\",\r\n  \"hf_token\": \"<redacted>\",\r\n  \"progress_window\": false,\r\n  \"progress_window_x\": 1694,\r\n  \"progress_window_y\": 2328\r\n}",
-    "profile_listing_before": [
-      "tmp 1",
-      "config.json 985",
-      "stable-boy.log 1763"
-    ],
-    "gimp_seconds": 14.2,
-    "gimp_exit_code": 0,
-    "gimp_killed_by_launcher": false,
-    "window_screenshot": null,
-    "processes_10s_after_exit": [],
-    "server_state_10s_after_exit": "(absent)",
-    "cleanup_seconds_after_exit": null,
-    "profile_listing_after": [
-      "tmp 1",
-      "config.json 985",
-      "stable-boy.log 4244"
-    ],
-    "config_after": "{\r\n  \"backend\": \"comfyui\",\r\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\r\n  \"url\": \"http://127.0.0.1:8199\",\r\n  \"a1111_url\": \"http://127.0.0.1:7860\",\r\n  \"autostart\": false,\r\n  \"idle_timeout_minutes\": 20,\r\n  \"startup_timeout\": 240,\r\n  \"request_timeout\": 0,\r\n  \"extra_server_args\": \"\",\r\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\r\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\r\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\r\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\r\n  \"quality\": \"fast\",\r\n  \"steps\": 25,\r\n  \"cfg\": 7.0,\r\n  \"sampler\": \"dpmpp_2m\",\r\n  \"scheduler\": \"karras\",\r\n  \"denoise\": 1.0,\r\n  \"grow\": 16,\r\n  \"feather\": 24,\r\n  \"grow_percent\": 10.0,\r\n  \"feather_percent\": 6.0,\r\n  \"prefill\": true,\r\n  \"max_side_sd15\": 768,\r\n  \"max_side_sdxl\": 1024,\r\n  \"txt2img_width\": 768,\r\n  \"txt2img_height\": 512,\r\n  \"debug\": false,\r\n  \"active_model\": \"mat-places512\",\r\n  \"hf_token\": \"<redacted>\",\r\n  \"progress_window\": false,\r\n  \"progress_window_x\": 1694,\r\n  \"progress_window_y\": 2328\r\n}",
-    "restored": "config.json = baseline copy; state, task and comfyui.log files removed",
-    "finished": "2026-10-09T00:59:35"
-  },
-  "gimp_stderr": "GIMP-Message: Welcome to GIMP 3.2.6!\n\nGenerative Fill-Warning: The AI backend is not available: ComfyUI is not answering at http://127.0.0.1:8199 and auto-start is disabled in the settings.\n\n"
+  "gimp_stderr": "=== instance 1\nGIMP-Message: Welcome to GIMP 3.2.6!\n\nGenerative Fill-Warning: The AI backend is not available: ComfyUI is not running at http://127.0.0.1:8199. Start ComfyUI yourself, or turn on 'Start backend automatically' in Filters > AI > Generative Fill Settings, then press Check backend.\n\n"
 }

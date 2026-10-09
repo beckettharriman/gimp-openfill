@@ -1,55 +1,30 @@
-2026-10-09 01:01:17,749 INFO  [32752 stable-boy] fill: selection=Rect(x=200, y=140, width=120, height=100) context=Rect(x=80, y=20, width=360, height=340) working=544x512 scale=1.51 mask(grow=12/18px feather=7/11px) model=sd15-inpainting template=sd15_inpaint
-2026-10-09 01:01:17,897 INFO  [32752 stable-boy] launching supervisor (gimp pid 27768): C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\supervisor.py --mode backend --python C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe --main C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --cwd C:\AI\ComfyUI\ComfyUI_windows_portable --host 127.0.0.1 --port 8199 --base C:\AI\overnight-scratch\gimp-profile-rob\stable-boy --config C:\AI\overnight-scratch\gimp-profile-rob\stable-boy\config.json --watch-pid 27768 --idle-minutes 2 --extra-args --cpu --verbose INFO
-2026-10-09 01:01:18 INFO  [32848 supervisor] starting backend: C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8199 --disable-auto-launch --dont-print-server --preview-method taesd --cpu --verbose INFO
-2026-10-09 01:01:18 INFO  [32848 supervisor] backend pid 35664, job object ok
-2026-10-09 01:01:18 INFO  [32848 supervisor] watching gimp pid 27768 (gimp-console-3.2.exe)
-2026-10-09 01:01:46 INFO  [32848 supervisor] shutting down: backend exited with code 1
-2026-10-09 01:01:46,544 ERROR [32752 stable-boy] procedure failed: The AI backend is not available: ComfyUI did not come up at http://127.0.0.1:8199 within 240 s. Last log lines:
-[32m[INFO][0m 
-Import times for custom nodes:
-[32m[INFO][0m    0.0 seconds: C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\custom_nodes\websocket_image_save.py
-[32m[INFO][0m    0.0 seconds: C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\custom_nodes\comfyui-inpaint-nodes
-[32m[INFO][0m    0.1 seconds: C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-GGUF
-[32m[INFO][0m 
-[32m[INFO][0m Using RAM pressure cache.
-[1m[31m[ERROR][0m Port 8199 is already in use on address 127.0.0.1. Please close the other application or use a different port with --port.
+2026-10-09 02:47:20,097 INFO  [15456 stable-boy] fill: selection=Rect(x=200, y=140, width=120, height=100) context=Rect(x=140, y=80, width=240, height=220) working=560x512 scale=2.33 mask(grow=12/28px feather=7/16px layer grow=7px) prefill=border/neutral color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+2026-10-09 02:47:20,208 WARNING [15456 stable-boy] port 8199 on 127.0.0.1 is taken by a program that is not ComfyUI
+2026-10-09 02:47:20,213 ERROR [15456 stable-boy] procedure failed: The AI backend is not available: Port 8199 is used by another program (it is not ComfyUI). Close that program, or set a free port in the ComfyUI URL in Filters > AI > Generative Fill Settings (for example http://127.0.0.1:8190).
 Traceback (most recent call last):
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 118, in run_fill
-    app.generative_fill(image, config.get_property("prompt"), config.get_property("negative"),
-    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                        config.get_property("variations"), config.get_property("strength"),
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                        config.get_property("seed"), config.get_property("model"),
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                        remove=bool(config.get_property("remove")))
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\app.py", line 333, in generative_fill
-    result = runner.run(lambda progress, preview, cancel:
-                        self.backend(progress).inpaint(request, progress, preview, cancel))
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\runner.py", line 102, in run
-    return job(self.status, None, None)
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\app.py", line 334, in <lambda>
-    self.backend(progress).inpaint(request, progress, preview, cancel))
-    ~~~~~~~~~~~~^^^^^^^^^^
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\app.py", line 93, in backend
-    url = self.server.ensure_running(progress)
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\server.py", line 120, in ensure_running
-    return self.start(progress)
-           ~~~~~~~~~~^^^^^^^^^^
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\server.py", line 163, in start
-    return self._wait_ready(url, progress)
-           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
-  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\stable_boy\server.py", line 285, in _wait_ready
-    raise BackendUnavailable(
-        f"ComfyUI did not come up at {url} within {timeout} s. Last log lines:\n{self.server_log_tail()}"
+  File "C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 462, in run_fill
+    layers = app.generative_fill(
+        image,
+    ...<6 lines>...
+        remove=bool(config.get_property("remove")),
     )
-stable_boy.backend.BackendUnavailable: ComfyUI did not come up at http://127.0.0.1:8199 within 240 s. Last log lines:
-[32m[INFO][0m 
-Import times for custom nodes:
-[32m[INFO][0m    0.0 seconds: C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\custom_nodes\websocket_image_save.py
-[32m[INFO][0m    0.0 seconds: C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\custom_nodes\comfyui-inpaint-nodes
-[32m[INFO][0m    0.1 seconds: C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-GGUF
-[32m[INFO][0m 
-[32m[INFO][0m Using RAM pressure cache.
-[1m[31m[ERROR][0m Port 8199 is already in use on address 127.0.0.1. Please close the other application or use a different port with --port.
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 497, in generative_fill
+    result = runner.run(
+        lambda progress, preview, cancel: self.backend(progress, cancel).inpaint(
+            request, progress, preview, cancel
+        )
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/runner.py", line 136, in run
+    return job(self.status, None, None)
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 498, in <lambda>
+    lambda progress, preview, cancel: self.backend(progress, cancel).inpaint(
+                                      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/app.py", line 111, in backend
+    url = self.server.ensure_running(progress, cancel)
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/server.py", line 161, in ensure_running
+    return self.start(progress, cancel)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:/AI/overnight-scratch/gimp-profile-rob/plug-ins/gimp-stable-boy/stable_boy/server.py", line 182, in start
+    raise BackendUnavailable(port_in_use_message(host, port))
+stable_boy.backend.BackendUnavailable: Port 8199 is used by another program (it is not ComfyUI). Close that program, or set a free port in the ComfyUI URL in Filters > AI > Generative Fill Settings (for example http://127.0.0.1:8190).
 

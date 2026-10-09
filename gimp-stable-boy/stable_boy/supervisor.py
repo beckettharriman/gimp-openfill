@@ -674,10 +674,85 @@ def run_tasks_only(base: Path, worker_path: Path, state_path: Path, config_path:
     return 0
 
 
+START_LOCK_FILENAME = "supervisor.lock"
+WATCHERS_DIRNAME = "watchers"
+
+
+def acquire_start_lock(path: Path) -> bool:
+    """One backend supervisor per profile: create ``path`` exclusively with our pid inside.
+
+    Two plug-ins that start at the same moment both find no state file; without this lock both
+    launch ComfyUI. A lock whose pid is dead or not a Python process is stale and taken over.
+    """
+    for _ in range(2):
+        try:
+            fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        except FileExistsError:
+            try:
+                holder = int(path.read_text(encoding="utf-8").strip() or 0)
+            except (OSError, ValueError):
+                holder = 0
+            if holder and holder != os.getpid() and pid_is_python(holder):
+                return False
+            try:
+                path.unlink()
+            except OSError:
+                return False
+            continue
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fh.write(str(os.getpid()))
+        return True
+    return False
+
+
+def release_start_lock(path: Path) -> None:
+    """Remove ``path`` if it is ours."""
+    try:
+        if int(path.read_text(encoding="utf-8").strip() or 0) == os.getpid():
+            path.unlink()
+    except (OSError, ValueError):
+        pass
+
+
+def live_watchers(base: Path, names: tuple[str, ...] = ("gimp",)) -> list[int]:
+    """GIMP pids registered in ``<base>/watchers`` (one file per pid, written by the plug-in of
+    every GIMP that uses the backend). Entries whose process is gone or is not a GIMP are removed."""
+    folder = base / WATCHERS_DIRNAME
+    alive = []
+    for entry in folder.glob("*") if folder.is_dir() else []:
+        try:
+            pid = int(entry.name)
+        except ValueError:
+            continue
+        name = process_name(pid) if pid_alive(pid) else None
+        if pid_alive(pid) and (name is None or any(n in name for n in names)):
+            alive.append(pid)
+        else:
+            try:
+                entry.unlink()
+            except OSError:
+                pass
+    return sorted(alive)
+
+
 def run_backend(
     args: argparse.Namespace, base: Path, state_path: Path, worker_path: Path, config_path: Path, log: Logger
 ) -> int:
-    """Own the ComfyUI process until GIMP exits, the idle timeout passes or a stop is requested."""
+    """Hold the per-profile start lock for the supervisor's lifetime, then run the backend."""
+    lock = base / START_LOCK_FILENAME
+    if not acquire_start_lock(lock):
+        log("another supervisor is starting or running (start lock held); exiting")
+        return 0
+    try:
+        return _run_backend(args, base, state_path, worker_path, config_path, log)
+    finally:
+        release_start_lock(lock)
+
+
+def _run_backend(
+    args: argparse.Namespace, base: Path, state_path: Path, worker_path: Path, config_path: Path, log: Logger
+) -> int:
+    """Own the ComfyUI process until every GIMP using it exits, the idle timeout passes or a stop is requested."""
     existing = read_json(state_path)
     if (
         existing.get("supervisor_pid")
@@ -715,11 +790,18 @@ def run_backend(
     watch_name = process_name(args.watch_pid) if args.watch_pid else None
     log(f"watching gimp pid {args.watch_pid} ({watch_name or 'name unknown'})")
 
+    handed_over: list[int] = []
+
     def watched_alive() -> bool:
         # A reused pid (another program after GIMP exited) counts as gone.
-        if not pid_alive(args.watch_pid):
-            return False
-        return watch_name is None or process_name(args.watch_pid) in (None, watch_name)
+        if pid_alive(args.watch_pid) and (watch_name is None or process_name(args.watch_pid) in (None, watch_name)):
+            return True
+        # Other GIMPs that use this backend (same profile) keep it alive.
+        others = [p for p in live_watchers(base) if p != args.watch_pid]
+        if others and others != handed_over:
+            log(f"GIMP (pid {args.watch_pid}) is gone; still serving GIMP pid(s) {others}")
+            handed_over[:] = others
+        return bool(others)
 
     now = time.time()
     state = {
@@ -764,7 +846,7 @@ def run_backend(
                 reason = f"backend exited with code {backend.child.returncode if backend.child else '?'}"
                 break
             if args.watch_pid and not watched_alive():
-                reason = f"GIMP (pid {args.watch_pid}) is gone"
+                reason = f"GIMP (pid {args.watch_pid}) is gone" + (f" and so are {handed_over}" if handed_over else "")
                 break
             current = read_json(state_path)
             if current.get("stop"):

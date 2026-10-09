@@ -1,0 +1,11 @@
+set GIMP3_DIRECTORY=C:\AI\overnight-scratch\gimp-profile-rob
+set SB_REPO=C:\repos\gimp-stable-boy
+set SB_ROB_CASE=rob-out-of-vram-forced
+set SB_ROB_H=2000
+set SB_ROB_OUT=C:\repos\gimp-stable-boy\docs\evidence\overnight-2026-10-09\rob-out-of-vram-forced
+set SB_ROB_SEL=200,150,2600,1700
+set SB_ROB_VARIATIONS=4
+set SB_ROB_W=3000
+set SB_TEST_CANCEL_FILE=C:\AI\overnight-scratch\rob\logs\rob-out-of-vram-forced\cancel-step.txt
+"C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe" --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b "exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())"
+(launcher: python C:\AI\overnight-scratch\rob\run_case.py rob-out-of-vram-forced; scenario: {"env": {"SB_ROB_W": "3000", "SB_ROB_H": "2000", "SB_ROB_SEL": "200,150,2600,1700", "SB_ROB_VARIATIONS": "4"}, "timeout": 900, "pre": "vram-hog"}; config overrides: {"comfy_dir": "C:\\AI\\ComfyUI\\ComfyUI_windows_portable", "url": "http://127.0.0.1:8188", "autostart": true, "progress_window": false, "idle_timeout_minutes": 20, "max_side_sd15": 2048})

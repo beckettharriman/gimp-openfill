@@ -1,0 +1,13 @@
+--- 02:46:15 before GIMP start (gpu used 11 MiB)
+  (no robustness-related python/gimp processes)
+--- 02:46:15 GIMP running 0 s (gpu used 11 MiB)
+   37360 ppid  37668 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+--- 02:46:21 GIMP running 5 s (gpu used 11 MiB)
+   37360 ppid  37668 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+--- 02:46:26 GIMP running 10 s (gpu used 11 MiB)
+   27156 ppid  37360 python.exe             C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\python.exe C:\AI\overnight-scratch\gimp-profile-rob\plug-ins\gimp-stable-boy\gimp-stable-boy.py -gimp 279 9 7 -run 0
+   37360 ppid  37668 gimp-console-3.2.exe   C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())
+--- 02:46:29 at GIMP exit (gpu used 11 MiB)
+  (no robustness-related python/gimp processes)
+--- 02:46:40 10 s after GIMP exit (gpu used 11 MiB)
+  (no robustness-related python/gimp processes)

@@ -1,35 +1,66 @@
 {
   "case": "rob-backend-not-installed",
+  "verdict": "PASS",
+  "verdict_reason": "Plain message naming the folder with the next step (set the folder in Settings or install ComfyUI); no traceback, image untouched, nothing spawned. (Phase 1 FAIL F1 fixed in a4619c3; the doubled next step seen in the first phase-2 run was removed by ui_text.with_next_step.)",
   "acceptance_rule": "plain words plus a next step, no traceback, image and processes clean",
-  "verdict": "FAIL",
-  "verdict_reason": "The message blames a missing model download, not the missing ComfyUI install. Following it (Models > Download) would download into a folder that has no ComfyUI. No traceback, image untouched, no process started, which is fine; the text is wrong.",
-  "message_shown_in_progress_window": null,
-  "notes": [
-    "App.resolve_model checks the model files under <comfy_dir>/models before anything checks that comfy_dir holds ComfyUI, so a wrong comfy_dir always surfaces as 'not downloaded yet'."
-  ],
   "status": "execution-error",
   "user_message_verbatim": [
-    "A model file is missing on the backend: 'Stable Diffusion 1.5 Inpainting' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download."
+    "The AI backend is not available: ComfyUI was not found in 'C:\\AI\\overnight-scratch\\rob\\empty-comfy'. Set the ComfyUI folder in Filters > AI > Generative Fill Settings, or install ComfyUI there (see the README, Install)."
   ],
-  "return_message": "A model file is missing on the backend: 'Stable Diffusion 1.5 Inpainting' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download.",
-  "seconds_in_procedure": 0.64,
+  "seconds_in_procedure": [
+    2.77
+  ],
   "checks": {
     "traceback_in_gimp_output": false,
-    "image_untouched": true,
-    "layer_count_before_after": [
-      1,
-      1
+    "image_untouched": [
+      true
     ],
-    "selection_unchanged": true,
-    "dirty_after (undo step added)": false,
+    "layers_after": [
+      [
+        "Background"
+      ]
+    ],
+    "selection_unchanged": [
+      true
+    ],
     "processes_alive_10s_after_gimp_exit": 0,
-    "cleanup_seconds_after_exit": null,
-    "gimp_killed_by_launcher": false
+    "cleanup_seconds_after_exit": null
+  },
+  "events": [
+    "02:46:15 gimp-console pid 37360 (instance 1/1)",
+    "02:46:29 GIMP exited after 14.0 s"
+  ],
+  "launcher": {
+    "config_mode": "set",
+    "config_written": "{\n  \"backend\": \"comfyui\",\n  \"comfy_dir\": \"C:\\\\AI\\\\overnight-scratch\\\\rob\\\\empty-comfy\",\n  \"url\": \"http://127.0.0.1:8199\",\n  \"a1111_url\": \"http://127.0.0.1:7860\",\n  \"autostart\": true,\n  \"idle_timeout_minutes\": 20,\n  \"startup_timeout\": 240,\n  \"request_timeout\": 0,\n  \"extra_server_args\": \"\",\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\n  \"quality\": \"fast\",\n  \"steps\": 25,\n  \"cfg\": 7.0,\n  \"sampler\": \"dpmpp_2m\",\n  \"scheduler\": \"karras\",\n  \"denoise\": 1.0,\n  \"grow\": 16,\n  \"feather\": 24,\n  \"grow_percent\": 10.0,\n  \"feather_percent\": 6.0,\n  \"prefill\": true,\n  \"max_side_sd15\": 768,\n  \"max_side_sdxl\": 1024,\n  \"txt2img_width\": 768,\n  \"txt2img_height\": 512,\n  \"debug\": false,\n  \"active_model\": \"mat-places512\",\n  \"hf_token\": \"<redacted>\",\n  \"progress_window\": false,\n  \"progress_window_x\": 1694,\n  \"progress_window_y\": 2328\n}",
+    "profile_listing_before": [
+      "config.json 986",
+      "stable-boy.log 123231",
+      "tmp <dir>",
+      "watchers <dir>"
+    ],
+    "gimp_seconds": 14.0,
+    "gimp_exit_codes": [
+      0
+    ],
+    "processes_10s_after_exit": [],
+    "server_state_10s_after_exit": "(absent)",
+    "dummy_hits_8199": 3,
+    "dummy_hits_8188": 3,
+    "profile_listing_after": [
+      "config.json 986",
+      "stable-boy.log 124649",
+      "tmp <dir>",
+      "watchers <dir>"
+    ],
+    "config_after": "{\n  \"backend\": \"comfyui\",\n  \"comfy_dir\": \"C:\\\\AI\\\\overnight-scratch\\\\rob\\\\empty-comfy\",\n  \"url\": \"http://127.0.0.1:8199\",\n  \"a1111_url\": \"http://127.0.0.1:7860\",\n  \"autostart\": true,\n  \"idle_timeout_minutes\": 20,\n  \"startup_timeout\": 240,\n  \"request_timeout\": 0,\n  \"extra_server_args\": \"\",\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\n  \"quality\": \"fast\",\n  \"steps\": 25,\n  \"cfg\": 7.0,\n  \"sampler\": \"dpmpp_2m\",\n  \"scheduler\": \"karras\",\n  \"denoise\": 1.0,\n  \"grow\": 16,\n  \"feather\": 24,\n  \"grow_percent\": 10.0,\n  \"feather_percent\": 6.0,\n  \"prefill\": true,\n  \"max_side_sd15\": 768,\n  \"max_side_sdxl\": 1024,\n  \"txt2img_width\": 768,\n  \"txt2img_height\": 512,\n  \"debug\": false,\n  \"active_model\": \"mat-places512\",\n  \"hf_token\": \"<redacted>\",\n  \"progress_window\": false,\n  \"progress_window_x\": 1694,\n  \"progress_window_y\": 2328\n}",
+    "restored": "config.json = baseline; state/task files removed; corrupt backups moved to scratch",
+    "total_seconds": 24.4
   },
   "driver": {
     "case": "rob-backend-not-installed",
-    "started": "2026-10-09 00:58:49",
-    "gimp_pid": 1908,
+    "started": "2026-10-09 02:46:22",
+    "gimp_pid": 32868,
     "gimp_version": "3.2.6",
     "profile": "C:\\AI\\overnight-scratch\\gimp-profile-rob",
     "procedure": "python-fu-stable-boy-generative-fill",
@@ -55,7 +86,7 @@
       },
       "dirty": false,
       "undo_enabled": true,
-      "composite_md5": "8c836944ea953341b22a0ee51d4697fa"
+      "composite_md5": "b97bbf8accd9f7ee8332ad03f5fb71a5"
     },
     "args": {
       "prompt": "a red brick wall, photo",
@@ -65,11 +96,11 @@
       "seed": 1234,
       "model": "fast"
     },
-    "call_started": 1791521931.7628407,
+    "call_started": 1791528384.7985802,
     "status": "execution-error",
-    "return_message": "A model file is missing on the backend: 'Stable Diffusion 1.5 Inpainting' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download.",
-    "seconds": 0.64,
-    "call_finished": 1791521932.4028213,
+    "return_message": "The AI backend is not available: ComfyUI was not found in 'C:\\AI\\overnight-scratch\\rob\\empty-comfy'. Set the ComfyUI folder in Filters > AI > Generative Fill Settings, or install ComfyUI there (see the README, Install).",
+    "seconds": 2.77,
+    "call_finished": 1791528387.5663853,
     "after": {
       "size": [
         512,
@@ -92,39 +123,10 @@
       },
       "dirty": false,
       "undo_enabled": true,
-      "composite_md5": "8c836944ea953341b22a0ee51d4697fa"
+      "composite_md5": "b97bbf8accd9f7ee8332ad03f5fb71a5"
     },
     "image_untouched": true,
-    "finished": "2026-10-09 00:58:54"
+    "finished": "2026-10-09 02:46:29"
   },
-  "launcher": {
-    "case": "rob-backend-not-installed",
-    "started": "2026-10-09T00:58:14",
-    "harness": [],
-    "events": [
-      "00:58:15 gimp-console pid 30512",
-      "00:58:54 gimp exited after 39.5 s (killed=False)"
-    ],
-    "config_mode": "set",
-    "config_written": "{\r\n  \"backend\": \"comfyui\",\r\n  \"comfy_dir\": \"C:\\\\AI\\\\overnight-scratch\\\\rob\\\\empty-comfy\",\r\n  \"url\": \"http://127.0.0.1:8199\",\r\n  \"a1111_url\": \"http://127.0.0.1:7860\",\r\n  \"autostart\": true,\r\n  \"idle_timeout_minutes\": 20,\r\n  \"startup_timeout\": 240,\r\n  \"request_timeout\": 0,\r\n  \"extra_server_args\": \"\",\r\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\r\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\r\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\r\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\r\n  \"quality\": \"fast\",\r\n  \"steps\": 25,\r\n  \"cfg\": 7.0,\r\n  \"sampler\": \"dpmpp_2m\",\r\n  \"scheduler\": \"karras\",\r\n  \"denoise\": 1.0,\r\n  \"grow\": 16,\r\n  \"feather\": 24,\r\n  \"grow_percent\": 10.0,\r\n  \"feather_percent\": 6.0,\r\n  \"prefill\": true,\r\n  \"max_side_sd15\": 768,\r\n  \"max_side_sdxl\": 1024,\r\n  \"txt2img_width\": 768,\r\n  \"txt2img_height\": 512,\r\n  \"debug\": false,\r\n  \"active_model\": \"mat-places512\",\r\n  \"hf_token\": \"<redacted>\",\r\n  \"progress_window\": false,\r\n  \"progress_window_x\": 1694,\r\n  \"progress_window_y\": 2328\r\n}",
-    "profile_listing_before": [
-      "config.json 986"
-    ],
-    "gimp_seconds": 39.5,
-    "gimp_exit_code": 0,
-    "gimp_killed_by_launcher": false,
-    "window_screenshot": null,
-    "processes_10s_after_exit": [],
-    "server_state_10s_after_exit": "(absent)",
-    "cleanup_seconds_after_exit": null,
-    "profile_listing_after": [
-      "tmp 1",
-      "config.json 986",
-      "stable-boy.log 1763"
-    ],
-    "config_after": "{\r\n  \"backend\": \"comfyui\",\r\n  \"comfy_dir\": \"C:\\\\AI\\\\overnight-scratch\\\\rob\\\\empty-comfy\",\r\n  \"url\": \"http://127.0.0.1:8199\",\r\n  \"a1111_url\": \"http://127.0.0.1:7860\",\r\n  \"autostart\": true,\r\n  \"idle_timeout_minutes\": 20,\r\n  \"startup_timeout\": 240,\r\n  \"request_timeout\": 0,\r\n  \"extra_server_args\": \"\",\r\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\r\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\r\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\r\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\r\n  \"quality\": \"fast\",\r\n  \"steps\": 25,\r\n  \"cfg\": 7.0,\r\n  \"sampler\": \"dpmpp_2m\",\r\n  \"scheduler\": \"karras\",\r\n  \"denoise\": 1.0,\r\n  \"grow\": 16,\r\n  \"feather\": 24,\r\n  \"grow_percent\": 10.0,\r\n  \"feather_percent\": 6.0,\r\n  \"prefill\": true,\r\n  \"max_side_sd15\": 768,\r\n  \"max_side_sdxl\": 1024,\r\n  \"txt2img_width\": 768,\r\n  \"txt2img_height\": 512,\r\n  \"debug\": false,\r\n  \"active_model\": \"mat-places512\",\r\n  \"hf_token\": \"<redacted>\",\r\n  \"progress_window\": false,\r\n  \"progress_window_x\": 1694,\r\n  \"progress_window_y\": 2328\r\n}",
-    "restored": "config.json = baseline copy; state, task and comfyui.log files removed",
-    "finished": "2026-10-09T00:59:04"
-  },
-  "gimp_stderr": "GIMP-Message: Welcome to GIMP 3.2.6!\n\nGenerative Fill-Warning: A model file is missing on the backend: 'Stable Diffusion 1.5 Inpainting' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download.\n\n"
+  "gimp_stderr": "=== instance 1\nGIMP-Message: Welcome to GIMP 3.2.6!\n\nGenerative Fill-Warning: The AI backend is not available: ComfyUI was not found in 'C:\\AI\\overnight-scratch\\rob\\empty-comfy'. Set the ComfyUI folder in Filters > AI > Generative Fill Settings, or install ComfyUI there (see the README, Install).\n\n"
 }

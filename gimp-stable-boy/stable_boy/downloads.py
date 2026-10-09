@@ -14,6 +14,7 @@ import hashlib
 import os
 import re
 import shutil
+import socket
 import subprocess
 import sys
 import time
@@ -119,6 +120,35 @@ def token_allowed(url: str, hosts: Iterable[str] = HF_TOKEN_HOSTS) -> bool:
 # -------------------------------------------------------------- download ----
 
 
+def _human(n: int) -> str:
+    """``1536`` -> ``"1.5 KB"`` (decimal units, like the Models tab)."""
+    value = float(n)
+    for unit in ("bytes", "KB", "MB", "GB"):
+        if value < 1000 or unit == "GB":
+            return f"{value:.0f} {unit}" if unit == "bytes" else f"{value:.1f} {unit}"
+        value /= 1000
+    return f"{value:.1f} GB"
+
+
+def network_message(url: str, err: BaseException) -> str:
+    """Plain words for a connection failure, with the next step."""
+    reason = getattr(err, "reason", err)
+    text = str(reason)
+    if isinstance(reason, socket.gaierror) or "getaddrinfo" in text:
+        why = "the address could not be looked up (no internet connection?)"
+    elif isinstance(reason, ConnectionRefusedError) or "10061" in text or "refused" in text.lower():
+        why = "the connection was refused (a proxy or firewall may be blocking it)"
+    elif isinstance(reason, (TimeoutError, socket.timeout)) or "timed out" in text.lower():
+        why = "the connection timed out"
+    else:
+        why = text or type(err).__name__
+    host = urlparse(url).hostname or url
+    return (
+        f"Could not reach {host}: {why}. Check the internet connection and any proxy or firewall, "
+        "then press Download again (a partly downloaded file is kept and resumes)."
+    )
+
+
 def part_path(dest: Path) -> Path:
     """The temporary ``<name>.part`` file a download is written to before the rename."""
     return dest.with_name(dest.name + ".part")
@@ -169,6 +199,7 @@ def download_file(
     opener: Callable[..., Any] = urlopen,
     min_free_bytes: int = 256 * 1024 * 1024,
     token_hosts: Iterable[str] = HF_TOKEN_HOSTS,
+    _fresh_retry: bool = False,
 ) -> DownloadResult:
     """Download ``url`` to ``dest`` with resume (HTTP Range), verification and
     atomic rename. Raises :class:`DownloadError` with a user-facing ``code``.
@@ -215,7 +246,7 @@ def download_file(
         else:
             raise DownloadError("network", f"HTTP {err.code} while fetching {url}") from err
     except (URLError, OSError) as err:
-        raise DownloadError("network", f"could not connect: {err}") from err
+        raise DownloadError("network", network_message(url, err)) from err
 
     written = 0
     resumed_from = offset
@@ -250,8 +281,9 @@ def download_file(
                 if free is not None and free < (total - offset) + min_free_bytes:
                     raise DownloadError(
                         "disk",
-                        f"not enough disk space: need {total - offset} bytes, "
-                        f"{free} free on {dest.parent.anchor or dest.parent}",
+                        f"not enough disk space on {dest.parent.anchor or dest.parent}: the download needs "
+                        f"{_human(total - offset + min_free_bytes)} (with a safety margin), {_human(free)} is free. "
+                        "Free up space on that drive, then press Download again.",
                     )
             limit = expected_size or total
             started = time.monotonic()
@@ -279,7 +311,11 @@ def download_file(
                 raise
             except OSError as err:
                 if err.errno in (errno.ENOSPC, 28) or "No space" in str(err):
-                    raise DownloadError("disk", "the disk is full") from err
+                    raise DownloadError(
+                        "disk",
+                        f"the disk filled up during the download ({dest.parent.anchor or dest.parent}). Free up "
+                        "space on that drive, then press Download again; the part already downloaded is kept.",
+                    ) from err
                 raise DownloadError("network", f"read/write error: {err}") from err
 
     final_size = part.stat().st_size if part.is_file() else 0
@@ -292,6 +328,21 @@ def download_file(
         digest = _sha256_of(part, cancel)
         if digest != expected_sha256:
             part.unlink()
+            if resumed_from and not _fresh_retry:
+                # the bytes kept from an earlier attempt were bad (a corrupt .part): fetch once from zero
+                return download_file(
+                    url,
+                    dest,
+                    expected_size,
+                    expected_sha256,
+                    token,
+                    progress,
+                    cancel,
+                    opener,
+                    min_free_bytes,
+                    token_hosts,
+                    _fresh_retry=True,
+                )
             raise DownloadError(
                 "hash",
                 f"checksum mismatch for {dest.name}: got {digest[:12]}..., "

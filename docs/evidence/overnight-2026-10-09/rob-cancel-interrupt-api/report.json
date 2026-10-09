@@ -1,0 +1,139 @@
+{
+  "case": "rob-cancel-interrupt-api",
+  "verdict": "PASS",
+  "verdict_reason": "POST /interrupt from outside GIMP during sampling: CANCEL status, no layer, and a plain message that the generation was stopped in ComfyUI (gimp-stable-boy.py _fail, ui_text.INTERRUPTED_OUTSIDE).",
+  "acceptance_rule": "plain words plus a next step, no traceback, image and processes clean",
+  "status": "cancel",
+  "user_message_verbatim": [
+    "The generation was stopped in ComfyUI (its Cancel or Interrupt was used outside GIMP). Nothing in the image was changed. Run the command again to try once more."
+  ],
+  "seconds_in_procedure": [
+    28.61
+  ],
+  "checks": {
+    "traceback_in_gimp_output": false,
+    "image_untouched": [
+      true
+    ],
+    "layers_after": [
+      [
+        "Background"
+      ]
+    ],
+    "selection_unchanged": [
+      true
+    ],
+    "processes_alive_10s_after_gimp_exit": 0,
+    "cleanup_seconds_after_exit": null
+  },
+  "events": [
+    "02:31:35 gimp-console pid 9292 (instance 1/1)",
+    "02:31:35 midrun interrupt: waiting for sampling",
+    "02:32:09 midrun: prompt running; acting in 3.0 s",
+    "02:32:12 midrun: POST /interrupt sent",
+    "02:32:15 GIMP exited after 39.9 s"
+  ],
+  "launcher": {
+    "config_mode": "set",
+    "config_written": "{\n  \"backend\": \"comfyui\",\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\n  \"url\": \"http://127.0.0.1:8188\",\n  \"a1111_url\": \"http://127.0.0.1:7860\",\n  \"autostart\": true,\n  \"idle_timeout_minutes\": 20,\n  \"startup_timeout\": 240,\n  \"request_timeout\": 0,\n  \"extra_server_args\": \"\",\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\n  \"quality\": \"fast\",\n  \"steps\": 40,\n  \"cfg\": 7.0,\n  \"sampler\": \"dpmpp_2m\",\n  \"scheduler\": \"karras\",\n  \"denoise\": 1.0,\n  \"grow\": 16,\n  \"feather\": 24,\n  \"grow_percent\": 10.0,\n  \"feather_percent\": 6.0,\n  \"prefill\": true,\n  \"max_side_sd15\": 768,\n  \"max_side_sdxl\": 1024,\n  \"txt2img_width\": 768,\n  \"txt2img_height\": 512,\n  \"debug\": false,\n  \"active_model\": \"mat-places512\",\n  \"hf_token\": \"<redacted>\",\n  \"progress_window\": false,\n  \"progress_window_x\": 1694,\n  \"progress_window_y\": 2328\n}",
+    "profile_listing_before": [
+      "config.json 984",
+      "stable-boy.log 112765",
+      "tmp <dir>",
+      "watchers <dir>"
+    ],
+    "gimp_seconds": 39.9,
+    "gimp_exit_codes": [
+      0
+    ],
+    "processes_10s_after_exit": [],
+    "server_state_10s_after_exit": "(absent)",
+    "dummy_hits_8199": 3,
+    "dummy_hits_8188": 3,
+    "profile_listing_after": [
+      "comfyui.log 7611",
+      "config.json 984",
+      "stable-boy.log 114645",
+      "supervisor-stderr.log 0",
+      "tasks <dir>",
+      "tasks-status.json 115",
+      "tmp <dir>",
+      "watchers <dir>"
+    ],
+    "config_after": "{\n  \"backend\": \"comfyui\",\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\n  \"url\": \"http://127.0.0.1:8188\",\n  \"a1111_url\": \"http://127.0.0.1:7860\",\n  \"autostart\": true,\n  \"idle_timeout_minutes\": 20,\n  \"startup_timeout\": 240,\n  \"request_timeout\": 0,\n  \"extra_server_args\": \"\",\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\n  \"quality\": \"fast\",\n  \"steps\": 40,\n  \"cfg\": 7.0,\n  \"sampler\": \"dpmpp_2m\",\n  \"scheduler\": \"karras\",\n  \"denoise\": 1.0,\n  \"grow\": 16,\n  \"feather\": 24,\n  \"grow_percent\": 10.0,\n  \"feather_percent\": 6.0,\n  \"prefill\": true,\n  \"max_side_sd15\": 768,\n  \"max_side_sdxl\": 1024,\n  \"txt2img_width\": 768,\n  \"txt2img_height\": 512,\n  \"debug\": false,\n  \"active_model\": \"mat-places512\",\n  \"hf_token\": \"<redacted>\",\n  \"progress_window\": false,\n  \"progress_window_x\": 1694,\n  \"progress_window_y\": 2328\n}",
+    "restored": "config.json = baseline; state/task files removed; corrupt backups moved to scratch",
+    "total_seconds": 50.3
+  },
+  "driver": {
+    "case": "rob-cancel-interrupt-api",
+    "started": "2026-10-09 02:31:41",
+    "gimp_pid": 22652,
+    "gimp_version": "3.2.6",
+    "profile": "C:\\AI\\overnight-scratch\\gimp-profile-rob",
+    "procedure": "python-fu-stable-boy-generative-fill",
+    "before": {
+      "size": [
+        512,
+        384
+      ],
+      "layers": [
+        "Background"
+      ],
+      "layer_count": 1,
+      "channels": [],
+      "selection": {
+        "empty": false,
+        "bounds": [
+          200,
+          140,
+          120,
+          100
+        ],
+        "md5": "e4b93e7537a7f238fcfadaa370994efb"
+      },
+      "dirty": false,
+      "undo_enabled": true,
+      "composite_md5": "e259c8d4106f1ca23fae4251ab5e2ff5"
+    },
+    "args": {
+      "prompt": "a red brick wall, photo",
+      "negative": "blurry",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "fast"
+    },
+    "call_started": 1791527504.340826,
+    "status": "cancel",
+    "return_message": "cancelled",
+    "seconds": 28.61,
+    "call_finished": 1791527532.947834,
+    "after": {
+      "size": [
+        512,
+        384
+      ],
+      "layers": [
+        "Background"
+      ],
+      "layer_count": 1,
+      "channels": [],
+      "selection": {
+        "empty": false,
+        "bounds": [
+          200,
+          140,
+          120,
+          100
+        ],
+        "md5": "e4b93e7537a7f238fcfadaa370994efb"
+      },
+      "dirty": false,
+      "undo_enabled": true,
+      "composite_md5": "e259c8d4106f1ca23fae4251ab5e2ff5"
+    },
+    "image_untouched": true,
+    "finished": "2026-10-09 02:32:14"
+  },
+  "gimp_stderr": "=== instance 1\nGIMP-Message: Welcome to GIMP 3.2.6!\n\nGenerative Fill-Warning: The generation was stopped in ComfyUI (its Cancel or Interrupt was used outside GIMP). Nothing in the image was changed. Run the command again to try once more.\n\n"
+}

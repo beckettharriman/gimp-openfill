@@ -1,5 +1,7 @@
 set GIMP3_DIRECTORY=C:\AI\overnight-scratch\gimp-profile-rob
+set SB_REPO=C:\repos\gimp-stable-boy
 set SB_ROB_CASE=rob-autostart-off-backend-down
 set SB_ROB_OUT=C:\repos\gimp-stable-boy\docs\evidence\overnight-2026-10-09\rob-autostart-off-backend-down
+set SB_TEST_CANCEL_FILE=C:\AI\overnight-scratch\rob\logs\rob-autostart-off-backend-down\cancel-step.txt
 "C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe" --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b "exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())"
-(launcher: pwsh -File C:\AI\overnight-scratch\rob\run-case.ps1 -Case rob-autostart-off-backend-down; config mode: set; )
+(launcher: python C:\AI\overnight-scratch\rob\run_case.py rob-autostart-off-backend-down; scenario: {}; config overrides: {"comfy_dir": "C:\\AI\\ComfyUI\\ComfyUI_windows_portable", "url": "http://127.0.0.1:8199", "autostart": false})

@@ -107,8 +107,8 @@ class App:
 
     # backend -------------------------------------------------------------
 
-    def backend(self, progress=None) -> Backend:
-        url = self.server.ensure_running(progress)
+    def backend(self, progress=None, cancel=None) -> Backend:
+        url = self.server.ensure_running(progress, cancel)
         timeout = float(self.settings.request_timeout or 0)
         if self.settings.backend == "a1111":
             return A1111Backend(url, timeout, self.log)
@@ -495,7 +495,9 @@ class App:
         runner = Runner(self, title, entry.name if entry else model.checkpoint, interactive=self.interactive)
         try:
             result = runner.run(
-                lambda progress, preview, cancel: self.backend(progress).inpaint(request, progress, preview, cancel)
+                lambda progress, preview, cancel: self.backend(progress, cancel).inpaint(
+                    request, progress, preview, cancel
+                )
             )
             self.server.touch()
             self._debug_dump("fill", request, result, ctx)
@@ -583,7 +585,9 @@ class App:
         )
         try:
             result = runner.run(
-                lambda progress, preview, cancel: self.backend(progress).outpaint(request, progress, preview, cancel)
+                lambda progress, preview, cancel: self.backend(progress, cancel).outpaint(
+                    request, progress, preview, cancel
+                )
             )
             self.server.touch()
             image.undo_group_start()
@@ -641,7 +645,9 @@ class App:
         runner = Runner(self, "Text to Image", entry.name if entry else model.checkpoint, interactive=self.interactive)
         try:
             result = runner.run(
-                lambda progress, preview, cancel: self.backend(progress).txt2img(request, progress, preview, cancel)
+                lambda progress, preview, cancel: self.backend(progress, cancel).txt2img(
+                    request, progress, preview, cancel
+                )
             )
             self.server.touch()
             name = _layer_name("Text to Image", prompt)

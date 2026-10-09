@@ -39,8 +39,11 @@ CASE = os.environ.get("SB_ROB_CASE", "rob-unnamed")
 OUT = os.environ["SB_ROB_OUT"]
 QUIT = os.environ.get("SB_TEST_QUIT", "1") == "1"
 PROC = os.environ.get("SB_ROB_PROC", "python-fu-stable-boy-generative-fill")
-WIDTH, HEIGHT = 512, 384
-SELECTION = (200, 140, 120, 100)  # x, y, w, h
+WIDTH = int(os.environ.get("SB_ROB_W", "512"))
+HEIGHT = int(os.environ.get("SB_ROB_H", "384"))
+SELECTION = tuple(int(v) for v in os.environ.get("SB_ROB_SEL", "200,140,120,100").split(","))  # x, y, w, h
+VARIATIONS = int(os.environ.get("SB_ROB_VARIATIONS", "1"))
+HOLD = float(os.environ.get("SB_ROB_HOLD", "0"))  # seconds to stay open after the call (idle timeout)
 LOG_PATH = os.path.join(Gimp.directory(), "stable-boy", "stable-boy.log")
 
 report = {
@@ -145,6 +148,9 @@ def export_png(image, path):
     dup = image.duplicate()
     try:
         dup.flatten()
+        longest = max(dup.get_width(), dup.get_height())
+        if longest > 1024:
+            dup.scale(round(dup.get_width() * 1024 / longest), round(dup.get_height() * 1024 / longest))
         Gimp.file_save(Gimp.RunMode.NONINTERACTIVE, dup, Gio.File.new_for_path(path))
     finally:
         dup.delete()
@@ -188,13 +194,36 @@ def main():
     args = {
         "prompt": os.environ.get("SB_ROB_PROMPT", "a red brick wall, photo"),
         "negative": "blurry",
-        "variations": 1,
+        "variations": VARIATIONS,
         "strength": 1.0,
         "seed": 1234,
         "model": os.environ.get("SB_ROB_MODEL", "fast"),
     }
     report["args"] = args
+    if os.environ.get("SB_ROB_WARMUP") == "1":
+        # first fill starts the backend; the case's call then runs against a warm server
+        t0 = time.monotonic()
+        report["warmup"] = dict(zip(("status", "message"), run_procedure(image, image.get_layers(), args), strict=True))
+        report["warmup"]["seconds"] = round(time.monotonic() - t0, 2)
+        for layer in image.get_layers()[:-1]:  # drop what the warm-up added, keep the background
+            image.remove_layer(layer)
+        image.select_rectangle(Gimp.ChannelOps.REPLACE, *SELECTION)
+        image.clean_all()
+        report["before"] = image_state(image)
+        go = os.path.join(OUT, "go.txt")
+        with open(os.path.join(OUT, "warm-done.txt"), "w", encoding="utf-8") as fh:
+            fh.write(str(time.time()))
+        if os.environ.get("SB_ROB_WAIT_GO") == "1":
+            t1 = time.time()
+            while not os.path.exists(go) and time.time() - t1 < 120:
+                time.sleep(0.5)
+    step = os.environ.get("SB_ROB_CANCEL_STEP")
+    if step and os.environ.get("SB_TEST_CANCEL_FILE"):
+        with open(os.environ["SB_TEST_CANCEL_FILE"], "w", encoding="utf-8") as fh:
+            fh.write(step)
     report["call_started"] = time.time()
+    with open(os.path.join(OUT, "call-started.txt"), "w", encoding="utf-8") as fh:
+        fh.write(str(report["call_started"]))
     t0 = time.monotonic()
     try:
         status, message = run_procedure(image, image.get_layers(), args)
@@ -218,6 +247,9 @@ def main():
     with open(os.path.join(OUT, "plugin-log.txt"), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(log_slice(log0).replace("\r\n", "\n"))
     image.delete()
+    if HOLD:
+        report["hold_seconds"] = HOLD
+        time.sleep(HOLD)
 
 
 try:
