@@ -263,7 +263,7 @@ def _ask(kind: str, title: str, procedure, config, image, hooks: dict) -> bool:
         return _dialog(procedure, config, title)
 
 
-def _pick_variation(image, layers, title: str, autoclose: float = 0) -> str:
+def _pick_variation(image, layers, title: str, autoclose: float = 0, test_steps=None) -> str:
     """After several variations were inserted (in a layer group): let the
     user keep one, keep all, or discard them. Returns the outcome."""
     if image is None or not layers or len(layers) < 2:
@@ -299,7 +299,8 @@ def _pick_variation(image, layers, title: str, autoclose: float = 0) -> str:
             image.undo_group_end()
         Gimp.displays_flush()
 
-    return run_picker(title, thumbs, show, lambda: None, discard, autoclose_seconds=autoclose)
+    return run_picker(title, thumbs, show, lambda: None, discard, autoclose_seconds=autoclose,
+                      test_steps=test_steps)
 
 
 def _after_insert(run_mode, image, layers, title: str, hooks: dict, log=None) -> None:
@@ -338,7 +339,8 @@ def _test_fake_variations(image, count: int, hooks: dict) -> None:
             except Exception:  # noqa: BLE001
                 pass
     Gimp.displays_flush()
-    _pick_variation(image, layers, "Generative Fill", float(hooks.get("autoclose") or 0))
+    _pick_variation(image, layers, "Generative Fill", float(hooks.get("autoclose") or 0),
+                    test_steps=hooks.get("picker_steps"))
 
 
 def _test_progress_demo(image, seconds: float) -> None:

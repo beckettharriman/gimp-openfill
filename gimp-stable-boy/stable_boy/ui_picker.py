@@ -146,6 +146,20 @@ class VariationPicker(Gtk.Window):
             self._on_closed()
 
 
+def _play_step(picker: VariationPicker, step: str) -> bool:
+    if picker._done:
+        return False
+    if step.isdigit() and 0 < int(step) <= len(picker.buttons):
+        picker.buttons[int(step) - 1].clicked()
+    elif step == "keep_all":
+        picker._keep_all()
+    elif step == "discard":
+        picker._discard()
+    elif step == "keep":
+        picker.finish("keep")
+    return False
+
+
 def scaled(pixbuf: GdkPixbuf.Pixbuf | None, size: int = THUMB) -> GdkPixbuf.Pixbuf | None:
     if pixbuf is None:
         return None
@@ -156,11 +170,19 @@ def scaled(pixbuf: GdkPixbuf.Pixbuf | None, size: int = THUMB) -> GdkPixbuf.Pixb
     return pixbuf.scale_simple(max(1, int(w * k)), max(1, int(h * k)), GdkPixbuf.InterpType.BILINEAR)
 
 
-def run_picker(title: str, thumbnails, on_show, on_keep_all, on_discard, autoclose_seconds: float = 0) -> str:
-    """Show the picker and block (in a nested main loop) until it closes; returns the outcome."""
+def run_picker(title: str, thumbnails, on_show, on_keep_all, on_discard, autoclose_seconds: float = 0,
+               test_steps: list[str] | None = None) -> str:
+    """Show the picker and block (in a nested main loop) until it closes; returns the outcome.
+
+    ``test_steps`` (test hook) is played back one step per second: a
+    variation number ("1", "2", ...) clicks that thumbnail; "keep",
+    "keep_all" and "discard" press the buttons.
+    """
     picker = VariationPicker(title, thumbnails, on_show, on_keep_all, on_discard,
                              on_closed=lambda: Gtk.main_quit() if Gtk.main_level() > 0 else None)
     if autoclose_seconds and autoclose_seconds > 0:
         GLib.timeout_add(int(autoclose_seconds * 1000), lambda: (picker.finish("keep"), False)[1])
+    for index, step in enumerate(test_steps or []):
+        GLib.timeout_add(1000 * (index + 1), _play_step, picker, str(step))
     Gtk.main()
     return picker.outcome

@@ -362,6 +362,24 @@ try:
              click_cancel=True)
     run_case("picker", fill, "Choose a variation - Generative Fill", "variations-picker.png",
              {"autoclose": 7, "fake_variations": 3}, image)
+    # Picker actions on fake variation layers (no backend): pick #3 and keep,
+    # keep all, discard. The layer tree is recorded after each.
+    def tree(img):
+        out = []
+        for layer in img.get_layers():
+            entry = {"name": layer.get_name(), "visible": layer.get_visible()}
+            if layer.is_group():
+                entry["children"] = [{"name": c.get_name(), "visible": c.get_visible()}
+                                     for c in layer.get_children()]
+            out.append(entry)
+        return out
+
+    for steps in (["3", "keep"], ["keep_all"], ["discard"]):
+        before = tree(image)
+        run_case("picker-" + "-".join(steps), fill, "Choose a variation - Generative Fill", None,
+                 {"autoclose": 15, "fake_variations": 3, "picker_steps": steps}, image)
+        report["cases"][-1]["layers_before"] = before
+        report["cases"][-1]["layers_after"] = tree(image)
     report["ok"] = all("error" not in c for c in report["cases"])
 except Exception as err:  # noqa: BLE001
     report["ok"] = False
