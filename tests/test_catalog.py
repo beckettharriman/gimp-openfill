@@ -17,8 +17,16 @@ class ShippedCatalogTests(unittest.TestCase):
 
     def test_loads_and_has_required_entries(self):
         ids = {e.id for e in self.entries}
-        for required in ("sd15-inpainting", "sdxl-base", "fooocus-inpaint-patch", "juggernaut-xl-v9",
-                         "flux1-fill-dev-gguf-q4", "qwen-image-edit-2511-gguf-q4", "lama-big", "mat-places512"):
+        for required in (
+            "sd15-inpainting",
+            "sdxl-base",
+            "fooocus-inpaint-patch",
+            "juggernaut-xl-v9",
+            "flux1-fill-dev-gguf-q4",
+            "qwen-image-edit-2511-gguf-q4",
+            "lama-big",
+            "mat-places512",
+        ):
             self.assertIn(required, ids)
 
     def test_every_entry_is_well_formed(self):
@@ -29,9 +37,13 @@ class ShippedCatalogTests(unittest.TestCase):
             if e.source_type == "community-quantization":
                 self.assertTrue(e.uploader, e.id)
             for f in e.files:
-                self.assertTrue(f.url.startswith("https://huggingface.co/") or f.url.startswith("https://github.com/"), f.url)
+                self.assertTrue(
+                    f.url.startswith("https://huggingface.co/") or f.url.startswith("https://github.com/"), f.url
+                )
                 self.assertTrue(f.size and f.size > 0, f.dest)
                 self.assertIn("/", f.dest)
+                self.assertEqual(f.filename, Path(f.filename).name, f.dest)
+                self.assertTrue(f.sha256 and len(f.sha256) == 64, f"{e.id}: {f.dest} needs a sha256")
             for n in e.requires_nodes:
                 self.assertEqual(len(n.commit), 40, n.folder)
 
@@ -74,6 +86,24 @@ class ValidationTests(unittest.TestCase):
     def test_unsafe_dest_and_http_url(self):
         self._expect(lambda d: d["models"][0]["files"][0].__setitem__("dest", "../x.ckpt"), "unsafe dest")
         self._expect(lambda d: d["models"][0]["files"][0].__setitem__("url", "http://x/y"), "https")
+
+    def test_unsafe_dest_variants(self):
+        for dest in (
+            "..\\x.ckpt",
+            "checkpoints/../../x.ckpt",
+            "C:/x.ckpt",
+            "\\\\server\\x",
+            "/abs/x.ckpt",
+            "checkpoints//x.ckpt",
+        ):
+            self._expect(lambda d, dest=dest: d["models"][0]["files"][0].__setitem__("dest", dest), "unsafe dest")
+
+    def test_node_repo_and_folder_validated(self):
+        self._expect(
+            lambda d: d["models"][1]["requires_nodes"][0].__setitem__("repo", "https://example.com/x/y"), "github.com"
+        )
+        self._expect(lambda d: d["models"][1]["requires_nodes"][0].__setitem__("folder", "../evil"), "plain name")
+        self._expect(lambda d: d["models"][1]["requires_nodes"][0].__setitem__("commit", "5b76817"), "pinned commit")
 
     def test_bad_sha_and_commit(self):
         self._expect(lambda d: d["models"][0]["files"][0].__setitem__("sha256", "abc"), "sha256")
@@ -140,7 +170,9 @@ class ModelSpecTests(unittest.TestCase):
         self.assertEqual(spec.fooocus_patch, "inpaint_v26.fooocus.patch")
         self.assertTrue(spec.uses_fooocus)
         flux = cat.model_spec_for(cat.by_id(entries, "flux1-fill-dev-gguf-q4"), entries)
-        self.assertEqual((flux.unet, flux.clip2, flux.vae), ("flux1-fill-dev-Q4_0.gguf", "clip_l.safetensors", "ae.safetensors"))
+        self.assertEqual(
+            (flux.unet, flux.clip2, flux.vae), ("flux1-fill-dev-Q4_0.gguf", "clip_l.safetensors", "ae.safetensors")
+        )
         self.assertEqual(flux.effective_template, "flux_fill")
         lama = cat.model_spec_for(cat.by_id(entries, "lama-big"), entries)
         self.assertTrue(lama.prompt_free)

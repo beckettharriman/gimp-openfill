@@ -4,8 +4,15 @@ import unittest
 from pathlib import Path
 
 from stable_boy import ui_text as ut
-from stable_boy.backend import (BackendUnavailable, GenerationCancelled, GenerationTimeout, ModelMissing,
-                                OutOfMemory, WorkflowRejected, describe_error)
+from stable_boy.backend import (
+    BackendUnavailable,
+    GenerationCancelled,
+    GenerationTimeout,
+    ModelMissing,
+    OutOfMemory,
+    WorkflowRejected,
+    describe_error,
+)
 from stable_boy.config import Settings
 
 
@@ -51,19 +58,29 @@ class HistoryTests(unittest.TestCase):
 class StatusTextTests(unittest.TestCase):
     def test_plain_step_text(self):
         self.assertEqual(ut.plain_step_text("Generating... step 12/25"), "Generating, step 12 of 25")
-        self.assertEqual(ut.plain_step_text("Starting the AI backend... 14 s"),
-                         "Starting the AI backend (first time takes about a minute), 14 s")
+        self.assertEqual(
+            ut.plain_step_text("Starting the AI backend... 14 s"),
+            "Starting the AI backend (first time takes about a minute), 14 s",
+        )
         self.assertEqual(ut.plain_step_text("Downloading result..."), "Placing the result")
-        self.assertEqual(ut.plain_step_text("Running node 7..."),
-                         "Loading the model and preparing (can take a while the first time)")
+        self.assertEqual(
+            ut.plain_step_text("Running node 7..."), "Loading the model and preparing (can take a while the first time)"
+        )
         self.assertEqual(ut.plain_step_text("Uploading selection..."), "Sending the selection to the AI backend")
         self.assertEqual(ut.plain_step_text("Downloading 1.0 GB of 2.0 GB"), "Downloading 1.0 GB of 2.0 GB")
         self.assertEqual(ut.plain_step_text(""), "")
 
     def test_no_jargon_in_plain_texts(self):
-        texts = [ut.plain_step_text(t) for t in ("Generating... step 3/20", "Running node 4...",
-                                                  "Submitting workflow...", "Waiting for the AI backend...")]
-        for text in texts + [ut.FILL_PLACEHOLDER, ut.REMOVE_EXPLANATION, ut.SHORTCUT_HINT]:
+        texts = [
+            ut.plain_step_text(t)
+            for t in (
+                "Generating... step 3/20",
+                "Running node 4...",
+                "Submitting workflow...",
+                "Waiting for the AI backend...",
+            )
+        ]
+        for text in [*texts, ut.FILL_PLACEHOLDER, ut.REMOVE_EXPLANATION, ut.SHORTCUT_HINT]:
             for word in ("cfg", "sampler", "scheduler", "denoise", "node", "workflow"):
                 self.assertNotIn(word, text.lower(), text)
 
@@ -109,8 +126,10 @@ class ErrorWordingTests(unittest.TestCase):
             BackendUnavailable("ComfyUI is not answering at http://x and auto-start is disabled in the settings."),
             BackendUnavailable("ComfyUI did not come up at http://x within 240 s."),
             BackendUnavailable("could not download the result: boom"),
-            ModelMissing("'FLUX' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models "
-                         "and press Download."),
+            ModelMissing(
+                "'FLUX' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models "
+                "and press Download."
+            ),
             ModelMissing("unknown thing"),
             OutOfMemory("CUDA"),
             GenerationTimeout("no result after 300 s"),
@@ -155,8 +174,16 @@ class ErrorWordingTests(unittest.TestCase):
 
 class PrimaryButtonTests(unittest.TestCase):
     def row(self, **kw):
-        base = {"id": "m", "installed": False, "gated": False, "partial": [], "missing_models": [],
-                "missing_nodes": [], "runnable": True, "active": False}
+        base = {
+            "id": "m",
+            "installed": False,
+            "gated": False,
+            "partial": [],
+            "missing_models": [],
+            "missing_nodes": [],
+            "runnable": True,
+            "active": False,
+        }
         base.update(kw)
         return base
 
@@ -170,8 +197,9 @@ class PrimaryButtonTests(unittest.TestCase):
     def test_other_states(self):
         self.assertEqual(ut.primary_action(self.row(gated=True), None, has_token=False), ("Download", "token", True))
         self.assertEqual(ut.primary_action(self.row(partial=["x"]), None)[0], "Resume download")
-        self.assertEqual(ut.primary_action(self.row(), {"model_id": "o", "type": "download"}, ["m"]),
-                         ("Queued", None, False))
+        self.assertEqual(
+            ut.primary_action(self.row(), {"model_id": "o", "type": "download"}, ["m"]), ("Queued", None, False)
+        )
         self.assertEqual(ut.primary_action(self.row(installed=True, missing_nodes=["n"]), None)[1], "nodes")
         self.assertEqual(ut.primary_action(self.row(installed=True, runnable=False), None), ("Downloaded", None, False))
         self.assertEqual(ut.primary_action(self.row(), {"model_id": "m", "type": "install_nodes"})[2], False)
@@ -180,10 +208,18 @@ class PrimaryButtonTests(unittest.TestCase):
         rows = [self.row(id="a"), self.row(id="b", installed=True), self.row(id="c", installed=True, active=True)]
         ordered = sorted(rows, key=ut.model_sort_key)
         self.assertEqual([r["id"] for r in ordered], ["c", "b", "a"])
-        text = ut.model_summary({"capabilities": ["fill", "expand", "txt2img"], "runnable": True, "size": "2.0 GB",
-                                 "min_vram_gb": 4, "gated": True})
-        self.assertEqual(text, "Fill, expand, text to image. 2.0 GB. Needs 4 GB of graphics memory. "
-                               "Needs a free Hugging Face token.")
+        text = ut.model_summary(
+            {
+                "capabilities": ["fill", "expand", "txt2img"],
+                "runnable": True,
+                "size": "2.0 GB",
+                "min_vram_gb": 4,
+                "gated": True,
+            }
+        )
+        self.assertEqual(
+            text, "Fill, expand, text to image. 2.0 GB. Needs 4 GB of graphics memory. Needs a free Hugging Face token."
+        )
         self.assertIn("Helper file", ut.model_summary({"capabilities": ["patch"], "runnable": False}))
         self.assertEqual(ut.model_option_label("SD", True, True), "SD (active model)")
         self.assertEqual(ut.model_option_label("SD", False, False), "SD (not downloaded)")

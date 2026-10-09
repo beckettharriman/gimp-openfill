@@ -1,0 +1,33 @@
+File listing of C:\AI\overnight-scratch\install-test\GIMP\3.2 after the copy install (step 5), 2026-10-09 00:30
+
+     <dir>  plug-ins\
+     <dir>  stable-boy\
+     <dir>  plug-ins\gimp-stable-boy\
+     <dir>  plug-ins\gimp-stable-boy\models\
+     <dir>  plug-ins\gimp-stable-boy\stable_boy\
+     22507  plug-ins\gimp-stable-boy\gimp-stable-boy.py
+     13776  plug-ins\gimp-stable-boy\models\catalog.json
+     <dir>  plug-ins\gimp-stable-boy\stable_boy\backends\
+      1102  plug-ins\gimp-stable-boy\stable_boy\__init__.py
+     24970  plug-ins\gimp-stable-boy\stable_boy\app.py
+      7729  plug-ins\gimp-stable-boy\stable_boy\backend.py
+     13832  plug-ins\gimp-stable-boy\stable_boy\catalog.py
+     13879  plug-ins\gimp-stable-boy\stable_boy\comfy_api.py
+      7985  plug-ins\gimp-stable-boy\stable_boy\config.py
+     14924  plug-ins\gimp-stable-boy\stable_boy\downloads.py
+     11686  plug-ins\gimp-stable-boy\stable_boy\geometry.py
+      9882  plug-ins\gimp-stable-boy\stable_boy\gimp_io.py
+      2569  plug-ins\gimp-stable-boy\stable_boy\log.py
+     15812  plug-ins\gimp-stable-boy\stable_boy\models_ui.py
+      2570  plug-ins\gimp-stable-boy\stable_boy\png.py
+     10502  plug-ins\gimp-stable-boy\stable_boy\progress_window.py
+      5315  plug-ins\gimp-stable-boy\stable_boy\progress.py
+      6718  plug-ins\gimp-stable-boy\stable_boy\runner.py
+     11740  plug-ins\gimp-stable-boy\stable_boy\server.py
+     32269  plug-ins\gimp-stable-boy\stable_boy\supervisor.py
+      6940  plug-ins\gimp-stable-boy\stable_boy\websocket.py
+     17179  plug-ins\gimp-stable-boy\stable_boy\workflow.py
+       280  plug-ins\gimp-stable-boy\stable_boy\backends\__init__.py
+      9060  plug-ins\gimp-stable-boy\stable_boy\backends\a1111.py
+      9164  plug-ins\gimp-stable-boy\stable_boy\backends\comfy.py
+       422  stable-boy\config.json

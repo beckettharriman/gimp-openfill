@@ -16,9 +16,14 @@ import os
 import socket
 import ssl
 import struct
-from urllib.parse import urlparse
+from urllib.parse import quote, urlparse
 
 _MAGIC = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+
+# Largest frame accepted from the server. ComfyUI previews are well under 1 MB and
+# full-size images (SaveImageWebsocket) stay far below this; anything bigger is a
+# broken or hostile peer and would otherwise be allocated in memory.
+MAX_FRAME_BYTES = 256 * 1024 * 1024
 
 OP_TEXT = 0x1
 OP_BINARY = 0x2
@@ -32,12 +37,15 @@ class WebSocketError(ConnectionError):
 
 
 class WebSocket:
+    """Blocking client connection; call :meth:`connect` first."""
+
     def __init__(self, url: str, timeout: float = 30.0) -> None:
         self.url = url
         self.timeout = timeout
         self._sock: socket.socket | None = None
 
     def connect(self) -> None:
+        """Open the TCP (or TLS for ``wss``) connection and perform the upgrade handshake."""
         parsed = urlparse(self.url)
         if parsed.scheme not in ("ws", "wss"):
             raise WebSocketError(f"unsupported scheme in {self.url}")
@@ -61,17 +69,21 @@ class WebSocket:
         sock.sendall(request)
         response = self._read_headers(sock)
         accept = base64.b64encode(hashlib.sha1((key + _MAGIC).encode("ascii")).digest()).decode()
-        if b" 101 " not in response.split(b"\r\n", 1)[0] or \
-                f"sec-websocket-accept: {accept}".encode().lower() not in response.lower():
+        if (
+            b" 101 " not in response.split(b"\r\n", 1)[0]
+            or f"sec-websocket-accept: {accept}".encode().lower() not in response.lower()
+        ):
             sock.close()
             raise WebSocketError("websocket upgrade rejected by server")
         self._sock = sock
 
     @property
     def connected(self) -> bool:
+        """True between a successful :meth:`connect` and :meth:`close`."""
         return self._sock is not None
 
     def settimeout(self, timeout: float | None) -> None:
+        """Socket timeout for subsequent :meth:`recv` calls."""
         if self._sock is not None:
             self._sock.settimeout(timeout)
 
@@ -91,9 +103,11 @@ class WebSocket:
             return opcode, payload
 
     def send_text(self, text: str) -> None:
+        """Send one masked text frame."""
         self._send_frame(OP_TEXT, text.encode("utf-8"))
 
     def close(self, reply: bool = False) -> None:
+        """Send a close frame (unless replying to the server's) and close the socket."""
         if self._sock is None:
             return
         try:
@@ -128,6 +142,9 @@ class WebSocket:
             length = struct.unpack(">H", self._read_exact(2))[0]
         elif length == 127:
             length = struct.unpack(">Q", self._read_exact(8))[0]
+        if length > MAX_FRAME_BYTES:
+            self.close(reply=True)
+            raise WebSocketError(f"frame of {length} bytes exceeds the {MAX_FRAME_BYTES} byte limit")
         mask = self._read_exact(4) if second & 0x80 else b""
         payload = bytearray(self._read_exact(length))
         if mask:
@@ -167,4 +184,4 @@ def ws_url(http_url: str, client_id: str) -> str:
     """``http://host:port`` -> ``ws://host:port/ws?clientId=...``."""
     parsed = urlparse(http_url)
     scheme = "wss" if parsed.scheme == "https" else "ws"
-    return f"{scheme}://{parsed.netloc}/ws?clientId={client_id}"
+    return f"{scheme}://{parsed.netloc}/ws?clientId={quote(client_id, safe='')}"

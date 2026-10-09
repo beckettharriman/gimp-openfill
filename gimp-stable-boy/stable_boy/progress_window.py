@@ -15,7 +15,7 @@ from __future__ import annotations
 import ctypes
 import sys
 import time
-from typing import Callable, Optional
+from collections.abc import Callable
 
 import gi
 
@@ -30,7 +30,7 @@ from .progress import Eta, FrameThrottle, download_row, fit_within, format_durat
 PREVIEW_LONG_SIDE = 320
 
 
-def _window_rect_from_handle(handle_bytes) -> Optional[tuple[int, int, int, int]]:
+def _window_rect_from_handle(handle_bytes) -> tuple[int, int, int, int] | None:
     """Windows only: (x, y, w, h) of the native window GIMP reported as the
     progress parent (the image window of the display the plug-in runs on)."""
     if sys.platform != "win32" or not handle_bytes:
@@ -78,6 +78,7 @@ class _NoActivate:
 
     def _find(self) -> int:
         import os
+
         user32 = self.user32
         found = []
         proto = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)
@@ -93,6 +94,7 @@ class _NoActivate:
                 found.append(hwnd)
                 return False
             return True
+
         user32.EnumWindows(proto(cb), None)
         return found[0] if found else 0
 
@@ -126,10 +128,17 @@ class _NoActivate:
 class ProgressWindow(Gtk.Window):
     """Non-modal, always-on-top status window for one operation."""
 
-    def __init__(self, title: str, model_name: str, on_cancel: Callable[[], None] | None = None,
-                 position: tuple[int, int] | None = None, anchor_handle=None,
-                 on_moved: Callable[[int, int], None] | None = None, show_preview: bool = True,
-                 quit_main_on_close: bool = True) -> None:
+    def __init__(
+        self,
+        title: str,
+        model_name: str,
+        on_cancel: Callable[[], None] | None = None,
+        position: tuple[int, int] | None = None,
+        anchor_handle=None,
+        on_moved: Callable[[int, int], None] | None = None,
+        show_preview: bool = True,
+        quit_main_on_close: bool = True,
+    ) -> None:
         super().__init__(title=f"Stable Boy - {title}")
         self._quit_main_on_close = quit_main_on_close
         self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
@@ -147,7 +156,7 @@ class ProgressWindow(Gtk.Window):
         self._throttle = FrameThrottle(0.25)
         self._finished = False
         self._cancel_requested = False
-        self._last_pos: Optional[tuple[int, int]] = None
+        self._last_pos: tuple[int, int] | None = None
         self.preview_frames = 0
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
@@ -353,8 +362,11 @@ class ProgressWindow(Gtk.Window):
             return False
         elapsed = time.monotonic() - self._started
         remaining = self._eta.update(elapsed, self.bar.get_fraction())
-        self.time_label.set_text(ui_text.elapsed_text(format_duration(elapsed),
-                                                      format_duration(remaining) if remaining is not None else None))
+        self.time_label.set_text(
+            ui_text.elapsed_text(
+                format_duration(elapsed), format_duration(remaining) if remaining is not None else None
+            )
+        )
         return True
 
     def _cancel_clicked(self, *_):

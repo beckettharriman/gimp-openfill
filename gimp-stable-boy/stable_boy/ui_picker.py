@@ -13,7 +13,7 @@ GIMP calls and is driven entirely by the result layers.
 
 from __future__ import annotations
 
-from typing import Callable
+from collections.abc import Callable
 
 import gi
 
@@ -35,9 +35,15 @@ class VariationPicker(Gtk.Window):
     current choice. ``on_closed()`` runs once at the end in every case.
     """
 
-    def __init__(self, title: str, thumbnails: list[tuple[str, GdkPixbuf.Pixbuf | None]],
-                 on_show: Callable[[int], None], on_keep_all: Callable[[], None],
-                 on_discard: Callable[[], None], on_closed: Callable[[], None] | None = None) -> None:
+    def __init__(
+        self,
+        title: str,
+        thumbnails: list[tuple[str, GdkPixbuf.Pixbuf | None]],
+        on_show: Callable[[int], None],
+        on_keep_all: Callable[[], None],
+        on_discard: Callable[[], None],
+        on_closed: Callable[[], None] | None = None,
+    ) -> None:
         super().__init__(title=f"Choose a variation - {title}")
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.set_keep_above(True)
@@ -80,8 +86,10 @@ class VariationPicker(Gtk.Window):
         box.pack_start(row, False, False, 0)
 
         hint = Gtk.Label(xalign=0)
-        hint.set_markup("<small>Keep selected hides the other variations (they stay in the layer group, "
-                        "so you can change your mind later). Discard removes all of them.</small>")
+        hint.set_markup(
+            "<small>Keep selected hides the other variations (they stay in the layer group, "
+            "so you can change your mind later). Discard removes all of them.</small>"
+        )
         hint.set_line_wrap(True)
         hint.set_max_width_chars(60)
         hint.get_style_context().add_class("dim-label")
@@ -170,16 +178,29 @@ def scaled(pixbuf: GdkPixbuf.Pixbuf | None, size: int = THUMB) -> GdkPixbuf.Pixb
     return pixbuf.scale_simple(max(1, int(w * k)), max(1, int(h * k)), GdkPixbuf.InterpType.BILINEAR)
 
 
-def run_picker(title: str, thumbnails, on_show, on_keep_all, on_discard, autoclose_seconds: float = 0,
-               test_steps: list[str] | None = None) -> str:
+def run_picker(
+    title: str,
+    thumbnails,
+    on_show,
+    on_keep_all,
+    on_discard,
+    autoclose_seconds: float = 0,
+    test_steps: list[str] | None = None,
+) -> str:
     """Show the picker and block (in a nested main loop) until it closes; returns the outcome.
 
     ``test_steps`` (test hook) is played back one step per second: a
     variation number ("1", "2", ...) clicks that thumbnail; "keep",
     "keep_all" and "discard" press the buttons.
     """
-    picker = VariationPicker(title, thumbnails, on_show, on_keep_all, on_discard,
-                             on_closed=lambda: Gtk.main_quit() if Gtk.main_level() > 0 else None)
+    picker = VariationPicker(
+        title,
+        thumbnails,
+        on_show,
+        on_keep_all,
+        on_discard,
+        on_closed=lambda: Gtk.main_quit() if Gtk.main_level() > 0 else None,
+    )
     if autoclose_seconds and autoclose_seconds > 0:
         GLib.timeout_add(int(autoclose_seconds * 1000), lambda: (picker.finish("keep"), False)[1])
     for index, step in enumerate(test_steps or []):

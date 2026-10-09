@@ -9,9 +9,12 @@ from __future__ import annotations
 import json
 import struct
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Any
 
+# ComfyUI binary websocket event types (server.py BinaryEventTypes). Only 1 and 4
+# carry previews; 2 and 3 are listed so the protocol is documented in one place.
 PREVIEW_IMAGE = 1
 UNENCODED_PREVIEW_IMAGE = 2
 TEXT = 3
@@ -20,12 +23,14 @@ PREVIEW_IMAGE_WITH_METADATA = 4
 
 @dataclass(frozen=True)
 class PreviewFrame:
-    mime: str          # image/jpeg or image/png
+    """A decoded preview image from the sampler."""
+
+    mime: str  # image/jpeg or image/png
     data: bytes
     metadata: dict = field(default_factory=dict)
 
 
-def parse_preview_frame(payload: bytes) -> Optional[PreviewFrame]:
+def parse_preview_frame(payload: bytes) -> PreviewFrame | None:
     """Decode a ComfyUI binary websocket frame into a :class:`PreviewFrame`.
 
     Layouts (big-endian):
@@ -47,11 +52,11 @@ def parse_preview_frame(payload: bytes) -> Optional[PreviewFrame]:
         if len(payload) < 8 + length + 1:
             return None
         try:
-            metadata = json.loads(payload[8:8 + length].decode("utf-8"))
+            metadata = json.loads(payload[8 : 8 + length].decode("utf-8"))
         except (ValueError, UnicodeDecodeError):
             metadata = {}
         mime = str(metadata.get("image_type") or "image/jpeg")
-        return PreviewFrame(mime, bytes(payload[8 + length:]), metadata)
+        return PreviewFrame(mime, bytes(payload[8 + length :]), metadata)
     return None
 
 
@@ -65,11 +70,12 @@ class Eta:
     """
 
     min_fraction: float = 0.02
-    _t0: Optional[float] = None
+    _t0: float | None = None
     _f0: float = 0.0
-    _estimate: Optional[float] = None
+    _estimate: float | None = None
 
-    def update(self, elapsed: float, fraction: float) -> Optional[float]:
+    def update(self, elapsed: float, fraction: float) -> float | None:
+        """Feed one sample; returns the remaining seconds or None while unknown."""
         fraction = max(0.0, min(1.0, fraction))
         if fraction < self.min_fraction:
             return None
@@ -88,10 +94,11 @@ class Eta:
         return max(0.0, self._estimate)
 
 
-def format_duration(seconds: Optional[float]) -> str:
+def format_duration(seconds: float | None) -> str:
+    """``75`` -> ``"1:15"``, ``3725`` -> ``"1:02:05"``, None -> ``"--:--"``."""
     if seconds is None:
         return "--:--"
-    seconds = int(round(max(0.0, seconds)))
+    seconds = round(max(0.0, seconds))
     minutes, secs = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
     if hours:
@@ -102,14 +109,15 @@ def format_duration(seconds: Optional[float]) -> str:
 class FrameThrottle:
     """Admit at most one frame per ``min_interval`` seconds (drop the rest)."""
 
-    def __init__(self, min_interval: float = 0.25, clock=time.monotonic) -> None:
+    def __init__(self, min_interval: float = 0.25, clock: Callable[[], float] = time.monotonic) -> None:
         self.min_interval = min_interval
         self._clock = clock
-        self._last: Optional[float] = None
+        self._last: float | None = None
         self.dropped = 0
         self.admitted = 0
 
     def admit(self) -> bool:
+        """True when a frame may be shown now (and records it)."""
         now = self._clock()
         if self._last is not None and now - self._last < self.min_interval:
             self.dropped += 1
@@ -130,7 +138,7 @@ def fit_within(width: int, height: int, long_side: int) -> tuple[int, int]:
     return max(1, round(width * scale)), max(1, round(height * scale))
 
 
-def download_row(current: dict) -> str:
+def download_row(current: dict[str, Any]) -> str:
     """One-line summary of a supervisor download status entry."""
     done, total = current.get("done") or 0, current.get("total") or 0
     pct = f"{100.0 * done / total:.0f}%" if total else "..."

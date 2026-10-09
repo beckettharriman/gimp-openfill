@@ -3,7 +3,7 @@
   "notes": [
     "Every URL points at an official project page: Hugging Face repositories of the model authors (or Comfy-Org / comfyanonymous repackaging), or GitHub releases.",
     "source_type is 'first-party' when the uploader is the model author or the ComfyUI project, 'community-quantization' when a third party converted the weights (uploader named in 'uploader').",
-    "sha256 values are the LFS checksums published by Hugging Face; null means the host publishes no checksum (the plug-in records the hash after a successful download).",
+    "sha256 values are the LFS checksums published by Hugging Face. GitHub release assets publish none; their sha256 was recorded from the release URL (big-lama.pt on 2026-10-09, size matching the release). Every file must have a sha256 so a download is verified before it is renamed into place.",
     "dest paths are relative to <ComfyUI>/models/. gated=true means the Hugging Face repository requires accepting its license and a user access token.",
     "A file marked optional is skipped when a file with the same dest already exists (for example the FLUX VAE shared by several entries)."
   ],
@@ -178,7 +178,7 @@
       ],
       "requires_models": [],
       "files": [
-        {"role": "inpaint_model", "url": "https://github.com/Sanster/models/releases/download/add_big_lama/big-lama.pt", "dest": "inpaint/big-lama.pt", "size": 205669692, "sha256": null}
+        {"role": "inpaint_model", "url": "https://github.com/Sanster/models/releases/download/add_big_lama/big-lama.pt", "dest": "inpaint/big-lama.pt", "size": 205669692, "sha256": "344c77bbcb158f17dd143070d1e789f38a66c04202311ae3a258ef66667a9ea9"}
       ]
     },
     {

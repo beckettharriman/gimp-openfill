@@ -11,10 +11,10 @@ def _decode_idat(data: bytes) -> bytes:
     pos = 8
     idat = b""
     while pos < len(data):
-        length = struct.unpack(">I", data[pos:pos + 4])[0]
-        kind = data[pos + 4:pos + 8]
-        body = data[pos + 8:pos + 8 + length]
-        crc = struct.unpack(">I", data[pos + 8 + length:pos + 12 + length])[0]
+        length = struct.unpack(">I", data[pos : pos + 4])[0]
+        kind = data[pos + 4 : pos + 8]
+        body = data[pos + 8 : pos + 8 + length]
+        crc = struct.unpack(">I", data[pos + 8 + length : pos + 12 + length])[0]
         assert crc == zlib.crc32(kind + body) & 0xFFFFFFFF, "crc mismatch"
         if kind == b"IDAT":
             idat += body
@@ -28,7 +28,7 @@ class PngTests(unittest.TestCase):
         data = png.encode(16, 16, pixels, 4)
         self.assertEqual(png.read_header(data), (16, 16, 8, 6))
         raw = _decode_idat(data)
-        rows = [raw[i * 65:(i + 1) * 65] for i in range(16)]
+        rows = [raw[i * 65 : (i + 1) * 65] for i in range(16)]
         self.assertTrue(all(r[0] == 0 for r in rows))
         self.assertEqual(b"".join(r[1:] for r in rows), pixels)
 

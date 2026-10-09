@@ -1,0 +1,43 @@
+# Stable Boy - generative fill for GIMP 3
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Tool configuration only. The plug-in is not packaged: GIMP loads it straight
+# from the gimp-stable-boy folder and it has no pip dependencies.
+
+[tool.ruff]
+line-length = 120
+# GIMP 3.2 for Windows bundles a recent Python (3.14 in 3.2.6); Linux GIMP uses the system python3,
+# so the code stays valid for 3.10.
+target-version = "py310"
+extend-exclude = ["__pycache__", "docs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "RUF"]
+ignore = [
+    # The plug-in talks to GObject introspection APIs whose names are camelCase or
+    # CONSTANT-like (Gimp.RunMode, Gtk callbacks, ctypes structure fields); pep8-naming
+    # would flag every override and ctypes Structure.
+    "N802",  # function name should be lowercase (GObject virtual method overrides such as do_query_procedures)
+    "N801",  # class name should be CapWords (ctypes structures mirror Win32 names such as IO_COUNTERS)
+    "N806",  # variable in function should be lowercase (Win32 constants kept under their SDK names)
+    "N818",  # exception name should end in Error (BackendUnavailable, ModelMissing read better as-is)
+    # Readability choices.
+    "SIM105",  # contextlib.suppress instead of try/except/pass: the explicit form is clearer in hot paths
+    "SIM108",  # ternary instead of if/else block: not always clearer
+    "RUF001",  # ambiguous unicode in strings: user-facing text deliberately uses typographic characters
+    "RUF002",  # same, for docstrings
+    "RUF003",  # same, for comments
+    "RUF012",  # mutable class attributes need ClassVar: ctypes _fields_ and test fixtures use plain lists
+    "E501",    # line length is enforced by the formatter; long URLs and messages may exceed it
+    "RUF100",  # unused noqa: "noqa: BLE001" markers document deliberate broad excepts even though BLE is not selected
+]
+
+[tool.ruff.lint.per-file-ignores]
+# GIMP batch scripts must call gi.require_version() before importing from gi.repository.
+"tests/gimp_batch_*.py" = ["E402"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["stable_boy"]
+
+[tool.ruff.format]
+line-ending = "lf"

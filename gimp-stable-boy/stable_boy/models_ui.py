@@ -23,8 +23,8 @@ from gi.repository import GLib, Gtk, Pango  # noqa: E402
 
 from . import catalog as cat  # noqa: E402
 from . import ui_text  # noqa: E402
-from .dialogs import style  # noqa: E402
 from .backend import BackendError  # noqa: E402
+from .dialogs import style  # noqa: E402
 
 TOKEN_PAGE = "https://huggingface.co/settings/tokens"
 
@@ -35,8 +35,9 @@ def _status_line(row: dict, current: dict, pending: list[str]) -> str:
         if kind == "download":
             done, total = current.get("done") or 0, current.get("total") or 0
             speed = (current.get("speed") or 0.0) / 1_048_576
-            return (f"Downloading {cat.human_size(done)} of {cat.human_size(total)}"
-                    + (f", {speed:.1f} MB/s" if speed else ""))
+            return f"Downloading {cat.human_size(done)} of {cat.human_size(total)}" + (
+                f", {speed:.1f} MB/s" if speed else ""
+            )
         if kind == "install_nodes":
             return "Installing the extra ComfyUI nodes it needs..."
         if kind == "remove":
@@ -61,7 +62,7 @@ def _status_line(row: dict, current: dict, pending: list[str]) -> str:
 
 
 class ModelRow(Gtk.ListBoxRow):
-    def __init__(self, panel: "ModelsPanel", row: dict, order: int) -> None:
+    def __init__(self, panel: ModelsPanel, row: dict, order: int) -> None:
         super().__init__()
         self.panel = panel
         self.model_id = row["id"]
@@ -127,8 +128,14 @@ class ModelRow(Gtk.ListBoxRow):
         label, action, sensitive = ui_text.primary_action(row, current, pending, has_token)
         self.primary.set_label(label)
         self.primary.set_sensitive(sensitive)
-        style(self.primary, "primary" if action in ("download", "activate", "nodes", "token")
-              else "danger" if action == "cancel" else None)
+        style(
+            self.primary,
+            "primary"
+            if action in ("download", "activate", "nodes", "token")
+            else "danger"
+            if action == "cancel"
+            else None,
+        )
         self.action = action
         if current.get("model_id") == row["id"] and current.get("type") == "download":
             total = current.get("total") or 0
@@ -153,8 +160,10 @@ class ModelsPanel(Gtk.Box):
         self._shown_error = None
 
         intro = Gtk.Label(xalign=0)
-        intro.set_markup("Downloaded models are listed first. Download a model once, then press "
-                         "<b>Set active</b> to use it in Generative Fill, Expand and Text to Image.")
+        intro.set_markup(
+            "Downloaded models are listed first. Download a model once, then press "
+            "<b>Set active</b> to use it in Generative Fill, Expand and Text to Image."
+        )
         intro.set_line_wrap(True)
         self.pack_start(intro, False, False, 0)
 
@@ -186,8 +195,10 @@ class ModelsPanel(Gtk.Box):
         token_box.pack_start(line, False, False, 0)
         explain = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         hint = Gtk.Label(xalign=0)
-        hint.set_markup("<small>Some models (FLUX) are gated: accept the license on the model page, then "
-                        "paste a free read token. It is stored only in your GIMP profile.</small>")
+        hint.set_markup(
+            "<small>Some models (FLUX) are gated: accept the license on the model page, then "
+            "paste a free read token. It is stored only in your GIMP profile.</small>"
+        )
         hint.set_line_wrap(True)
         hint.get_style_context().add_class("dim-label")
         explain.pack_start(hint, True, True, 0)
@@ -300,8 +311,9 @@ class ModelsPanel(Gtk.Box):
     def _update_token_box(self) -> None:
         selected = self._row(self.selected_id() or "")
         current = self.app.task_status().get("current") or {}
-        gated_in_use = any(r["gated"] and (r["installed"] or r["partial"] or r["id"] == current.get("model_id"))
-                           for r in self._rows)
+        gated_in_use = any(
+            r["gated"] and (r["installed"] or r["partial"] or r["id"] == current.get("model_id")) for r in self._rows
+        )
         show = bool((selected and selected["gated"]) or gated_in_use or self._has_token())
         self.token_revealer.set_reveal_child(show)
 
@@ -321,8 +333,9 @@ class ModelsPanel(Gtk.Box):
             if history and history[0].get("state") == "error" and history[0].get("finished") != self._shown_error:
                 last = history[0]
                 self._shown_error = last.get("finished")
-                self._say(ui_text.with_next_step(f"The last task for {last.get('model_id')} failed: "
-                                                 f"{last.get('message')}"))
+                self._say(
+                    ui_text.with_next_step(f"The last task for {last.get('model_id')} failed: {last.get('message')}")
+                )
         return True
 
     # actions -------------------------------------------------------------
@@ -335,8 +348,7 @@ class ModelsPanel(Gtk.Box):
             self._download(model_id)
         elif action == "cancel":
             self.app.server.request_cancel()
-            self._say("Download cancelled. The partial file is kept, so Resume download continues where it "
-                      "stopped.")
+            self._say("Download cancelled. The partial file is kept, so Resume download continues where it stopped.")
         elif action == "activate":
             self._set_active(model_id)
         elif action == "nodes":
@@ -345,8 +357,10 @@ class ModelsPanel(Gtk.Box):
             self.token_revealer.set_reveal_child(True)
             self.token.grab_focus()
             row = self._row(model_id) or {}
-            self._say(f"{row.get('name', model_id)} is gated. Accept its license on the model page (menu next "
-                      "to the button), paste your token below, press Save token, then Download.")
+            self._say(
+                f"{row.get('name', model_id)} is gated. Accept its license on the model page (menu next "
+                "to the button), paste your token below, press Save token, then Download."
+            )
         self._refresh_rows(force=True)
 
     def _download(self, model_id: str) -> None:
@@ -355,9 +369,11 @@ class ModelsPanel(Gtk.Box):
                 self.app.save_token(self.token.get_text())
             ids = self.app.queue_download(model_id)
             row = self._row(model_id) or {}
-            self._say(f"Downloading {row.get('name', model_id)}"
-                      + (f" ({len(ids)} parts)" if len(ids) > 1 else "")
-                      + ". It continues in the background even if you close this window.")
+            self._say(
+                f"Downloading {row.get('name', model_id)}"
+                + (f" ({len(ids)} parts)" if len(ids) > 1 else "")
+                + ". It continues in the background even if you close this window."
+            )
             self._open_downloads_window()
         except BackendError as err:
             self._say(ui_text.with_next_step(str(err)))
@@ -379,12 +395,17 @@ class ModelsPanel(Gtk.Box):
             self._say("Nothing to install.")
             return
         lines = "\n".join(f"- {n.repo} @ {n.commit[:10]} ({n.license or 'see repository'})" for n in nodes)
-        dialog = Gtk.MessageDialog(transient_for=self.get_toplevel(), modal=True,
-                                   message_type=Gtk.MessageType.QUESTION, buttons=Gtk.ButtonsType.OK_CANCEL,
-                                   text="Install extra nodes into ComfyUI?")
+        dialog = Gtk.MessageDialog(
+            transient_for=self.get_toplevel(),
+            modal=True,
+            message_type=Gtk.MessageType.QUESTION,
+            buttons=Gtk.ButtonsType.OK_CANCEL,
+            text="Install extra nodes into ComfyUI?",
+        )
         dialog.format_secondary_text(
             f"This downloads and installs (with ComfyUI's own Python):\n{lines}\n\n"
-            "The backend restarts afterwards; a running generation would be interrupted.")
+            "The backend restarts afterwards; a running generation would be interrupted."
+        )
         answer = dialog.run()
         dialog.destroy()
         if answer != Gtk.ResponseType.OK:
@@ -399,11 +420,16 @@ class ModelsPanel(Gtk.Box):
         r = self._row(model_id)
         if not r:
             return
-        dialog = Gtk.MessageDialog(transient_for=self.get_toplevel(), modal=True,
-                                   message_type=Gtk.MessageType.WARNING, buttons=Gtk.ButtonsType.OK_CANCEL,
-                                   text=f"Delete the files of '{r['name']}' ({r['size']})?")
-        dialog.format_secondary_text("Files shared with other downloaded models are kept. You can download "
-                                     "it again later.")
+        dialog = Gtk.MessageDialog(
+            transient_for=self.get_toplevel(),
+            modal=True,
+            message_type=Gtk.MessageType.WARNING,
+            buttons=Gtk.ButtonsType.OK_CANCEL,
+            text=f"Delete the files of '{r['name']}' ({r['size']})?",
+        )
+        dialog.format_secondary_text(
+            "Files shared with other downloaded models are kept. You can download it again later."
+        )
         answer = dialog.run()
         dialog.destroy()
         if answer != Gtk.ResponseType.OK:
@@ -416,8 +442,10 @@ class ModelsPanel(Gtk.Box):
         try:
             self.app.open_models_folder()
         except OSError as err:
-            self._say(f"Could not open the folder: {err}. Next step: open {self.app.models_root} in the "
-                      "file manager yourself.")
+            self._say(
+                f"Could not open the folder: {err}. Next step: open {self.app.models_root} in the "
+                "file manager yourself."
+            )
 
     def _on_save_token(self, *_):
         try:
@@ -438,15 +466,22 @@ class ModelsPanel(Gtk.Box):
             return
         try:
             from .progress_window import ProgressWindow
-            self._dl_window = ProgressWindow("Model downloads", "", on_cancel=self.app.server.request_cancel,
-                                             position=(self.app.settings.progress_window_x,
-                                                       self.app.settings.progress_window_y),
-                                             show_preview=False, quit_main_on_close=False)
+
+            self._dl_window = ProgressWindow(
+                "Model downloads",
+                "",
+                on_cancel=self.app.server.request_cancel,
+                position=(self.app.settings.progress_window_x, self.app.settings.progress_window_y),
+                show_preview=False,
+                quit_main_on_close=False,
+            )
             self._dl_timer = GLib.timeout_add(1000, self._tick_downloads)
         except Exception as err:  # noqa: BLE001 - the window is optional
             self._dl_window = None
-            self._say(f"The download continues, but the progress window could not be opened: {err}. "
-                      "Next step: watch the row's progress here.")
+            self._say(
+                f"The download continues, but the progress window could not be opened: {err}. "
+                "Next step: watch the row's progress here."
+            )
 
     def _tick_downloads(self) -> bool:
         win = self._dl_window
@@ -458,7 +493,9 @@ class ModelsPanel(Gtk.Box):
         win.set_downloads(current, pending)
         if current.get("type") == "download":
             done, total = current.get("done") or 0, current.get("total") or 0
-            win.set_step(done / total if total else 0.0, f"Downloading {cat.human_size(done)} of {cat.human_size(total)}")
+            win.set_step(
+                done / total if total else 0.0, f"Downloading {cat.human_size(done)} of {cat.human_size(total)}"
+            )
             return True
         if current or pending:
             win.set_step(0.0, f"{current.get('type', 'task')}: {current.get('state', 'working')}")
@@ -466,7 +503,9 @@ class ModelsPanel(Gtk.Box):
         history = status.get("history") or []
         last = history[0] if history else {}
         ok = last.get("state") == "done"
-        win.finish(ok, "Download complete" if ok else f"{last.get('state', 'stopped')}: {last.get('message', '')}", 1500)
+        win.finish(
+            ok, "Download complete" if ok else f"{last.get('state', 'stopped')}: {last.get('message', '')}", 1500
+        )
         self._dl_window = None
         self._dl_timer = 0
         return False

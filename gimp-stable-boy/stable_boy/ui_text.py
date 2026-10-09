@@ -14,17 +14,18 @@ import re
 
 HISTORY_LIMIT = 20
 SUGGESTED_SHORTCUT = "Shift+Ctrl+G"
-SHORTCUT_HINT = (f"Tip: give it a key in Edit > Keyboard Shortcuts (search \"Generative Fill\"), "
-                 f"for example {SUGGESTED_SHORTCUT}.")
+SHORTCUT_HINT = (
+    f'Tip: give it a key in Edit > Keyboard Shortcuts (search "Generative Fill"), for example {SUGGESTED_SHORTCUT}.'
+)
 
 FILL_PLACEHOLDER = "Describe what should appear here..."
 EXPAND_PLACEHOLDER = "Describe what the new area should show (optional)..."
 TXT2IMG_PLACEHOLDER = "Describe the image you want..."
-REMOVE_EXPLANATION = ("Erases the selection and continues the background. No prompt needed: "
-                      "just press Generate.")
+REMOVE_EXPLANATION = "Erases the selection and continues the background. No prompt needed: just press Generate."
 
 
 # ------------------------------------------------------------ history ----
+
 
 def parse_history(text: str | None) -> list[str]:
     """Read the stored history (a JSON list of strings); tolerate junk."""
@@ -108,8 +109,10 @@ def elapsed_text(elapsed: str, remaining: str | None = None) -> str:
 
 def prompt_free_warning(model_name: str) -> str:
     short = (model_name or "The active model").split(" - ")[0]
-    return (f"Note: the active model ({short}) only removes objects and ignores the prompt. "
-            "Choose another model under Advanced to fill with a prompt.")
+    return (
+        f"Note: the active model ({short}) only removes objects and ignores the prompt. "
+        "Choose another model under Advanced to fill with a prompt."
+    )
 
 
 def selection_status(selection: tuple[int, int] | None, image: tuple[int, int] | None) -> str:
@@ -117,8 +120,10 @@ def selection_status(selection: tuple[int, int] | None, image: tuple[int, int] |
     if image is None:
         return ""
     if selection is None:
-        return (f"No selection: the whole image ({image[0]} x {image[1]} px) will be regenerated. "
-                "Select an area first for a normal fill.")
+        return (
+            f"No selection: the whole image ({image[0]} x {image[1]} px) will be regenerated. "
+            "Select an area first for a normal fill."
+        )
     return f"Selection: {selection[0]} x {selection[1]} px in a {image[0]} x {image[1]} px image."
 
 
@@ -131,8 +136,9 @@ def expand_status(image: tuple[int, int] | None, left: int, top: int, right: int
     return f"Canvas: {image[0]} x {image[1]} px, after expanding {width} x {height} px."
 
 
-def txt2img_status(width: int, height: int, selection: tuple[int, int] | None,
-                   default: tuple[int, int], target: str) -> str:
+def txt2img_status(
+    width: int, height: int, selection: tuple[int, int] | None, default: tuple[int, int], target: str
+) -> str:
     if width > 0 and height > 0:
         size = f"{width} x {height} px"
     elif selection is not None and target == "layer":
@@ -145,8 +151,10 @@ def txt2img_status(width: int, height: int, selection: tuple[int, int] | None,
 
 # ------------------------------------------------------------ windows ----
 
-def clamp_position(x: int, y: int, width: int, height: int,
-                   areas: list[tuple[int, int, int, int]], margin: int = 8) -> tuple[int, int]:
+
+def clamp_position(
+    x: int, y: int, width: int, height: int, areas: list[tuple[int, int, int, int]], margin: int = 8
+) -> tuple[int, int]:
     """Keep a window of ``width`` x ``height`` at (x, y) fully inside one of
     the monitor work ``areas`` (x, y, w, h). A position on no monitor (for
     example remembered from a monitor that is gone) moves to the nearest
@@ -169,24 +177,36 @@ def clamp_position(x: int, y: int, width: int, height: int,
 # ------------------------------------------------------------ errors -----
 
 _NEXT_STEPS = (
-    ("was not found at", "Next step: open Filters > AI > Generative Fill Settings and choose the backend "
-                         "folder with Browse."),
-    ("auto-start is disabled", "Next step: turn on \"Start backend automatically\" in Filters > AI > "
-                               "Generative Fill Settings, or start ComfyUI yourself."),
-    ("did not come up", "Next step: try again (the first start can take a few minutes). If it keeps "
-                        "failing, read comfyui.log in the stable-boy folder of your GIMP profile."),
+    (
+        "was not found at",
+        "Next step: open Filters > AI > Generative Fill Settings and choose the backend folder with Browse.",
+    ),
+    (
+        "auto-start is disabled",
+        'Next step: turn on "Start backend automatically" in Filters > AI > '
+        "Generative Fill Settings, or start ComfyUI yourself.",
+    ),
+    (
+        "did not come up",
+        "Next step: try again (the first start can take a few minutes). If it keeps "
+        "failing, read comfyui.log in the stable-boy folder of your GIMP profile.",
+    ),
     ("is not answering", ""),  # the A1111 message already says what to do
     ("ran out of memory", ""),  # describe_error already says what to do
-    ("timed out", "Next step: try a smaller selection or fewer variations, or raise \"Generation time limit\" "
-                  "in Settings > Connection and troubleshooting."),
+    (
+        "timed out",
+        'Next step: try a smaller selection or fewer variations, or raise "Generation time limit" '
+        "in Settings > Connection and troubleshooting.",
+    ),
     ("was cancelled", "Nothing in the image was changed."),
-    ("rejected", "Next step: pick another model under Advanced, or turn on \"Verbose log\" in Settings "
-                 "and try again."),
+    ("rejected", 'Next step: pick another model under Advanced, or turn on "Verbose log" in Settings and try again.'),
     ("press download", ""),
     ("download it from the models tab", ""),
     ("press install nodes", ""),
-    ("model file is missing", "Next step: open Filters > AI > Generative Fill Settings > Models and download "
-                              "or choose a model."),
+    (
+        "model file is missing",
+        "Next step: open Filters > AI > Generative Fill Settings > Models and download or choose a model.",
+    ),
     ("not available", "Next step: open Filters > AI > Generative Fill Settings and press Check backend."),
 )
 
@@ -196,8 +216,10 @@ def next_step(message: str) -> str:
     for needle, step in _NEXT_STEPS:
         if needle in lowered:
             return step
-    return ("Next step: try again. If it happens again, turn on \"Verbose log\" in Filters > AI > "
-            "Generative Fill Settings and keep stable-boy.log for a bug report.")
+    return (
+        'Next step: try again. If it happens again, turn on "Verbose log" in Filters > AI > '
+        "Generative Fill Settings and keep stable-boy.log for a bug report."
+    )
 
 
 def with_next_step(message: str) -> str:
@@ -214,9 +236,11 @@ def with_next_step(message: str) -> str:
 
 def save_failed(path: str, detail: str) -> str:
     """Wording when the settings file cannot be written."""
-    return (f"The settings could not be saved to {path}: {detail}. Next step: check that the folder is "
-            "writable and the disk is not full, then open Filters > AI > Generative Fill Settings and "
-            "press Save again.")
+    return (
+        f"The settings could not be saved to {path}: {detail}. Next step: check that the folder is "
+        "writable and the disk is not full, then open Filters > AI > Generative Fill Settings and "
+        "press Save again."
+    )
 
 
 def unexpected_error(type_name: str, detail: str) -> str:
@@ -235,15 +259,19 @@ def health_text(ok: bool, detail: str, model_count: int, inpaint_nodes: bool) ->
         reason = reason[:217].rstrip() + "..."
     step = next_step(reason)
     if not step or step.startswith("Next step: try again. If it happens"):
-        step = ("Next step: check the backend folder above, keep \"Start backend automatically\" on, "
-                "and press Check backend again.")
+        step = (
+            'Next step: check the backend folder above, keep "Start backend automatically" on, '
+            "and press Check backend again."
+        )
     return f"Could not reach the backend: {reason.rstrip('.')}. {step}"
 
 
 # ------------------------------------------------------------ models -----
 
-def primary_action(row: dict, current: dict | None, pending_ids: list[str] | None = None,
-                   has_token: bool = True) -> tuple[str, str | None, bool]:
+
+def primary_action(
+    row: dict, current: dict | None, pending_ids: list[str] | None = None, has_token: bool = True
+) -> tuple[str, str | None, bool]:
     """(label, action, sensitive) of the single primary button of a model row.
 
     Actions: "download", "cancel", "activate", "nodes", "token" (ask for a
@@ -288,8 +316,7 @@ def model_sort_key(row: dict) -> tuple:
 def model_summary(row: dict) -> str:
     """Second line of a model row, in plain words."""
     caps = row.get("capabilities") or []
-    names = {"fill": "fill", "expand": "expand", "txt2img": "text to image", "remove": "object removal",
-             "edit": "edit"}
+    names = {"fill": "fill", "expand": "expand", "txt2img": "text to image", "remove": "object removal", "edit": "edit"}
     uses = [names[c] for c in caps if c in names]
     if not row.get("runnable") or "patch" in caps:
         uses = ["helper file used by another model"]

@@ -138,3 +138,10 @@ dmypy.json
 docs/evidence/*.xcf
 gimp-stable-boy/stable_boy/tmp/
 *.marker
+
+# Tool caches
+.ruff_cache/
+
+# Never commit a GIMP profile config (it holds the Hugging Face token) or partial downloads
+**/stable-boy/config.json
+*.part

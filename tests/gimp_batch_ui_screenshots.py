@@ -50,10 +50,9 @@ WORK = os.environ.get("SB_TEST_WORK", os.path.join(os.environ.get("TEMP", OUT), 
 os.makedirs(OUT, exist_ok=True)
 os.makedirs(WORK, exist_ok=True)
 GIMP_PID = os.getppid()
-report = {"started": time.strftime("%Y-%m-%d %H:%M:%S"), "gimp_pid": GIMP_PID, "hooks_file": HOOKS,
-          "cases": []}
+report = {"started": time.strftime("%Y-%m-%d %H:%M:%S"), "gimp_pid": GIMP_PID, "hooks_file": HOOKS, "cases": []}
 
-CAPTURE_PS1 = r'''
+CAPTURE_PS1 = r"""
 param([string]$Title, [string]$Out, [int]$ParentPid, [string]$DelaysMs = "2500", [int]$Screen = 0, [int]$ClickCancel = 0,
       [int]$TimeoutSec = 90,
       [int]$MaxWidth = 1600)
@@ -145,14 +144,14 @@ if ($ClickCancel -eq 1) {
   $bmp.Save($name, [System.Drawing.Imaging.ImageFormat]::Png); $bmp.Dispose()
   "clicked Cancel, saved $name foreground=$([SbWin]::GetForegroundWindow() -eq $hwnd)"
 }
-'''
+"""
 
 # Optional (SB_TEST_MENU=1): open Filters > AI in the GIMP window with the
 # keyboard and capture the screen area. Keys are sent only after checking
 # that the foreground window belongs to this GIMP; the screen must be
 # unlocked. "{UP} {UP} {RIGHT}" assumes AI is the second-to-last entry of
 # the Filters menu (GIMP 3.2.6 with no other plug-in submenus after it).
-MENU_PS1 = r'''
+MENU_PS1 = r"""
 param([int]$GimpPid, [string]$Out, [string]$Keys = "{UP} {UP} {RIGHT}", [int]$CropW = 1000, [int]$CropH = 860)
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Drawing
@@ -224,21 +223,35 @@ $bmp.Save($Out, [System.Drawing.Imaging.ImageFormat]::Png)
 "saved $Out rect=$($r.L),$($r.T),$w,$hh"
 $ws.SendKeys("{ESC}"); Start-Sleep -Milliseconds 200; $ws.SendKeys("{ESC}"); Start-Sleep -Milliseconds 200; $ws.SendKeys("{ESC}")
 
-'''
+"""
 
 
 def capture_menu(out_name):
     script = os.path.join(WORK, "capture-menu.ps1")
     with open(script, "w", encoding="utf-8") as fh:
         fh.write(MENU_PS1)
-    powershell = os.path.join(os.environ.get("SystemRoot", r"C:\Windows"), "System32", "WindowsPowerShell",
-                              "v1.0", "powershell.exe")
-    res = subprocess.run([powershell, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", script,
-                          "-GimpPid", str(GIMP_PID), "-Out", os.path.join(OUT, out_name)],
-                         capture_output=True, text=True, timeout=90,
-                         creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
-    report["cases"].append({"case": "menu", "capture": (res.stdout + res.stderr).strip(),
-                            "capture_rc": res.returncode})
+    powershell = os.path.join(
+        os.environ.get("SYSTEMROOT", r"C:\Windows"), "System32", "WindowsPowerShell", "v1.0", "powershell.exe"
+    )
+    res = subprocess.run(
+        [
+            powershell,
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            script,
+            "-GimpPid",
+            str(GIMP_PID),
+            "-Out",
+            os.path.join(OUT, out_name),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=90,
+        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+    )
+    report["cases"].append({"case": "menu", "capture": (res.stdout + res.stderr).strip(), "capture_rc": res.returncode})
 
 
 def capture(title, out_name, delays_ms="2500", screen=False, click_cancel=False):
@@ -246,13 +259,35 @@ def capture(title, out_name, delays_ms="2500", screen=False, click_cancel=False)
     with open(script, "w", encoding="utf-8") as fh:
         fh.write(CAPTURE_PS1)
     out = os.path.join(OUT, out_name)
-    powershell = os.path.join(os.environ.get("SystemRoot", r"C:\Windows"), "System32", "WindowsPowerShell",
-                              "v1.0", "powershell.exe")
-    return subprocess.Popen([powershell, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", script,
-                             "-Title", title, "-Out", out, "-ParentPid", str(GIMP_PID), "-DelaysMs", delays_ms, "-Screen", "1" if screen else "0",
-                             "-ClickCancel", "1" if click_cancel else "0"],
-                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
-                            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+    powershell = os.path.join(
+        os.environ.get("SYSTEMROOT", r"C:\Windows"), "System32", "WindowsPowerShell", "v1.0", "powershell.exe"
+    )
+    return subprocess.Popen(
+        [
+            powershell,
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            script,
+            "-Title",
+            title,
+            "-Out",
+            out,
+            "-ParentPid",
+            str(GIMP_PID),
+            "-DelaysMs",
+            delays_ms,
+            "-Screen",
+            "1" if screen else "0",
+            "-ClickCancel",
+            "1" if click_cancel else "0",
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+    )
 
 
 def set_hooks(**hooks):
@@ -265,7 +300,19 @@ def set_hooks(**hooks):
 extra_clicked = "progress-window-cancel-clicked.png"
 
 
-def run_case(name, proc_name, title, out_name, hooks, image=None, delays_ms="2500", setup=None, names=(), screen=False, click_cancel=False):
+def run_case(
+    name,
+    proc_name,
+    title,
+    out_name,
+    hooks,
+    image=None,
+    delays_ms="2500",
+    setup=None,
+    names=(),
+    screen=False,
+    click_cancel=False,
+):
     case = {"case": name, "procedure": proc_name, "title": title, "hooks": hooks}
     try:
         set_hooks(**hooks)
@@ -312,8 +359,11 @@ try:
     time.sleep(2)
     if os.environ.get("SB_TEST_MENU") == "1":
         capture_menu("filters-ai-menu.png")
-    fill, expand, txt = ("python-fu-stable-boy-generative-fill", "python-fu-stable-boy-generative-expand",
-                         "python-fu-stable-boy-text-to-image")
+    fill, expand, txt = (
+        "python-fu-stable-boy-generative-fill",
+        "python-fu-stable-boy-generative-expand",
+        "python-fu-stable-boy-text-to-image",
+    )
     settings = "python-fu-stable-boy-settings"
 
     def set_prompt(text):
@@ -324,13 +374,21 @@ try:
     # calling the backend, and the prompt history is updated as in real use);
     # Escape cancels. Three prompts are entered so Recent prompts has entries.
     dry_out = os.path.join(WORK, "dry-run.json")
-    for prompt in ("a stone fountain in the middle of the lawn", "a small wooden cabin with a red roof",
-                   "a red door with brass handles"):
+    for prompt in (
+        "a stone fountain in the middle of the lawn",
+        "a small wooden cabin with a red roof",
+        "a red door with brass handles",
+    ):
         if os.path.exists(dry_out):
             os.remove(dry_out)
-        run_case("keys-enter", fill, "Generative Fill", None,
-                 {"autoclose": 12, "type": prompt, "press": "Return", "dry_run": True, "dry_run_out": dry_out},
-                 image)
+        run_case(
+            "keys-enter",
+            fill,
+            "Generative Fill",
+            None,
+            {"autoclose": 12, "type": prompt, "press": "Return", "dry_run": True, "dry_run_out": dry_out},
+            image,
+        )
         try:
             with open(dry_out, encoding="utf-8") as fh:
                 report["cases"][-1]["dry_run"] = json.load(fh)
@@ -338,30 +396,85 @@ try:
             report["cases"][-1]["dry_run"] = f"missing: {err}"
     run_case("keys-escape", fill, "Generative Fill", None, {"autoclose": 12, "press": "Escape"}, image)
 
-    run_case("fill", fill, "Generative Fill", "fill-dialog.png", {"autoclose": 7}, image,
-             setup=set_prompt("a weathered wooden bench, soft afternoon light"))
-    run_case("fill-recent", fill, "Generative Fill", "fill-dialog-recent-prompts.png",
-             {"autoclose": 7, "open_recent": True}, image, delays_ms="3000", screen=True)
-    run_case("fill-advanced", fill, "Generative Fill", "fill-dialog-advanced.png",
-             {"autoclose": 7, "advanced": True}, image)
-    run_case("fill-remove", fill, "Generative Fill", "fill-dialog-remove.png",
-             {"autoclose": 7, "mode": "remove"}, image)
-    run_case("expand", expand, "Generative Expand", "expand-dialog.png", {"autoclose": 7}, image,
-             setup=set_prompt(""))
-    run_case("txt2img", txt, "Text to Image", "text-to-image-dialog.png", {"autoclose": 7}, image,
-             setup=set_prompt("a lighthouse on a cliff at dusk, oil painting"))
+    run_case(
+        "fill",
+        fill,
+        "Generative Fill",
+        "fill-dialog.png",
+        {"autoclose": 7},
+        image,
+        setup=set_prompt("a weathered wooden bench, soft afternoon light"),
+    )
+    run_case(
+        "fill-recent",
+        fill,
+        "Generative Fill",
+        "fill-dialog-recent-prompts.png",
+        {"autoclose": 7, "open_recent": True},
+        image,
+        delays_ms="3000",
+        screen=True,
+    )
+    run_case(
+        "fill-advanced", fill, "Generative Fill", "fill-dialog-advanced.png", {"autoclose": 7, "advanced": True}, image
+    )
+    run_case(
+        "fill-remove", fill, "Generative Fill", "fill-dialog-remove.png", {"autoclose": 7, "mode": "remove"}, image
+    )
+    run_case("expand", expand, "Generative Expand", "expand-dialog.png", {"autoclose": 7}, image, setup=set_prompt(""))
+    run_case(
+        "txt2img",
+        txt,
+        "Text to Image",
+        "text-to-image-dialog.png",
+        {"autoclose": 7},
+        image,
+        setup=set_prompt("a lighthouse on a cliff at dusk, oil painting"),
+    )
     run_case("settings-general", settings, "Generative Fill Settings", "settings-general.png", {"autoclose": 7})
-    run_case("settings-advanced", settings, "Generative Fill Settings", "settings-general-advanced.png",
-             {"autoclose": 7, "advanced": True})
-    run_case("settings-models", settings, "Generative Fill Settings", "settings-models.png",
-             {"autoclose": 8, "settings_tab": "models"}, delays_ms="3500")
-    run_case("settings-models-token", settings, "Generative Fill Settings", "settings-models-token.png",
-             {"autoclose": 8, "settings_tab": "models", "select_model": "flux1-fill-dev"}, delays_ms="3500")
-    run_case("progress", fill, "Stable Boy - Generative Fill", "progress-window-start.png",
-             {"progress_demo": 11}, image, delays_ms="1200,7500", names=("progress-window.png", "-clicked"),
-             click_cancel=True)
-    run_case("picker", fill, "Choose a variation - Generative Fill", "variations-picker.png",
-             {"autoclose": 7, "fake_variations": 3}, image)
+    run_case(
+        "settings-advanced",
+        settings,
+        "Generative Fill Settings",
+        "settings-general-advanced.png",
+        {"autoclose": 7, "advanced": True},
+    )
+    run_case(
+        "settings-models",
+        settings,
+        "Generative Fill Settings",
+        "settings-models.png",
+        {"autoclose": 8, "settings_tab": "models"},
+        delays_ms="3500",
+    )
+    run_case(
+        "settings-models-token",
+        settings,
+        "Generative Fill Settings",
+        "settings-models-token.png",
+        {"autoclose": 8, "settings_tab": "models", "select_model": "flux1-fill-dev"},
+        delays_ms="3500",
+    )
+    run_case(
+        "progress",
+        fill,
+        "Stable Boy - Generative Fill",
+        "progress-window-start.png",
+        {"progress_demo": 11},
+        image,
+        delays_ms="1200,7500",
+        names=("progress-window.png", "-clicked"),
+        click_cancel=True,
+    )
+    run_case(
+        "picker",
+        fill,
+        "Choose a variation - Generative Fill",
+        "variations-picker.png",
+        {"autoclose": 7, "fake_variations": 3},
+        image,
+    )
+
     # Picker actions on fake variation layers (no backend): pick #3 and keep,
     # keep all, discard. The layer tree is recorded after each.
     def tree(img):
@@ -369,15 +482,20 @@ try:
         for layer in img.get_layers():
             entry = {"name": layer.get_name(), "visible": layer.get_visible()}
             if layer.is_group():
-                entry["children"] = [{"name": c.get_name(), "visible": c.get_visible()}
-                                     for c in layer.get_children()]
+                entry["children"] = [{"name": c.get_name(), "visible": c.get_visible()} for c in layer.get_children()]
             out.append(entry)
         return out
 
     for steps in (["3", "keep"], ["keep_all"], ["discard"]):
         before = tree(image)
-        run_case("picker-" + "-".join(steps), fill, "Choose a variation - Generative Fill", None,
-                 {"autoclose": 15, "fake_variations": 3, "picker_steps": steps}, image)
+        run_case(
+            "picker-" + "-".join(steps),
+            fill,
+            "Choose a variation - Generative Fill",
+            None,
+            {"autoclose": 15, "fake_variations": 3, "picker_steps": steps},
+            image,
+        )
         report["cases"][-1]["layers_before"] = before
         report["cases"][-1]["layers_after"] = tree(image)
     report["ok"] = all("error" not in c for c in report["cases"])

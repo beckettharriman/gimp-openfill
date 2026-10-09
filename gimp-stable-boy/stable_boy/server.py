@@ -11,19 +11,50 @@ the supervisor's state file, health-check the URL and launch the supervisor.
 from __future__ import annotations
 
 import json
+import logging
 import os
+import re
+import socket
 import subprocess
 import sys
 import time
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
+from typing import Any
+from urllib.parse import urlparse
 
 from .backend import BackendUnavailable
 from .comfy_api import ComfyClient
 from .config import Paths, Settings, comfy_layout
+from .supervisor import pid_is_python
 
 ProgressCallback = Callable[[float, str], None]
 IS_WINDOWS = sys.platform == "win32"
+SUPERVISOR_STDERR_FILENAME = "supervisor-stderr.log"
+_ANSI_RE = re.compile(r"\x1b(?:\[[0-?]*[ -/]*[@-~]|\][^\x07\x1b]*(?:\x07|\x1b\\)|[@-Z\\-_])")
+
+
+def strip_ansi(text: str) -> str:
+    """``text`` without ANSI escape sequences (colors, cursor moves) as ComfyUI writes them to its log."""
+    return _ANSI_RE.sub("", text)
+
+
+def port_in_use_message(host: str, port: int) -> str:
+    """Plain-words error for a port that another program already holds."""
+    free = 8190 if port != 8190 else 8191
+    return (
+        f"Port {port} is used by another program (it is not ComfyUI). Close that program, or set a free "
+        f"port in the ComfyUI URL in Settings (for example http://{host}:{free})."
+    )
+
+
+def port_answers(host: str, port: int, timeout: float = 1.0) -> bool:
+    """True when something accepts a TCP connection on ``host:port``."""
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
 
 
 def _hidden_python() -> str:
@@ -38,20 +69,23 @@ def _hidden_python() -> str:
 
 
 class ServerManager:
-    def __init__(self, settings: Settings, paths: Paths, logger=None) -> None:
+    """Reads the supervisor's state, health-checks the backend and starts it hidden when needed."""
+
+    def __init__(self, settings: Settings, paths: Paths, logger: logging.Logger | None = None) -> None:
         self.settings = settings
         self.paths = paths
         self.log = logger
 
     # state ---------------------------------------------------------------
 
-    def read_state(self) -> dict:
+    def read_state(self) -> dict[str, Any]:
+        """``server-state.json`` as written by the supervisor; ``{}`` when absent or broken."""
         try:
             return json.loads(self.paths.state.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             return {}
 
-    def _write_state(self, state: dict) -> None:
+    def _write_state(self, state: dict[str, Any]) -> None:
         tmp = self.paths.state.with_suffix(".tmp")
         tmp.write_text(json.dumps(state, indent=2), encoding="utf-8")
         os.replace(tmp, self.paths.state)
@@ -83,12 +117,15 @@ class ServerManager:
     # health --------------------------------------------------------------
 
     def url(self) -> str:
+        """URL of the running managed backend, else the configured one."""
         state = self.read_state()
         return state.get("url") or self.settings.active_url
 
     def is_healthy(self, url: str | None = None) -> bool:
+        """True when the selected backend answers at ``url``."""
         if self.settings.backend == "a1111":
             from .backends.a1111 import A1111Backend
+
             return A1111Backend(url or self.settings.a1111_url).health().ok
         return ComfyClient(url or self.url()).is_alive()
 
@@ -103,31 +140,63 @@ class ServerManager:
         if self.settings.backend == "a1111":
             raise BackendUnavailable(
                 f"AUTOMATIC1111 WebUI is not answering at {self.settings.a1111_url}. "
-                "Start it with --api, or switch the backend to ComfyUI in the settings.")
+                "Start it with --api, or switch the backend to ComfyUI in the settings."
+            )
         if not self.settings.autostart:
             raise BackendUnavailable(
-                f"ComfyUI is not answering at {url} and auto-start is disabled in the settings.")
+                f"ComfyUI is not running at {url}. Start ComfyUI yourself, or turn on 'Start backend "
+                "automatically' in Filters > AI > Generative Fill Settings, then press Check backend."
+            )
         return self.start(progress)
 
     def start(self, progress: ProgressCallback | None = None) -> str:
+        """Launch the backend supervisor detached and wait until ComfyUI answers."""
         layout = comfy_layout(self.settings.comfy_dir)
         if layout is None:
             raise BackendUnavailable(
                 f"ComfyUI was not found at '{self.settings.comfy_dir}'. Install the portable "
-                "build there or set the ComfyUI folder in Filters > AI > Generative Fill Settings.")
+                "build there or set the ComfyUI folder in Filters > AI > Generative Fill Settings."
+            )
         self.paths.ensure()
         url = self.settings.url
         host, port = _split_host_port(url)
+        # Something already listening here is not a healthy ComfyUI (ensure_running checked), so launching
+        # would only make ComfyUI load for half a minute and then fail to bind the port.
+        if port_answers(host, port, timeout=1.0):
+            if ComfyClient(url).is_alive(timeout=10.0):  # a busy ComfyUI that was slow to answer the first check
+                self.touch()
+                return url
+            if self.log:
+                self.log.warning("port %s on %s is taken by a program that is not ComfyUI", port, host)
+            raise BackendUnavailable(port_in_use_message(host, port))
         gimp_pid = os.getppid()
         cmd = [
-            _hidden_python(), str(Path(__file__).with_name("supervisor.py")), "--mode", "backend",
-            "--python", str(layout["python"]), "--main", str(layout["main"]),
-            "--cwd", str(layout["cwd"]), "--host", host, "--port", str(port),
-            "--base", str(self.paths.base), "--config", str(self.paths.config),
-            "--watch-pid", str(gimp_pid), "--idle-minutes", str(self.settings.idle_timeout_minutes),
+            _hidden_python(),
+            str(Path(__file__).with_name("supervisor.py")),
+            "--mode",
+            "backend",
+            "--python",
+            str(layout["python"]),
+            "--main",
+            str(layout["main"]),
+            "--cwd",
+            str(layout["cwd"]),
+            "--host",
+            host,
+            "--port",
+            str(port),
+            "--base",
+            str(self.paths.base),
+            "--config",
+            str(self.paths.config),
+            "--watch-pid",
+            str(gimp_pid),
+            "--idle-minutes",
+            str(self.settings.idle_timeout_minutes),
         ]
         if self.settings.extra_server_args.strip():
-            cmd += ["--extra-args", self.settings.extra_server_args.strip()]
+            # one argv item: a separate value starting with "-" (--cpu) would be read as an option
+            cmd.append(f"--extra-args={self.settings.extra_server_args.strip()}")
         if self.log:
             self.log.info("launching supervisor (gimp pid %s): %s", gimp_pid, " ".join(cmd))
         self._spawn_detached(cmd)
@@ -137,22 +206,19 @@ class ServerManager:
 
     @property
     def tasks_dir(self) -> Path:
+        """Queue folder the supervisor's task worker polls."""
         return self.paths.base / "tasks"
-
-    def supervisor_alive(self) -> bool:
-        state = self.read_state()
-        pid = int(state.get("supervisor_pid") or 0)
-        return bool(pid) and _pid_alive(pid)
 
     def task_worker_alive(self) -> bool:
         """A worker is a tasks-mode supervisor, or a backend supervisor that
-        announced itself in tasks-status.json (older supervisors did not)."""
+        announced itself in tasks-status.json (older supervisors did not).
+        Pids are checked against the process name, so a reused pid does not count."""
         for name, key in (("tasks-worker.json", "pid"), ("tasks-status.json", "worker_pid")):
             try:
                 info = json.loads((self.paths.base / name).read_text(encoding="utf-8"))
             except (OSError, ValueError):
                 continue
-            if _pid_alive(int(info.get(key) or 0)):
+            if pid_is_python(int(info.get(key) or 0)):
                 return True
         return False
 
@@ -160,13 +226,22 @@ class ServerManager:
         """Make sure something will process queued tasks."""
         if self.task_worker_alive():
             return
-        cmd = [_hidden_python(), str(Path(__file__).with_name("supervisor.py")), "--mode", "tasks",
-               "--base", str(self.paths.base), "--config", str(self.paths.config)]
+        cmd = [
+            _hidden_python(),
+            str(Path(__file__).with_name("supervisor.py")),
+            "--mode",
+            "tasks",
+            "--base",
+            str(self.paths.base),
+            "--config",
+            str(self.paths.config),
+        ]
         if self.log:
             self.log.info("launching task worker: %s", " ".join(cmd))
         self._spawn_detached(cmd)
 
-    def queue_task(self, task: dict) -> str:
+    def queue_task(self, task: dict[str, Any]) -> str:
+        """Write ``task`` to the queue (atomically) and make sure a worker runs; returns its id."""
         self.tasks_dir.mkdir(parents=True, exist_ok=True)
         task_id = task.get("id") or f"{int(time.time() * 1000)}-{task.get('type', 'task')}"
         task["id"] = task_id
@@ -179,13 +254,15 @@ class ServerManager:
             self.log.info("queued task %s (%s)", task_id, task.get("type"))
         return task_id
 
-    def task_status(self) -> dict:
+    def task_status(self) -> dict[str, Any]:
+        """The worker's ``tasks-status.json`` (current task, queue, history)."""
         try:
             return json.loads((self.paths.base / "tasks-status.json").read_text(encoding="utf-8"))
         except (OSError, ValueError):
             return {}
 
     def request_cancel(self) -> None:
+        """Cancel the running task and drop everything still queued."""
         self.tasks_dir.mkdir(parents=True, exist_ok=True)
         (self.tasks_dir / "cancel").write_text(str(time.time()), encoding="utf-8")
         # also drop anything still waiting in the queue
@@ -196,7 +273,8 @@ class ServerManager:
                 except OSError:
                     pass
 
-    def pending_tasks(self) -> list[dict]:
+    def pending_tasks(self) -> list[dict[str, Any]]:
+        """Decoded queued tasks, oldest first."""
         out = []
         for p in sorted(self.tasks_dir.glob("*.json")) if self.tasks_dir.is_dir() else []:
             try:
@@ -205,15 +283,36 @@ class ServerManager:
                 pass
         return out
 
+    @property
+    def supervisor_stderr_log(self) -> Path:
+        """Where the supervisor's stderr goes (argument errors, crashes before its own log is open)."""
+        return self.paths.base / SUPERVISOR_STDERR_FILENAME
+
     def _spawn_detached(self, cmd: list[str]) -> None:
-        kwargs: dict = dict(stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                            stderr=subprocess.DEVNULL, close_fds=True)
+        """Start ``cmd`` detached and hidden; its stderr is appended to :attr:`supervisor_stderr_log`."""
+        try:
+            self.paths.base.mkdir(parents=True, exist_ok=True)
+            stderr: Any = open(self.supervisor_stderr_log, "ab")  # noqa: SIM115 - the child gets its own handle
+        except OSError:
+            stderr = subprocess.DEVNULL
+        try:
+            self._popen_detached(cmd, stderr)
+        finally:
+            if stderr is not subprocess.DEVNULL:
+                stderr.close()
+
+    def _popen_detached(self, cmd: list[str], stderr: Any) -> None:
+        kwargs: dict[str, Any] = {
+            "stdin": subprocess.DEVNULL,
+            "stdout": subprocess.DEVNULL,
+            "stderr": stderr,
+            "close_fds": True,
+        }
         env = dict(os.environ)
         env.pop("PYTHONPATH", None)
         kwargs["env"] = env
         if IS_WINDOWS:
-            flags = (subprocess.CREATE_NO_WINDOW | subprocess.DETACHED_PROCESS
-                     | subprocess.CREATE_NEW_PROCESS_GROUP)
+            flags = subprocess.CREATE_NO_WINDOW | subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
             try:
                 subprocess.Popen(cmd, creationflags=flags | subprocess.CREATE_BREAKAWAY_FROM_JOB, **kwargs)
                 return
@@ -241,41 +340,28 @@ class ServerManager:
             if state.get("status") == "failed" or (elapsed > 15 and not state):
                 break
             time.sleep(1.5)
+        elapsed = time.monotonic() - started
+        tail = self.server_log_tail()
+        if "already in use" in tail.lower():
+            host, port = _split_host_port(url)
+            raise BackendUnavailable(port_in_use_message(host, port))
+        if self.log:
+            self.log.warning("backend did not come up at %s after %.0f s; log tail:\n%s", url, elapsed, tail)
         raise BackendUnavailable(
-            f"ComfyUI did not come up at {url} within {timeout} s. "
-            f"Last log lines:\n{self.server_log_tail()}")
+            f"ComfyUI did not start at {url} (gave up after {elapsed:.0f} s). Check the ComfyUI folder and "
+            "the extra server arguments in Filters > AI > Generative Fill Settings, then try again. "
+            f"Last lines of the ComfyUI log ({self.paths.server_log}):\n{tail}"
+        )
 
     def server_log_tail(self, lines: int = 8) -> str:
+        """Last ``lines`` lines of the ComfyUI log, for error messages."""
         try:
             text = self.paths.server_log.read_text(encoding="utf-8", errors="replace")
         except OSError:
             return "(no backend log yet)"
-        return "\n".join(text.strip().splitlines()[-lines:])
-
-
-def _pid_alive(pid: int) -> bool:
-    if pid <= 0:
-        return False
-    if IS_WINDOWS:
-        import ctypes
-        k32 = ctypes.windll.kernel32  # type: ignore[attr-defined]
-        handle = k32.OpenProcess(0x00100000, False, pid)  # SYNCHRONIZE
-        if not handle:
-            return False
-        try:
-            return k32.WaitForSingleObject(handle, 0) == 0x102
-        finally:
-            k32.CloseHandle(handle)
-    try:
-        os.kill(pid, 0)
-        return True
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True
+        return "\n".join(strip_ansi(text).strip().splitlines()[-lines:])
 
 
 def _split_host_port(url: str) -> tuple[str, int]:
-    from urllib.parse import urlparse
     parsed = urlparse(url)
     return parsed.hostname or "127.0.0.1", parsed.port or 8188

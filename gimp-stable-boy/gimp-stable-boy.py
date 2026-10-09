@@ -52,9 +52,21 @@ MENU = "<Image>/Filters/AI"
 AUTHOR = "Stable Boy contributors (original: Torben Giesselmann)"
 RW = GObject.ParamFlags.READWRITE
 
-SAMPLERS = ["euler", "euler_ancestral", "heun", "dpm_2", "dpm_2_ancestral", "lms",
-            "dpmpp_2s_ancestral", "dpmpp_2m", "dpmpp_sde", "dpmpp_2m_sde", "dpmpp_2m_sde_gpu",
-            "ddim", "uni_pc"]
+SAMPLERS = [
+    "euler",
+    "euler_ancestral",
+    "heun",
+    "dpm_2",
+    "dpm_2_ancestral",
+    "lms",
+    "dpmpp_2s_ancestral",
+    "dpmpp_2m",
+    "dpmpp_sde",
+    "dpmpp_2m_sde",
+    "dpmpp_2m_sde_gpu",
+    "ddim",
+    "uni_pc",
+]
 SCHEDULERS = ["normal", "karras", "exponential", "sgm_uniform", "simple", "ddim_uniform"]
 
 
@@ -67,11 +79,16 @@ def _choice(options: list[tuple[str, str]]) -> Gimp.Choice:
 
 def _model_choice() -> Gimp.Choice:
     """'active' (from the settings), the two legacy tiers, then every catalog model."""
-    options = [("active", "Active model (see Settings > Models)"),
-               ("fast", "Fast (SD 1.5 inpainting)"), ("quality", "Quality (SDXL + Fooocus)")]
+    options = [
+        ("active", "Active model (see Settings > Models)"),
+        ("fast", "Fast (SD 1.5 inpainting)"),
+        ("quality", "Quality (SDXL + Fooocus)"),
+    ]
     try:
-        from stable_boy.catalog import load_catalog
         from pathlib import Path
+
+        from stable_boy.catalog import load_catalog
+
         for entry in load_catalog(plugin_dir=Path(__file__).resolve().parent):  # resolve() follows a junction
             if entry.runnable:
                 options.append((entry.id, f"{entry.name} [{entry.tier}]".replace("_", "__")))
@@ -82,6 +99,7 @@ def _model_choice() -> Gimp.Choice:
 
 def _load_models_cache() -> dict:
     import json
+
     try:
         paths = Paths.for_profile(Gimp.directory())
         return json.loads(paths.models_cache.read_text(encoding="utf-8"))
@@ -128,8 +146,10 @@ def _bind_runner(interactive: bool) -> None:
     replaced for this plug-in process. Works whether or not runner.Runner
     already accepts the keyword (it is only passed when it does)."""
     import inspect
+
     from stable_boy import app as app_module
     from stable_boy import runner as runner_module
+
     base = runner_module.Runner
     try:
         accepts = "interactive" in inspect.signature(base.__init__).parameters
@@ -152,6 +172,7 @@ def _test_hooks() -> dict:
     SB_SETTINGS_TAB variables. Keys: autoclose (seconds, answers Cancel),
     settings_tab ("models"), fake_variations (count), progress_demo (seconds)."""
     import json
+
     hooks: dict = {}
     path = os.environ.get("SB_TEST_UI_FILE")
     if path:
@@ -193,7 +214,9 @@ def _model_options(config, kind: str, settings: Settings) -> tuple[list[tuple[st
     """Model dropdown: the active model first, then the catalog models that
     can do ``kind`` (downloaded ones before the others)."""
     from pathlib import Path
+
     from stable_boy import catalog as cat
+
     nicks = [n for n, _ in (_choice_options(config, "model") or [("active", "Active model")])]
     active_name, prompt_free = settings.active_model, False
     installed_rows, other_rows = [], []
@@ -223,6 +246,7 @@ def _image_sizes(image):
     if image is None:
         return None, None
     from stable_boy import gimp_io
+
     size = (image.get_width(), image.get_height())
     try:
         sel = gimp_io.selection_rect(image)
@@ -236,6 +260,7 @@ def _generation_dialog(kind: str, procedure, config, image, hooks: dict) -> bool
     (the same properties NONINTERACTIVE callers set)."""
     gi.require_version("Gtk", "3.0")
     from stable_boy import dialogs
+
     GimpUi.init("gimp-stable-boy")
     paths = Paths.for_profile(Gimp.directory()).ensure()
     settings = Settings.load(paths.config)
@@ -249,19 +274,30 @@ def _generation_dialog(kind: str, procedure, config, image, hooks: dict) -> bool
     models, active_name, prompt_free = _model_options(config, kind, settings)
     image_size, selection_size = _image_sizes(image)
     result = dialogs.run_generation_dialog(
-        kind, values, history, models, autoclose_seconds=float(hooks.get("autoclose") or 0),
-        image_size=image_size, selection_size=selection_size,
+        kind,
+        values,
+        history,
+        models,
+        autoclose_seconds=float(hooks.get("autoclose") or 0),
+        image_size=image_size,
+        selection_size=selection_size,
         default_size=(settings.txt2img_width, settings.txt2img_height),
-        active_prompt_free=prompt_free, active_name=active_name, show_advanced=bool(hooks.get("advanced")),
-        test_text=hooks.get("type"), test_key=hooks.get("press"), test_open_recent=bool(hooks.get("open_recent")))
+        active_prompt_free=prompt_free,
+        active_name=active_name,
+        show_advanced=bool(hooks.get("advanced")),
+        test_text=hooks.get("type"),
+        test_key=hooks.get("press"),
+        test_open_recent=bool(hooks.get("open_recent")),
+    )
     if result is None:
         return False
     for key, value in result.items():
         config.set_property(key, value)
     if result.get("prompt") and not result.get("remove"):
         fresh = Settings.load(paths.config)
-        fresh.prompt_history = ui_text.dump_history(ui_text.remember_prompt(
-            ui_text.parse_history(fresh.prompt_history), result["prompt"]))
+        fresh.prompt_history = ui_text.dump_history(
+            ui_text.remember_prompt(ui_text.parse_history(fresh.prompt_history), result["prompt"])
+        )
         try:
             fresh.save(paths.config)
         except OSError as err:  # the history is a convenience: generate anyway
@@ -274,9 +310,11 @@ def _dry_run(kind: str, config, hooks: dict) -> bool:
     if not hooks.get("dry_run"):
         return False
     import json
+
     values = {key: config.get_property(key) for key in KIND_ARGS[kind]}
-    with open(hooks.get("dry_run_out") or os.path.join(Gimp.directory(), "stable-boy", "dry-run.json"), "w",
-              encoding="utf-8") as fh:
+    with open(
+        hooks.get("dry_run_out") or os.path.join(Gimp.directory(), "stable-boy", "dry-run.json"), "w", encoding="utf-8"
+    ) as fh:
         json.dump({"kind": kind, "values": values}, fh, indent=2)
     return True
 
@@ -285,8 +323,7 @@ def _ask(kind: str, title: str, procedure, config, image, hooks: dict) -> bool:
     try:
         return _generation_dialog(kind, procedure, config, image, hooks)
     except Exception:  # noqa: BLE001 - never leave the user without a dialog
-        print(f"[stable-boy] custom dialog failed, using the generic one:\n{traceback.format_exc()}",
-              file=sys.stderr)
+        print(f"[stable-boy] custom dialog failed, using the generic one:\n{traceback.format_exc()}", file=sys.stderr)
         return _dialog(procedure, config, title)
 
 
@@ -297,6 +334,7 @@ def _pick_variation(image, layers, title: str, autoclose: float = 0, test_steps=
         return "keep"
     gi.require_version("Gtk", "3.0")
     from stable_boy.ui_picker import run_picker, scaled
+
     GimpUi.init("gimp-stable-boy")
     thumbs = []
     for layer in layers:
@@ -316,8 +354,11 @@ def _pick_variation(image, layers, title: str, autoclose: float = 0, test_steps=
         parent = layers[0].get_parent()
         image.undo_group_start()
         try:
-            if (parent is not None and all(layer.get_parent() == parent for layer in layers)
-                    and len(parent.get_children()) == len(layers)):
+            if (
+                parent is not None
+                and all(layer.get_parent() == parent for layer in layers)
+                and len(parent.get_children()) == len(layers)
+            ):
                 image.remove_layer(parent)
             else:
                 for layer in layers:
@@ -326,8 +367,7 @@ def _pick_variation(image, layers, title: str, autoclose: float = 0, test_steps=
             image.undo_group_end()
         Gimp.displays_flush()
 
-    return run_picker(title, thumbs, show, lambda: None, discard, autoclose_seconds=autoclose,
-                      test_steps=test_steps)
+    return run_picker(title, thumbs, show, lambda: None, discard, autoclose_seconds=autoclose, test_steps=test_steps)
 
 
 def _after_insert(run_mode, image, layers, title: str, hooks: dict, log=None) -> None:
@@ -343,11 +383,13 @@ def _after_insert(run_mode, image, layers, title: str, hooks: dict, log=None) ->
 
 # ---------------------------------------------------------- test hooks ----
 
+
 def _test_fake_variations(image, count: int, hooks: dict) -> None:
     """Screenshot hook: copies of the selected area (all but the first
     tinted) as variation layers in a group, then the picker. No backend."""
     from stable_boy import gimp_io
     from stable_boy.geometry import Rect
+
     rect = gimp_io.selection_rect(image) or gimp_io.image_rect(image)
     pad = max(16, max(rect.width, rect.height) // 4)
     full = gimp_io.image_rect(image)
@@ -356,25 +398,29 @@ def _test_fake_variations(image, count: int, hooks: dict) -> None:
     ctx = Rect(x0, y0, x1 - x0, y1 - y0)
     data = gimp_io.export_region_png(image, ctx)
     paths = Paths.for_profile(Gimp.directory()).ensure()
-    layers = gimp_io.insert_results(image, [data] * max(2, count), ctx, "Generative Fill: test variations",
-                                    8.0, paths.temp)
+    layers = gimp_io.insert_results(
+        image, [data] * max(2, count), ctx, "Generative Fill: test variations", 8.0, paths.temp
+    )
     tints = [None, (200.0, 60.0, 0.0), (30.0, 70.0, 10.0), (120.0, 50.0, 0.0)]
-    for layer, tint in zip(layers, tints):
+    for layer, tint in zip(layers, tints, strict=False):
         if tint is not None:
             try:
                 layer.colorize_hsl(*tint)
             except Exception:  # noqa: BLE001
                 pass
     Gimp.displays_flush()
-    _pick_variation(image, layers, "Generative Fill", float(hooks.get("autoclose") or 0),
-                    test_steps=hooks.get("picker_steps"))
+    _pick_variation(
+        image, layers, "Generative Fill", float(hooks.get("autoclose") or 0), test_steps=hooks.get("picker_steps")
+    )
 
 
 def _test_progress_demo(image, seconds: float) -> None:
     """Screenshot hook: the real progress window fed with scripted steps."""
     gi.require_version("Gtk", "3.0")
     from gi.repository import Gtk
+
     from stable_boy.progress_window import ProgressWindow
+
     GimpUi.init("gimp-stable-boy")
     handle = None
     try:
@@ -383,8 +429,13 @@ def _test_progress_demo(image, seconds: float) -> None:
     except Exception:  # noqa: BLE001
         handle = None
     settings = Settings.load(Paths.for_profile(Gimp.directory()).config)
-    win = ProgressWindow("Generative Fill", "SD 1.5 Inpainting", on_cancel=None,
-                         position=(settings.progress_window_x, settings.progress_window_y), anchor_handle=handle)
+    win = ProgressWindow(
+        "Generative Fill",
+        "SD 1.5 Inpainting",
+        on_cancel=None,
+        position=(settings.progress_window_x, settings.progress_window_y),
+        anchor_handle=handle,
+    )
     pixbuf = None
     if image is not None:
         try:
@@ -392,7 +443,8 @@ def _test_progress_demo(image, seconds: float) -> None:
         except Exception:  # noqa: BLE001
             pixbuf = None
     script = [(0.0, 0.05, "Starting the AI backend... 8 s")] + [
-        (2.5 + i * 0.35, 0.05 + 0.9 * i / 25, f"Generating... step {i}/25") for i in range(1, 13)]
+        (2.5 + i * 0.35, 0.05 + 0.9 * i / 25, f"Generating... step {i}/25") for i in range(1, 13)
+    ]
 
     def at(fraction, text, show_preview):
         win._set_step(fraction, text)
@@ -408,6 +460,7 @@ def _test_progress_demo(image, seconds: float) -> None:
 
 # ------------------------------------------------------------------ runs ----
 
+
 def run_fill(procedure, run_mode, image, drawables, config, data):
     hooks = _test_hooks() if run_mode == Gimp.RunMode.INTERACTIVE else {}
     if hooks.get("fake_variations"):
@@ -416,20 +469,26 @@ def run_fill(procedure, run_mode, image, drawables, config, data):
     if hooks.get("progress_demo"):
         _test_progress_demo(image, float(hooks["progress_demo"]))
         return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
-    if run_mode == Gimp.RunMode.INTERACTIVE and not _ask("fill", "Generative Fill", procedure, config, image,
-                                                         hooks):
+    if run_mode == Gimp.RunMode.INTERACTIVE and not _ask("fill", "Generative Fill", procedure, config, image, hooks):
         return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
     if _dry_run("fill", config, hooks):
         return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
     from stable_boy.app import App
+
     app = None
     try:
         _bind_runner(run_mode == Gimp.RunMode.INTERACTIVE)
         app = App()
-        layers = app.generative_fill(image, config.get_property("prompt"), config.get_property("negative"),
-                                     config.get_property("variations"), config.get_property("strength"),
-                                     config.get_property("seed"), config.get_property("model"),
-                                     remove=bool(config.get_property("remove")))
+        layers = app.generative_fill(
+            image,
+            config.get_property("prompt"),
+            config.get_property("negative"),
+            config.get_property("variations"),
+            config.get_property("strength"),
+            config.get_property("seed"),
+            config.get_property("model"),
+            remove=bool(config.get_property("remove")),
+        )
     except Exception as err:  # noqa: BLE001 - every failure must reach the user
         return _fail(procedure, err, app.log if app else None)
     _after_insert(run_mode, image, layers, "Generative Fill", hooks, app.log)
@@ -438,21 +497,30 @@ def run_fill(procedure, run_mode, image, drawables, config, data):
 
 def run_expand(procedure, run_mode, image, drawables, config, data):
     hooks = _test_hooks() if run_mode == Gimp.RunMode.INTERACTIVE else {}
-    if run_mode == Gimp.RunMode.INTERACTIVE and not _ask("expand", "Generative Expand", procedure, config,
-                                                         image, hooks):
+    if run_mode == Gimp.RunMode.INTERACTIVE and not _ask(
+        "expand", "Generative Expand", procedure, config, image, hooks
+    ):
         return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
     if _dry_run("expand", config, hooks):
         return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
     from stable_boy.app import App
+
     app = None
     try:
         _bind_runner(run_mode == Gimp.RunMode.INTERACTIVE)
         app = App()
-        layers = app.generative_expand(image, config.get_property("prompt"), config.get_property("negative"),
-                                       config.get_property("left"), config.get_property("top"),
-                                       config.get_property("right"), config.get_property("bottom"),
-                                       config.get_property("variations"), config.get_property("seed"),
-                                       config.get_property("model"))
+        layers = app.generative_expand(
+            image,
+            config.get_property("prompt"),
+            config.get_property("negative"),
+            config.get_property("left"),
+            config.get_property("top"),
+            config.get_property("right"),
+            config.get_property("bottom"),
+            config.get_property("variations"),
+            config.get_property("seed"),
+            config.get_property("model"),
+        )
     except Exception as err:  # noqa: BLE001
         return _fail(procedure, err, app.log if app else None)
     _after_insert(run_mode, image, layers, "Generative Expand", hooks, app.log)
@@ -461,30 +529,62 @@ def run_expand(procedure, run_mode, image, drawables, config, data):
 
 def run_txt2img(procedure, run_mode, image, drawables, config, data):
     hooks = _test_hooks() if run_mode == Gimp.RunMode.INTERACTIVE else {}
-    if run_mode == Gimp.RunMode.INTERACTIVE and not _ask("txt2img", "Text to Image", procedure, config, image,
-                                                         hooks):
+    if run_mode == Gimp.RunMode.INTERACTIVE and not _ask("txt2img", "Text to Image", procedure, config, image, hooks):
         return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
     if _dry_run("txt2img", config, hooks):
         return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
     from stable_boy.app import App
+
     app = None
     try:
         _bind_runner(run_mode == Gimp.RunMode.INTERACTIVE)
         app = App()
-        app.text_to_image(image, config.get_property("prompt"), config.get_property("negative"),
-                          config.get_property("width"), config.get_property("height"),
-                          config.get_property("variations"), config.get_property("seed"),
-                          config.get_property("model"), config.get_property("target"))
+        app.text_to_image(
+            image,
+            config.get_property("prompt"),
+            config.get_property("negative"),
+            config.get_property("width"),
+            config.get_property("height"),
+            config.get_property("variations"),
+            config.get_property("seed"),
+            config.get_property("model"),
+            config.get_property("target"),
+        )
     except Exception as err:  # noqa: BLE001
         return _fail(procedure, err, app.log if app else None)
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
 
 
-SETTINGS_KEYS = ["backend", "comfy_dir", "url", "a1111_url", "autostart", "idle_timeout_minutes",
-                 "quality", "progress_window", "checkpoint", "sdxl_checkpoint", "fooocus_patch", "steps", "cfg",
-                 "sampler", "scheduler", "grow_percent", "feather_percent", "grow", "feather", "prefill", "max_side_sd15",
-                 "max_side_sdxl", "txt2img_width", "txt2img_height", "startup_timeout",
-                 "request_timeout", "extra_server_args", "debug"]
+SETTINGS_KEYS = [
+    "backend",
+    "comfy_dir",
+    "url",
+    "a1111_url",
+    "autostart",
+    "idle_timeout_minutes",
+    "quality",
+    "progress_window",
+    "checkpoint",
+    "sdxl_checkpoint",
+    "fooocus_patch",
+    "steps",
+    "cfg",
+    "sampler",
+    "scheduler",
+    "grow_percent",
+    "feather_percent",
+    "grow",
+    "feather",
+    "prefill",
+    "max_side_sd15",
+    "max_side_sdxl",
+    "txt2img_width",
+    "txt2img_height",
+    "startup_timeout",
+    "request_timeout",
+    "extra_server_args",
+    "debug",
+]
 
 
 def _settings_test_backend(app, values: dict, report) -> str:
@@ -530,12 +630,17 @@ def _settings_dialog(procedure, config) -> bool:
             except AttributeError:
                 pass
     test_app = App()  # created here: App() reads the profile path through GIMP (main thread only)
-    result = dialogs.run_settings_dialog(values, choices, ranges, models_panel_factory=lambda: ModelsPanel(App()),
-                                         test_backend=lambda v, report: _settings_test_backend(test_app, v, report),
-                                         autoclose_seconds=float(hooks.get("autoclose") or 0),
-                                         tab=str(hooks.get("settings_tab") or ""),
-                                         show_advanced=bool(hooks.get("advanced")),
-                                         select_model=str(hooks.get("select_model") or ""))
+    result = dialogs.run_settings_dialog(
+        values,
+        choices,
+        ranges,
+        models_panel_factory=lambda: ModelsPanel(App()),
+        test_backend=lambda v, report: _settings_test_backend(test_app, v, report),
+        autoclose_seconds=float(hooks.get("autoclose") or 0),
+        tab=str(hooks.get("settings_tab") or ""),
+        show_advanced=bool(hooks.get("advanced")),
+        select_model=str(hooks.get("select_model") or ""),
+    )
     if result is None:
         return False
     for key, value in result.items():
@@ -566,12 +671,15 @@ def run_settings(procedure, config, data):
         return procedure.new_return_values(Gimp.PDBStatusType.EXECUTION_ERROR, GLib.Error(text))
     if config.get_property("check-backend"):
         from stable_boy.app import App
+
         app = App()
         health = app.check_backend()
         if health.ok:
-            Gimp.message(f"Backend OK: {health.detail}\n"
-                         f"Checkpoints: {', '.join(health.checkpoints) or 'none'}\n"
-                         f"Inpaint nodes: {'yes' if health.inpaint_nodes else 'no'}")
+            Gimp.message(
+                f"Backend OK: {health.detail}\n"
+                f"Checkpoints: {', '.join(health.checkpoints) or 'none'}\n"
+                f"Inpaint nodes: {'yes' if health.inpaint_nodes else 'no'}"
+            )
         else:
             Gimp.message(ui_text.with_next_step(f"Backend check failed: {health.detail}"))
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
@@ -579,6 +687,7 @@ def run_settings(procedure, config, data):
 
 def run_stop(procedure, config, data):
     from stable_boy.app import App
+
     try:
         Gimp.message(App().stop_backend())
     except Exception as err:  # noqa: BLE001
@@ -587,6 +696,7 @@ def run_stop(procedure, config, data):
 
 
 # --------------------------------------------------------------- plug-in ----
+
 
 class StableBoy(Gimp.PlugIn):
     def do_set_i18n(self, name):
@@ -610,25 +720,34 @@ class StableBoy(Gimp.PlugIn):
 
     @staticmethod
     def _common_prompt_args(procedure, variations_default=1):
-        procedure.add_string_argument("prompt", "_Prompt", "What should appear in the selection",
-                                      "", RW)
-        procedure.add_string_argument("negative", "_Negative prompt", "What to avoid",
-                                      "blurry, low quality, watermark, text", RW)
-        procedure.add_int_argument("variations", "_Variations", "Number of results (layers)",
-                                   1, 8, variations_default, RW)
+        procedure.add_string_argument("prompt", "_Prompt", "What should appear in the selection", "", RW)
+        procedure.add_string_argument(
+            "negative", "_Negative prompt", "What to avoid", "blurry, low quality, watermark, text", RW
+        )
+        procedure.add_int_argument(
+            "variations", "_Variations", "Number of results (layers)", 1, 8, variations_default, RW
+        )
 
     @staticmethod
     def _seed_quality_args(procedure):
         procedure.add_int_argument("seed", "_Seed", "-1 for random", -1, 2**31 - 1, -1, RW)
-        procedure.add_choice_argument("model", "_Model", "Which model to use ('active' = the one chosen "
-                                      "in Settings > Models)", _model_choice(), "active", RW)
+        procedure.add_choice_argument(
+            "model",
+            "_Model",
+            "Which model to use ('active' = the one chosen in Settings > Models)",
+            _model_choice(),
+            "active",
+            RW,
+        )
 
     def _image_procedure(self, name, func, label, blurb, help_text):
         procedure = Gimp.ImageProcedure.new(self, name, Gimp.PDBProcType.PLUGIN, func, None)
         procedure.set_image_types("RGB*, GRAY*")
-        procedure.set_sensitivity_mask(Gimp.ProcedureSensitivityMask.DRAWABLE
-                                       | Gimp.ProcedureSensitivityMask.DRAWABLES
-                                       | Gimp.ProcedureSensitivityMask.NO_DRAWABLES)
+        procedure.set_sensitivity_mask(
+            Gimp.ProcedureSensitivityMask.DRAWABLE
+            | Gimp.ProcedureSensitivityMask.DRAWABLES
+            | Gimp.ProcedureSensitivityMask.NO_DRAWABLES
+        )
         procedure.set_menu_label(label)
         procedure.add_menu_path(MENU)
         procedure.set_documentation(blurb, help_text, name)
@@ -637,49 +756,85 @@ class StableBoy(Gimp.PlugIn):
 
     def _fill(self):
         p = self._image_procedure(
-            PROC_FILL, run_fill, "Generative _Fill...",
+            PROC_FILL,
+            run_fill,
+            "Generative _Fill...",
             "Fill the selection with AI-generated content",
             "Crops a context region around the selection, sends it to the AI backend "
             "(ComfyUI by default, started automatically), and adds the result as a new "
-            "layer with a feathered layer mask. Stable Boy " + __version__)
+            "layer with a feathered layer mask. Stable Boy " + __version__,
+        )
         self._common_prompt_args(p)
-        p.add_double_argument("strength", "_Strength", "1.0 replaces the selection entirely; "
-                              "lower values keep more of the original", 0.1, 1.0, 1.0, RW)
-        p.add_boolean_argument("remove", "_Remove object (ignore prompt)",
-                               "Erase what is selected and continue the background. Uses an installed "
-                               "LaMa/MAT removal model when available, otherwise the chosen model with a "
-                               "background prompt.", False, RW)
+        p.add_double_argument(
+            "strength",
+            "_Strength",
+            "1.0 replaces the selection entirely; lower values keep more of the original",
+            0.1,
+            1.0,
+            1.0,
+            RW,
+        )
+        p.add_boolean_argument(
+            "remove",
+            "_Remove object (ignore prompt)",
+            "Erase what is selected and continue the background. Uses an installed "
+            "LaMa/MAT removal model when available, otherwise the chosen model with a "
+            "background prompt.",
+            False,
+            RW,
+        )
         self._seed_quality_args(p)
         return p
 
     def _expand(self):
         p = self._image_procedure(
-            PROC_EXPAND, run_expand, "Generative _Expand...",
+            PROC_EXPAND,
+            run_expand,
+            "Generative _Expand...",
             "Grow the canvas and fill the new area with AI-generated content",
             "Resizes the canvas by the given margins and outpaints the new border, "
-            "returning it as a new masked layer. Stable Boy " + __version__)
+            "returning it as a new masked layer. Stable Boy " + __version__,
+        )
         self._common_prompt_args(p)
         for side in ("left", "top", "right", "bottom"):
-            p.add_int_argument(side, f"_{side.capitalize()} (px)", f"Pixels to add on the {side}",
-                               0, 4096, 256 if side in ("left", "right") else 0, RW)
+            p.add_int_argument(
+                side,
+                f"_{side.capitalize()} (px)",
+                f"Pixels to add on the {side}",
+                0,
+                4096,
+                256 if side in ("left", "right") else 0,
+                RW,
+            )
         self._seed_quality_args(p)
         return p
 
     def _txt2img(self):
         p = self._image_procedure(
-            PROC_TXT2IMG, run_txt2img, "_Text to Image...",
+            PROC_TXT2IMG,
+            run_txt2img,
+            "_Text to Image...",
             "Generate an image from a text prompt",
             "Generates images from text into a new layer (sized to the selection when "
-            "there is one) or a new image. Stable Boy " + __version__)
-        p.set_sensitivity_mask(Gimp.ProcedureSensitivityMask.DRAWABLE
-                               | Gimp.ProcedureSensitivityMask.DRAWABLES
-                               | Gimp.ProcedureSensitivityMask.NO_DRAWABLES
-                               | Gimp.ProcedureSensitivityMask.NO_IMAGE)
+            "there is one) or a new image. Stable Boy " + __version__,
+        )
+        p.set_sensitivity_mask(
+            Gimp.ProcedureSensitivityMask.DRAWABLE
+            | Gimp.ProcedureSensitivityMask.DRAWABLES
+            | Gimp.ProcedureSensitivityMask.NO_DRAWABLES
+            | Gimp.ProcedureSensitivityMask.NO_IMAGE
+        )
         self._common_prompt_args(p)
         p.add_int_argument("width", "_Width", "0 = selection or configured default", 0, 4096, 0, RW)
         p.add_int_argument("height", "_Height", "0 = selection or configured default", 0, 4096, 0, RW)
-        p.add_choice_argument("target", "_Result as", "Where the result goes",
-                              _choice([("layer", "New layer"), ("image", "New image")]), "layer", RW)
+        p.add_choice_argument(
+            "target",
+            "_Result as",
+            "Where the result goes",
+            _choice([("layer", "New layer"), ("image", "New image")]),
+            "layer",
+            RW,
+        )
         self._seed_quality_args(p)
         return p
 
@@ -687,59 +842,103 @@ class StableBoy(Gimp.PlugIn):
         p = Gimp.Procedure.new(self, PROC_SETTINGS, Gimp.PDBProcType.PLUGIN, run_settings, None)
         p.set_menu_label("Generative Fill _Settings...")
         p.add_menu_path(MENU)
-        p.set_documentation("Configure the AI backend and generation defaults",
-                            "Backend location, model choice, sampling defaults, mask feathering "
-                            "and the idle timeout. Saved to the GIMP profile. Stable Boy " + __version__,
-                            PROC_SETTINGS)
+        p.set_documentation(
+            "Configure the AI backend and generation defaults",
+            "Backend location, model choice, sampling defaults, mask feathering "
+            "and the idle timeout. Saved to the GIMP profile. Stable Boy " + __version__,
+            PROC_SETTINGS,
+        )
         p.set_attribution(AUTHOR, AUTHOR, "2022-2026")
-        p.add_enum_argument("run-mode", "Run mode", "The run mode", Gimp.RunMode,
-                            Gimp.RunMode.INTERACTIVE, RW)
+        p.add_enum_argument("run-mode", "Run mode", "The run mode", Gimp.RunMode, Gimp.RunMode.INTERACTIVE, RW)
         s = Settings()
         cache = _load_models_cache()
-        p.add_choice_argument("backend", "_Backend", "Generation server", _choice(
-            [("comfyui", "ComfyUI (managed, recommended)"), ("a1111", "AUTOMATIC1111 WebUI (external)")]),
-            s.backend, RW)
-        p.add_string_argument("comfy-dir", "Co_mfyUI folder", "Folder of the ComfyUI portable build",
-                              s.comfy_dir, RW)
+        p.add_choice_argument(
+            "backend",
+            "_Backend",
+            "Generation server",
+            _choice([("comfyui", "ComfyUI (managed, recommended)"), ("a1111", "AUTOMATIC1111 WebUI (external)")]),
+            s.backend,
+            RW,
+        )
+        p.add_string_argument("comfy-dir", "Co_mfyUI folder", "Folder of the ComfyUI portable build", s.comfy_dir, RW)
         p.add_string_argument("url", "Com_fyUI URL", "Base URL of ComfyUI", s.url, RW)
         p.add_string_argument("a1111-url", "_A1111 URL", "Base URL of the WebUI API", s.a1111_url, RW)
         p.add_boolean_argument("autostart", "S_tart backend automatically", "", s.autostart, RW)
-        p.add_int_argument("idle-timeout-minutes", "_Idle timeout (min)",
-                           "Stop the backend after this many idle minutes; 0 = until GIMP exits",
-                           0, 24 * 60, s.idle_timeout_minutes, RW)
-        p.add_choice_argument("quality", "L_egacy tier for 'fast'/'quality' calls", "",
-                              _choice([("fast", "Fast (SD 1.5 inpainting)"), ("quality", "Quality (SDXL + Fooocus)")]),
-                              s.quality, RW)
-        p.add_boolean_argument("progress-window", "Float_ing progress window", "Show a floating window with "
-                               "progress, live preview and downloads", s.progress_window, RW)
+        p.add_int_argument(
+            "idle-timeout-minutes",
+            "_Idle timeout (min)",
+            "Stop the backend after this many idle minutes; 0 = until GIMP exits",
+            0,
+            24 * 60,
+            s.idle_timeout_minutes,
+            RW,
+        )
+        p.add_choice_argument(
+            "quality",
+            "L_egacy tier for 'fast'/'quality' calls",
+            "",
+            _choice([("fast", "Fast (SD 1.5 inpainting)"), ("quality", "Quality (SDXL + Fooocus)")]),
+            s.quality,
+            RW,
+        )
+        p.add_boolean_argument(
+            "progress-window",
+            "Float_ing progress window",
+            "Show a floating window with progress, live preview and downloads",
+            s.progress_window,
+            RW,
+        )
         self._model_arg(p, "checkpoint", "SD 1.5 _checkpoint", cache.get("checkpoints"), s.checkpoint)
         self._model_arg(p, "sdxl-checkpoint", "SD_XL checkpoint", cache.get("checkpoints"), s.sdxl_checkpoint)
         self._model_arg(p, "fooocus-patch", "Fooocus _patch", cache.get("fooocus_patches"), s.fooocus_patch)
         p.add_int_argument("steps", "Ste_ps", "", 1, 150, s.steps, RW)
         p.add_double_argument("cfg", "CF_G scale", "", 0.0, 30.0, s.cfg, RW)
         p.add_choice_argument("sampler", "Sampler", "", _choice([(x, x) for x in SAMPLERS]), s.sampler, RW)
-        p.add_choice_argument("scheduler", "Sche_duler", "", _choice([(x, x) for x in SCHEDULERS]),
-                              s.scheduler, RW)
-        p.add_double_argument("grow-percent", "Mask grow (% of selection)", "Dilation of the selection sent to the "
-                              "model, as percent of its larger side", 0.0, 50.0, s.grow_percent, RW)
-        p.add_double_argument("feather-percent", "Mask feather (% of selection)", "Soft edge of the layer mask, "
-                              "as percent of the selection's larger side", 0.0, 50.0, s.feather_percent, RW)
+        p.add_choice_argument("scheduler", "Sche_duler", "", _choice([(x, x) for x in SCHEDULERS]), s.scheduler, RW)
+        p.add_double_argument(
+            "grow-percent",
+            "Mask grow (% of selection)",
+            "Dilation of the selection sent to the model, as percent of its larger side",
+            0.0,
+            50.0,
+            s.grow_percent,
+            RW,
+        )
+        p.add_double_argument(
+            "feather-percent",
+            "Mask feather (% of selection)",
+            "Soft edge of the layer mask, as percent of the selection's larger side",
+            0.0,
+            50.0,
+            s.feather_percent,
+            RW,
+        )
         p.add_int_argument("grow", "Mask grow cap (px)", "Upper limit for the dilation", 0, 256, s.grow, RW)
-        p.add_int_argument("feather", "Mask feather cap (px)", "Upper limit for the layer mask feather", 0, 256, s.feather, RW)
-        p.add_boolean_argument("prefill", "Pre-fill masked area", "Hide old content under the mask "
-                               "before sampling (needs comfyui-inpaint-nodes)", s.prefill, RW)
+        p.add_int_argument(
+            "feather", "Mask feather cap (px)", "Upper limit for the layer mask feather", 0, 256, s.feather, RW
+        )
+        p.add_boolean_argument(
+            "prefill",
+            "Pre-fill masked area",
+            "Hide old content under the mask before sampling (needs comfyui-inpaint-nodes)",
+            s.prefill,
+            RW,
+        )
         p.add_int_argument("max-side-sd15", "Max _working size SD 1.5", "", 512, 2048, s.max_side_sd15, RW)
         p.add_int_argument("max-side-sdxl", "Max worki_ng size SDXL", "", 768, 2048, s.max_side_sdxl, RW)
         p.add_int_argument("txt2img-width", "Text to Image width", "", 64, 4096, s.txt2img_width, RW)
         p.add_int_argument("txt2img-height", "Text to Image height", "", 64, 4096, s.txt2img_height, RW)
         p.add_int_argument("startup-timeout", "Start_up timeout (s)", "", 30, 1800, s.startup_timeout, RW)
-        p.add_int_argument("request-timeout", "Re_quest timeout (s)", "0 = estimate per request",
-                           0, 7200, s.request_timeout, RW)
-        p.add_string_argument("extra-server-args", "Extra ComfyUI ar_guments",
-                              "For example --lowvram", s.extra_server_args, RW)
+        p.add_int_argument(
+            "request-timeout", "Re_quest timeout (s)", "0 = estimate per request", 0, 7200, s.request_timeout, RW
+        )
+        p.add_string_argument(
+            "extra-server-args", "Extra ComfyUI ar_guments", "For example --lowvram", s.extra_server_args, RW
+        )
         p.add_boolean_argument("debug", "_Verbose log", "", s.debug, RW)
-        p.add_boolean_argument("check-backend", "Chec_k backend now",
-                               "Start the backend if needed and list its models", True, RW)
+        p.add_boolean_argument(
+            "check-backend", "Chec_k backend now", "Start the backend if needed and list its models", True, RW
+        )
         return p
 
     @staticmethod
@@ -749,8 +948,9 @@ class StableBoy(Gimp.PlugIn):
             options.insert(0, default)
         if options:
             # a single underscore would become a mnemonic in the radio label
-            procedure.add_choice_argument(name, nick, "", _choice([(o, o.replace("_", "__")) for o in options]),
-                                          default, RW)
+            procedure.add_choice_argument(
+                name, nick, "", _choice([(o, o.replace("_", "__")) for o in options]), default, RW
+            )
         else:
             procedure.add_string_argument(name, nick, "", default, RW)
 
@@ -758,13 +958,14 @@ class StableBoy(Gimp.PlugIn):
         p = Gimp.Procedure.new(self, PROC_STOP, Gimp.PDBProcType.PLUGIN, run_stop, None)
         p.set_menu_label("Stop AI _Backend")
         p.add_menu_path(MENU)
-        p.set_documentation("Shut down the managed ComfyUI backend to free GPU memory",
-                            "Asks the Stable Boy supervisor to terminate the ComfyUI process it "
-                            "started. The backend restarts automatically on the next request.",
-                            PROC_STOP)
+        p.set_documentation(
+            "Shut down the managed ComfyUI backend to free GPU memory",
+            "Asks the Stable Boy supervisor to terminate the ComfyUI process it "
+            "started. The backend restarts automatically on the next request.",
+            PROC_STOP,
+        )
         p.set_attribution(AUTHOR, AUTHOR, "2022-2026")
-        p.add_enum_argument("run-mode", "Run mode", "The run mode", Gimp.RunMode,
-                            Gimp.RunMode.INTERACTIVE, RW)
+        p.add_enum_argument("run-mode", "Run mode", "The run mode", Gimp.RunMode, Gimp.RunMode.INTERACTIVE, RW)
         return p
 
 

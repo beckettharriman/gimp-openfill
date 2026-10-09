@@ -1,0 +1,104 @@
+Install transcript, 2026-10-09 00:30 local time, install.ps1 run by Windows PowerShell 5.1.26100.9549
+Isolated profile (GIMP3_DIRECTORY-style): C:\AI\overnight-scratch\install-test\GIMP\3.2
+
+=== 1. fresh copy install into an empty profile
+> powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -ProfileDir C:\AI\overnight-scratch\install-test\GIMP\3.2
+GIMP profile: C:\AI\overnight-scratch\install-test\GIMP\3.2
+WARNING: A GIMP process is running. Changes take effect the next time GIMP starts.
+Copied plug-in (with models\catalog.json) to C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy
+Wrote default config to C:\AI\overnight-scratch\install-test\GIMP\3.2\stable-boy\config.json
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: install.ps1 -Uninstall (add -RemoveConfig to delete the settings too).
+exit code: 0
+
+plug-in target: folder with 24 files
+config.json present: True
+
+=== 2. re-run: plug-in already copied
+> powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -ProfileDir C:\AI\overnight-scratch\install-test\GIMP\3.2
+GIMP profile: C:\AI\overnight-scratch\install-test\GIMP\3.2
+WARNING: A GIMP process is running. Changes take effect the next time GIMP starts.
+Replacing the existing plug-in folder at C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy
+Copied plug-in (with models\catalog.json) to C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy
+Keeping existing config at C:\AI\overnight-scratch\install-test\GIMP\3.2\stable-boy\config.json
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: install.ps1 -Uninstall (add -RemoveConfig to delete the settings too).
+exit code: 0
+
+plug-in target: folder with 24 files
+config.json present: True
+
+=== 3. switch to a development junction
+> powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -ProfileDir C:\AI\overnight-scratch\install-test\GIMP\3.2 -Link
+GIMP profile: C:\AI\overnight-scratch\install-test\GIMP\3.2
+WARNING: A GIMP process is running. Changes take effect the next time GIMP starts.
+Replacing the existing plug-in folder at C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy
+Linked C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy -> C:\repos\gimp-stable-boy\gimp-stable-boy
+Keeping existing config at C:\AI\overnight-scratch\install-test\GIMP\3.2\stable-boy\config.json
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: install.ps1 -Uninstall (add -RemoveConfig to delete the settings too).
+exit code: 0
+
+plug-in target: junction -> C:\repos\gimp-stable-boy\gimp-stable-boy
+config.json present: True
+
+=== 4. re-run: junction already exists
+> powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -ProfileDir C:\AI\overnight-scratch\install-test\GIMP\3.2 -Link
+GIMP profile: C:\AI\overnight-scratch\install-test\GIMP\3.2
+WARNING: A GIMP process is running. Changes take effect the next time GIMP starts.
+Replacing the existing plug-in junction at C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy
+Linked C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy -> C:\repos\gimp-stable-boy\gimp-stable-boy
+Keeping existing config at C:\AI\overnight-scratch\install-test\GIMP\3.2\stable-boy\config.json
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: install.ps1 -Uninstall (add -RemoveConfig to delete the settings too).
+exit code: 0
+
+plug-in target: junction -> C:\repos\gimp-stable-boy\gimp-stable-boy
+config.json present: True
+
+=== 5. profile taken from GIMP3_DIRECTORY (no -ProfileDir)
+    (environment: GIMP3_DIRECTORY=C:\AI\overnight-scratch\install-test\GIMP\3.2)
+> powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 
+GIMP profile: C:\AI\overnight-scratch\install-test\GIMP\3.2
+WARNING: A GIMP process is running. Changes take effect the next time GIMP starts.
+Replacing the existing plug-in junction at C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy
+Copied plug-in (with models\catalog.json) to C:\AI\overnight-scratch\install-test\GIMP\3.2\plug-ins\gimp-stable-boy
+Keeping existing config at C:\AI\overnight-scratch\install-test\GIMP\3.2\stable-boy\config.json
+
+Next steps:
+  1. Restart GIMP (plug-ins are registered at start-up).
+  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder.
+  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active.
+  4. Select an area of an image and run Filters > AI > Generative Fill...
+To remove the plug-in later: install.ps1 -Uninstall (add -RemoveConfig to delete the settings too).
+exit code: 0
+
+plug-in target: folder with 24 files
+config.json present: True
+
+=== 6. no GIMP 3 profile at all (APPDATA pointed at an empty folder)
+    (environment: APPDATA=C:\AI\overnight-scratch\install-test\empty-appdata)
+> powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 
+error: GIMP 3 is installed but has no profile under C:\AI\overnight-scratch\install-test\empty-appdata\GIMP yet. Start GIMP once, close it, then re-run.
+exit code: 1
+

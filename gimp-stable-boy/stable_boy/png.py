@@ -46,14 +46,16 @@ def encode(width: int, height: int, pixels: bytes, channels: int, compress_level
     view = memoryview(pixels)
     for y in range(height):
         raw.append(0)  # filter type 0 (None) for every scanline
-        raw += view[y * stride:(y + 1) * stride]
+        raw += view[y * stride : (y + 1) * stride]
     ihdr = struct.pack(">IIBBBBB", width, height, 8, COLOR_TYPES[channels], 0, 0, 0)
-    return b"".join((
-        _SIGNATURE,
-        _chunk(b"IHDR", ihdr),
-        _chunk(b"IDAT", zlib.compress(bytes(raw), compress_level)),
-        _chunk(b"IEND", b""),
-    ))
+    return b"".join(
+        (
+            _SIGNATURE,
+            _chunk(b"IHDR", ihdr),
+            _chunk(b"IDAT", zlib.compress(bytes(raw), compress_level)),
+            _chunk(b"IEND", b""),
+        )
+    )
 
 
 def read_header(data: bytes) -> tuple[int, int, int, int]:

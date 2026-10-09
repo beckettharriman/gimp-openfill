@@ -23,52 +23,85 @@ Tasks are JSON files in ``<base>/tasks/``; progress goes to
 ``<base>/tasks-status.json`` which the plug-in polls. A ``cancel`` file in the
 tasks folder cancels the running task.
 
-Depends only on the standard library plus ``downloads.py`` next to it.
+Depends only on the standard library plus the GIMP-free modules next to it
+(``downloads``, ``catalog``, ``config``, ``log``).
+
+Trust: task files are re-validated here against the shipped catalog and the
+ComfyUI folder named in ``config.json`` (download URL, destination, size and
+sha256; node repo, folder and commit; the interpreter that runs pip), so a
+tampered task file cannot make the worker fetch or run anything the catalog
+does not list. Pids read from state files are checked against the process
+image name before they are trusted, which guards against pid reuse.
 """
 
 from __future__ import annotations
 
 import argparse
 import ctypes
+import ipaddress
 import json
 import os
 import subprocess
 import sys
 import threading
 import time
+from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 from urllib.request import urlopen
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from stable_boy import downloads  # noqa: E402
+from stable_boy import catalog, downloads  # noqa: E402
+from stable_boy.config import Settings, comfy_layout  # noqa: E402
+from stable_boy.log import redact  # noqa: E402
 
 IS_WINDOWS = sys.platform == "win32"
 
 
 # ---------------------------------------------------------------- windows ----
 
-def _job_object_for_child(pid: int):
+
+def _job_object_for_child(pid: int) -> Any:
     """Create a Job Object that kills ``pid`` when the handle closes."""
     if not IS_WINDOWS:
         return None
     k32 = ctypes.windll.kernel32  # type: ignore[attr-defined]
 
     class IO_COUNTERS(ctypes.Structure):
-        _fields_ = [(n, ctypes.c_uint64) for n in (
-            "ReadOperationCount", "WriteOperationCount", "OtherOperationCount",
-            "ReadTransferCount", "WriteTransferCount", "OtherTransferCount")]
+        _fields_ = [
+            (n, ctypes.c_uint64)
+            for n in (
+                "ReadOperationCount",
+                "WriteOperationCount",
+                "OtherOperationCount",
+                "ReadTransferCount",
+                "WriteTransferCount",
+                "OtherTransferCount",
+            )
+        ]
 
     class BASIC(ctypes.Structure):
-        _fields_ = [("PerProcessUserTimeLimit", ctypes.c_int64), ("PerJobUserTimeLimit", ctypes.c_int64),
-                    ("LimitFlags", ctypes.c_uint32), ("MinimumWorkingSetSize", ctypes.c_size_t),
-                    ("MaximumWorkingSetSize", ctypes.c_size_t), ("ActiveProcessLimit", ctypes.c_uint32),
-                    ("Affinity", ctypes.c_size_t), ("PriorityClass", ctypes.c_uint32),
-                    ("SchedulingClass", ctypes.c_uint32)]
+        _fields_ = [
+            ("PerProcessUserTimeLimit", ctypes.c_int64),
+            ("PerJobUserTimeLimit", ctypes.c_int64),
+            ("LimitFlags", ctypes.c_uint32),
+            ("MinimumWorkingSetSize", ctypes.c_size_t),
+            ("MaximumWorkingSetSize", ctypes.c_size_t),
+            ("ActiveProcessLimit", ctypes.c_uint32),
+            ("Affinity", ctypes.c_size_t),
+            ("PriorityClass", ctypes.c_uint32),
+            ("SchedulingClass", ctypes.c_uint32),
+        ]
 
     class EXTENDED(ctypes.Structure):
-        _fields_ = [("BasicLimitInformation", BASIC), ("IoInfo", IO_COUNTERS),
-                    ("ProcessMemoryLimit", ctypes.c_size_t), ("JobMemoryLimit", ctypes.c_size_t),
-                    ("PeakProcessMemoryUsed", ctypes.c_size_t), ("PeakJobMemoryUsed", ctypes.c_size_t)]
+        _fields_ = [
+            ("BasicLimitInformation", BASIC),
+            ("IoInfo", IO_COUNTERS),
+            ("ProcessMemoryLimit", ctypes.c_size_t),
+            ("JobMemoryLimit", ctypes.c_size_t),
+            ("PeakProcessMemoryUsed", ctypes.c_size_t),
+            ("PeakJobMemoryUsed", ctypes.c_size_t),
+        ]
 
     JobObjectExtendedLimitInformation = 9
     JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x2000
@@ -78,8 +111,7 @@ def _job_object_for_child(pid: int):
         return None
     info = EXTENDED()
     info.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
-    if not k32.SetInformationJobObject(job, JobObjectExtendedLimitInformation, ctypes.byref(info),
-                                       ctypes.sizeof(info)):
+    if not k32.SetInformationJobObject(job, JobObjectExtendedLimitInformation, ctypes.byref(info), ctypes.sizeof(info)):
         return None
     handle = k32.OpenProcess(PROCESS_TERMINATE | PROCESS_SET_QUOTA, False, pid)
     if handle and k32.AssignProcessToJobObject(job, handle):
@@ -89,6 +121,7 @@ def _job_object_for_child(pid: int):
 
 
 def pid_alive(pid: int) -> bool:
+    """True while a process with ``pid`` exists (says nothing about which program it is)."""
     if pid <= 0:
         return False
     if IS_WINDOWS:
@@ -110,16 +143,74 @@ def pid_alive(pid: int) -> bool:
         return True
 
 
+def process_name(pid: int) -> str | None:
+    """Lower-case executable base name of ``pid`` (``"pythonw.exe"``), or None if unknown."""
+    if pid <= 0:
+        return None
+    if IS_WINDOWS:
+        k32 = ctypes.windll.kernel32  # type: ignore[attr-defined]
+        PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+        handle = k32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
+        if not handle:
+            return None
+        try:
+            size = ctypes.c_uint32(32768)
+            buf = ctypes.create_unicode_buffer(size.value)
+            if not k32.QueryFullProcessImageNameW(handle, 0, buf, ctypes.byref(size)):
+                return None
+            return Path(buf.value).name.lower()
+        finally:
+            k32.CloseHandle(handle)
+    try:
+        return Path(os.readlink(f"/proc/{pid}/exe")).name.lower()
+    except OSError:
+        pass
+    try:
+        return Path(f"/proc/{pid}/comm").read_text(encoding="utf-8").strip().lower() or None
+    except OSError:
+        return None
+
+
+def pid_is_python(pid: int) -> bool:
+    """``pid`` is alive and (when the name is readable) a Python interpreter.
+
+    Used for pids read from state files: after a crash the pid may have been
+    reused by an unrelated program, which must not be mistaken for a supervisor.
+    """
+    if not pid_alive(pid):
+        return False
+    name = process_name(pid)
+    return name is None or "python" in name
+
+
+def is_loopback(host: str) -> bool:
+    """True for ``localhost`` and loopback addresses."""
+    if host.lower() == "localhost":
+        return True
+    try:
+        return ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        return False
+
+
+def same_path(a: str | Path, b: str | Path) -> bool:
+    """Path equality after resolving links and normalising case on Windows."""
+    return os.path.normcase(str(Path(a).resolve())) == os.path.normcase(str(Path(b).resolve()))
+
+
 # ------------------------------------------------------------------ state ----
 
-def read_json(path: Path) -> dict:
+
+def read_json(path: Path) -> dict[str, Any]:
+    """Decode a JSON object file; ``{}`` when missing or broken."""
     try:
         return json.loads(path.read_text(encoding="utf-8-sig"))
     except (OSError, ValueError):
         return {}
 
 
-def write_json(path: Path, data: dict) -> None:
+def write_json(path: Path, data: dict[str, Any]) -> None:
+    """Write atomically (temporary file, then rename)."""
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(json.dumps(data, indent=2), encoding="utf-8")
     os.replace(tmp, path)
@@ -136,12 +227,16 @@ def server_busy(url: str) -> bool | None:
 
 
 class Logger:
+    """Append-only log writer with token redaction (no ``logging`` setup needed)."""
+
     def __init__(self, path: Path, tag: str) -> None:
         self.path = path
         self.tag = tag
         path.parent.mkdir(parents=True, exist_ok=True)
 
     def __call__(self, msg: str, level: str = "INFO") -> None:
+        """Append one line; errors are ignored (logging must never stop the supervisor)."""
+        msg = redact(msg)
         try:
             with open(self.path, "a", encoding="utf-8") as fh:
                 fh.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} {level:5s} [{os.getpid()} {self.tag}] {msg}\n")
@@ -150,6 +245,7 @@ class Logger:
 
 
 # ---------------------------------------------------------------- backend ----
+
 
 class Backend:
     """The ComfyUI child process."""
@@ -160,11 +256,12 @@ class Backend:
         self.log_path = log_path
         self.log = log
         self.child: subprocess.Popen | None = None
-        self.job = None
-        self.log_file = None
+        self.job: Any = None
+        self.log_file: Any = None
 
     def start(self) -> None:
-        popen_kwargs: dict = {}
+        """Launch ComfyUI hidden, output to the log file, tied to a kill-on-close Job Object."""
+        popen_kwargs: dict[str, Any] = {}
         if IS_WINDOWS:
             popen_kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW | subprocess.CREATE_NEW_PROCESS_GROUP
         else:
@@ -173,21 +270,31 @@ class Backend:
         env.pop("PYTHONPATH", None)  # GIMP's interpreter paths must not leak into ComfyUI
         env.pop("PYTHONHOME", None)
         env["PYTHONIOENCODING"] = "utf-8"
-        self.log_file = open(self.log_path, "ab", buffering=0)
+        self.log_file = open(self.log_path, "ab", buffering=0)  # noqa: SIM115 - kept open for the child's lifetime
         self.log(f"starting backend: {' '.join(self.cmd)}")
-        self.child = subprocess.Popen(self.cmd, cwd=self.cwd, stdin=subprocess.DEVNULL, stdout=self.log_file,
-                                      stderr=subprocess.STDOUT, env=env, **popen_kwargs)
+        self.child = subprocess.Popen(
+            self.cmd,
+            cwd=self.cwd,
+            stdin=subprocess.DEVNULL,
+            stdout=self.log_file,
+            stderr=subprocess.STDOUT,
+            env=env,
+            **popen_kwargs,
+        )
         self.job = _job_object_for_child(self.child.pid)
         self.log(f"backend pid {self.child.pid}, job object {'ok' if self.job else 'unavailable'}")
 
     @property
     def pid(self) -> int:
+        """Pid of the running child, 0 when none."""
         return self.child.pid if self.child else 0
 
     def alive(self) -> bool:
+        """True while the child runs."""
         return self.child is not None and self.child.poll() is None
 
     def stop(self) -> None:
+        """Terminate (then kill) our own child process; never touches other pids."""
         child, self.child = self.child, None
         if child is None:
             return
@@ -214,10 +321,13 @@ class Backend:
 
 # ------------------------------------------------------------------ tasks ----
 
+
 class TaskWorker:
     """Processes ``<base>/tasks/*.json`` one at a time in a thread."""
 
-    def __init__(self, base: Path, config_path: Path, log: Logger, on_restart_backend=None) -> None:
+    def __init__(
+        self, base: Path, config_path: Path, log: Logger, on_restart_backend: Callable[[], None] | None = None
+    ) -> None:
         self.base = base
         self.tasks_dir = base / "tasks"
         self.status_path = base / "tasks-status.json"
@@ -228,15 +338,17 @@ class TaskWorker:
         self._lock = threading.Lock()
         self._stop = threading.Event()
         self.last_activity = time.time()
-        self.status: dict = {"worker_pid": os.getpid(), "current": None, "queue": [], "history": []}
+        self.status: dict[str, Any] = {"worker_pid": os.getpid(), "current": None, "queue": [], "history": []}
         self._thread = threading.Thread(target=self._run, name="tasks", daemon=True)
 
     # queue helpers -----------------------------------------------------
 
     def pending(self) -> list[Path]:
+        """Queued task files, oldest first."""
         return sorted(p for p in self.tasks_dir.glob("*.json") if not p.name.endswith(".running.json"))
 
     def cancel_requested(self) -> bool:
+        """True when the plug-in dropped a ``cancel`` file."""
         return (self.tasks_dir / "cancel").exists()
 
     def _clear_cancel(self) -> None:
@@ -254,17 +366,24 @@ class TaskWorker:
             except OSError:
                 pass
 
-    def _set_current(self, **fields) -> None:
+    def _set_current(self, **fields: Any) -> None:
         with self._lock:
             if self.status["current"] is None:
                 self.status["current"] = {}
             self.status["current"].update(fields)
         self._write_status()
 
-    def _finish(self, task: dict, state: str, message: str = "", **extra) -> None:
+    def _finish(self, task: dict[str, Any], state: str, message: str = "", **extra: Any) -> None:
         with self._lock:
-            entry = {"task_id": task.get("id"), "type": task.get("type"), "model_id": task.get("model_id"),
-                     "state": state, "message": message, "finished": time.time(), **extra}
+            entry = {
+                "task_id": task.get("id"),
+                "type": task.get("type"),
+                "model_id": task.get("model_id"),
+                "state": state,
+                "message": message,
+                "finished": time.time(),
+                **extra,
+            }
             self.status["history"] = ([entry] + self.status["history"])[:30]
             self.status["current"] = None
         self.last_activity = time.time()
@@ -274,16 +393,20 @@ class TaskWorker:
     # lifecycle ---------------------------------------------------------
 
     def start(self) -> None:
+        """Start the worker thread."""
         self._write_status()
         self._thread.start()
 
     def stop(self) -> None:
+        """Ask the worker thread to finish after the current task."""
         self._stop.set()
 
     def idle_for(self) -> float:
+        """Seconds since the last task finished or started."""
         return time.time() - self.last_activity
 
     def busy(self) -> bool:
+        """A task is running or queued."""
         with self._lock:
             return self.status["current"] is not None or bool(self.pending())
 
@@ -327,52 +450,147 @@ class TaskWorker:
     def _token(self) -> str:
         return str(read_json(self.config_path).get("hf_token", "") or "")
 
-    def _download(self, task: dict) -> None:
+    # task validation ---------------------------------------------------
+
+    def _comfy_dir(self) -> str:
+        return Settings.load(self.config_path, backup=False).comfy_dir
+
+    def _catalog_files(self, task: dict[str, Any]) -> dict[str, catalog.FileSpec]:
+        """Files of the task's catalog entry, keyed by normalised ``dest``."""
+        entry = catalog.by_id(catalog.load_catalog(), str(task.get("model_id") or ""))
+        return {downloads.safe_relative_path(f.dest): f for f in entry.files}
+
+    def _checked_models_root(self, task: dict[str, Any]) -> Path:
         root = Path(task["models_root"])
-        files = task["files"]
-        total_all = sum(int(f.get("size") or 0) for f in files)
+        expected = catalog.default_models_root(self._comfy_dir())
+        if not same_path(root, expected):
+            raise ValueError(f"task models folder {root} is not the configured {expected}")
+        return root
+
+    def checked_download_files(self, task: dict[str, Any]) -> list[tuple[catalog.FileSpec, Path]]:
+        """The task's files as catalog entries with their destination paths.
+
+        Raises ``ValueError`` when the models folder is not the configured one
+        or a file (URL plus destination) is not one of the catalog entry named by
+        ``model_id``. Size, sha256, the optional flag
+        and the gated flag always come from the catalog, never from the task.
+        """
+        root = self._checked_models_root(task)
+        known = self._catalog_files(task)
+        out = []
+        for f in task["files"]:
+            spec = known.get(downloads.safe_relative_path(f["dest"]))
+            if spec is None or spec.url != f.get("url"):
+                raise ValueError(f"{f.get('dest')!r} from {f.get('url')!r} is not a catalog download")
+            out.append((spec, downloads.safe_join(root, spec.dest)))
+        return out
+
+    def checked_node_install(self, task: dict[str, Any]) -> tuple[Path, Path, list[catalog.NodeSpec]]:
+        """``(custom_nodes_dir, python, nodes)`` of an install task, validated.
+
+        The folder and the interpreter must be the ones of the ComfyUI install
+        named in config.json, and every node must match a catalog entry exactly
+        (repo, folder and pinned commit). Raises ``ValueError`` otherwise.
+        """
+        comfy_dir = self._comfy_dir()
+        nodes_dir = Path(task["custom_nodes_dir"])
+        expected_dir = catalog.default_custom_nodes_dir(comfy_dir)
+        if not same_path(nodes_dir, expected_dir):
+            raise ValueError(f"task custom_nodes folder {nodes_dir} is not the configured {expected_dir}")
+        layout = comfy_layout(comfy_dir)
+        python = Path(task["python"])
+        if layout is None or not same_path(python, layout["python"]):
+            raise ValueError(f"task interpreter {python} is not the ComfyUI interpreter of {comfy_dir}")
+        known = {(n.repo, n.folder, n.commit): n for e in catalog.load_catalog() for n in e.requires_nodes}
+        nodes = []
+        for n in task["nodes"]:
+            spec = known.get((n.get("repo"), n.get("folder"), n.get("commit")))
+            if spec is None:
+                raise ValueError(f"custom node {n.get('folder')!r} at {n.get('commit')!r} is not in the catalog")
+            nodes.append(spec)
+        return nodes_dir, python, nodes
+
+    # task types --------------------------------------------------------
+
+    def _download(self, task: dict[str, Any]) -> None:
+        files = self.checked_download_files(task)
+        total_all = sum(int(spec.size or 0) for spec, _ in files)
         done_before = 0
         results = []
-        for index, f in enumerate(files):
-            dest = root / f["dest"]
-            if f.get("optional") and dest.is_file():
+        for index, (spec, dest) in enumerate(files):
+            if spec.optional and dest.is_file():
                 continue
-            self._set_current(task_id=task.get("id"), type="download", model_id=task.get("model_id"),
-                              file=f["dest"], file_index=index, file_count=len(files), done=done_before,
-                              total=total_all, speed=0.0, state="downloading", started=time.time())
+            self._set_current(
+                task_id=task.get("id"),
+                type="download",
+                model_id=task.get("model_id"),
+                file=spec.dest,
+                file_index=index,
+                file_count=len(files),
+                done=done_before,
+                total=total_all,
+                speed=0.0,
+                state="downloading",
+                started=time.time(),
+            )
 
-            def progress(done, total, speed, _base=done_before):
-                self._set_current(done=_base + done, total=total_all or (total or 0), speed=speed,
-                                  file_done=done, file_total=total)
+            def progress(done: int, total: int | None, speed: float, _base: int = done_before) -> None:
+                self._set_current(
+                    done=_base + done, total=total_all or (total or 0), speed=speed, file_done=done, file_total=total
+                )
 
-            token = self._token() if f.get("gated") or task.get("use_token") else None
-            self.log(f"download {f['url']} -> {dest}")
-            result = downloads.download_file(f["url"], dest, f.get("size"), f.get("sha256"), token or None,
-                                             progress, self.cancel_requested)
-            results.append({"dest": f["dest"], "sha256": result.sha256, "skipped": result.skipped,
-                            "resumed_from": result.resumed_from})
-            done_before += int(f.get("size") or result.bytes_written or 0)
+            # The token is only attached for gated files; download_file further restricts it to
+            # https Hugging Face hosts and never forwards it on a redirect.
+            token = self._token() if spec.gated or task.get("use_token") else None
+            self.log(f"download {spec.url} -> {dest}")
+            result = downloads.download_file(
+                spec.url, dest, spec.size, spec.sha256, token or None, progress, self.cancel_requested
+            )
+            results.append(
+                {
+                    "dest": spec.dest,
+                    "sha256": result.sha256,
+                    "skipped": result.skipped,
+                    "resumed_from": result.resumed_from,
+                }
+            )
+            done_before += int(spec.size or result.bytes_written or 0)
         self._finish(task, "done", f"{len(results)} file(s) ready", files=results)
 
-    def _install_nodes(self, task: dict) -> None:
-        nodes_dir = Path(task["custom_nodes_dir"])
-        python = Path(task["python"])
-        for n in task["nodes"]:
-            self._set_current(task_id=task.get("id"), type="install_nodes", model_id=task.get("model_id"),
-                              file=n["folder"], state="installing", done=0, total=0, started=time.time())
-            downloads.install_custom_node(n["repo"], n["folder"], n["commit"], nodes_dir, python, self.log)
+    def _install_nodes(self, task: dict[str, Any]) -> None:
+        nodes_dir, python, nodes = self.checked_node_install(task)
+        for n in nodes:
+            self._set_current(
+                task_id=task.get("id"),
+                type="install_nodes",
+                model_id=task.get("model_id"),
+                file=n.folder,
+                state="installing",
+                done=0,
+                total=0,
+                started=time.time(),
+            )
+            downloads.install_custom_node(n.repo, n.folder, n.commit, nodes_dir, python, self.log)
         if self.on_restart_backend and task.get("restart_backend", True):
             self._set_current(state="restarting backend")
             self.on_restart_backend()
-        self._finish(task, "done", "custom nodes installed" + (" and backend restarted" if self.on_restart_backend else ""))
+        self._finish(
+            task, "done", "custom nodes installed" + (" and backend restarted" if self.on_restart_backend else "")
+        )
 
-    def _remove(self, task: dict) -> None:
-        root = Path(task["models_root"])
+    def _remove(self, task: dict[str, Any]) -> None:
+        root = self._checked_models_root(task)
+        known = self._catalog_files(task)
         removed = []
         for rel in task["files"]:
-            if ".." in rel.split("/") or rel.startswith(("/", "\\")):
+            try:
+                rel = downloads.safe_relative_path(rel)
+                path = downloads.safe_join(root, rel)
+            except ValueError:
                 continue
-            for p in (root / rel, root / (rel + ".part")):
+            if rel not in known:
+                continue  # only files the catalog put there are ever deleted
+            for p in (path, downloads.part_path(path)):
                 if p.is_file():
                     p.unlink()
                     removed.append(str(p))
@@ -381,7 +599,10 @@ class TaskWorker:
 
 # ------------------------------------------------------------------- main ----
 
-def main(argv: list[str] | None = None) -> int:
+
+def build_parser() -> argparse.ArgumentParser:
+    """The supervisor's command line. ``server.py`` passes ``--extra-args=<value>`` as one
+    item so a value that starts with ``-`` (``--cpu``) is not read as an option."""
     parser = argparse.ArgumentParser(description="Stable Boy backend supervisor")
     parser.add_argument("--mode", choices=("backend", "tasks"), default="backend")
     parser.add_argument("--python", default="", help="interpreter that runs ComfyUI")
@@ -393,8 +614,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--config", default="", help="config.json (for the Hugging Face token)")
     parser.add_argument("--watch-pid", type=int, default=0, help="exit when this pid ends")
     parser.add_argument("--idle-minutes", type=float, default=20.0, help="0 disables")
-    parser.add_argument("--extra-args", default="", help="extra ComfyUI arguments")
-    args = parser.parse_args(argv)
+    parser.add_argument("--extra-args", default="", help="extra ComfyUI arguments (pass as --extra-args=VALUE)")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Command-line entry point (see the module docstring for the modes)."""
+    args = build_parser().parse_args(argv)
 
     base = Path(args.base)
     base.mkdir(parents=True, exist_ok=True)
@@ -409,12 +635,13 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def run_tasks_only(base: Path, worker_path: Path, state_path: Path, config_path: Path, log: Logger) -> int:
+    """Process queued tasks without a backend; exit after 30 s with an empty queue."""
     existing = read_json(worker_path)
-    if existing.get("pid") and pid_alive(int(existing["pid"])) and existing["pid"] != os.getpid():
+    if existing.get("pid") and pid_is_python(int(existing["pid"])) and existing["pid"] != os.getpid():
         log(f"another task worker ({existing['pid']}) is alive; exiting")
         return 0
     status = read_json(base / "tasks-status.json")
-    if status.get("worker_pid") and pid_alive(int(status["worker_pid"])) and status["worker_pid"] != os.getpid():
+    if status.get("worker_pid") and pid_is_python(int(status["worker_pid"])) and status["worker_pid"] != os.getpid():
         log("backend supervisor is alive and handles tasks; exiting")
         return 0
     write_json(worker_path, {"pid": os.getpid(), "started": time.time(), "mode": "tasks"})
@@ -422,7 +649,7 @@ def run_tasks_only(base: Path, worker_path: Path, state_path: Path, config_path:
     def ask_backend_restart() -> None:
         """No backend of our own: flag the backend supervisor (if any) to restart."""
         state = read_json(state_path)
-        if state.get("supervisor_pid") and pid_alive(int(state["supervisor_pid"])):
+        if state.get("supervisor_pid") and pid_is_python(int(state["supervisor_pid"])):
             state["restart_backend"] = True
             write_json(state_path, state)
             log("asked the backend supervisor to restart ComfyUI")
@@ -435,9 +662,8 @@ def run_tasks_only(base: Path, worker_path: Path, state_path: Path, config_path:
             time.sleep(2.0)
             if not worker.busy() and worker.idle_for() > 30:
                 break
-            if read_json(state_path).get("supervisor_pid") not in (None, os.getpid()):
-                if not worker.busy():
-                    break  # a backend supervisor appeared; let it take over
+            if read_json(state_path).get("supervisor_pid") not in (None, os.getpid()) and not worker.busy():
+                break  # a backend supervisor appeared; let it take over
     finally:
         worker.stop()
         try:
@@ -448,28 +674,66 @@ def run_tasks_only(base: Path, worker_path: Path, state_path: Path, config_path:
     return 0
 
 
-def run_backend(args, base: Path, state_path: Path, worker_path: Path, config_path: Path, log: Logger) -> int:
+def run_backend(
+    args: argparse.Namespace, base: Path, state_path: Path, worker_path: Path, config_path: Path, log: Logger
+) -> int:
+    """Own the ComfyUI process until GIMP exits, the idle timeout passes or a stop is requested."""
     existing = read_json(state_path)
-    if existing.get("supervisor_pid") and pid_alive(int(existing["supervisor_pid"])) \
-            and existing.get("supervisor_pid") != os.getpid():
+    if (
+        existing.get("supervisor_pid")
+        and pid_is_python(int(existing["supervisor_pid"]))
+        and existing.get("supervisor_pid") != os.getpid()
+    ):
         log(f"another supervisor ({existing['supervisor_pid']}) is alive; exiting")
         return 0
 
-    cmd = [args.python, "-s", args.main, "--listen", args.host, "--port", str(args.port),
-           "--disable-auto-launch", "--dont-print-server", "--preview-method", "taesd"]
+    cmd = [
+        args.python,
+        "-s",
+        args.main,
+        "--listen",
+        args.host,
+        "--port",
+        str(args.port),
+        "--disable-auto-launch",
+        "--dont-print-server",
+        "--preview-method",
+        "taesd",
+    ]
     if args.extra_args.strip():
         cmd += args.extra_args.split()
     url = f"http://{args.host}:{args.port}"
+    if not is_loopback(args.host):
+        log(
+            f"ComfyUI will listen on {args.host}, reachable from other machines; "
+            "use 127.0.0.1 in the settings unless that is intended",
+            "WARN",
+        )
 
     backend = Backend(cmd, args.cwd, str(base / "comfyui.log"), log)
     backend.start()
-    log(f"watching gimp pid {args.watch_pid}")
+    watch_name = process_name(args.watch_pid) if args.watch_pid else None
+    log(f"watching gimp pid {args.watch_pid} ({watch_name or 'name unknown'})")
+
+    def watched_alive() -> bool:
+        # A reused pid (another program after GIMP exited) counts as gone.
+        if not pid_alive(args.watch_pid):
+            return False
+        return watch_name is None or process_name(args.watch_pid) in (None, watch_name)
 
     now = time.time()
     state = {
-        "supervisor_pid": os.getpid(), "server_pid": backend.pid, "url": url, "port": args.port,
-        "host": args.host, "started": now, "last_used": now, "watch_pid": args.watch_pid,
-        "idle_minutes": args.idle_minutes, "command": cmd, "status": "starting",
+        "supervisor_pid": os.getpid(),
+        "server_pid": backend.pid,
+        "url": url,
+        "port": args.port,
+        "host": args.host,
+        "started": now,
+        "last_used": now,
+        "watch_pid": args.watch_pid,
+        "idle_minutes": args.idle_minutes,
+        "command": cmd,
+        "status": "starting",
     }
     write_json(state_path, state)
 
@@ -486,7 +750,7 @@ def run_backend(args, base: Path, state_path: Path, worker_path: Path, config_pa
 
     worker = None
     other_worker = read_json(worker_path)
-    if not (other_worker.get("pid") and pid_alive(int(other_worker["pid"]))):
+    if not (other_worker.get("pid") and pid_is_python(int(other_worker["pid"]))):
         worker = TaskWorker(base, config_path, log, on_restart_backend=restart_backend)
         worker.start()
 
@@ -499,7 +763,7 @@ def run_backend(args, base: Path, state_path: Path, worker_path: Path, config_pa
             if not backend.alive() and not restart_lock.locked():
                 reason = f"backend exited with code {backend.child.returncode if backend.child else '?'}"
                 break
-            if args.watch_pid and not pid_alive(args.watch_pid):
+            if args.watch_pid and not watched_alive():
                 reason = f"GIMP (pid {args.watch_pid}) is gone"
                 break
             current = read_json(state_path)
@@ -517,7 +781,7 @@ def run_backend(args, base: Path, state_path: Path, worker_path: Path, config_pa
                 continue
             if worker is None:
                 other = read_json(worker_path)
-                if not (other.get("pid") and pid_alive(int(other["pid"]))):
+                if not (other.get("pid") and pid_is_python(int(other["pid"]))):
                     worker = TaskWorker(base, config_path, log, on_restart_backend=restart_backend)
                     worker.start()
                     log("adopted task processing (standalone worker is gone)")

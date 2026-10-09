@@ -14,7 +14,7 @@ arguments. All texts live in :mod:`ui_text` (unit tested).
 from __future__ import annotations
 
 import threading
-from typing import Callable, Optional
+from collections.abc import Callable
 
 import gi
 
@@ -74,6 +74,7 @@ def style(widget: Gtk.Widget, kind: str | None) -> Gtk.Widget:
 
 # ------------------------------------------------------------ helpers -----
 
+
 def _dim(text: str, small: bool = True, wrap: bool = True, markup: bool = False) -> Gtk.Label:
     label = Gtk.Label(xalign=0)
     body = text if markup else GLib.markup_escape_text(text)
@@ -93,8 +94,7 @@ def _right(text: str) -> Gtk.Label:
 
 
 def _spin(lower: float, upper: float, value: float, step: float = 1, digits: int = 0) -> Gtk.SpinButton:
-    adj = Gtk.Adjustment(value=value, lower=lower, upper=upper, step_increment=step,
-                         page_increment=step * 10)
+    adj = Gtk.Adjustment(value=value, lower=lower, upper=upper, step_increment=step, page_increment=step * 10)
     spin = Gtk.SpinButton(adjustment=adj, digits=digits)
     spin.set_numeric(True)
     spin.set_value(value)
@@ -107,7 +107,9 @@ def _gimp_window_rect() -> tuple[int, int, int, int] | None:
     try:
         gi.require_version("Gimp", "3.0")
         from gi.repository import Gimp
+
         from .progress_window import _window_rect_from_handle
+
         data = Gimp.progress_get_window_handle()
         return _window_rect_from_handle(data.get_data() if data is not None else None)
     except Exception:  # noqa: BLE001 - placement is best effort
@@ -122,6 +124,7 @@ def set_transient(window: Gtk.Window) -> None:
     try:
         gi.require_version("GimpUi", "3.0")
         from gi.repository import GimpUi
+
         GimpUi.window_set_transient(window)
     except Exception:  # noqa: BLE001 - outside GIMP (or older API): no parent
         pass
@@ -164,8 +167,9 @@ def send_key(widget: Gtk.Widget, keyval: int, state: int = 0) -> None:
     Gtk.main_do_event(event)
 
 
-def scripted_input(dialog: Gtk.Dialog, prompt: Optional["PromptBox"], text: str | None, key: str | None,
-                   delay: float = 1.5) -> None:
+def scripted_input(
+    dialog: Gtk.Dialog, prompt: PromptBox | None, text: str | None, key: str | None, delay: float = 1.5
+) -> None:
     """Test hook: after ``delay`` s type ``text`` into the prompt and press ``key``."""
     if not text and not key:
         return
@@ -177,6 +181,7 @@ def scripted_input(dialog: Gtk.Dialog, prompt: Optional["PromptBox"], text: str 
         if key:
             send_key(prompt.view if prompt is not None else dialog, Gdk.keyval_from_name(key))
         return False
+
     GLib.timeout_add(int(delay * 1000), act)
 
 
@@ -187,8 +192,14 @@ class PromptBox(Gtk.Box):
     new line.
     """
 
-    def __init__(self, placeholder: str, text: str, history: list[str], on_activate: Callable[[], None],
-                 on_changed: Callable[[], None] | None = None) -> None:
+    def __init__(
+        self,
+        placeholder: str,
+        text: str,
+        history: list[str],
+        on_activate: Callable[[], None],
+        on_changed: Callable[[], None] | None = None,
+    ) -> None:
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=4)
         self._on_activate = on_activate
         self._on_changed = on_changed
@@ -240,10 +251,10 @@ class PromptBox(Gtk.Box):
         self._changed()
 
     def _key(self, _view, event) -> bool:
-        if event.keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter, Gdk.KEY_ISO_Enter):
-            if not event.state & (Gdk.ModifierType.SHIFT_MASK | Gdk.ModifierType.CONTROL_MASK):
-                self._on_activate()
-                return True
+        enter = event.keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter, Gdk.KEY_ISO_Enter)
+        if enter and not event.state & (Gdk.ModifierType.SHIFT_MASK | Gdk.ModifierType.CONTROL_MASK):
+            self._on_activate()
+            return True
         return False
 
     def _changed(self, *_) -> None:
@@ -267,6 +278,7 @@ class PromptBox(Gtk.Box):
 
 # --------------------------------------------------- generation dialogs ---
 
+
 class GenerationDialog(Gtk.Dialog):
     """One dialog class for Fill, Expand and Text to Image.
 
@@ -277,10 +289,19 @@ class GenerationDialog(Gtk.Dialog):
 
     TITLES = {"fill": "Generative Fill", "expand": "Generative Expand", "txt2img": "Text to Image"}
 
-    def __init__(self, kind: str, values: dict, history: list[str], models: list[tuple[str, str]],
-                 image_size: tuple[int, int] | None = None, selection_size: tuple[int, int] | None = None,
-                 default_size: tuple[int, int] = (768, 512), active_prompt_free: bool = False,
-                 active_name: str = "", show_advanced: bool = False) -> None:
+    def __init__(
+        self,
+        kind: str,
+        values: dict,
+        history: list[str],
+        models: list[tuple[str, str]],
+        image_size: tuple[int, int] | None = None,
+        selection_size: tuple[int, int] | None = None,
+        default_size: tuple[int, int] = (768, 512),
+        active_prompt_free: bool = False,
+        active_name: str = "",
+        show_advanced: bool = False,
+    ) -> None:
         super().__init__(title=self.TITLES[kind], modal=True)
         self.kind = kind
         self.values = dict(values)
@@ -305,14 +326,22 @@ class GenerationDialog(Gtk.Dialog):
         body.set_border_width(8)
         area.pack_start(body, True, True, 0)
 
-        self.remove_radio: Optional[Gtk.RadioButton] = None
+        self.remove_radio: Gtk.RadioButton | None = None
         if kind == "fill":
             body.pack_start(self._mode_switch(bool(values.get("remove"))), False, False, 0)
 
-        placeholder = {"fill": ui_text.FILL_PLACEHOLDER, "expand": ui_text.EXPAND_PLACEHOLDER,
-                       "txt2img": ui_text.TXT2IMG_PLACEHOLDER}[kind]
-        self.prompt = PromptBox(placeholder, values.get("prompt", ""), history,
-                                on_activate=lambda: self.response(OK), on_changed=self._update_status)
+        placeholder = {
+            "fill": ui_text.FILL_PLACEHOLDER,
+            "expand": ui_text.EXPAND_PLACEHOLDER,
+            "txt2img": ui_text.TXT2IMG_PLACEHOLDER,
+        }[kind]
+        self.prompt = PromptBox(
+            placeholder,
+            values.get("prompt", ""),
+            history,
+            on_activate=lambda: self.response(OK),
+            on_changed=self._update_status,
+        )
         self.stack = Gtk.Stack()
         self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
         self.stack.add_named(self.prompt, "prompt")
@@ -323,9 +352,15 @@ class GenerationDialog(Gtk.Dialog):
         big.set_line_wrap(True)
         big.set_max_width_chars(60)
         removal.pack_start(big, False, False, 0)
-        removal.pack_start(_dim("Works best when the selection covers the whole object with a little margin. "
-                                "An installed LaMa or MAT removal model is used automatically when there is one."),
-                           False, False, 0)
+        removal.pack_start(
+            _dim(
+                "Works best when the selection covers the whole object with a little margin. "
+                "An installed LaMa or MAT removal model is used automatically when there is one."
+            ),
+            False,
+            False,
+            0,
+        )
         self.stack.add_named(removal, "remove")
         body.pack_start(self.stack, True, True, 0)
 
@@ -414,9 +449,11 @@ class GenerationDialog(Gtk.Dialog):
         presets = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         presets.set_halign(Gtk.Align.CENTER)
         presets.pack_start(_dim("Quick:", wrap=False), False, False, 0)
-        for label, sides in (("Wider", {"left": 256, "right": 256, "top": 0, "bottom": 0}),
-                             ("Taller", {"left": 0, "right": 0, "top": 256, "bottom": 256}),
-                             ("All sides", {"left": 128, "right": 128, "top": 128, "bottom": 128})):
+        for label, sides in (
+            ("Wider", {"left": 256, "right": 256, "top": 0, "bottom": 0}),
+            ("Taller", {"left": 0, "right": 0, "top": 256, "bottom": 256}),
+            ("All sides", {"left": 128, "right": 128, "top": 128, "bottom": 128}),
+        ):
             button = Gtk.Button(label=label)
             button.connect("clicked", lambda _b, s=sides: [self.margin_spins[k].set_value(v) for k, v in s.items()])
             presets.pack_start(button, False, False, 0)
@@ -443,8 +480,9 @@ class GenerationDialog(Gtk.Dialog):
         size_box.pack_start(Gtk.Label(label="px"), False, False, 0)
         grid.attach(size_box, 1, 1, 3, 1)
         for w in (self.auto_size, self.width_spin, self.height_spin):
-            w.connect("toggled" if isinstance(w, Gtk.CheckButton) else "value-changed",
-                      lambda *_: self._update_status())
+            w.connect(
+                "toggled" if isinstance(w, Gtk.CheckButton) else "value-changed", lambda *_: self._update_status()
+            )
         grid.attach(_right("Result as"), 0, 2, 1, 1)
         self.target_layer = Gtk.RadioButton.new_with_label(None, "New layer in this image")
         self.target_image = Gtk.RadioButton.new_with_label_from_widget(self.target_layer, "New image")
@@ -498,8 +536,11 @@ class GenerationDialog(Gtk.Dialog):
 
         self.variations = _spin(1, 8, int(self.values.get("variations", 1)))
         self.variations.set_activates_default(True)
-        hint = ("Each result becomes a layer; with more than one you pick your favourite afterwards."
-                if self.kind != "txt2img" else "Each result becomes a layer.")
+        hint = (
+            "Each result becomes a layer; with more than one you pick your favourite afterwards."
+            if self.kind != "txt2img"
+            else "Each result becomes a layer."
+        )
         add("Variations", self.variations, hint, expand=False)
 
         if self.kind == "fill":
@@ -507,8 +548,11 @@ class GenerationDialog(Gtk.Dialog):
             self.strength.set_value(float(self.values.get("strength", 1.0)))
             self.strength.set_digits(2)
             self.strength.set_value_pos(Gtk.PositionType.RIGHT)
-            add("Change amount", self.strength, "1.0 replaces the selection completely; lower values keep "
-                "more of what is there now.")
+            add(
+                "Change amount",
+                self.strength,
+                "1.0 replaces the selection completely; lower values keep more of what is there now.",
+            )
 
         seed_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         seed = int(self.values.get("seed", -1))
@@ -538,7 +582,7 @@ class GenerationDialog(Gtk.Dialog):
         if self.kind == "fill":
             parts.append(ui_text.selection_status(self.selection_size, self.image_size))
             model = self.model_combo.get_active_id() if hasattr(self, "model_combo") else "active"
-            if (not self.removing and model == "active" and self.active_prompt_free):
+            if not self.removing and model == "active" and self.active_prompt_free:
                 warning = ui_text.prompt_free_warning(self.active_name)
         elif self.kind == "expand" and hasattr(self, "margin_spins"):
             s = {k: int(v.get_value()) for k, v in self.margin_spins.items()}
@@ -557,10 +601,13 @@ class GenerationDialog(Gtk.Dialog):
             self.warning.set_visible(bool(warning))
 
     def collect(self) -> dict:
-        out = {"prompt": self.prompt.get_text().strip(), "negative": self.negative.get_text().strip(),
-               "variations": int(self.variations.get_value()),
-               "seed": -1 if self.random_seed.get_active() else int(self.seed.get_value()),
-               "model": self.model_combo.get_active_id() or "active"}
+        out = {
+            "prompt": self.prompt.get_text().strip(),
+            "negative": self.negative.get_text().strip(),
+            "variations": int(self.variations.get_value()),
+            "seed": -1 if self.random_seed.get_active() else int(self.seed.get_value()),
+            "model": self.model_combo.get_active_id() or "active",
+        }
         if self.kind == "fill":
             out["strength"] = round(float(self.strength.get_value()), 2)
             out["remove"] = self.removing
@@ -574,9 +621,17 @@ class GenerationDialog(Gtk.Dialog):
         return out
 
 
-def run_generation_dialog(kind: str, values: dict, history: list[str], models: list[tuple[str, str]],
-                          autoclose_seconds: float = 0, test_text: str | None = None,
-                          test_key: str | None = None, test_open_recent: bool = False, **kwargs) -> dict | None:
+def run_generation_dialog(
+    kind: str,
+    values: dict,
+    history: list[str],
+    models: list[tuple[str, str]],
+    autoclose_seconds: float = 0,
+    test_text: str | None = None,
+    test_key: str | None = None,
+    test_open_recent: bool = False,
+    **kwargs,
+) -> dict | None:
     """Show the dialog; the collected values, or None when cancelled."""
     dialog = GenerationDialog(kind, values, history, models, **kwargs)
     set_transient(dialog)
@@ -591,8 +646,9 @@ def run_generation_dialog(kind: str, values: dict, history: list[str], models: l
                 return None
             result = dialog.collect()
             if kind == "fill" and not result.get("remove") and not result["prompt"]:
-                dialog.status.set_markup("<b>Type what should appear, or switch to Remove object to erase "
-                                         "the selection.</b>")
+                dialog.status.set_markup(
+                    "<b>Type what should appear, or switch to Remove object to erase the selection.</b>"
+                )
                 dialog.prompt.view.grab_focus()
                 continue
             return result
@@ -604,34 +660,52 @@ def run_generation_dialog(kind: str, values: dict, history: list[str], models: l
 
 GENERAL_FIELDS = (
     ("comfy_dir", "AI backend folder", "Where ComfyUI (portable build) is installed."),
-    ("autostart", "Start backend automatically", "Starts ComfyUI hidden in the background when you "
-     "generate. Nothing else to open."),
-    ("idle_timeout_minutes", "Idle timeout (minutes)", "Stops the backend after this many minutes without "
-     "use, to free the graphics card memory. 0 keeps it running until GIMP closes."),
-    ("progress_window", "Show the floating progress window", "Progress, a live preview and a Cancel button "
-     "while generating."),
+    (
+        "autostart",
+        "Start backend automatically",
+        "Starts ComfyUI hidden in the background when you generate. Nothing else to open.",
+    ),
+    (
+        "idle_timeout_minutes",
+        "Idle timeout (minutes)",
+        "Stops the backend after this many minutes without "
+        "use, to free the graphics card memory. 0 keeps it running until GIMP closes.",
+    ),
+    (
+        "progress_window",
+        "Show the floating progress window",
+        "Progress, a live preview and a Cancel button while generating.",
+    ),
 )
 ADVANCED_FIELDS = (
     ("steps", "Steps", "More steps add detail but take longer. 20 to 30 is typical."),
     ("cfg", "Prompt strictness (CFG)", "How closely the result follows the prompt. 5 to 8 is typical."),
-    ("sampler", "Sampler", "The method that turns noise into a picture. Keep the default unless a model "
-     "page says otherwise."),
-    ("scheduler", "Scheduler", "How the noise is removed step by step. \"karras\" suits most models."),
-    ("grow_percent", "Repaint margin (% of selection)", "Lets the AI repaint a little around the selection "
-     "so object edges disappear."),
+    (
+        "sampler",
+        "Sampler",
+        "The method that turns noise into a picture. Keep the default unless a model page says otherwise.",
+    ),
+    ("scheduler", "Scheduler", 'How the noise is removed step by step. "karras" suits most models.'),
+    (
+        "grow_percent",
+        "Repaint margin (% of selection)",
+        "Lets the AI repaint a little around the selection so object edges disappear.",
+    ),
     ("grow", "Repaint margin limit (px)", "Upper limit for that margin."),
     ("feather_percent", "Edge softness (% of selection)", "How softly the new layer blends into the image."),
     ("feather", "Edge softness limit (px)", "Upper limit for the soft edge."),
-    ("prefill", "Hide old content before generating", "Helps the AI replace an object instead of copying "
-     "it (needs the inpaint nodes)."),
+    (
+        "prefill",
+        "Hide old content before generating",
+        "Helps the AI replace an object instead of copying it (needs the inpaint nodes).",
+    ),
     ("max_side_sd15", "Working size for SD 1.5 (px)", "Larger is sharper but slower and needs more memory."),
     ("max_side_sdxl", "Working size for SDXL (px)", "Larger is sharper but slower and needs more memory."),
     ("txt2img_width", "Text to Image default width (px)", ""),
     ("txt2img_height", "Text to Image default height (px)", ""),
 )
 CONNECTION_FIELDS = (
-    ("backend", "Backend", "ComfyUI is started and stopped for you. AUTOMATIC1111 must be started by you "
-     "with --api."),
+    ("backend", "Backend", "ComfyUI is started and stopped for you. AUTOMATIC1111 must be started by you with --api."),
     ("url", "ComfyUI address", ""),
     ("a1111_url", "AUTOMATIC1111 address", ""),
     ("startup_timeout", "Startup time limit (s)", "How long to wait for the backend to start."),
@@ -654,9 +728,14 @@ class SettingsDialog(Gtk.Dialog):
     call ``report(text)`` with progress (thread safe here).
     """
 
-    def __init__(self, values: dict, choices: dict, ranges: dict,
-                 models_panel_factory: Callable[[], Gtk.Widget] | None = None,
-                 test_backend: Callable[[dict, Callable[[str], None]], str] | None = None) -> None:
+    def __init__(
+        self,
+        values: dict,
+        choices: dict,
+        ranges: dict,
+        models_panel_factory: Callable[[], Gtk.Widget] | None = None,
+        test_backend: Callable[[dict, Callable[[str], None]], str] | None = None,
+    ) -> None:
         super().__init__(title="Generative Fill Settings", modal=True)
         self.values = dict(values)
         self.choices = choices
@@ -683,8 +762,10 @@ class SettingsDialog(Gtk.Dialog):
                 self.panel = models_panel_factory()
                 self.notebook.append_page(self.panel, Gtk.Label(label="Models"))
             except Exception as err:  # noqa: BLE001 - the General page must still work
-                self.notebook.append_page(_dim(ui_text.with_next_step(f"The Models tab could not be opened: {err}"), small=False),
-                                          Gtk.Label(label="Models"))
+                self.notebook.append_page(
+                    _dim(ui_text.with_next_step(f"The Models tab could not be opened: {err}"), small=False),
+                    Gtk.Label(label="Models"),
+                )
         self.get_content_area().show_all()  # shown by run(), after placement
 
     # building ------------------------------------------------------------
@@ -706,13 +787,17 @@ class SettingsDialog(Gtk.Dialog):
         self.test_label.set_line_wrap(True)
         self.test_label.set_max_width_chars(80)
         self.test_label.set_selectable(True)
-        self.test_label.set_text("Press Check backend to see that the AI backend starts and answers. "
-                                 "The first start can take about a minute.")
+        self.test_label.set_text(
+            "Press Check backend to see that the AI backend starts and answers. "
+            "The first start can take about a minute."
+        )
         test_row.pack_start(self.test_label, True, True, 0)
         box.pack_start(test_row, False, False, 0)
 
-        for title, fields in (("Advanced generation", ADVANCED_FIELDS),
-                              ("Connection and troubleshooting", CONNECTION_FIELDS)):
+        for title, fields in (
+            ("Advanced generation", ADVANCED_FIELDS),
+            ("Connection and troubleshooting", CONNECTION_FIELDS),
+        ):
             expander = Gtk.Expander(label=title)
             self.expanders.append(expander)
             inner = self._grid(fields)
@@ -785,8 +870,9 @@ class SettingsDialog(Gtk.Dialog):
         return entry
 
     def _browse(self, _button, entry: Gtk.Entry) -> None:
-        chooser = Gtk.FileChooserDialog(title="Choose the ComfyUI folder", transient_for=self,
-                                        action=Gtk.FileChooserAction.SELECT_FOLDER)
+        chooser = Gtk.FileChooserDialog(
+            title="Choose the ComfyUI folder", transient_for=self, action=Gtk.FileChooserAction.SELECT_FOLDER
+        )
         chooser.add_buttons("_Cancel", CANCEL, "_Select", OK)
         if entry.get_text():
             chooser.set_current_folder(entry.get_text())
@@ -819,8 +905,7 @@ class SettingsDialog(Gtk.Dialog):
         values = self.collect()
         self.test_button.set_sensitive(False)
         self.test_spinner.start()
-        self.test_label.set_text("Testing... this may start the backend, which takes about a minute the "
-                                 "first time.")
+        self.test_label.set_text("Testing... this may start the backend, which takes about a minute the first time.")
 
         def report(text: str) -> None:
             GLib.idle_add(lambda: (self._alive and self.test_label.set_text(text), False)[1])
@@ -847,9 +932,17 @@ class SettingsDialog(Gtk.Dialog):
             self.panel.stop()
 
 
-def run_settings_dialog(values: dict, choices: dict, ranges: dict, models_panel_factory=None,
-                        test_backend=None, autoclose_seconds: float = 0, tab: str = "",
-                        show_advanced: bool = False, select_model: str = "") -> dict | None:
+def run_settings_dialog(
+    values: dict,
+    choices: dict,
+    ranges: dict,
+    models_panel_factory=None,
+    test_backend=None,
+    autoclose_seconds: float = 0,
+    tab: str = "",
+    show_advanced: bool = False,
+    select_model: str = "",
+) -> dict | None:
     dialog = SettingsDialog(values, choices, ranges, models_panel_factory, test_backend)
     set_transient(dialog)
     for expander in dialog.expanders[:1] if show_advanced else []:
