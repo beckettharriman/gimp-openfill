@@ -171,7 +171,7 @@ def clamp_position(x: int, y: int, width: int, height: int,
 _NEXT_STEPS = (
     ("was not found at", "Next step: open Filters > AI > Generative Fill Settings and choose the backend "
                          "folder with Browse."),
-    ("auto-start is disabled", "Next step: turn on \"Start the backend automatically\" in Filters > AI > "
+    ("auto-start is disabled", "Next step: turn on \"Start backend automatically\" in Filters > AI > "
                                "Generative Fill Settings, or start ComfyUI yourself."),
     ("did not come up", "Next step: try again (the first start can take a few minutes). If it keeps "
                         "failing, read comfyui.log in the stable-boy folder of your GIMP profile."),
@@ -187,7 +187,7 @@ _NEXT_STEPS = (
     ("press install nodes", ""),
     ("model file is missing", "Next step: open Filters > AI > Generative Fill Settings > Models and download "
                               "or choose a model."),
-    ("not available", "Next step: open Filters > AI > Generative Fill Settings and press Test backend."),
+    ("not available", "Next step: open Filters > AI > Generative Fill Settings and press Check backend."),
 )
 
 
@@ -212,13 +212,20 @@ def with_next_step(message: str) -> str:
     return f"{message}{sep} {step}" if message else step
 
 
+def save_failed(path: str, detail: str) -> str:
+    """Wording when the settings file cannot be written."""
+    return (f"The settings could not be saved to {path}: {detail}. Next step: check that the folder is "
+            "writable and the disk is not full, then open Filters > AI > Generative Fill Settings and "
+            "press Save again.")
+
+
 def unexpected_error(type_name: str, detail: str) -> str:
     """Wording for an error that is not a backend error (a bug or a GIMP failure)."""
     return with_next_step(f"Something went wrong: {type_name}: {detail}")
 
 
 def health_text(ok: bool, detail: str, model_count: int, inpaint_nodes: bool) -> str:
-    """Result line of the Settings > General "Test backend" button."""
+    """Result line of the Settings > General "Check backend" button."""
     if ok:
         models = f"{model_count} model{'s' if model_count != 1 else ''}"
         nodes = "inpaint nodes installed" if inpaint_nodes else "inpaint nodes missing (SDXL quality fill needs them)"
@@ -228,8 +235,8 @@ def health_text(ok: bool, detail: str, model_count: int, inpaint_nodes: bool) ->
         reason = reason[:217].rstrip() + "..."
     step = next_step(reason)
     if not step or step.startswith("Next step: try again. If it happens"):
-        step = ("Next step: check the backend folder above, keep \"Start the backend automatically\" on, "
-                "and press Test backend again.")
+        step = ("Next step: check the backend folder above, keep \"Start backend automatically\" on, "
+                "and press Check backend again.")
     return f"Could not reach the backend: {reason.rstrip('.')}. {step}"
 
 

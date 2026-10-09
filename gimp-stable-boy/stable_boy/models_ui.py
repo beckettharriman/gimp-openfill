@@ -350,9 +350,9 @@ class ModelsPanel(Gtk.Box):
         self._refresh_rows(force=True)
 
     def _download(self, model_id: str) -> None:
-        if self.token.get_text().strip() != (self.app.settings.hf_token or ""):
-            self.app.save_token(self.token.get_text())
         try:
+            if self.token.get_text().strip() != (self.app.settings.hf_token or ""):
+                self.app.save_token(self.token.get_text())
             ids = self.app.queue_download(model_id)
             row = self._row(model_id) or {}
             self._say(f"Downloading {row.get('name', model_id)}"
@@ -361,6 +361,8 @@ class ModelsPanel(Gtk.Box):
             self._open_downloads_window()
         except BackendError as err:
             self._say(ui_text.with_next_step(str(err)))
+        except OSError as err:
+            self._say(ui_text.save_failed(str(self.app.paths.config), str(err)))
 
     def _set_active(self, model_id: str) -> None:
         try:
@@ -368,6 +370,8 @@ class ModelsPanel(Gtk.Box):
             self._say(f"{entry.name} is now the active model.")
         except BackendError as err:
             self._say(ui_text.with_next_step(str(err)))
+        except OSError as err:
+            self._say(ui_text.save_failed(str(self.app.paths.config), str(err)))
 
     def _install_nodes(self, model_id: str) -> None:
         nodes = self.app.nodes_to_install(model_id)
@@ -416,7 +420,11 @@ class ModelsPanel(Gtk.Box):
                       "file manager yourself.")
 
     def _on_save_token(self, *_):
-        self.app.save_token(self.token.get_text())
+        try:
+            self.app.save_token(self.token.get_text())
+        except OSError as err:
+            self._say(ui_text.save_failed(str(self.app.paths.config), str(err)))
+            return
         self._say("Token saved in your GIMP profile." if self.token.get_text().strip() else "Token removed.")
         self._refresh_rows(force=True)
 

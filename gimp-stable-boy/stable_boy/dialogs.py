@@ -604,7 +604,7 @@ def run_generation_dialog(kind: str, values: dict, history: list[str], models: l
 
 GENERAL_FIELDS = (
     ("comfy_dir", "AI backend folder", "Where ComfyUI (portable build) is installed."),
-    ("autostart", "Start the backend automatically", "Starts ComfyUI hidden in the background when you "
+    ("autostart", "Start backend automatically", "Starts ComfyUI hidden in the background when you "
      "generate. Nothing else to open."),
     ("idle_timeout_minutes", "Idle timeout (minutes)", "Stops the backend after this many minutes without "
      "use, to free the graphics card memory. 0 keeps it running until GIMP closes."),
@@ -696,7 +696,7 @@ class SettingsDialog(Gtk.Dialog):
         box.pack_start(grid, False, False, 0)
 
         test_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
-        self.test_button = Gtk.Button(label="Test backend")
+        self.test_button = Gtk.Button(label="Check backend")
         self.test_button.set_tooltip_text("Starts the backend if needed and checks that it answers.")
         self.test_button.connect("clicked", self._on_test)
         test_row.pack_start(self.test_button, False, False, 0)
@@ -706,7 +706,7 @@ class SettingsDialog(Gtk.Dialog):
         self.test_label.set_line_wrap(True)
         self.test_label.set_max_width_chars(80)
         self.test_label.set_selectable(True)
-        self.test_label.set_text("Press Test backend to check that the AI backend starts and answers. "
+        self.test_label.set_text("Press Check backend to see that the AI backend starts and answers. "
                                  "The first start can take about a minute.")
         test_row.pack_start(self.test_label, True, True, 0)
         box.pack_start(test_row, False, False, 0)

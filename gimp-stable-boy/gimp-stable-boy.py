@@ -262,7 +262,10 @@ def _generation_dialog(kind: str, procedure, config, image, hooks: dict) -> bool
         fresh = Settings.load(paths.config)
         fresh.prompt_history = ui_text.dump_history(ui_text.remember_prompt(
             ui_text.parse_history(fresh.prompt_history), result["prompt"]))
-        fresh.save(paths.config)
+        try:
+            fresh.save(paths.config)
+        except OSError as err:  # the history is a convenience: generate anyway
+            print(f"[stable-boy] prompt history not saved: {err}", file=sys.stderr)
     return True
 
 
@@ -537,7 +540,7 @@ def _settings_dialog(procedure, config) -> bool:
         return False
     for key, value in result.items():
         config.set_property(key.replace("_", "-"), value)
-    config.set_property("check-backend", False)  # the dialog has its own Test backend button
+    config.set_property("check-backend", False)  # the dialog has its own Check backend button
     return True
 
 
@@ -555,7 +558,12 @@ def run_settings(procedure, config, data):
     settings = Settings.load(paths.config)  # the Models tab may have changed active_model / token meanwhile
     for key in SETTINGS_KEYS:
         setattr(settings, key, config.get_property(key.replace("_", "-")))
-    settings.save(paths.config)
+    try:
+        settings.save(paths.config)
+    except OSError as err:
+        text = ui_text.save_failed(str(paths.config), str(err))
+        Gimp.message(text)
+        return procedure.new_return_values(Gimp.PDBStatusType.EXECUTION_ERROR, GLib.Error(text))
     if config.get_property("check-backend"):
         from stable_boy.app import App
         app = App()

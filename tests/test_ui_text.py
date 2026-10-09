@@ -129,6 +129,15 @@ class ErrorWordingTests(unittest.TestCase):
         once = ut.with_next_step("The AI backend is not available: x")
         self.assertEqual(ut.with_next_step(once), once)
 
+    def test_save_failed(self):
+        text = ut.save_failed("C:/p/config.json", "Permission denied")
+        self.assertIn("C:/p/config.json: Permission denied", text)
+        self.assertIn("Next step", text)
+
+    def test_labels_match_backend_wording(self):
+        self.assertIn('"Start backend automatically"', ut.next_step("auto-start is disabled"))
+        self.assertIn("press Check backend", ut.next_step("The AI backend is not available: x"))
+
     def test_unexpected(self):
         text = ut.unexpected_error("ValueError", "bad value")
         self.assertIn("ValueError: bad value", text)
