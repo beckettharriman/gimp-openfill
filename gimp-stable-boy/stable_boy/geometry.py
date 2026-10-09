@@ -360,6 +360,16 @@ def mask_params(
     return MaskParams(grow_image, feather_image, grow_work, blur_work)
 
 
+# Disk-to-GPU rate assumed for loading model files (bytes per second); slow
+# laptop disks plus dtype conversion and offloading.
+MODEL_LOAD_RATE = 60_000_000
+# Floor of the timeout when the request uses a model the server has not just
+# run (first request after a start, or a different model): FLUX Fill Q4 on an
+# 8 GB card timed out at 153 s on its cold first case while warm cases took
+# 97 to 144 s.
+COLD_TIMEOUT_FLOOR = 600.0
+
+
 def estimate_timeout(
     steps: int,
     batch: int,
@@ -367,10 +377,18 @@ def estimate_timeout(
     seconds_per_step_mpx: float = 1.5,
     floor: float = 120.0,
     model_load: float = 90.0,
+    model_bytes: int = 0,
+    cold: bool = False,
 ) -> float:
-    """Rough upper bound for a generation, used as the request timeout."""
+    """Rough upper bound for a generation, used as the request timeout.
+
+    ``model_bytes`` (the size of the model files on disk) adds their load
+    time at ``MODEL_LOAD_RATE``; a ``cold`` request (the server has not just
+    run this model) gets at least ``COLD_TIMEOUT_FLOOR`` seconds."""
     mpx = pixels / 1_000_000
-    return max(floor, model_load + steps * batch * max(0.25, mpx) * seconds_per_step_mpx * 2)
+    load = model_load + max(0, int(model_bytes)) / MODEL_LOAD_RATE
+    estimate = max(floor, load + steps * batch * max(0.25, mpx) * seconds_per_step_mpx * 2)
+    return max(estimate, COLD_TIMEOUT_FLOOR) if cold else estimate
 
 
 def seed_or_random(seed: int | None, rng: random.Random | None = None) -> int:
@@ -399,11 +417,14 @@ def fill_padding(removal: bool, prompt_free_model: bool = False) -> float:
 
 
 # Pre-fill of the hole before sampling, as (style, mode) for the workflow's
-# INPAINT_MaskedFill. SD 1.5 needs a neutral grey hole to follow the prompt
-# (it continues a border-filled sky instead); the SDXL tier with the Fooocus
-# patch treats a flat grey rectangle as a separate picture and paints a framed
-# photo or a hard-edged block into it, so it gets the border fill.
-NEUTRAL_PREFILL_ARCHS = ("sd15",)
+# INPAINT_MaskedFill. Every architecture gets the border fill (navier-stokes
+# plus blur) for a full-strength fill. SD 1.5 used a neutral grey hole so it
+# would follow the prompt; on flat or bright contexts the inpainting
+# checkpoints (dreamshaper-8 most) read the grey block as a separate picture
+# and painted a pasted panel or a pale frame into it (balloon, spoon,
+# strawberry, suede shoe). The border fill keeps the prompted object and loses
+# the panel (docs/evidence/daytime-2026-10-09/pipeline/README.md).
+NEUTRAL_PREFILL_ARCHS: tuple[str, ...] = ()
 
 
 def prefill_for(removal: bool, strength: float, arch: str) -> tuple[str, str]:
@@ -473,7 +494,9 @@ def layer_mask_grow(mask: MaskParams, removal: bool) -> int:
     covered. A prompted fill grows only by the feather radius (GIMP's feather
     is centred on the edge), so the mask is fully opaque over the selection and
     fades outward; growing further exposes the model's repainted context as a
-    pale band around the fill. Never more than the removal grow.
+    pale band around the fill. Never more than the removal grow. (Showing the
+    whole growth on upscaled fills did not change the clipped watermelon,
+    ladybug and earring cases.)
     """
     if removal:
         return mask.grow_image
@@ -499,3 +522,216 @@ def flatten_over_mean(rgba: bytes) -> bytes:
         out[c::4] = bytes(map(lambda v, a, m=m: (v * a + m * (255 - a) + 127) // 255, rgba[c::4], alpha))
     out[3::4] = b"\xff" * n
     return bytes(out)
+
+
+# ------------------------------------------------------------- fill planning --
+
+# Lowest working scale (working px per image px) of a generation pass. Below it
+# a large selection comes back soft: snow, grass and brick at 0.3 to 0.5 were
+# visibly calmer than the photo. A context that would need a lower scale is
+# cropped to a smaller margin first and split into tiles when even that is not
+# enough.
+MIN_WORK_SCALE = {"sd15": 0.6, "sdxl": 0.75}
+# Smallest margin (image px) kept around the selection when the context is
+# shrunk to hold the minimum working scale.
+MIN_TILE_MARGIN = 64
+# A tile's shorter side, in working pixels, is at least this much. A 1620x89
+# strip was worked as a 28 px band inside a 640x408 image; now each tile shows
+# the strip with at least 256 working px across it.
+MIN_TILE_CONTENT = 256
+# Overlap of neighbouring tiles (image px); the later tile blends into the
+# earlier one over this band.
+TILE_OVERLAP = 128
+# Tiles of a generation pass, at most, per architecture; the scale is lowered
+# (never below the minimum) until the selection fits in this many.
+MAX_GEN_TILES = {"sd15": 4, "sdxl": 2}
+# Margin (image px) of the refine region around the selection: covers the mask
+# growth and blur of the main pass.
+REFINE_MARGIN = 48
+
+
+@dataclass(frozen=True)
+class Tile:
+    """One window of a tiled pass, in context coordinates."""
+
+    rect: Rect  # pixels the model sees (context coordinates)
+    work_width: int  # working size of this window
+    work_height: int
+    done: tuple[Rect, ...] = ()  # parts finished by earlier tiles (tile coordinates)
+
+
+@dataclass(frozen=True)
+class FillPlan:
+    """How a fill is generated: the context crop, the single-pass working size,
+    and optional tiled main and refine passes."""
+
+    context: Rect
+    work: WorkingSize  # single-pass working size (used when ``tiles`` is empty)
+    tiles: tuple[Tile, ...] = ()  # tiled main pass (empty: one pass at ``work``)
+    tile_scale: float = 1.0  # working scale of the tiled main pass
+    refine_tiles: tuple[Tile, ...] = ()  # full-resolution refine pass (empty: none)
+
+    @property
+    def main_scale(self) -> float:
+        return self.tile_scale if self.tiles else self.work.scale
+
+
+def _rect_with_margin(selection: Rect, bounds: Rect, mx: int, my: int) -> Rect:
+    grown = Rect(selection.x - mx, selection.y - my, selection.width + 2 * mx, selection.height + 2 * my)
+    return grown.intersect(bounds)
+
+
+def _spans(start: int, length: int, window: int, overlap: int) -> list[tuple[int, int]]:
+    """Evenly spaced windows of ``window`` px, overlapping by at least
+    ``overlap``, covering [start, start + length)."""
+    if length <= window:
+        return [(start, length)]
+    step_max = max(1, window - overlap)
+    count = 1 + -(-(length - window) // step_max)
+    step = (length - window) / (count - 1)
+    return [(start + round(i * step), window) for i in range(count)]
+
+
+def _grid(region: Rect, tw: int, th: int, overlap: int) -> list[Rect]:
+    xs = _spans(region.x, region.width, tw, overlap)
+    ys = _spans(region.y, region.height, th, overlap)
+    return [Rect(x, y, w, h) for y, h in ys for x, w in xs]
+
+
+def _with_done(rects: list[Rect], work: list[tuple[int, int]], overlap: int) -> tuple[Tile, ...]:
+    """Tiles in order; each records the parts of earlier tiles it overlaps,
+    minus a band of half the overlap on the side facing it, so the later tile
+    repaints that band and blends into the earlier one."""
+    tiles = []
+    half = overlap // 2
+    for i, r in enumerate(rects):
+        done = []
+        for prev in rects[:i]:
+            x1, y1, x2, y2 = prev.x, prev.y, prev.right, prev.bottom
+            if r.x > prev.x:
+                x2 = min(x2, max(r.x + half, x1))
+            if r.right < prev.right:
+                x1 = max(x1, min(r.right - half, x2))
+            if r.y > prev.y:
+                y2 = min(y2, max(r.y + half, y1))
+            if r.bottom < prev.bottom:
+                y1 = max(y1, min(r.bottom - half, y2))
+            part = Rect(x1, y1, x2 - x1, y2 - y1).intersect(r)
+            if not part.is_empty():
+                done.append(part.relative_to(r))
+        tiles.append(Tile(r, work[i][0], work[i][1], tuple(done)))
+    return tuple(tiles)
+
+
+def _tile_layout(sel: Rect, bounds: Rect, side: int, min_short: int, margin: int, overlap: int) -> list[Rect]:
+    """Windows of at most ``side`` px covering ``sel`` plus ``margin`` inside
+    ``bounds``; the margin across a thin selection is raised so every window
+    is at least ``min_short`` px across."""
+    mx = max(margin, (min_short - sel.width + 1) // 2)
+    my = max(margin, (min_short - sel.height + 1) // 2)
+    # moved inside the bounds rather than cut, so a strip along the image edge
+    # keeps its full width across
+    region = clamp_rect(Rect(sel.x - mx, sel.y - my, sel.width + 2 * mx, sel.height + 2 * my), bounds)
+    return _grid(region, min(side, region.width), min(side, region.height), overlap)
+
+
+def plan_fill(
+    selection: Rect,
+    image: Rect,
+    profile: ModelProfile,
+    arch: str,
+    removal: bool,
+    padding_ratio: float,
+    refine: bool = False,
+    min_scale: float | None = None,
+    max_tiles: int | None = None,
+    overlap: int = TILE_OVERLAP,
+) -> FillPlan:
+    """Plan a Generative Fill.
+
+    The context and single-pass working size are the classic ones
+    (``context_rect``, ``working_size`` with ``fill_profile``). When that
+    working scale is below ``MIN_WORK_SCALE`` for the architecture, the margin
+    shrinks (keeping at least ``MIN_TILE_MARGIN``) until the context fits at
+    the minimum scale. When the selection itself is too large for that, the
+    main pass is split into overlapping tiles at one common scale: the highest
+    of 1.0, 0.95, ... down to the minimum that needs no more tiles than
+    ``max_tiles`` (default ``MAX_GEN_TILES`` for the architecture) or, if more,
+    than the minimum scale needs. Every tile is at least
+    ``MIN_TILE_CONTENT`` (or three quarters of the model's ``min_side``)
+    working pixels across.
+
+    With ``refine`` and a main scale below 1.0, a second pass at full
+    resolution covers the selection plus ``REFINE_MARGIN``, tiled at the
+    model's ``max_side``.
+    """
+    ctx = context_rect(selection, image, profile, padding_ratio=padding_ratio)
+    prof = fill_profile(profile, ctx, arch, removal)
+    work = working_size(ctx.width, ctx.height, prof)
+    smin = MIN_WORK_SCALE.get(arch, 0.0) if min_scale is None else min_scale
+    tiles: tuple[Tile, ...] = ()
+    tile_scale = 1.0
+    if work.scale < smin:
+        limit = int(prof.max_side / smin)
+        mx = (min(limit, ctx.width) - selection.width) // 2
+        my = (min(limit, ctx.height) - selection.height) // 2
+        if min(mx, my) >= MIN_TILE_MARGIN:
+            far = Rect(-(10**9), -(10**9), 2 * 10**9, 2 * 10**9)
+            smaller = clamp_rect(_rect_with_margin(selection, far, mx, my), image)
+            sprof = fill_profile(profile, smaller, arch, removal)
+            swork = working_size(smaller.width, smaller.height, sprof)
+            if swork.scale >= smin:
+                ctx, work = smaller, swork
+        if work.scale < smin:
+            sel_c = selection.relative_to(ctx)
+            whole = Rect(0, 0, ctx.width, ctx.height)
+            layouts = []
+            for step in range(20):
+                scale = round(max(smin, 1.0 - 0.05 * step), 4)
+                side = int(prof.max_side / scale)
+                min_short = int(max(MIN_TILE_CONTENT, 0.75 * profile.min_side) / scale) + 1
+                margin = max(
+                    MIN_TILE_MARGIN, min(side // 8, round(max(selection.width, selection.height) * padding_ratio))
+                )
+                layouts.append((scale, _tile_layout(sel_c, whole, side, min_short, margin, overlap)))
+                if scale <= smin:
+                    break
+            allowed = max(MAX_GEN_TILES.get(arch, 2) if max_tiles is None else max_tiles, len(layouts[-1][1]))
+            tile_scale, rects = next((s_, r_) for s_, r_ in layouts if len(r_) <= allowed)
+            sizes = [
+                (
+                    round_to_multiple(round(r.width * tile_scale), profile.multiple),
+                    round_to_multiple(round(r.height * tile_scale), profile.multiple),
+                )
+                for r in rects
+            ]
+            tiles = _with_done(rects, sizes, overlap)
+    plan = FillPlan(ctx, work, tiles, tile_scale if tiles else 1.0)
+    if refine and plan.main_scale < 0.999:
+        plan = replace(plan, refine_tiles=refine_layout(selection, ctx, profile, overlap=overlap))
+    return plan
+
+
+def refine_layout(
+    selection: Rect, ctx: Rect, profile: ModelProfile, margin: int = REFINE_MARGIN, overlap: int = TILE_OVERLAP
+) -> tuple[Tile, ...]:
+    """Full-resolution windows (scale 1, at most ``profile.max_side`` a side)
+    covering the selection plus ``margin`` inside the context. A region
+    smaller than the model's ``min_side`` is grown to it where the context
+    allows, so the model sees enough around a small selection."""
+    whole = Rect(0, 0, ctx.width, ctx.height)
+    region = _rect_with_margin(selection.relative_to(ctx), whole, margin, margin)
+    need_w = max(region.width, min(profile.min_side, whole.width))
+    need_h = max(region.height, min(profile.min_side, whole.height))
+    if (need_w, need_h) != (region.width, region.height):
+        cx, cy = region.x + region.width / 2, region.y + region.height / 2
+        region = clamp_rect(Rect(round(cx - need_w / 2), round(cy - need_h / 2), need_w, need_h), whole)
+    m = profile.multiple
+    up_w = min(whole.width, -(-region.width // m) * m)
+    up_h = min(whole.height, -(-region.height // m) * m)
+    region = clamp_rect(Rect(region.x, region.y, up_w, up_h), whole)
+    side = profile.max_side // m * m
+    tw = min(side, region.width // m * m) or region.width
+    th = min(side, region.height // m * m) or region.height
+    rects = _grid(region, tw, th, overlap)
+    return _with_done(rects, [(r.width, r.height) for r in rects], overlap)

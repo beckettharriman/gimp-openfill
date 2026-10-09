@@ -243,6 +243,16 @@ class MiscTests(unittest.TestCase):
         self.assertGreaterEqual(g.estimate_timeout(1, 1, 1000), 120)
         self.assertGreater(g.estimate_timeout(50, 4, 1024 * 1024), g.estimate_timeout(10, 1, 1024 * 1024))
 
+    def test_timeout_covers_a_cold_model_load(self):
+        warm = g.estimate_timeout(25, 1, 1024 * 1024)
+        # a 7 GB model adds its load time from disk
+        self.assertGreater(g.estimate_timeout(25, 1, 1024 * 1024, model_bytes=7_000_000_000), warm + 100)
+        # the first request with a model gets at least ten minutes
+        self.assertGreaterEqual(g.estimate_timeout(25, 1, 1024 * 1024, cold=True), 600)
+        self.assertGreaterEqual(g.estimate_timeout(1, 1, 1000, cold=True), g.COLD_TIMEOUT_FLOOR)
+        # FLUX Q4 cold case: 153 s was not enough
+        self.assertGreaterEqual(g.estimate_timeout(28, 1, 1024 * 1024, model_bytes=12_000_000_000, cold=True), 600)
+
 
 class FillPolicyTests(unittest.TestCase):
     image = g.Rect(0, 0, 1024, 768)
@@ -286,7 +296,7 @@ class FillPolicyTests(unittest.TestCase):
         self.assertEqual(g.prefill_for(True, 1.0, "sd15"), ("border", "navier-stokes"))
         self.assertEqual(g.prefill_for(True, 1.0, "sdxl"), ("border", "navier-stokes"))
         self.assertEqual(g.prefill_for(False, 0.6, "sd15"), ("blur", "navier-stokes"))
-        self.assertEqual(g.prefill_for(False, 1.0, "sd15"), ("border", "neutral"))
+        self.assertEqual(g.prefill_for(False, 1.0, "sd15"), ("border", "navier-stokes"))
         # the SDXL tier paints a framed picture into a flat grey hole
         self.assertEqual(g.prefill_for(False, 1.0, "sdxl"), ("border", "navier-stokes"))
 
@@ -323,3 +333,86 @@ class FillPolicyTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FillPlanTests(unittest.TestCase):
+    """Minimum working scale, thin strips and the refine pass (geometry.plan_fill)."""
+
+    def _covered(self, tiles, sel):
+        """Every selection pixel lies in some tile (checked on a grid)."""
+        for y in range(sel.y, sel.bottom, max(1, sel.height // 7)):
+            for x in range(sel.x, sel.right, max(1, sel.width // 7)):
+                self.assertTrue(
+                    any(t.rect.x <= x < t.rect.right and t.rect.y <= y < t.rect.bottom for t in tiles), (x, y)
+                )
+
+    def test_small_selection_is_one_pass_without_refine(self):
+        plan = g.plan_fill(g.Rect(922, 384, 256, 256), g.Rect(0, 0, 1280, 853), g.SD15, "sd15", False, 0.5, refine=True)
+        self.assertEqual(plan.tiles, ())
+        self.assertEqual(plan.work.scale, 1.0)
+        self.assertEqual(plan.refine_tiles, ())  # worked at 1:1: nothing to refine
+
+    def test_scale_never_below_minimum(self):
+        for arch, prof in (("sd15", g.SD15), ("sdxl", g.SDXL)):
+            for sel, img in (
+                (g.Rect(160, 51, 1620, 89), g.Rect(0, 0, 2000, 1273)),
+                (g.Rect(96, 72, 1728, 1296), g.Rect(0, 0, 1920, 1440)),
+                (g.Rect(1488, 1200, 792, 1350), g.Rect(0, 0, 2400, 3000)),
+                (g.Rect(730, 1267, 557, 490), g.Rect(0, 0, 1920, 2880)),
+            ):
+                plan = g.plan_fill(sel, img, prof, arch, False, 0.5)
+                self.assertGreaterEqual(plan.main_scale, g.MIN_WORK_SCALE[arch] - 0.02, (arch, sel))
+                self.assertTrue(plan.context.contains(sel))
+                if plan.tiles:
+                    self._covered([t for t in plan.tiles], sel.relative_to(plan.context))
+                    for t in plan.tiles:
+                        self.assertLessEqual(max(t.work_width, t.work_height), prof.max_side)
+                        self.assertEqual(t.work_width % prof.multiple, 0)
+
+    def test_thin_strip_gets_tiles_with_content_across(self):
+        sel = g.Rect(160, 51, 1620, 89)
+        plan = g.plan_fill(sel, g.Rect(0, 0, 2000, 1273), g.SD15, "sd15", False, 0.5)
+        self.assertGreater(len(plan.tiles), 1)
+        for t in plan.tiles:
+            self.assertGreaterEqual(min(t.work_width, t.work_height), g.MIN_TILE_CONTENT)
+            # the strip is worked with more than 28 px across (the old single pass)
+            self.assertGreaterEqual(89 * plan.tile_scale, 80)
+
+    def test_later_tiles_mark_earlier_overlap_done(self):
+        sel = g.Rect(160, 51, 1620, 89)
+        plan = g.plan_fill(sel, g.Rect(0, 0, 2000, 1273), g.SD15, "sd15", False, 0.5)
+        self.assertEqual(plan.tiles[0].done, ())
+        for prev, tile in zip(plan.tiles, plan.tiles[1:], strict=False):
+            self.assertTrue(tile.done)
+            overlap = prev.rect.right - tile.rect.x
+            done_width = max(d.right for d in tile.done)
+            # half the overlap stays to be repainted as a blend band
+            self.assertLess(done_width, overlap)
+            self.assertGreater(done_width, 0)
+
+    def test_margin_shrinks_before_tiling(self):
+        # 900 px selection: a 0.5 margin context needs scale 0.4; a smaller margin keeps 0.6+ in one pass
+        sel = g.Rect(500, 500, 900, 700)
+        plan = g.plan_fill(sel, g.Rect(0, 0, 3000, 3000), g.SD15, "sd15", False, 0.5)
+        self.assertEqual(plan.tiles, ())
+        self.assertGreaterEqual(plan.work.scale, 0.6)
+        self.assertTrue(plan.context.contains(sel))
+
+    def test_refine_covers_selection_at_full_resolution(self):
+        sel = g.Rect(730, 1267, 557, 490)
+        plan = g.plan_fill(sel, g.Rect(0, 0, 1920, 2880), g.SD15, "sd15", False, 0.5, refine=True)
+        self.assertLess(plan.main_scale, 1.0)
+        self.assertTrue(plan.refine_tiles)
+        self._covered(plan.refine_tiles, sel.relative_to(plan.context))
+        for t in plan.refine_tiles:
+            self.assertEqual((t.work_width, t.work_height), (t.rect.width, t.rect.height))
+            self.assertLessEqual(max(t.rect.width, t.rect.height), g.SD15.max_side)
+            self.assertEqual(t.rect.width % 8, 0)
+        self.assertEqual(len(plan.refine_tiles), 1)
+
+    def test_other_architectures_unchanged(self):
+        sel = g.Rect(96, 72, 1728, 1296)
+        plan = g.plan_fill(sel, g.Rect(0, 0, 1920, 1440), g.INPAINT_MODEL, "inpaint_model", True, 0.5)
+        self.assertEqual(plan.tiles, ())
+        ctx = g.context_rect(sel, g.Rect(0, 0, 1920, 1440), g.INPAINT_MODEL, 0.5)
+        self.assertEqual(plan.context, ctx)
