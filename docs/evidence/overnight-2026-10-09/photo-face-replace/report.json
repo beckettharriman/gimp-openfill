@@ -1,0 +1,337 @@
+{
+  "id": "photo-face-replace",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Generative Fill: sunglasses"
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "image_size_unchanged": {
+      "ok": true,
+      "value": [
+        2400,
+        3000
+      ]
+    },
+    "layer_covers_selection": {
+      "ok": true,
+      "value": {
+        "layer": [
+          1020,
+          375,
+          720,
+          540
+        ],
+        "selection": [
+          1200,
+          555,
+          360,
+          180
+        ]
+      }
+    },
+    "mask_opaque_over_selection": {
+      "ok": true,
+      "value": 0.9998148148148148
+    },
+    "content_changed_in_selection": {
+      "ok": true,
+      "value": 66.69
+    },
+    "outside_grown_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "not_a_flat_blob": {
+      "ok": true,
+      "value": 258.06
+    },
+    "selection_restored": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 17.15,
+    "layer_size": [
+      720,
+      540
+    ],
+    "layer_offset": [
+      1020,
+      375
+    ],
+    "mask_opaque_fraction_in_selection": 0.9998,
+    "mask_opaque_fraction_in_fully_selected": 0.9998,
+    "mask_pixels_gt0": 110196,
+    "selection_pixels_ge128": 64800,
+    "mean_abs_diff_in_selection": 66.69,
+    "outside_max_abs_diff": 0,
+    "outside_changed_pixels": 0,
+    "laplacian_var_in_after": 258.06,
+    "laplacian_var_out_after": 120.76,
+    "laplacian_var_in_before": 199.88,
+    "detail_ratio_in_vs_out": 2.137,
+    "blur_flag": false
+  },
+  "memory": {
+    "samples": 18,
+    "peak_gimp_tree_mb": 559,
+    "peak_comfyui_mb": 4243,
+    "peak_gpu_mib": 6870
+  },
+  "evidence_files": {
+    "before.jpg/after.jpg": "longest side 1024 px, JPEG q85",
+    "region-1to1.jpg": {
+      "box": [
+        1075,
+        430,
+        1685,
+        860
+      ],
+      "scale": 1.0,
+      "quality": 90
+    }
+  },
+  "spec": {
+    "id": "photo-face-replace",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+      "w": 2400,
+      "h": 3000,
+      "scale": false
+    },
+    "selection": {
+      "kind": "rect",
+      "rect": [
+        0.5,
+        0.185,
+        0.15,
+        0.06
+      ],
+      "units": "frac"
+    },
+    "proc": "fill",
+    "args": {
+      "prompt": "sunglasses",
+      "negative": "blurry, lowres, watermark",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "juggernaut-xl-v9",
+      "remove": false
+    }
+  },
+  "gimp": {
+    "id": "photo-face-replace",
+    "spec": {
+      "id": "photo-face-replace",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+        "w": 2400,
+        "h": 3000,
+        "scale": false
+      },
+      "selection": {
+        "kind": "rect",
+        "rect": [
+          0.5,
+          0.185,
+          0.15,
+          0.06
+        ],
+        "units": "frac"
+      },
+      "proc": "fill",
+      "args": {
+        "prompt": "sunglasses",
+        "negative": "blurry, lowres, watermark",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 1234,
+        "model": "juggernaut-xl-v9",
+        "remove": false
+      }
+    },
+    "started": "2026-10-09 03:20:54",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+          "size": [
+            2400,
+            3000
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "rect",
+          "empty": false,
+          "bounds": [
+            1200,
+            555,
+            360,
+            180
+          ]
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 2400,
+          "height": 3000,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "f1e3282effe37f8fbce94fdf8403e695"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 2400,
+          "height": 3000,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "c743d9e2260b4100f09e1109f7281827"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 17.15,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 82,
+            "name": "Background",
+            "size": [
+              2400,
+              3000
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 88,
+            "name": "Generative Fill: sunglasses",
+            "size": [
+              720,
+              540
+            ],
+            "offset": [
+              1020,
+              375
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 82,
+            "name": "Background",
+            "size": [
+              2400,
+              3000
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          2400,
+          3000
+        ],
+        "selection_restored": true,
+        "new_top_level": [
+          {
+            "id": 88,
+            "name": "Generative Fill: sunglasses",
+            "size": [
+              720,
+              540
+            ],
+            "offset": [
+              1020,
+              375
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 720,
+          "height": 540,
+          "channels": 4,
+          "offset": [
+            1020,
+            375
+          ],
+          "md5": "24e6ea86ba865897b9297c3902e74876"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 720,
+          "height": 540,
+          "channels": 1,
+          "offset": [
+            1020,
+            375
+          ],
+          "md5": "c569f2801c6d67bcab7dd3f9d0683baf"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 2400,
+          "height": 3000,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "b5583f74dc1d927b8d214a89d14338c5"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 18.42
+  },
+  "analysis_error": null,
+  "region_scale": 1.0
+}

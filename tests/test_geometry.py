@@ -127,6 +127,23 @@ class ExpandTests(unittest.TestCase):
         self.assertTrue(plan.context.contains(plan.fill_rect))
         self.assertTrue(g.Rect(0, 0, 1056, 600).contains(plan.context))
 
+    def test_strip_context_is_local_to_the_new_edge(self):
+        # a 256 px strip along a 1440 px edge: not the whole 2176 px canvas
+        plan = g.plan_expand(1920, 1440, 0, 0, 256, 0, g.SDXL)
+        self.assertEqual(plan.context, g.Rect(1312, 0, 864, 1440))
+        self.assertTrue(plan.context.contains(plan.fill_rect))
+        ws = g.working_size(plan.context.width, plan.context.height, g.SDXL)
+        self.assertGreater(ws.scale, 0.7)
+        # top strip: full width, anchored at the top
+        plan = g.plan_expand(1920, 1440, 0, 256, 0, 0, g.SDXL)
+        self.assertEqual((plan.context.x, plan.context.y, plan.context.width), (0, 0, 1920))
+        self.assertTrue(plan.context.contains(plan.fill_rect))
+
+    def test_strip_context_not_narrower_than_half_the_edge(self):
+        plan = g.plan_expand(2400, 3000, 0, 0, 256, 0, g.SDXL)
+        self.assertEqual(plan.context.width, 1500)
+        self.assertEqual(plan.context.right, plan.new_width)
+
     def test_all_sides_fill_is_canvas(self):
         plan = g.plan_expand(400, 400, 50, 50, 50, 50, g.SD15)
         self.assertEqual(plan.fill_rect, g.Rect(0, 0, 500, 500))
@@ -187,6 +204,36 @@ class FillPolicyTests(unittest.TestCase):
         # a corner selection touches only two edges
         corner = g.Rect(0, 0, 100, 100)
         self.assertTrue(g.color_match_useful(corner, g.Rect(0, 0, 300, 300), self.image))
+
+    def test_removal_model_context_stays_near_native_size(self):
+        # MAT runs on a 512 px square: a 400 px selection must not be shrunk 2.4x
+        image = g.Rect(0, 0, 2400, 3000)
+        sel = g.Rect(852, 1665, 312, 405)
+        ctx = g.context_rect(sel, image, g.INPAINT_MODEL, padding_ratio=g.fill_padding(True, True))
+        wide = g.context_rect(sel, image, g.INPAINT_MODEL, padding_ratio=g.fill_padding(True))
+        self.assertLess(ctx.area, wide.area)
+        self.assertTrue(ctx.contains(sel))
+        ws = g.working_size(ctx.width, ctx.height, g.INPAINT_MODEL)
+        self.assertLessEqual(max(ws.width, ws.height), 512)
+        # a small selection gets a 512 px context at 1:1
+        small = g.context_rect(g.Rect(100, 100, 80, 60), image, g.INPAINT_MODEL, g.fill_padding(True, True))
+        self.assertEqual(small.size, (512, 512))
+        self.assertEqual(g.working_size(*small.size, g.INPAINT_MODEL).scale, 1.0)
+
+    def test_prefill_policy(self):
+        self.assertEqual(g.prefill_for(True, 1.0, "sd15"), ("border", "navier-stokes"))
+        self.assertEqual(g.prefill_for(True, 1.0, "sdxl"), ("border", "navier-stokes"))
+        self.assertEqual(g.prefill_for(False, 0.6, "sd15"), ("blur", "navier-stokes"))
+        self.assertEqual(g.prefill_for(False, 1.0, "sd15"), ("border", "neutral"))
+        # the SDXL tier paints a framed picture into a flat grey hole
+        self.assertEqual(g.prefill_for(False, 1.0, "sdxl"), ("border", "navier-stokes"))
+
+    def test_color_match_strength(self):
+        mid = g.Rect(420, 300, 260, 200)
+        ctx = g.context_rect(mid, self.image, g.SD15)
+        self.assertEqual(g.color_match_strength(mid, ctx, self.image, True), 1.0)
+        self.assertEqual(g.color_match_strength(mid, ctx, self.image, False), g.PROMPT_COLOR_MATCH)
+        self.assertEqual(g.color_match_strength(self.image, self.image, self.image, True), 0.0)
 
     def test_layer_mask_grow(self):
         mp = g.mask_params(g.Rect(0, 0, 260, 200), 1.0)

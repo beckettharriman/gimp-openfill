@@ -1,0 +1,3 @@
+2026-10-09 03:21:35,813 INFO  [20080 stable-boy] fill: selection=Rect(x=480, y=43, width=346, height=288) context=Rect(x=307, y=0, width=692, height=634) working=840x768 scale=1.21 mask(grow=16/19px feather=21/19px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=juggernaut-xl-v9 template=sdxl_fooocus
+2026-10-09 03:21:36,035 INFO  [20080 stable-boy] queued prompt 3f5729d6-6c4b-42e9-b138-486efea0063e (timeout 129s, 20 steps x 1)
+2026-10-09 03:21:51,724 INFO  [20080 stable-boy] fill: done, seed=1234, 1 layer(s)

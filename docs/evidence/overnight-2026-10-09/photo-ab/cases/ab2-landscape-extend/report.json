@@ -1,0 +1,196 @@
+{
+  "id": "ab2-landscape-extend",
+  "pass": false,
+  "checks": {
+    "returns_success": {
+      "ok": false,
+      "value": "execution-error ComfyUI rejected the request: LoadImage: [Errno 541478725] End of file: 'C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\\\\ComfyUI\\\\input\\\\stable-boy\\\\sb-dbd84dee22f7-mask.png'. Make sure the model and its custom nodes are installed (Filters > AI > Generative Fill Settings > Models), then try again."
+    },
+    "failure_left_layers_unchanged": {
+      "ok": true,
+      "value": [
+        1,
+        1
+      ]
+    },
+    "failure_left_selection": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "execution-error",
+    "message": "ComfyUI rejected the request: LoadImage: [Errno 541478725] End of file: 'C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\\\\ComfyUI\\\\input\\\\stable-boy\\\\sb-dbd84dee22f7-mask.png'. Make sure the model and its custom nodes are installed (Filters > AI > Generative Fill Settings > Models), then try again.",
+    "seconds": 2.04
+  },
+  "memory": {
+    "samples": 4,
+    "peak_gimp_tree_mb": 418,
+    "peak_comfyui_mb": 3990,
+    "peak_gpu_mib": 4920
+  },
+  "evidence_files": {
+    "before.png scale": 0.5333,
+    "after.png scale": 0.5333
+  },
+  "spec": {
+    "id": "ab2-landscape-extend",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+      "w": 1920,
+      "h": 1440,
+      "scale": false
+    },
+    "selection": {
+      "kind": "none"
+    },
+    "proc": "expand",
+    "args": {
+      "prompt": "green meadow and evening sky with trees, photo",
+      "negative": "blurry, lowres, watermark",
+      "variations": 1,
+      "seed": 1234,
+      "model": "juggernaut-xl-v9",
+      "left": 0,
+      "top": 0,
+      "right": 256,
+      "bottom": 0
+    }
+  },
+  "gimp": {
+    "id": "ab2-landscape-extend",
+    "spec": {
+      "id": "ab2-landscape-extend",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+        "w": 1920,
+        "h": 1440,
+        "scale": false
+      },
+      "selection": {
+        "kind": "none"
+      },
+      "proc": "expand",
+      "args": {
+        "prompt": "green meadow and evening sky with trees, photo",
+        "negative": "blurry, lowres, watermark",
+        "variations": 1,
+        "seed": 1234,
+        "model": "juggernaut-xl-v9",
+        "left": 0,
+        "top": 0,
+        "right": 256,
+        "bottom": 0
+      }
+    },
+    "started": "2026-10-09 03:14:27",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+          "size": [
+            1920,
+            1440
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "none",
+          "empty": true,
+          "bounds": null
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 1920,
+          "height": 1440,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "d2202c93a99502df0bb9d9a3cfccda91"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 1920,
+          "height": 1440,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "23312e5bbe15055edf37c94555328e56"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 2.04,
+        "status": "execution-error",
+        "message": "ComfyUI rejected the request: LoadImage: [Errno 541478725] End of file: 'C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\\\\ComfyUI\\\\input\\\\stable-boy\\\\sb-dbd84dee22f7-mask.png'. Make sure the model and its custom nodes are installed (Filters > AI > Generative Fill Settings > Models), then try again.",
+        "layers_before": [
+          {
+            "id": 62,
+            "name": "Background",
+            "size": [
+              1920,
+              1440
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 62,
+            "name": "Background",
+            "size": [
+              1920,
+              1440
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 1,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          1920,
+          1440
+        ],
+        "selection_restored": true,
+        "new_top_level": [],
+        "raw_after": {
+          "file": "after.raw",
+          "width": 1920,
+          "height": 1440,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "d2202c93a99502df0bb9d9a3cfccda91"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 2.55
+  },
+  "analysis_error": null
+}

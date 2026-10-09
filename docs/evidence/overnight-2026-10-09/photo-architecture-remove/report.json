@@ -1,0 +1,335 @@
+{
+  "id": "photo-architecture-remove",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Object Removal"
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "image_size_unchanged": {
+      "ok": true,
+      "value": [
+        2000,
+        1273
+      ]
+    },
+    "layer_covers_selection": {
+      "ok": true,
+      "value": {
+        "layer": [
+          824,
+          272,
+          512,
+          512
+        ],
+        "selection": [
+          980,
+          420,
+          200,
+          216
+        ]
+      }
+    },
+    "mask_opaque_over_selection": {
+      "ok": true,
+      "value": 1.0
+    },
+    "content_changed_in_selection": {
+      "ok": true,
+      "value": 67.02
+    },
+    "outside_grown_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "selection_restored": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 2.31,
+    "layer_size": [
+      512,
+      512
+    ],
+    "layer_offset": [
+      824,
+      272
+    ],
+    "mask_opaque_fraction_in_selection": 1.0,
+    "mask_opaque_fraction_in_fully_selected": 1.0,
+    "mask_pixels_gt0": 69952,
+    "selection_pixels_ge128": 43200,
+    "mean_abs_diff_in_selection": 67.02,
+    "outside_max_abs_diff": 0,
+    "outside_changed_pixels": 0,
+    "laplacian_var_in_after": 2595.0,
+    "laplacian_var_out_after": 2289.45,
+    "laplacian_var_in_before": 3972.44,
+    "detail_ratio_in_vs_out": 1.133,
+    "blur_flag": false
+  },
+  "memory": {
+    "samples": 4,
+    "peak_gimp_tree_mb": 454,
+    "peak_comfyui_mb": 2133,
+    "peak_gpu_mib": 1640
+  },
+  "evidence_files": {
+    "before.jpg/after.jpg": "longest side 1024 px, JPEG q85",
+    "region-1to1.jpg": {
+      "box": [
+        905,
+        345,
+        1255,
+        711
+      ],
+      "scale": 1.0,
+      "quality": 90
+    }
+  },
+  "spec": {
+    "id": "photo-architecture-remove",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+      "w": 2000,
+      "h": 1273,
+      "scale": false
+    },
+    "selection": {
+      "kind": "rect",
+      "rect": [
+        0.49,
+        0.33,
+        0.1,
+        0.17
+      ],
+      "units": "frac"
+    },
+    "proc": "fill",
+    "args": {
+      "prompt": "",
+      "negative": "blurry, lowres, watermark",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "mat-places512",
+      "remove": true
+    },
+    "removal": true
+  },
+  "gimp": {
+    "id": "photo-architecture-remove",
+    "spec": {
+      "id": "photo-architecture-remove",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+        "w": 2000,
+        "h": 1273,
+        "scale": false
+      },
+      "selection": {
+        "kind": "rect",
+        "rect": [
+          0.49,
+          0.33,
+          0.1,
+          0.17
+        ],
+        "units": "frac"
+      },
+      "proc": "fill",
+      "args": {
+        "prompt": "",
+        "negative": "blurry, lowres, watermark",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 1234,
+        "model": "mat-places512",
+        "remove": true
+      },
+      "removal": true
+    },
+    "started": "2026-10-09 03:20:09",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+          "size": [
+            2000,
+            1273
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "rect",
+          "empty": false,
+          "bounds": [
+            980,
+            420,
+            200,
+            216
+          ]
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 2000,
+          "height": 1273,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "2984137dcb68c20da5d06b26614fef33"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 2000,
+          "height": 1273,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "bf57230692c671273f142344f382039b"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 2.31,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 32,
+            "name": "Background",
+            "size": [
+              2000,
+              1273
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 38,
+            "name": "Object Removal",
+            "size": [
+              512,
+              512
+            ],
+            "offset": [
+              824,
+              272
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 32,
+            "name": "Background",
+            "size": [
+              2000,
+              1273
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          2000,
+          1273
+        ],
+        "selection_restored": true,
+        "new_top_level": [
+          {
+            "id": 38,
+            "name": "Object Removal",
+            "size": [
+              512,
+              512
+            ],
+            "offset": [
+              824,
+              272
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 512,
+          "height": 512,
+          "channels": 4,
+          "offset": [
+            824,
+            272
+          ],
+          "md5": "eb2d8cf85605fbce0cff07296ee62df5"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 512,
+          "height": 512,
+          "channels": 1,
+          "offset": [
+            824,
+            272
+          ],
+          "md5": "b084f8b5cfdee6bea6325c77232a3e0c"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 2000,
+          "height": 1273,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "a3441d4220733521d9b9766933d30d1c"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 3.13
+  },
+  "analysis_error": null,
+  "region_scale": 1.0
+}

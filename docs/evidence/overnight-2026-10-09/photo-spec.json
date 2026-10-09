@@ -1,0 +1,784 @@
+{
+ "cases": [
+  {
+   "id": "photo-face-remove",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+    "w": 2400,
+    "h": 3000,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.355,
+     0.555,
+     0.13,
+     0.135
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "mat-places512",
+    "remove": true
+   },
+   "removal": true
+  },
+  {
+   "id": "photo-fabric-remove",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\fabric.jpg",
+    "w": 1920,
+    "h": 1677,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.46,
+     0.37,
+     0.1,
+     0.1
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "mat-places512",
+    "remove": true
+   },
+   "removal": true
+  },
+  {
+   "id": "photo-landscape-remove",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.465,
+     0.315,
+     0.14,
+     0.09
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "mat-places512",
+    "remove": true
+   },
+   "removal": true
+  },
+  {
+   "id": "photo-architecture-remove",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+    "w": 2000,
+    "h": 1273,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.49,
+     0.33,
+     0.1,
+     0.17
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "mat-places512",
+    "remove": true
+   },
+   "removal": true
+  },
+  {
+   "id": "photo-text-remove",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+    "w": 1920,
+    "h": 1429,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.105,
+     0.235,
+     0.2,
+     0.1
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "mat-places512",
+    "remove": true
+   },
+   "removal": true
+  },
+  {
+   "id": "photo-product-remove",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+    "w": 1280,
+    "h": 853,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.3,
+     0.61,
+     0.21,
+     0.08
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "mat-places512",
+    "remove": true
+   },
+   "removal": true
+  },
+  {
+   "id": "photo-face-replace-fast",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+    "w": 2400,
+    "h": 3000,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.5,
+     0.185,
+     0.15,
+     0.06
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "sunglasses",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "photo-fabric-replace-fast",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\fabric.jpg",
+    "w": 1920,
+    "h": 1677,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.3,
+     0.3,
+     0.35,
+     0.35
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red wool scarf",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "photo-landscape-replace-fast",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.25,
+     0.03,
+     0.18,
+     0.2
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "hot air balloon",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "photo-architecture-replace-fast",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+    "w": 2000,
+    "h": 1273,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.005,
+     0.3,
+     0.085,
+     0.25
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "open window with curtains",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "photo-text-replace-fast",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+    "w": 1920,
+    "h": 1429,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.495,
+     0.375,
+     0.42,
+     0.11
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a blue arrow",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "photo-product-replace-fast",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+    "w": 1280,
+    "h": 853,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.47,
+     0.62,
+     0.13,
+     0.11
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a lemon slice",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "photo-landscape-remove-quality",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.465,
+     0.315,
+     0.14,
+     0.09
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "remove": false
+   },
+   "removal": true
+  },
+  {
+   "id": "photo-architecture-remove-quality",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+    "w": 2000,
+    "h": 1273,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.49,
+     0.33,
+     0.1,
+     0.17
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "remove": false
+   },
+   "removal": true
+  },
+  {
+   "id": "photo-face-replace",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+    "w": 2400,
+    "h": 3000,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.5,
+     0.185,
+     0.15,
+     0.06
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "sunglasses",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "remove": false
+   }
+  },
+  {
+   "id": "photo-fabric-replace",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\fabric.jpg",
+    "w": 1920,
+    "h": 1677,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.3,
+     0.3,
+     0.35,
+     0.35
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red wool scarf",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "remove": false
+   }
+  },
+  {
+   "id": "photo-landscape-replace",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.25,
+     0.03,
+     0.18,
+     0.2
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "hot air balloon",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "remove": false
+   }
+  },
+  {
+   "id": "photo-architecture-replace",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+    "w": 2000,
+    "h": 1273,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.005,
+     0.3,
+     0.085,
+     0.25
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "open window with curtains",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "remove": false
+   }
+  },
+  {
+   "id": "photo-text-replace",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+    "w": 1920,
+    "h": 1429,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.495,
+     0.375,
+     0.42,
+     0.11
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a blue arrow",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "remove": false
+   }
+  },
+  {
+   "id": "photo-product-replace",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+    "w": 1280,
+    "h": 853,
+    "scale": false
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.47,
+     0.62,
+     0.13,
+     0.11
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a lemon slice",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "remove": false
+   }
+  },
+  {
+   "id": "photo-face-extend",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+    "w": 2400,
+    "h": 3000,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "studio portrait of an astronaut in a blue flight suit, grey backdrop, photo",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "left": 0,
+    "top": 0,
+    "right": 256,
+    "bottom": 0
+   }
+  },
+  {
+   "id": "photo-fabric-extend",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\fabric.jpg",
+    "w": 1920,
+    "h": 1677,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "close-up of tweed wool fabric weave",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "left": 0,
+    "top": 0,
+    "right": 256,
+    "bottom": 0
+   }
+  },
+  {
+   "id": "photo-landscape-extend",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "green meadow and evening sky with trees, photo",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "left": 0,
+    "top": 0,
+    "right": 256,
+    "bottom": 0
+   }
+  },
+  {
+   "id": "photo-architecture-extend",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+    "w": 2000,
+    "h": 1273,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "old apartment building facade with windows and laundry, photo",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "left": 0,
+    "top": 0,
+    "right": 256,
+    "bottom": 0
+   }
+  },
+  {
+   "id": "photo-text-extend",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+    "w": 1920,
+    "h": 1429,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "yellow road sign with black lettering and a metal frame",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "left": 0,
+    "top": 0,
+    "right": 256,
+    "bottom": 0
+   }
+  },
+  {
+   "id": "photo-product-extend",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+    "w": 1280,
+    "h": 853,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "white tea cup on a saucer, white background, product photo",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "left": 0,
+    "top": 0,
+    "right": 256,
+    "bottom": 0
+   }
+  },
+  {
+   "id": "photo-landscape-extend-all",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "green meadow and evening sky with trees, photo",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "left": 256,
+    "top": 256,
+    "right": 256,
+    "bottom": 256
+   }
+  },
+  {
+   "id": "photo-landscape-extend-all-fast",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "green meadow and evening sky with trees, photo",
+    "negative": "blurry, lowres, watermark",
+    "variations": 1,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "left": 256,
+    "top": 256,
+    "right": 256,
+    "bottom": 256
+   }
+  }
+ ]
+}

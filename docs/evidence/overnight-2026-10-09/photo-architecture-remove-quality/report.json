@@ -1,0 +1,335 @@
+{
+  "id": "photo-architecture-remove-quality",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Generative Fill: seamless continuation of the surrounding backgro"
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "image_size_unchanged": {
+      "ok": true,
+      "value": [
+        2000,
+        1273
+      ]
+    },
+    "layer_covers_selection": {
+      "ok": true,
+      "value": {
+        "layer": [
+          764,
+          204,
+          632,
+          648
+        ],
+        "selection": [
+          980,
+          420,
+          200,
+          216
+        ]
+      }
+    },
+    "mask_opaque_over_selection": {
+      "ok": true,
+      "value": 1.0
+    },
+    "content_changed_in_selection": {
+      "ok": true,
+      "value": 68.52
+    },
+    "outside_grown_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "selection_restored": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 14.5,
+    "layer_size": [
+      632,
+      648
+    ],
+    "layer_offset": [
+      764,
+      204
+    ],
+    "mask_opaque_fraction_in_selection": 1.0,
+    "mask_opaque_fraction_in_fully_selected": 1.0,
+    "mask_pixels_gt0": 69952,
+    "selection_pixels_ge128": 43200,
+    "mean_abs_diff_in_selection": 68.52,
+    "outside_max_abs_diff": 0,
+    "outside_changed_pixels": 0,
+    "laplacian_var_in_after": 1951.71,
+    "laplacian_var_out_after": 2289.45,
+    "laplacian_var_in_before": 3972.44,
+    "detail_ratio_in_vs_out": 0.852,
+    "blur_flag": false
+  },
+  "memory": {
+    "samples": 16,
+    "peak_gimp_tree_mb": 529,
+    "peak_comfyui_mb": 4207,
+    "peak_gpu_mib": 5958
+  },
+  "evidence_files": {
+    "before.jpg/after.jpg": "longest side 1024 px, JPEG q85",
+    "region-1to1.jpg": {
+      "box": [
+        905,
+        345,
+        1255,
+        711
+      ],
+      "scale": 1.0,
+      "quality": 90
+    }
+  },
+  "spec": {
+    "id": "photo-architecture-remove-quality",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+      "w": 2000,
+      "h": 1273,
+      "scale": false
+    },
+    "selection": {
+      "kind": "rect",
+      "rect": [
+        0.49,
+        0.33,
+        0.1,
+        0.17
+      ],
+      "units": "frac"
+    },
+    "proc": "fill",
+    "args": {
+      "prompt": "",
+      "negative": "blurry, lowres, watermark",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "juggernaut-xl-v9",
+      "remove": false
+    },
+    "removal": true
+  },
+  "gimp": {
+    "id": "photo-architecture-remove-quality",
+    "spec": {
+      "id": "photo-architecture-remove-quality",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+        "w": 2000,
+        "h": 1273,
+        "scale": false
+      },
+      "selection": {
+        "kind": "rect",
+        "rect": [
+          0.49,
+          0.33,
+          0.1,
+          0.17
+        ],
+        "units": "frac"
+      },
+      "proc": "fill",
+      "args": {
+        "prompt": "",
+        "negative": "blurry, lowres, watermark",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 1234,
+        "model": "juggernaut-xl-v9",
+        "remove": false
+      },
+      "removal": true
+    },
+    "started": "2026-10-09 03:20:39",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+          "size": [
+            2000,
+            1273
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "rect",
+          "empty": false,
+          "bounds": [
+            980,
+            420,
+            200,
+            216
+          ]
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 2000,
+          "height": 1273,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "2984137dcb68c20da5d06b26614fef33"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 2000,
+          "height": 1273,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "bf57230692c671273f142344f382039b"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 14.5,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 72,
+            "name": "Background",
+            "size": [
+              2000,
+              1273
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 78,
+            "name": "Generative Fill: seamless continuation of the surrounding backgro",
+            "size": [
+              632,
+              648
+            ],
+            "offset": [
+              764,
+              204
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 72,
+            "name": "Background",
+            "size": [
+              2000,
+              1273
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          2000,
+          1273
+        ],
+        "selection_restored": true,
+        "new_top_level": [
+          {
+            "id": 78,
+            "name": "Generative Fill: seamless continuation of the surrounding backgro",
+            "size": [
+              632,
+              648
+            ],
+            "offset": [
+              764,
+              204
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 632,
+          "height": 648,
+          "channels": 4,
+          "offset": [
+            764,
+            204
+          ],
+          "md5": "6720b9d2b4e323028d45b96555deedef"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 632,
+          "height": 648,
+          "channels": 1,
+          "offset": [
+            764,
+            204
+          ],
+          "md5": "d8f4445b2eb6fc98c62688192c2e8e97"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 2000,
+          "height": 1273,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "c63668613fdb3fdb0cbb0395807d0047"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 15.36
+  },
+  "analysis_error": null,
+  "region_scale": 1.0
+}

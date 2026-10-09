@@ -1,0 +1,335 @@
+{
+  "id": "photo-product-remove",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Object Removal"
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "image_size_unchanged": {
+      "ok": true,
+      "value": [
+        1280,
+        853
+      ]
+    },
+    "layer_covers_selection": {
+      "ok": true,
+      "value": {
+        "layer": [
+          250,
+          298,
+          537,
+          512
+        ],
+        "selection": [
+          384,
+          520,
+          269,
+          68
+        ]
+      }
+    },
+    "mask_opaque_over_selection": {
+      "ok": true,
+      "value": 1.0
+    },
+    "content_changed_in_selection": {
+      "ok": true,
+      "value": 18.82
+    },
+    "outside_grown_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "selection_restored": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 2.15,
+    "layer_size": [
+      537,
+      512
+    ],
+    "layer_offset": [
+      250,
+      298
+    ],
+    "mask_opaque_fraction_in_selection": 1.0,
+    "mask_opaque_fraction_in_fully_selected": 1.0,
+    "mask_pixels_gt0": 43008,
+    "selection_pixels_ge128": 18292,
+    "mean_abs_diff_in_selection": 18.82,
+    "outside_max_abs_diff": 0,
+    "outside_changed_pixels": 0,
+    "laplacian_var_in_after": 3.43,
+    "laplacian_var_out_after": 18.67,
+    "laplacian_var_in_before": 47.12,
+    "detail_ratio_in_vs_out": 0.184,
+    "blur_flag": false
+  },
+  "memory": {
+    "samples": 4,
+    "peak_gimp_tree_mb": 580,
+    "peak_comfyui_mb": 2141,
+    "peak_gpu_mib": 264
+  },
+  "evidence_files": {
+    "before.jpg/after.jpg": "longest side 1024 px, JPEG q85",
+    "region-1to1.jpg": {
+      "box": [
+        290,
+        426,
+        747,
+        682
+      ],
+      "scale": 1.0,
+      "quality": 90
+    }
+  },
+  "spec": {
+    "id": "photo-product-remove",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+      "w": 1280,
+      "h": 853,
+      "scale": false
+    },
+    "selection": {
+      "kind": "rect",
+      "rect": [
+        0.3,
+        0.61,
+        0.21,
+        0.08
+      ],
+      "units": "frac"
+    },
+    "proc": "fill",
+    "args": {
+      "prompt": "",
+      "negative": "blurry, lowres, watermark",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "mat-places512",
+      "remove": true
+    },
+    "removal": true
+  },
+  "gimp": {
+    "id": "photo-product-remove",
+    "spec": {
+      "id": "photo-product-remove",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+        "w": 1280,
+        "h": 853,
+        "scale": false
+      },
+      "selection": {
+        "kind": "rect",
+        "rect": [
+          0.3,
+          0.61,
+          0.21,
+          0.08
+        ],
+        "units": "frac"
+      },
+      "proc": "fill",
+      "args": {
+        "prompt": "",
+        "negative": "blurry, lowres, watermark",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 1234,
+        "model": "mat-places512",
+        "remove": true
+      },
+      "removal": true
+    },
+    "started": "2026-10-09 03:20:17",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+          "size": [
+            1280,
+            853
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "rect",
+          "empty": false,
+          "bounds": [
+            384,
+            520,
+            269,
+            68
+          ]
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 1280,
+          "height": 853,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "b8063723ff98233864be89a9c73e0194"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 1280,
+          "height": 853,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "b111411ea40fed749f638f47b5942070"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 2.15,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 52,
+            "name": "Background",
+            "size": [
+              1280,
+              853
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 58,
+            "name": "Object Removal",
+            "size": [
+              537,
+              512
+            ],
+            "offset": [
+              250,
+              298
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 52,
+            "name": "Background",
+            "size": [
+              1280,
+              853
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          1280,
+          853
+        ],
+        "selection_restored": true,
+        "new_top_level": [
+          {
+            "id": 58,
+            "name": "Object Removal",
+            "size": [
+              537,
+              512
+            ],
+            "offset": [
+              250,
+              298
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 537,
+          "height": 512,
+          "channels": 4,
+          "offset": [
+            250,
+            298
+          ],
+          "md5": "7471ed20534afbe5f4b551fc025c724d"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 537,
+          "height": 512,
+          "channels": 1,
+          "offset": [
+            250,
+            298
+          ],
+          "md5": "58fbe321b1a62edf3998c6d2e391cb8a"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 1280,
+          "height": 853,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "a0d6ddbf6d9ce834fdc276dba7573428"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 2.55
+  },
+  "analysis_error": null,
+  "region_scale": 1.0
+}

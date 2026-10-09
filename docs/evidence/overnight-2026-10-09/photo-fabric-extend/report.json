@@ -1,0 +1,304 @@
+{
+  "id": "photo-fabric-extend",
+  "pass": false,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Generative Expand: close-up of tweed wool fabric weave"
+      ]
+    },
+    "canvas_grew": {
+      "ok": true,
+      "value": [
+        2176,
+        1677
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "new_area_opaque": {
+      "ok": true,
+      "value": 255.0
+    },
+    "no_hard_seam_at_old_edge": {
+      "ok": false,
+      "value": 33.71
+    },
+    "new_area_not_empty": {
+      "ok": true,
+      "value": 84.8
+    },
+    "old_pixels_outside_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "selection_state_after": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 17.61,
+    "layer_size": [
+      864,
+      1677
+    ],
+    "layer_offset": [
+      1312,
+      0
+    ],
+    "laplacian_var_new_area": 20.35,
+    "laplacian_var_old_area": 15409.29,
+    "seam_mean_abs_diff_max": 33.71,
+    "new_area_mean_rgb": [
+      88.2,
+      88.0,
+      78.3
+    ],
+    "old_pixels_outside_mask_max_abs_diff": 0,
+    "old_pixels_outside_mask_count": 3125928
+  },
+  "memory": {
+    "samples": 18,
+    "peak_gimp_tree_mb": 604,
+    "peak_comfyui_mb": 4568,
+    "peak_gpu_mib": 6586
+  },
+  "evidence_files": {
+    "before.jpg/after.jpg": "longest side 1024 px, JPEG q85",
+    "region-1to1.jpg": {
+      "box": [
+        1408,
+        454,
+        2176,
+        1222
+      ],
+      "scale": 1.0,
+      "quality": 90
+    }
+  },
+  "spec": {
+    "id": "photo-fabric-extend",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\fabric.jpg",
+      "w": 1920,
+      "h": 1677,
+      "scale": false
+    },
+    "selection": {
+      "kind": "none"
+    },
+    "proc": "expand",
+    "args": {
+      "prompt": "close-up of tweed wool fabric weave",
+      "negative": "blurry, lowres, watermark",
+      "variations": 1,
+      "seed": 1234,
+      "model": "juggernaut-xl-v9",
+      "left": 0,
+      "top": 0,
+      "right": 256,
+      "bottom": 0
+    }
+  },
+  "gimp": {
+    "id": "photo-fabric-extend",
+    "spec": {
+      "id": "photo-fabric-extend",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\fabric.jpg",
+        "w": 1920,
+        "h": 1677,
+        "scale": false
+      },
+      "selection": {
+        "kind": "none"
+      },
+      "proc": "expand",
+      "args": {
+        "prompt": "close-up of tweed wool fabric weave",
+        "negative": "blurry, lowres, watermark",
+        "variations": 1,
+        "seed": 1234,
+        "model": "juggernaut-xl-v9",
+        "left": 0,
+        "top": 0,
+        "right": 256,
+        "bottom": 0
+      }
+    },
+    "started": "2026-10-09 03:23:05",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\fabric.jpg",
+          "size": [
+            1920,
+            1677
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "none",
+          "empty": true,
+          "bounds": null
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 1920,
+          "height": 1677,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "580bdbe5df58252b424eff3903899545"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 1920,
+          "height": 1677,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "b31e10f8ddad149ab82485425370ec59"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 17.61,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 152,
+            "name": "Background",
+            "size": [
+              1920,
+              1677
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 157,
+            "name": "Generative Expand: close-up of tweed wool fabric weave",
+            "size": [
+              864,
+              1677
+            ],
+            "offset": [
+              1312,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 152,
+            "name": "Background",
+            "size": [
+              1920,
+              1677
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          2176,
+          1677
+        ],
+        "selection_restored": null,
+        "selection_after_empty": true,
+        "new_top_level": [
+          {
+            "id": 157,
+            "name": "Generative Expand: close-up of tweed wool fabric weave",
+            "size": [
+              864,
+              1677
+            ],
+            "offset": [
+              1312,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 864,
+          "height": 1677,
+          "channels": 4,
+          "offset": [
+            1312,
+            0
+          ],
+          "md5": "f4331d3668165795f6166cb939706a8f"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 864,
+          "height": 1677,
+          "channels": 1,
+          "offset": [
+            1312,
+            0
+          ],
+          "md5": "27ce72fd956a261787c92d73fa50adab"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 2176,
+          "height": 1677,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "0d0a68851b2f753ba39b3ec8ad1a333a"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 18.22
+  },
+  "analysis_error": null,
+  "region_scale": 1.0
+}

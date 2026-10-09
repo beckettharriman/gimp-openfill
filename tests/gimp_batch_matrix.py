@@ -20,6 +20,7 @@ Spec format: {"cases": [case, ...]}; a case is
      "image": {"w": 1024, "h": 768, "source": "scene" | "new" | "<path>",
                "base": "rgb" | "gray" | "indexed",
                "precision": "u8" | "u16" | "float" | "linear",
+               "scale": true,
                "setup": ["hidden_layer", "text_layer", ...]},
      "selection": {"kind": "none" | "all" | "rect" | "ellipse" | "multi" | "blob",
                    "rect": [x, y, w, h], "rects": [[...], ...], "units": "px" | "frac",
@@ -28,6 +29,9 @@ Spec format: {"cases": [case, ...]}; a case is
      "args": {...procedure arguments...},
      "runs": 1,
      "expect": {"status": "success" | "error", "message_contains": ["..."]}}
+
+A "source" path loads that file (a photograph, for the photo-* cases); it is
+scaled to w x h unless "scale" is false, which keeps the file's own size.
 
 Outputs per case in <out>/<id>/: gimp-report.json and raw buffers (*.raw,
 described in the report: width, height, channels, offset).

@@ -1,0 +1,304 @@
+{
+  "id": "photo-text-extend",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Generative Expand: yellow road sign with black lettering and a meta"
+      ]
+    },
+    "canvas_grew": {
+      "ok": true,
+      "value": [
+        2176,
+        1429
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "new_area_opaque": {
+      "ok": true,
+      "value": 255.0
+    },
+    "no_hard_seam_at_old_edge": {
+      "ok": true,
+      "value": 4.04
+    },
+    "new_area_not_empty": {
+      "ok": true,
+      "value": 170.6
+    },
+    "old_pixels_outside_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "selection_state_after": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 18.48,
+    "layer_size": [
+      864,
+      1429
+    ],
+    "layer_offset": [
+      1312,
+      0
+    ],
+    "laplacian_var_new_area": 7.57,
+    "laplacian_var_old_area": 418.37,
+    "seam_mean_abs_diff_max": 4.04,
+    "new_area_mean_rgb": [
+      194.1,
+      186.7,
+      131.1
+    ],
+    "old_pixels_outside_mask_max_abs_diff": 0,
+    "old_pixels_outside_mask_count": 2663656
+  },
+  "memory": {
+    "samples": 19,
+    "peak_gimp_tree_mb": 635,
+    "peak_comfyui_mb": 4520,
+    "peak_gpu_mib": 6410
+  },
+  "evidence_files": {
+    "before.jpg/after.jpg": "longest side 1024 px, JPEG q85",
+    "region-1to1.jpg": {
+      "box": [
+        1408,
+        330,
+        2176,
+        1098
+      ],
+      "scale": 1.0,
+      "quality": 90
+    }
+  },
+  "spec": {
+    "id": "photo-text-extend",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+      "w": 1920,
+      "h": 1429,
+      "scale": false
+    },
+    "selection": {
+      "kind": "none"
+    },
+    "proc": "expand",
+    "args": {
+      "prompt": "yellow road sign with black lettering and a metal frame",
+      "negative": "blurry, lowres, watermark",
+      "variations": 1,
+      "seed": 1234,
+      "model": "juggernaut-xl-v9",
+      "left": 0,
+      "top": 0,
+      "right": 256,
+      "bottom": 0
+    }
+  },
+  "gimp": {
+    "id": "photo-text-extend",
+    "spec": {
+      "id": "photo-text-extend",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+        "w": 1920,
+        "h": 1429,
+        "scale": false
+      },
+      "selection": {
+        "kind": "none"
+      },
+      "proc": "expand",
+      "args": {
+        "prompt": "yellow road sign with black lettering and a metal frame",
+        "negative": "blurry, lowres, watermark",
+        "variations": 1,
+        "seed": 1234,
+        "model": "juggernaut-xl-v9",
+        "left": 0,
+        "top": 0,
+        "right": 256,
+        "bottom": 0
+      }
+    },
+    "started": "2026-10-09 03:24:02",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+          "size": [
+            1920,
+            1429
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "none",
+          "empty": true,
+          "bounds": null
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 1920,
+          "height": 1429,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "1086cae2da2873ebeb6da2e1c10dd5b6"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 1920,
+          "height": 1429,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "81c222203db53495d316e893c56dcd84"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 18.48,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 182,
+            "name": "Background",
+            "size": [
+              1920,
+              1429
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 187,
+            "name": "Generative Expand: yellow road sign with black lettering and a meta",
+            "size": [
+              864,
+              1429
+            ],
+            "offset": [
+              1312,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 182,
+            "name": "Background",
+            "size": [
+              1920,
+              1429
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          2176,
+          1429
+        ],
+        "selection_restored": null,
+        "selection_after_empty": true,
+        "new_top_level": [
+          {
+            "id": 187,
+            "name": "Generative Expand: yellow road sign with black lettering and a meta",
+            "size": [
+              864,
+              1429
+            ],
+            "offset": [
+              1312,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 864,
+          "height": 1429,
+          "channels": 4,
+          "offset": [
+            1312,
+            0
+          ],
+          "md5": "aaf4fa74bbe70d11b7b6bc9382f88df0"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 864,
+          "height": 1429,
+          "channels": 1,
+          "offset": [
+            1312,
+            0
+          ],
+          "md5": "8cad1a14d758a96f0890be4e228202eb"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 2176,
+          "height": 1429,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "cc52e3d054e5be6313bd8767601f9997"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 19.08
+  },
+  "analysis_error": null,
+  "region_scale": 1.0
+}

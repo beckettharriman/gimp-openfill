@@ -1,0 +1,337 @@
+{
+  "id": "photo-text-replace",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Generative Fill: a blue arrow"
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "image_size_unchanged": {
+      "ok": true,
+      "value": [
+        1920,
+        1429
+      ]
+    },
+    "layer_covers_selection": {
+      "ok": true,
+      "value": {
+        "layer": [
+          308,
+          133,
+          1612,
+          963
+        ],
+        "selection": [
+          950,
+          536,
+          806,
+          157
+        ]
+      }
+    },
+    "mask_opaque_over_selection": {
+      "ok": true,
+      "value": 0.9995574591835122
+    },
+    "content_changed_in_selection": {
+      "ok": true,
+      "value": 32.21
+    },
+    "outside_grown_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "not_a_flat_blob": {
+      "ok": true,
+      "value": 1.6
+    },
+    "selection_restored": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 17.41,
+    "layer_size": [
+      1612,
+      963
+    ],
+    "layer_offset": [
+      308,
+      133
+    ],
+    "mask_opaque_fraction_in_selection": 0.9996,
+    "mask_opaque_fraction_in_fully_selected": 0.9996,
+    "mask_pixels_gt0": 208350,
+    "selection_pixels_ge128": 126542,
+    "mean_abs_diff_in_selection": 32.21,
+    "outside_max_abs_diff": 0,
+    "outside_changed_pixels": 0,
+    "laplacian_var_in_after": 1.6,
+    "laplacian_var_out_after": 437.91,
+    "laplacian_var_in_before": 800.2,
+    "detail_ratio_in_vs_out": 0.004,
+    "blur_flag": true
+  },
+  "memory": {
+    "samples": 18,
+    "peak_gimp_tree_mb": 605,
+    "peak_comfyui_mb": 4350,
+    "peak_gpu_mib": 7162
+  },
+  "evidence_files": {
+    "before.jpg/after.jpg": "longest side 1024 px, JPEG q85",
+    "region-1to1.jpg": {
+      "box": [
+        668,
+        254,
+        1920,
+        975
+      ],
+      "scale": 0.6369,
+      "quality": 90
+    }
+  },
+  "spec": {
+    "id": "photo-text-replace",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+      "w": 1920,
+      "h": 1429,
+      "scale": false
+    },
+    "selection": {
+      "kind": "rect",
+      "rect": [
+        0.495,
+        0.375,
+        0.42,
+        0.11
+      ],
+      "units": "frac"
+    },
+    "proc": "fill",
+    "args": {
+      "prompt": "a blue arrow",
+      "negative": "blurry, lowres, watermark",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "juggernaut-xl-v9",
+      "remove": false
+    }
+  },
+  "gimp": {
+    "id": "photo-text-replace",
+    "spec": {
+      "id": "photo-text-replace",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+        "w": 1920,
+        "h": 1429,
+        "scale": false
+      },
+      "selection": {
+        "kind": "rect",
+        "rect": [
+          0.495,
+          0.375,
+          0.42,
+          0.11
+        ],
+        "units": "frac"
+      },
+      "proc": "fill",
+      "args": {
+        "prompt": "a blue arrow",
+        "negative": "blurry, lowres, watermark",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 1234,
+        "model": "juggernaut-xl-v9",
+        "remove": false
+      }
+    },
+    "started": "2026-10-09 03:22:10",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\text.jpg",
+          "size": [
+            1920,
+            1429
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "rect",
+          "empty": false,
+          "bounds": [
+            950,
+            536,
+            806,
+            157
+          ]
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 1920,
+          "height": 1429,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "1086cae2da2873ebeb6da2e1c10dd5b6"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 1920,
+          "height": 1429,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "9b7662b984aaf47564676323731146a0"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 17.41,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 122,
+            "name": "Background",
+            "size": [
+              1920,
+              1429
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 128,
+            "name": "Generative Fill: a blue arrow",
+            "size": [
+              1612,
+              963
+            ],
+            "offset": [
+              308,
+              133
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 122,
+            "name": "Background",
+            "size": [
+              1920,
+              1429
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          1920,
+          1429
+        ],
+        "selection_restored": true,
+        "new_top_level": [
+          {
+            "id": 128,
+            "name": "Generative Fill: a blue arrow",
+            "size": [
+              1612,
+              963
+            ],
+            "offset": [
+              308,
+              133
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 1612,
+          "height": 963,
+          "channels": 4,
+          "offset": [
+            308,
+            133
+          ],
+          "md5": "fafda7bb8a856747084781cedbd83e78"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 1612,
+          "height": 963,
+          "channels": 1,
+          "offset": [
+            308,
+            133
+          ],
+          "md5": "85030c03e720150e86e687bfc8feda4c"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 1920,
+          "height": 1429,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "f8c3ef05040a35bbdec21218dc356c06"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 17.99
+  },
+  "analysis_error": null,
+  "region_scale": 0.6369
+}

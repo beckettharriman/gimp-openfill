@@ -1,0 +1,335 @@
+{
+  "id": "ab1-architecture-replace",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Generative Fill: open window with curtains"
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "image_size_unchanged": {
+      "ok": true,
+      "value": [
+        2000,
+        1273
+      ]
+    },
+    "layer_covers_selection": {
+      "ok": true,
+      "value": {
+        "layer": [
+          0,
+          223,
+          488,
+          636
+        ],
+        "selection": [
+          10,
+          382,
+          170,
+          318
+        ]
+      }
+    },
+    "mask_opaque_over_selection": {
+      "ok": true,
+      "value": 1.0
+    },
+    "content_changed_in_selection": {
+      "ok": true,
+      "value": 13.01
+    },
+    "outside_grown_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "not_a_flat_blob": {
+      "ok": true,
+      "value": 149.62
+    },
+    "selection_restored": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 18.06,
+    "layer_size": [
+      488,
+      636
+    ],
+    "layer_offset": [
+      0,
+      223
+    ],
+    "mask_opaque_fraction_in_selection": 1.0,
+    "mask_opaque_fraction_in_fully_selected": 1.0,
+    "mask_pixels_gt0": 82844,
+    "selection_pixels_ge128": 54060,
+    "mean_abs_diff_in_selection": 13.01,
+    "outside_max_abs_diff": 0,
+    "outside_changed_pixels": 0,
+    "laplacian_var_in_after": 149.62,
+    "laplacian_var_out_after": 1249.0,
+    "laplacian_var_in_before": 580.48,
+    "detail_ratio_in_vs_out": 0.12,
+    "blur_flag": false
+  },
+  "memory": {
+    "samples": 19,
+    "peak_gimp_tree_mb": 610,
+    "peak_comfyui_mb": 4381,
+    "peak_gpu_mib": 6870
+  },
+  "evidence_files": {
+    "before.png scale": 0.512,
+    "after.png scale": 0.512,
+    "crop_box": [
+      0,
+      64,
+      498,
+      1018
+    ],
+    "before-crop.png scale": 1.0,
+    "after-crop.png scale": 1.0
+  },
+  "spec": {
+    "id": "ab1-architecture-replace",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+      "w": 2000,
+      "h": 1273,
+      "scale": false
+    },
+    "selection": {
+      "kind": "rect",
+      "rect": [
+        0.005,
+        0.3,
+        0.085,
+        0.25
+      ],
+      "units": "frac"
+    },
+    "proc": "fill",
+    "args": {
+      "prompt": "open window with curtains",
+      "negative": "blurry, lowres, watermark",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "juggernaut-xl-v9",
+      "remove": false
+    }
+  },
+  "gimp": {
+    "id": "ab1-architecture-replace",
+    "spec": {
+      "id": "ab1-architecture-replace",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+        "w": 2000,
+        "h": 1273,
+        "scale": false
+      },
+      "selection": {
+        "kind": "rect",
+        "rect": [
+          0.005,
+          0.3,
+          0.085,
+          0.25
+        ],
+        "units": "frac"
+      },
+      "proc": "fill",
+      "args": {
+        "prompt": "open window with curtains",
+        "negative": "blurry, lowres, watermark",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 1234,
+        "model": "juggernaut-xl-v9",
+        "remove": false
+      }
+    },
+    "started": "2026-10-09 03:10:26",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+          "size": [
+            2000,
+            1273
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "rect",
+          "empty": false,
+          "bounds": [
+            10,
+            382,
+            170,
+            318
+          ]
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 2000,
+          "height": 1273,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "2984137dcb68c20da5d06b26614fef33"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 2000,
+          "height": 1273,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "baaa02be5e6f4d336353bd808803c0ae"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 18.06,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 72,
+            "name": "Background",
+            "size": [
+              2000,
+              1273
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 78,
+            "name": "Generative Fill: open window with curtains",
+            "size": [
+              488,
+              636
+            ],
+            "offset": [
+              0,
+              223
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 72,
+            "name": "Background",
+            "size": [
+              2000,
+              1273
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          2000,
+          1273
+        ],
+        "selection_restored": true,
+        "new_top_level": [
+          {
+            "id": 78,
+            "name": "Generative Fill: open window with curtains",
+            "size": [
+              488,
+              636
+            ],
+            "offset": [
+              0,
+              223
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 488,
+          "height": 636,
+          "channels": 4,
+          "offset": [
+            0,
+            223
+          ],
+          "md5": "8fb2be9ecce675528bb20ea05e71c296"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 488,
+          "height": 636,
+          "channels": 1,
+          "offset": [
+            0,
+            223
+          ],
+          "md5": "eb73b552eb2f211e0138eb72196b1573"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 2000,
+          "height": 1273,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "9051ac1c06507608130a6f3e17ccfa3d"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 18.89
+  },
+  "analysis_error": null
+}

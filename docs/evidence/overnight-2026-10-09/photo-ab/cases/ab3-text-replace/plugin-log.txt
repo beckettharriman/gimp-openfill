@@ -1,0 +1,3 @@
+2026-10-09 03:29:22,478 INFO  [14144 stable-boy] fill: selection=Rect(x=950, y=536, width=806, height=157) context=Rect(x=308, y=133, width=1612, height=963) working=1024x608 scale=0.64 mask(grow=16/10px feather=24/10px layer grow=16px) prefill=border/soft-neutral color_match=1.0 model=juggernaut-xl-v9 template=sdxl_fooocus
+2026-10-09 03:29:23,468 INFO  [14144 stable-boy] queued prompt e6e962aa-fc96-43f7-a31b-daaafa1beed4 (timeout 127s, 20 steps x 1)
+2026-10-09 03:29:39,207 INFO  [14144 stable-boy] fill: done, seed=1234, 1 layer(s)

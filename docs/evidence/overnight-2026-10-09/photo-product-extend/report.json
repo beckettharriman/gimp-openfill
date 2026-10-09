@@ -1,0 +1,304 @@
+{
+  "id": "photo-product-extend",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Generative Expand: white tea cup on a saucer, white background, pro"
+      ]
+    },
+    "canvas_grew": {
+      "ok": true,
+      "value": [
+        1536,
+        853
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "new_area_opaque": {
+      "ok": true,
+      "value": 255.0
+    },
+    "no_hard_seam_at_old_edge": {
+      "ok": true,
+      "value": 0.02
+    },
+    "new_area_not_empty": {
+      "ok": true,
+      "value": 254.8
+    },
+    "old_pixels_outside_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "selection_state_after": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 19.89,
+    "layer_size": [
+      864,
+      853
+    ],
+    "layer_offset": [
+      672,
+      0
+    ],
+    "laplacian_var_new_area": 0.1,
+    "laplacian_var_old_area": 8.59,
+    "seam_mean_abs_diff_max": 0.02,
+    "new_area_mean_rgb": [
+      254.9,
+      254.9,
+      254.8
+    ],
+    "old_pixels_outside_mask_max_abs_diff": 0,
+    "old_pixels_outside_mask_count": 1044072
+  },
+  "memory": {
+    "samples": 20,
+    "peak_gimp_tree_mb": 635,
+    "peak_comfyui_mb": 4526,
+    "peak_gpu_mib": 6842
+  },
+  "evidence_files": {
+    "before.jpg/after.jpg": "longest side 1024 px, JPEG q85",
+    "region-1to1.jpg": {
+      "box": [
+        768,
+        42,
+        1536,
+        810
+      ],
+      "scale": 1.0,
+      "quality": 90
+    }
+  },
+  "spec": {
+    "id": "photo-product-extend",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+      "w": 1280,
+      "h": 853,
+      "scale": false
+    },
+    "selection": {
+      "kind": "none"
+    },
+    "proc": "expand",
+    "args": {
+      "prompt": "white tea cup on a saucer, white background, product photo",
+      "negative": "blurry, lowres, watermark",
+      "variations": 1,
+      "seed": 1234,
+      "model": "juggernaut-xl-v9",
+      "left": 0,
+      "top": 0,
+      "right": 256,
+      "bottom": 0
+    }
+  },
+  "gimp": {
+    "id": "photo-product-extend",
+    "spec": {
+      "id": "photo-product-extend",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+        "w": 1280,
+        "h": 853,
+        "scale": false
+      },
+      "selection": {
+        "kind": "none"
+      },
+      "proc": "expand",
+      "args": {
+        "prompt": "white tea cup on a saucer, white background, product photo",
+        "negative": "blurry, lowres, watermark",
+        "variations": 1,
+        "seed": 1234,
+        "model": "juggernaut-xl-v9",
+        "left": 0,
+        "top": 0,
+        "right": 256,
+        "bottom": 0
+      }
+    },
+    "started": "2026-10-09 03:24:22",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+          "size": [
+            1280,
+            853
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "none",
+          "empty": true,
+          "bounds": null
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 1280,
+          "height": 853,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "b8063723ff98233864be89a9c73e0194"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 1280,
+          "height": 853,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "173b3acf80750354f59c5a5c35440888"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 19.89,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 192,
+            "name": "Background",
+            "size": [
+              1280,
+              853
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 197,
+            "name": "Generative Expand: white tea cup on a saucer, white background, pro",
+            "size": [
+              864,
+              853
+            ],
+            "offset": [
+              672,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 192,
+            "name": "Background",
+            "size": [
+              1280,
+              853
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          1536,
+          853
+        ],
+        "selection_restored": null,
+        "selection_after_empty": true,
+        "new_top_level": [
+          {
+            "id": 197,
+            "name": "Generative Expand: white tea cup on a saucer, white background, pro",
+            "size": [
+              864,
+              853
+            ],
+            "offset": [
+              672,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 864,
+          "height": 853,
+          "channels": 4,
+          "offset": [
+            672,
+            0
+          ],
+          "md5": "a43599c550fa62d82842e13e1d98ef6e"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 864,
+          "height": 853,
+          "channels": 1,
+          "offset": [
+            672,
+            0
+          ],
+          "md5": "5067ced17f8b67cc042376d04e6d2890"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 1536,
+          "height": 853,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "5767a6cb373ac02fadbb7171879ca7d1"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 20.3
+  },
+  "analysis_error": null,
+  "region_scale": 1.0
+}

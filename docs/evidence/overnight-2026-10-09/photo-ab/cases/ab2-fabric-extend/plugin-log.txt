@@ -1,0 +1,49 @@
+2026-10-09 03:14:33,649 INFO  [24508 stable-boy] expand: margins=(0, 0, 256, 0) canvas=2176x1677 context=Rect(x=1312, y=0, width=864, height=1677) working=528x1024 model=juggernaut-xl-v9
+2026-10-09 03:14:35,091 INFO  [24508 stable-boy] queued prompt 99207ba1-2272-4e7c-ae34-b86b42999125 (timeout 122s, 20 steps x 1)
+2026-10-09 03:14:35,154 ERROR [24508 stable-boy] procedure failed: ComfyUI rejected the request: LoadImage: [Errno 541478725] End of file: 'C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\input\\stable-boy\\sb-a8d2303fcadb-mask.png'. Make sure the model and its custom nodes are installed (Filters > AI > Generative Fill Settings > Models), then try again.
+Traceback (most recent call last):
+  File "C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/backends/comfy.py", line 187, in _run
+    entry = self.client.wait_for(
+        prompt_id, workflow.total_steps(graph), deadline, self._wrap(progress), preview=preview, cancel=cancel
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/comfy_api.py", line 275, in wait_for
+    raise ComfyExecutionError(
+    ...<4 lines>...
+    )
+stable_boy.comfy_api.ComfyExecutionError: [Errno 541478725] End of file: 'C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\input\\stable-boy\\sb-a8d2303fcadb-mask.png'
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\AI\overnight-scratch\gimp-profile-test\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 582, in run_expand
+    layers = app.generative_expand(
+        image,
+    ...<8 lines>...
+        config.get_property("model"),
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/app.py", line 581, in generative_expand
+    result = runner.run(
+        lambda progress, preview, cancel: self.backend(progress, cancel).outpaint(
+            request, progress, preview, cancel
+        )
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/runner.py", line 149, in run
+    return job(self.status, None, None)
+  File "C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/app.py", line 582, in <lambda>
+    lambda progress, preview, cancel: self.backend(progress, cancel).outpaint(
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        request, progress, preview, cancel
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/backend.py", line 203, in outpaint
+    return self.inpaint(request, progress, preview, cancel)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/backends/comfy.py", line 127, in inpaint
+    images = self._run(graph, request.sampling.steps, request.sampling.batch, pixels, progress, preview, cancel)
+  File "C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/backends/comfy.py", line 193, in _run
+    raise WorkflowRejected(f"{err.node_type or 'node'}: {err}") from err
+stable_boy.backend.WorkflowRejected: LoadImage: [Errno 541478725] End of file: 'C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\input\\stable-boy\\sb-a8d2303fcadb-mask.png'
+
+

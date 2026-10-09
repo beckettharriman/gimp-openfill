@@ -1,0 +1,6 @@
+set GIMP3_DIRECTORY=C:\AI\overnight-scratch\gimp-profile-test
+set SB_MATRIX_SPEC=C:\AI\overnight-scratch\photo-lane\ab-spec.json
+set SB_MATRIX_OUT=C:\AI\overnight-scratch\runs
+set SB_MATRIX_ONLY=ab2-fabric-replace-fast,ab2-product-replace-fast,ab2-face-replace-fast,ab2-landscape-replace-fast,ab2-fabric-replace,ab2-landscape-replace,ab2-landscape-extend,ab2-architecture-extend,ab2-fabric-extend,ab2-landscape-extend-fast
+"C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe" --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b "exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_matrix.py').read())"
+(launcher: python C:\AI\overnight-scratch\runs\run_matrix.py --spec C:\AI\overnight-scratch\photo-lane\ab-spec.json --only ab2-fabric-replace-fast,ab2-product-replace-fast,ab2-face-replace-fast,ab2-landscape-replace-fast,ab2-fabric-replace,ab2-landscape-replace,ab2-landscape-extend,ab2-architecture-extend,ab2-fabric-extend,ab2-landscape-extend-fast)

@@ -113,8 +113,8 @@ class ComfyBackend(Backend):
         job = uuid.uuid4().hex[:12]
         self._report(progress, 0.0, "Uploading selection...")
         try:
-            image_ref = self.client.upload_image(f"sb-{job}-image.png", request.image_png)
-            mask_ref = self.client.upload_image(f"sb-{job}-mask.png", request.mask_png)
+            image_ref = self.client.upload_image(f"sb-{job}-image.png", workflow.probe_safe_png(request.image_png))
+            mask_ref = self.client.upload_image(f"sb-{job}-mask.png", workflow.probe_safe_png(request.mask_png))
         except ComfyApiError as err:
             raise BackendUnavailable(f"upload failed: {err}") from err
         prefix = f"stable-boy/{request.mode}-{job}"

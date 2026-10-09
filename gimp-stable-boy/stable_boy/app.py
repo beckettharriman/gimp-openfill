@@ -40,6 +40,7 @@ from .geometry import Rect
 from .log import get_logger
 from .runner import Runner
 from .server import ServerManager
+from .workflow import model_display_name
 
 LEGACY_CHOICES = {"fast": "sd15-inpainting", "quality": "sdxl-base"}
 MODEL_LIST_NODES = (
@@ -159,20 +160,22 @@ class App:
                 return None, self.settings.model_for("quality" if choice == "quality" else "fast")
             raise ModelMissing(f"unknown model '{model_id}'; pick one in {SETTINGS_MENU} > Models") from None
         if not entry.runnable:
-            raise ModelMissing(f"'{entry.name}' is a companion file, not a model you can generate with")
+            raise ModelMissing(
+                f"'{model_display_name(entry.name)}' is a companion file, not a model you can generate with"
+            )
         status = cat.install_status(entry, self.models_root, self.custom_nodes_dir, self.catalog)
         if not status.installed:
             raise ModelMissing(
-                f"'{entry.name}' is not downloaded yet. Open Filters > AI > Generative Fill "
+                f"'{model_display_name(entry.name)}' is not downloaded yet. Open Filters > AI > Generative Fill "
                 "Settings > Models and press Download."
             )
         if status.missing_models:
             raise ModelMissing(
-                f"'{entry.name}' also needs {', '.join(status.missing_models)}; download it from the Models tab."
+                f"'{model_display_name(entry.name)}' also needs {', '.join(status.missing_models)}; download it from the Models tab."
             )
         if status.missing_nodes:
             raise ModelMissing(
-                f"'{entry.name}' needs the custom node pack(s) {', '.join(status.missing_nodes)}; "
+                f"'{model_display_name(entry.name)}' needs the custom node pack(s) {', '.join(status.missing_nodes)}; "
                 "press Install nodes in the Models tab."
             )
         return entry, cat.model_spec_for(entry, self.catalog)
@@ -256,7 +259,7 @@ class App:
     def set_active(self, model_id: str) -> cat.ModelEntry:
         entry = cat.by_id(self.catalog, model_id)
         if not entry.runnable:
-            raise ModelMissing(f"'{entry.name}' cannot be the active model (companion file)")
+            raise ModelMissing(f"'{model_display_name(entry.name)}' cannot be the active model (companion file)")
         self.settings.active_model = model_id
         self._save_settings()
         self.log.info("active model set to %s", model_id)
@@ -278,7 +281,7 @@ class App:
         entry = cat.by_id(self.catalog, model_id)
         if entry.gated and not self.settings.hf_token:
             raise ModelMissing(
-                f"'{entry.name}' is gated on Hugging Face. Accept the license at {entry.page} "
+                f"'{model_display_name(entry.name)}' is gated on Hugging Face. Accept the license at {entry.page} "
                 "and enter your access token (huggingface.co/settings/tokens) in the Models tab."
             )
         self.models_root.mkdir(parents=True, exist_ok=True)
@@ -286,7 +289,7 @@ class App:
         need = sum(f.size or 0 for f in entry.files if not cat.file_installed(self.models_root, f))
         if need and free < need + 512 * 1024 * 1024:
             raise ModelMissing(
-                f"not enough disk space for '{entry.name}': needs {cat.human_size(need)}, {cat.human_size(free)} free"
+                f"not enough disk space for '{model_display_name(entry.name)}': needs {cat.human_size(need)}, {cat.human_size(free)} free"
             )
         ids = []
         if include_dependencies:
@@ -422,7 +425,9 @@ class App:
         full = gimp_io.image_rect(image)
         target = selection
         removal_intent = remove or not prompt.strip() or model.prompt_free
-        ctx = geometry.context_rect(target, full, profile, padding_ratio=geometry.fill_padding(removal_intent))
+        ctx = geometry.context_rect(
+            target, full, profile, padding_ratio=geometry.fill_padding(removal_intent, model.prompt_free)
+        )
         ws = geometry.working_size(ctx.width, ctx.height, profile)
         mp = geometry.mask_params(
             target,
@@ -433,17 +438,8 @@ class App:
             self.settings.feather,
         )
         layer_grow = geometry.layer_mask_grow(mp, removal_intent)
-        color_match = 1.0 if geometry.color_match_useful(target, ctx, full) else 0.0
-        if removal_intent:
-            # paint the hole from its border: nothing of the removed object survives
-            prefill_style, prefill_mode = "border", "navier-stokes"
-        elif strength >= 1.0:
-            # Adding content: a neutral grey hole. A blurred or border-filled hole
-            # biases the sampler towards the surroundings and the prompt is ignored
-            # (SD 1.5 continued a flat sky instead of painting a brick wall).
-            prefill_style, prefill_mode = "border", "neutral"
-        else:
-            prefill_style, prefill_mode = "blur", "navier-stokes"  # partial strength keeps the original
+        color_match = geometry.color_match_strength(target, ctx, full, removal_intent)
+        prefill_style, prefill_mode = geometry.prefill_for(removal_intent, strength, model.arch)
         if model.prompt_free:
             prompt, negative = "", ""
         elif removal_intent:
@@ -492,7 +488,9 @@ class App:
             color_match=color_match,
         )
         title = "Object Removal" if model.prompt_free else "Generative Fill"
-        runner = Runner(self, title, entry.name if entry else model.checkpoint, interactive=self.interactive)
+        runner = Runner(
+            self, title, model_display_name(entry.name) if entry else model.checkpoint, interactive=self.interactive
+        )
         try:
             result = runner.run(
                 lambda progress, preview, cancel: self.backend(progress, cancel).inpaint(
@@ -581,7 +579,10 @@ class App:
             prefill=True,
         )
         runner = Runner(
-            self, "Generative Expand", entry.name if entry else model.checkpoint, interactive=self.interactive
+            self,
+            "Generative Expand",
+            model_display_name(entry.name) if entry else model.checkpoint,
+            interactive=self.interactive,
         )
         try:
             result = runner.run(
@@ -627,7 +628,9 @@ class App:
             self._check_image(image)
         entry, model = self.resolve_model(model_choice)
         if entry is not None and "txt2img" not in entry.capabilities:
-            raise ModelMissing(f"'{entry.name}' does not support Text to Image; pick an SD 1.5 or SDXL model")
+            raise ModelMissing(
+                f"'{model_display_name(entry.name)}' does not support Text to Image; pick an SD 1.5 or SDXL model"
+            )
         profile = self.profile_for(model)
         origin = Rect(0, 0, 0, 0)
         if image is not None and target == "layer":
@@ -642,7 +645,12 @@ class App:
             ws.width, ws.height, prompt, negative, model, self.sampling(model, variations, seed, 1.0)
         )
         self.log.info("txt2img: %dx%d model=%s target=%s", ws.width, ws.height, model.checkpoint, target)
-        runner = Runner(self, "Text to Image", entry.name if entry else model.checkpoint, interactive=self.interactive)
+        runner = Runner(
+            self,
+            "Text to Image",
+            model_display_name(entry.name) if entry else model.checkpoint,
+            interactive=self.interactive,
+        )
         try:
             result = runner.run(
                 lambda progress, preview, cancel: self.backend(progress, cancel).txt2img(

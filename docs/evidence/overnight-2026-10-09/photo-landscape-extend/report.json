@@ -1,0 +1,304 @@
+{
+  "id": "photo-landscape-extend",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Generative Expand: green meadow and evening sky with trees, photo"
+      ]
+    },
+    "canvas_grew": {
+      "ok": true,
+      "value": [
+        2176,
+        1440
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "new_area_opaque": {
+      "ok": true,
+      "value": 255.0
+    },
+    "no_hard_seam_at_old_edge": {
+      "ok": true,
+      "value": 9.85
+    },
+    "new_area_not_empty": {
+      "ok": true,
+      "value": 35.2
+    },
+    "old_pixels_outside_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "selection_state_after": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 18.09,
+    "layer_size": [
+      864,
+      1440
+    ],
+    "layer_offset": [
+      1312,
+      0
+    ],
+    "laplacian_var_new_area": 55.9,
+    "laplacian_var_old_area": 2537.06,
+    "seam_mean_abs_diff_max": 9.85,
+    "new_area_mean_rgb": [
+      32.4,
+      58.2,
+      15.1
+    ],
+    "old_pixels_outside_mask_max_abs_diff": 0,
+    "old_pixels_outside_mask_count": 2684160
+  },
+  "memory": {
+    "samples": 19,
+    "peak_gimp_tree_mb": 572,
+    "peak_comfyui_mb": 4484,
+    "peak_gpu_mib": 6378
+  },
+  "evidence_files": {
+    "before.jpg/after.jpg": "longest side 1024 px, JPEG q85",
+    "region-1to1.jpg": {
+      "box": [
+        1408,
+        336,
+        2176,
+        1104
+      ],
+      "scale": 1.0,
+      "quality": 90
+    }
+  },
+  "spec": {
+    "id": "photo-landscape-extend",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+      "w": 1920,
+      "h": 1440,
+      "scale": false
+    },
+    "selection": {
+      "kind": "none"
+    },
+    "proc": "expand",
+    "args": {
+      "prompt": "green meadow and evening sky with trees, photo",
+      "negative": "blurry, lowres, watermark",
+      "variations": 1,
+      "seed": 1234,
+      "model": "juggernaut-xl-v9",
+      "left": 0,
+      "top": 0,
+      "right": 256,
+      "bottom": 0
+    }
+  },
+  "gimp": {
+    "id": "photo-landscape-extend",
+    "spec": {
+      "id": "photo-landscape-extend",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+        "w": 1920,
+        "h": 1440,
+        "scale": false
+      },
+      "selection": {
+        "kind": "none"
+      },
+      "proc": "expand",
+      "args": {
+        "prompt": "green meadow and evening sky with trees, photo",
+        "negative": "blurry, lowres, watermark",
+        "variations": 1,
+        "seed": 1234,
+        "model": "juggernaut-xl-v9",
+        "left": 0,
+        "top": 0,
+        "right": 256,
+        "bottom": 0
+      }
+    },
+    "started": "2026-10-09 03:23:24",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+          "size": [
+            1920,
+            1440
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "none",
+          "empty": true,
+          "bounds": null
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 1920,
+          "height": 1440,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "d2202c93a99502df0bb9d9a3cfccda91"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 1920,
+          "height": 1440,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "23312e5bbe15055edf37c94555328e56"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 18.09,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 162,
+            "name": "Background",
+            "size": [
+              1920,
+              1440
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 167,
+            "name": "Generative Expand: green meadow and evening sky with trees, photo",
+            "size": [
+              864,
+              1440
+            ],
+            "offset": [
+              1312,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 162,
+            "name": "Background",
+            "size": [
+              1920,
+              1440
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          2176,
+          1440
+        ],
+        "selection_restored": null,
+        "selection_after_empty": true,
+        "new_top_level": [
+          {
+            "id": 167,
+            "name": "Generative Expand: green meadow and evening sky with trees, photo",
+            "size": [
+              864,
+              1440
+            ],
+            "offset": [
+              1312,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 864,
+          "height": 1440,
+          "channels": 4,
+          "offset": [
+            1312,
+            0
+          ],
+          "md5": "ebb68ee10fd18c8469c631603971ea16"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 864,
+          "height": 1440,
+          "channels": 1,
+          "offset": [
+            1312,
+            0
+          ],
+          "md5": "3199269cbb1f7507c839be6ca9d25ce8"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 2176,
+          "height": 1440,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "0324384c83776c3e5973e71c57840833"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 18.65
+  },
+  "analysis_error": null,
+  "region_scale": 1.0
+}

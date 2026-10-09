@@ -15,6 +15,7 @@ pre-fill nodes and can apply the Fooocus SDXL inpaint patch.
 
 from __future__ import annotations
 
+import zlib
 from dataclasses import dataclass
 
 from .backend import InpaintRequest, Txt2ImgRequest
@@ -460,6 +461,49 @@ def total_steps(graph: dict) -> int:
     return sum(
         int(n["inputs"].get("steps", 0)) for n in graph.values() if n["class_type"] in ("KSampler", "KSamplerAdvanced")
     )
+
+
+_PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+# ComfyUI's LoadImage decodes uploads with PyAV (FFmpeg), which guesses the file
+# format from the first 2048 bytes. A mask with identical rows (an outpaint
+# strip) deflates into a periodic byte stream that the MPEG-TS probe scores
+# higher than PNG, and the load fails with "End of file". A text chunk of
+# spaces right after IHDR fills the probe window, so only the PNG signature
+# is recognisable there.
+PROBE_PADDING = 2048
+
+
+def probe_safe_png(data: bytes) -> bytes:
+    """Return ``data`` with a tEXt chunk of ``PROBE_PADDING`` spaces inserted after IHDR.
+
+    Decoders ignore the chunk; the pixels are unchanged. Input that is not a PNG
+    starting with IHDR, or already padded, is returned as is.
+    """
+    if not data.startswith(_PNG_SIGNATURE) or data[12:16] != b"IHDR":
+        return data
+    end_ihdr = 8 + 12 + int.from_bytes(data[8:12], "big")
+    if data[end_ihdr + 4 : end_ihdr + 8] == b"tEXt":
+        return data
+    body = b"Comment\x00" + b" " * PROBE_PADDING
+    chunk = len(body).to_bytes(4, "big") + b"tEXt" + body + (zlib.crc32(b"tEXt" + body) & 0xFFFFFFFF).to_bytes(4, "big")
+    return data[:end_ihdr] + chunk + data[end_ihdr:]
+
+
+def model_display_name(name: str) -> str:
+    """The user-facing part of a catalog model name.
+
+    Catalog names carry packaging details for the Models tab, e.g. "FLUX.1 Fill
+    [dev] (first-party safetensors, fp8 at load time)" or "MAT Places512 (fp16)
+    - prompt-free object removal". Messages about a missing or running model
+    only need the model itself: everything from the first " (" or " - " on is
+    dropped. A name that would become empty is returned unchanged.
+    """
+    text = (name or "").strip()
+    for marker in (" (", " - "):
+        index = text.find(marker)
+        if index > 0:
+            text = text[:index]
+    return text.strip() or (name or "").strip()
 
 
 def describe_node_errors(node_errors: dict, graph: dict) -> str:

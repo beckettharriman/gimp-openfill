@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 import unittest
 
+from stable_boy import geometry as g
+from stable_boy import png
 from stable_boy import workflow as w
 from stable_boy.backend import InpaintRequest, ModelSpec, Sampling, Txt2ImgRequest
 
@@ -257,6 +259,49 @@ class ErrorDescriptionTests(unittest.TestCase):
         self.assertIn("CheckpointLoaderSimple", text)
         self.assertIn("ckpt_name", text)
         self.assertEqual(w.describe_node_errors({}, graph), "")
+
+
+class ModelDisplayNameTests(unittest.TestCase):
+    def test_packaging_details_are_dropped(self):
+        self.assertEqual(
+            w.model_display_name("FLUX.1 Fill [dev] (first-party safetensors, fp8 at load time)"), "FLUX.1 Fill [dev]"
+        )
+        self.assertEqual(w.model_display_name("MAT Places512 (fp16) - prompt-free object removal"), "MAT Places512")
+        self.assertEqual(w.model_display_name("LaMa (big-lama) - prompt-free object removal"), "LaMa")
+        self.assertEqual(
+            w.model_display_name("Juggernaut XL v9 (RunDiffusion Photo v2, with Fooocus inpaint patch)"),
+            "Juggernaut XL v9",
+        )
+
+    def test_plain_names_are_kept(self):
+        self.assertEqual(w.model_display_name("Stable Diffusion 1.5 Inpainting"), "Stable Diffusion 1.5 Inpainting")
+        self.assertEqual(w.model_display_name("  FLUX.1 Fill [dev] GGUF Q4_0  "), "FLUX.1 Fill [dev] GGUF Q4_0")
+
+    def test_never_empty(self):
+        self.assertEqual(w.model_display_name("(fp16)"), "(fp16)")
+        self.assertEqual(w.model_display_name(""), "")
+
+
+class ProbeSafePngTests(unittest.TestCase):
+    def _strip_mask(self):
+        # the outpaint mask that PyAV's format probe took for MPEG-TS
+        plan = g.plan_expand(1920, 1440, 0, 0, 256, 0, g.SDXL)
+        return png.encode(plan.context.width, plan.context.height, g.mask_for_expand(plan), 1)
+
+    def test_padding_fills_probe_window_and_keeps_header(self):
+        data = self._strip_mask()
+        safe = w.probe_safe_png(data)
+        self.assertEqual(png.read_header(safe), png.read_header(data))
+        self.assertEqual(safe[37:41], b"tEXt")
+        self.assertEqual(len(safe), len(data) + 12 + len(b"Comment") + 1 + w.PROBE_PADDING)
+        # nothing but the signature and IHDR is recognisable in the first 2048 bytes
+        self.assertNotIn(0x47, safe[41 + 8 : 2048])
+        self.assertTrue(safe.endswith(data[33:]))
+
+    def test_idempotent_and_ignores_non_png(self):
+        safe = w.probe_safe_png(self._strip_mask())
+        self.assertEqual(w.probe_safe_png(safe), safe)
+        self.assertEqual(w.probe_safe_png(b"not a png"), b"not a png")
 
 
 if __name__ == "__main__":

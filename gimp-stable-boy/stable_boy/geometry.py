@@ -75,7 +75,11 @@ FLUX = ModelProfile("flux", min_side=768, max_side=1024, min_context=256, multip
 QWEN = ModelProfile("qwen_image", min_side=768, max_side=1024, min_context=256, multiple=16)
 # LaMa/MAT work best on native-resolution pixels: a 512 px context at 1:1,
 # no upscaling (texture scale would not match the surroundings otherwise).
-INPAINT_MODEL = ModelProfile("inpaint_model", min_side=256, max_side=1024, min_context=512)
+# The removal node runs MAT on a fixed 512 px square (it pads the crop to a
+# square and resizes it with nearest-neighbour sampling), so anything larger
+# than 512 px is thrown away there with aliasing; the graph downscales with
+# lanczos to 512 instead and the node then works 1:1.
+INPAINT_MODEL = ModelProfile("inpaint_model", min_side=256, max_side=512, min_context=512)
 PROFILES = {"sd15": SD15, "sdxl": SDXL, "flux": FLUX, "qwen_image": QWEN, "inpaint_model": INPAINT_MODEL}
 
 
@@ -213,8 +217,42 @@ def plan_expand(
         fill = Rect(0, 0, new_w, keep.y)
     else:
         fill = Rect(0, keep.bottom, new_w, new_h - keep.bottom)
-    context = context_rect(fill, canvas, profile)
+    if sides == 1:
+        context = _strip_context(fill, canvas, profile, left, top, right, bottom)
+    else:
+        context = context_rect(fill, canvas, profile)
     return ExpandPlan(image_w, image_h, new_w, new_h, left, top, overlap, fill, context)
+
+
+# Old pixels shown next to a one-sided outpaint strip, as a multiple of the
+# strip's depth. The generic context (padding by the larger side) turned a
+# 256 px strip along a 1440 px edge into the whole canvas, sampled at 0.47x:
+# the new area became a thin, flat band in the working image.
+EXPAND_CONTEXT_FACTOR = 2.0
+# ...but never narrower than half the edge length: a 864x3000 strip was
+# sampled at 296x1024, far below what SDXL can compose, and came back as a
+# flat dark panel.
+EXPAND_MIN_ASPECT = 0.5
+
+
+def _strip_context(
+    fill: Rect, canvas: Rect, profile: ModelProfile, left: int, top: int, right: int, bottom: int
+) -> Rect:
+    """Context for a single-side expansion: the strip plus a band of the old
+    image as deep as ``EXPAND_CONTEXT_FACTOR`` times the strip (at least the
+    model's minimum context, and at least ``EXPAND_MIN_ASPECT`` of the edge
+    length), over the full length of the edge."""
+    if left or right:
+        depth = fill.width
+        width = depth + max(profile.min_context, round(depth * EXPAND_CONTEXT_FACTOR))
+        width = min(canvas.width, max(width, round(canvas.height * EXPAND_MIN_ASPECT)))
+        x = 0 if left else canvas.width - width
+        return Rect(x, 0, width, canvas.height)
+    depth = fill.height
+    height = depth + max(profile.min_context, round(depth * EXPAND_CONTEXT_FACTOR))
+    height = min(canvas.height, max(height, round(canvas.width * EXPAND_MIN_ASPECT)))
+    y = 0 if top else canvas.height - height
+    return Rect(0, y, canvas.width, height)
 
 
 def mask_for_expand(plan: ExpandPlan) -> bytes:
@@ -292,10 +330,34 @@ def seed_or_random(seed: int | None, rng: random.Random | None = None) -> int:
 # do not outvote the prompt (SD 1.5 otherwise continues a flat sky).
 REMOVAL_PADDING = 1.0
 PROMPT_PADDING = 0.5
+# LaMa/MAT see the context at 512 px at most: a 3x context around a 400 px
+# selection is shrunk 2.4x and comes back soft. A 2x context keeps the
+# selection near 1:1 while still giving the model surroundings to continue.
+REMOVAL_MODEL_PADDING = 0.5
 
 
-def fill_padding(removal: bool) -> float:
+def fill_padding(removal: bool, prompt_free_model: bool = False) -> float:
+    if prompt_free_model:
+        return REMOVAL_MODEL_PADDING
     return REMOVAL_PADDING if removal else PROMPT_PADDING
+
+
+# Pre-fill of the hole before sampling, as (style, mode) for the workflow's
+# INPAINT_MaskedFill. SD 1.5 needs a neutral grey hole to follow the prompt
+# (it continues a border-filled sky instead); the SDXL tier with the Fooocus
+# patch treats a flat grey rectangle as a separate picture and paints a framed
+# photo or a hard-edged block into it, so it gets the border fill.
+NEUTRAL_PREFILL_ARCHS = ("sd15",)
+
+
+def prefill_for(removal: bool, strength: float, arch: str) -> tuple[str, str]:
+    if removal:
+        return "border", "navier-stokes"  # nothing of the removed object survives
+    if strength < 1.0:
+        return "blur", "navier-stokes"  # partial strength keeps the original
+    if arch in NEUTRAL_PREFILL_ARCHS:
+        return "border", "neutral"
+    return "border", "navier-stokes"
 
 
 def color_match_useful(selection: Rect, context: Rect, image: Rect, min_reference: float = 0.15) -> bool:
@@ -317,6 +379,19 @@ def color_match_useful(selection: Rect, context: Rect, image: Rect, min_referenc
         )
     )
     return edges < 3
+
+
+# Strength of the colour match for prompted fills (removal always uses 1.0).
+PROMPT_COLOR_MATCH = 1.0
+
+
+def color_match_strength(selection: Rect, context: Rect, image: Rect, removal: bool) -> float:
+    """INPAINT_ColorMatch strength for a fill: 0 when there is no reference
+    (``color_match_useful``), otherwise full for removal and
+    ``PROMPT_COLOR_MATCH`` for prompted fills."""
+    if not color_match_useful(selection, context, image):
+        return 0.0
+    return 1.0 if removal else PROMPT_COLOR_MATCH
 
 
 def layer_mask_grow(mask: MaskParams, removal: bool) -> int:

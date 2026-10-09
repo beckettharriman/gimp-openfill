@@ -299,3 +299,111 @@ none (every report.json was written at or before 2026-10-09T01:40:12, before thi
 ## Not yet scored
 
 none
+
+## Real photos
+
+Twenty-eight photo-* cases on six Wikimedia Commons photographs (sources,
+selections and prompts in photos-README.md, spec in photo-spec.json), scored
+from after.jpg and region-1to1.jpg at 1:1, on the same 1-5 scale and verdicts
+as above. Seed 1234, 1 variation, 20 steps. Remove = MAT Places512 (the
+Remove checkbox always uses the installed LaMa/MAT model); remove-quality =
+Juggernaut XL v9 with an empty prompt; replace = Juggernaut XL v9 (Quality);
+replace-fast = SD 1.5 inpainting (Fast); extend = Juggernaut XL v9.
+
+Code state: the remove, remove-quality, replace and extend rows were run
+after the fixes below (03:19 to 03:32); the replace-fast rows are from the
+first run (03:00), whose SD 1.5 fill path is identical to the final code. A/B
+evidence for every parameter change is in photo-ab/README.md.
+
+Selection respect: every fill case reports outside_max_abs_diff = 0 outside
+the grown mask; no layer, offset or selection-restore problem was seen. The
+report.json "pass" flags (26 of 28) only check mechanics; the verdicts below
+are visual.
+
+| Case | Seams | Color | Blur | Artifacts | Mask edge | Content | Verdict | Notes |
+|---|---|---|---|---|---|---|---|---|
+| photo-face-remove | 4 | 4 | 3 | 3 | 4 | 4 | PASS-WITH-NOTES | Patch gone, weave and the flap fold continue. Two small dark stains (left edge, lower middle). Inside detail ratio 0.08 of the surroundings (0.02 before the MAT fix). |
+| photo-fabric-remove | 4 | 4 | 3 | 3 | 4 | 4 | PASS-WITH-NOTES | Red fibre cluster removed; one radial cluster of white fibres converges in the middle; slightly glassy. |
+| photo-landscape-remove | 4 | 4 | 3 | 4 | 4 | 4 | PASS-WITH-NOTES | Barn gone, horizon and hedge continue. A pale patch remains behind the tree crowns at the right edge of the selection. |
+| photo-architecture-remove | 3 | 4 | 3 | 2 | 3 | 2 | FAIL | Air conditioner replaced by a pile of window-frame and box fragments. MAT cannot reconstruct the window structure behind it. |
+| photo-text-remove | 5 | 5 | 4 | 5 | 5 | 5 | PASS | "AUX" removed, clean yellow sign surface (two dark blobs before the MAT fix). |
+| photo-product-remove | 3 | 5 | 4 | 2 | 4 | 3 | FAIL | Foot ring and its shadow removed, but the selection crossed the cup and its bottom contour now has a step. |
+| photo-landscape-remove-quality | 4 | 4 | 4 | 2 | 4 | 1 | FAIL | Empty-prompt removal with Juggernaut invents a green hill and a smaller shed where the barn was. Model behaviour; MAT does this case well. |
+| photo-architecture-remove-quality | 4 | 4 | 4 | 3 | 4 | 4 | PASS-WITH-NOTES | Window, railings and frames continue where the unit was; a stray yellow strap. Better than MAT here. |
+| photo-face-replace | 5 | 4 | 5 | 5 | 5 | 5 | PASS | Gold aviators fitted to the face; skin under the bridge slightly smoother than the rest. |
+| photo-fabric-replace | 3 | 4 | 3 | 4 | 4 | 5 | PASS-WITH-NOTES | Red scarf lying on the tweed; the fibres left of it are softer than the surrounding weave (generated at 0.57x). Before the pre-fill fix: a framed photograph of a woman with a scarf (FAIL). |
+| photo-landscape-replace | 5 | 5 | 4 | 5 | 5 | 5 | PASS | Balloon in the evening sky, no rectangle. Before the pre-fill fix: balloon on its own blue-sky rectangle (FAIL). |
+| photo-architecture-replace | 2 | 2 | 2 | 4 | 2 | 1 | FAIL | No window: a flat yellow-beige rectangle with visible top and bottom edges on the pink wall. With the old neutral pre-fill a flat green pane in a frame filled the box (content 3). Open issue, see below. |
+| photo-text-replace | 4 | 4 | 4 | 5 | 4 | 1 | FAIL | Word removed cleanly, no arrow drawn. The old neutral pre-fill gave a blue block with an arrow-like end filling the box. |
+| photo-product-replace | 5 | 5 | 5 | 5 | 5 | 5 | PASS | Lemon slice on the saucer with a soft contact shadow. |
+| photo-face-replace-fast | 5 | 4 | 4 | 4 | 5 | 5 | PASS | Sunglasses; the eyes show through the lenses as a reflection, slightly odd but plausible. No mask-band rectangle. |
+| photo-fabric-replace-fast | 2 | 3 | 2 | 3 | 3 | 1 | FAIL | No scarf. A softer, lighter rectangle of fibres (concern 3): generated at 0.57x and upscaled; colour match off gives the same result (photo-ab section 3). |
+| photo-landscape-replace-fast | 5 | 5 | 4 | 4 | 5 | 5 | PASS | Balloon plus a small second balloon; basket lettering garbled. |
+| photo-architecture-replace-fast | 4 | 4 | 4 | 2 | 4 | 1 | FAIL | No window; cables removed and a dark open shutter shape drawn at the edge. Model ignores the prompt. |
+| photo-text-replace-fast | 5 | 5 | 4 | 2 | 5 | 1 | FAIL | Word replaced by garbage letters "AEESREN", no arrow. Model behaviour. |
+| photo-product-replace-fast | 5 | 5 | 4 | 4 | 5 | 5 | PASS | Whole lemon plus a slice on the saucer. |
+| photo-face-extend | 4 | 4 | 4 | 5 | 4 | 4 | PASS-WITH-NOTES | Grey backdrop continues; faint vertical tone step where the new strip starts. (Strip context before the minimum aspect: a black panel; whole-canvas context: a dark band at the far edge.) |
+| photo-fabric-extend | 2 | 4 | 2 | 3 | 3 | 3 | FAIL | Weave continues but coarser and blurred, with a visible seam at the old edge (seam metric 33.7). |
+| photo-landscape-extend | 4 | 4 | 3 | 3 | 4 | 4 | PASS-WITH-NOTES | Trees and meadow continue; one bright fern-like branch hangs into the frame. Before the expand fix: a flat lime bar (FAIL). |
+| photo-architecture-extend | 4 | 4 | 3 | 4 | 4 | 5 | PASS-WITH-NOTES | Facade continues with windows and curtains, softer than the original. Before: a blurred yellow block (FAIL). |
+| photo-text-extend | 4 | 4 | 3 | 4 | 4 | 4 | PASS-WITH-NOTES | Sign frame continues, a blurred path and grass beyond it. Before: a flat pale field. |
+| photo-product-extend | 5 | 5 | 5 | 5 | 5 | 5 | PASS | White background continues. |
+| photo-landscape-extend-all | 1 | 2 | 1 | 1 | 2 | 1 | FAIL | Quality tier, all four sides: the border is a smeared radial blur of green and sky, like a vignette frame; nothing generated. Unchanged by the fixes (all-sides still uses the whole canvas). |
+| photo-landscape-extend-all-fast | 4 | 4 | 3 | 4 | 4 | 5 | PASS-WITH-NOTES | Same expansion with SD 1.5: birch, meadow and sky extended on all sides; soft (0.42x working scale), bottom-left corner darker. |
+
+Totals: 8 PASS, 10 PASS-WITH-NOTES, 10 FAIL.
+
+### Known concerns from the synthetic matrix, checked on photos
+
+1. Pale or dark rectangle at the mask edge in SD 1.5 fills: not seen on the
+   photos as a tonal band (face, landscape, product fills blend). The fabric
+   fill shows a softer rectangle, which is resolution (0.57x working scale on
+   a 672x587 selection), not the mask band.
+2. Hard dark seam lines on the Quality tier: not seen. The Quality tier had a
+   different and worse defect instead: with the neutral grey pre-fill,
+   Juggernaut painted a separate framed picture into the selection (fabric,
+   landscape). Fixed: SDXL prompted fills use the border pre-fill
+   (geometry.prefill_for); a soft-edged neutral pre-fill did not help.
+3. Flat tinted blocks: seen in photo-fabric-replace-fast (soft block, SD 1.5)
+   and photo-architecture-replace (flat yellow rectangle, Quality tier with
+   the border pre-fill). Colour match is not the cause (A/B with colour match
+   off: identical at normal view), so the default stays at 1.0.
+4. err-model-missing showing "FLUX.1 Fill [dev] (first-party safetensors, fp8
+   at load time)": fixed in app.py (workflow.model_display_name, used for every
+   ModelMissing message and the progress title); the message now reads
+   "'FLUX.1 Fill [dev]' is not downloaded yet ...". Unit-tested; the GIMP
+   error case was not re-run in this pass.
+
+### Plug-in defects found and fixed in this pass
+
+- MAT removal was soft and left ghosts: the removal node always resamples to
+  512 px, so a 1024 px working size was thrown away with nearest-neighbour
+  sampling. geometry.INPAINT_MODEL max_side 512, geometry.fill_padding 0.5x
+  margin for prompt-free models (photo-ab section 1).
+- Quality-tier framed-picture fills: geometry.prefill_for (section 2).
+- Generative Expand painted flat bars: a one-sided strip used the whole canvas
+  as context. geometry.plan_expand and _strip_context (section 4).
+- Every expansion failed with "LoadImage: End of file" once the context was a
+  strip: ComfyUI decodes uploads with PyAV, whose format probe took the strip
+  mask for MPEG-TS. workflow.probe_safe_png, applied to both uploads in
+  backends/comfy.py (section 4). Any upload whose compressed bytes look
+  periodic could hit this, so it also protects fills.
+
+### Open issues (not fixed)
+
+- Quality tier ignores some prompts with the border pre-fill
+  (photo-architecture-replace, photo-text-replace): nothing is added, and on
+  the wall the barely changed pre-fill shows as a tinted flat rectangle. The
+  old neutral pre-fill drew something in these two but framed pictures in
+  others. Next step: a per-selection choice (for example neutral only for
+  small selections or low-variance surroundings), not tried.
+- All-sides expansion on the Quality tier produces a blurred vignette instead
+  of content; SD 1.5 does it well. Likely the same "picture in a frame"
+  reading of a rectangle surrounded by a border; expanding one side at a time
+  would avoid it.
+- Large fills and expansions on fine texture (fabric) come back softer than
+  the 1:1 surroundings because they are generated at 0.5 to 0.8x.
+- Empty-prompt removal with a generation model invents objects
+  (photo-landscape-remove-quality); MAT is the better default, which is what
+  the Remove checkbox already uses.
+- MAT cannot rebuild structured backgrounds (photo-architecture-remove).

@@ -1,0 +1,196 @@
+{
+  "id": "ab2-architecture-extend",
+  "pass": false,
+  "checks": {
+    "returns_success": {
+      "ok": false,
+      "value": "execution-error ComfyUI rejected the request: LoadImage: [Errno 541478725] End of file: 'C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\\\\ComfyUI\\\\input\\\\stable-boy\\\\sb-ff17f87ca319-mask.png'. Make sure the model and its custom nodes are installed (Filters > AI > Generative Fill Settings > Models), then try again."
+    },
+    "failure_left_layers_unchanged": {
+      "ok": true,
+      "value": [
+        1,
+        1
+      ]
+    },
+    "failure_left_selection": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "execution-error",
+    "message": "ComfyUI rejected the request: LoadImage: [Errno 541478725] End of file: 'C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\\\\ComfyUI\\\\input\\\\stable-boy\\\\sb-ff17f87ca319-mask.png'. Make sure the model and its custom nodes are installed (Filters > AI > Generative Fill Settings > Models), then try again.",
+    "seconds": 1.81
+  },
+  "memory": {
+    "samples": 4,
+    "peak_gimp_tree_mb": 420,
+    "peak_comfyui_mb": 3990,
+    "peak_gpu_mib": 4920
+  },
+  "evidence_files": {
+    "before.png scale": 0.512,
+    "after.png scale": 0.512
+  },
+  "spec": {
+    "id": "ab2-architecture-extend",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+      "w": 2000,
+      "h": 1273,
+      "scale": false
+    },
+    "selection": {
+      "kind": "none"
+    },
+    "proc": "expand",
+    "args": {
+      "prompt": "old apartment building facade with windows and laundry, photo",
+      "negative": "blurry, lowres, watermark",
+      "variations": 1,
+      "seed": 1234,
+      "model": "juggernaut-xl-v9",
+      "left": 0,
+      "top": 0,
+      "right": 256,
+      "bottom": 0
+    }
+  },
+  "gimp": {
+    "id": "ab2-architecture-extend",
+    "spec": {
+      "id": "ab2-architecture-extend",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+        "w": 2000,
+        "h": 1273,
+        "scale": false
+      },
+      "selection": {
+        "kind": "none"
+      },
+      "proc": "expand",
+      "args": {
+        "prompt": "old apartment building facade with windows and laundry, photo",
+        "negative": "blurry, lowres, watermark",
+        "variations": 1,
+        "seed": 1234,
+        "model": "juggernaut-xl-v9",
+        "left": 0,
+        "top": 0,
+        "right": 256,
+        "bottom": 0
+      }
+    },
+    "started": "2026-10-09 03:14:29",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+          "size": [
+            2000,
+            1273
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "none",
+          "empty": true,
+          "bounds": null
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 2000,
+          "height": 1273,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "2984137dcb68c20da5d06b26614fef33"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 2000,
+          "height": 1273,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "0e1d50f8d39f14f6e89b9c62cd5f4d20"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 1.81,
+        "status": "execution-error",
+        "message": "ComfyUI rejected the request: LoadImage: [Errno 541478725] End of file: 'C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\\\\ComfyUI\\\\input\\\\stable-boy\\\\sb-ff17f87ca319-mask.png'. Make sure the model and its custom nodes are installed (Filters > AI > Generative Fill Settings > Models), then try again.",
+        "layers_before": [
+          {
+            "id": 67,
+            "name": "Background",
+            "size": [
+              2000,
+              1273
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 67,
+            "name": "Background",
+            "size": [
+              2000,
+              1273
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 1,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          2000,
+          1273
+        ],
+        "selection_restored": true,
+        "new_top_level": [],
+        "raw_after": {
+          "file": "after.raw",
+          "width": 2000,
+          "height": 1273,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "2984137dcb68c20da5d06b26614fef33"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 2.62
+  },
+  "analysis_error": null
+}
