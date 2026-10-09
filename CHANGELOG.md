@@ -106,6 +106,11 @@ downloader, and fixes from an end-to-end test matrix run in a real GIMP 3.2.6
 - ComfyUI is started with `--preview-method taesd`; extra server arguments are
   passed as one argument so values such as `--cpu` work.
 - Dialogs open centred on the image window.
+- Crop PNGs are encoded at zlib level 1 (about half the encode time) and
+  uploads are named by content, so re-rolling the same region with a new
+  seed or prompt skips the image and mask preparation. Measured timings are
+  in `docs/performance.md` (cold start 31 to 38 s, warm SD 1.5 fills 8 to
+  11 s, SDXL tiers 20 to 28 s, MAT 3 to 6 s, no memory growth over 20 fills).
 
 ### Fixed
 
@@ -167,6 +172,9 @@ downloader, and fixes from an end-to-end test matrix run in a real GIMP 3.2.6
 - A GLib "Source ID was not found" warning when the progress window closed,
   and picker timers that fired after the picker had closed.
 - HTTP error responses were not closed (ResourceWarning).
+- The floating progress window was created but never marked visible by
+  Windows inside a GUI GIMP session (screenshots taken with PrintWindow did
+  not reveal it); it is now shown without taking focus.
 
 ### Security
 
