@@ -1,0 +1,202 @@
+[
+ {
+  "_id": "673fe95090613d5e14785593",
+  "id": "YarvixPA/FLUX.1-Fill-dev-GGUF",
+  "gated": false,
+  "lastModified": "2025-06-11T14:04:52.000Z",
+  "downloads": 33481,
+  "tags": [
+   "gguf",
+   "flux",
+   "image-generation",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67453a5a8eebd2eaf7e4c697",
+  "id": "second-state/FLUX.1-Fill-dev-GGUF",
+  "gated": false,
+  "lastModified": "2024-11-27T13:45:48.000Z",
+  "downloads": 1753,
+  "tags": [
+   "gguf",
+   "text-to-image",
+   "image-generation",
+   "flux",
+   "en",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67a19aabf79b3b8da55394ef",
+  "id": "mit-han-lab/svdq-int4-flux.1-fill-dev",
+  "gated": false,
+  "lastModified": "2025-07-21T05:33:03.000Z",
+  "downloads": 1543,
+  "tags": [
+   "diffusers",
+   "image-to-image",
+   "SVDQuant",
+   "FLUX.1-Fill-dev",
+   "FLUX.1",
+   "Diffusion",
+   "Quantization",
+   "ICLR2025",
+   "en",
+   "dataset:mit-han-lab/svdquant-datasets",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "687847304be53e1430eff8e7",
+  "id": "nunchaku-ai/nunchaku-flux.1-fill-dev",
+  "gated": false,
+  "lastModified": "2025-11-16T02:24:18.000Z",
+  "downloads": 1360,
+  "tags": [
+   "diffusers",
+   "image-to-image",
+   "SVDQuant",
+   "FLUX.1-Fill-dev",
+   "FLUX.1",
+   "Diffusion",
+   "Quantization",
+   "ICLR2025",
+   "en",
+   "dataset:mit-han-lab/svdquant-datasets",
+   "arxiv:2411.05007",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "681d16b53c1428878135674f",
+  "id": "DFloat11/FLUX.1-Fill-dev-DF11",
+  "gated": false,
+  "lastModified": "2025-05-08T20:41:29.000Z",
+  "downloads": 1346,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "llama",
+   "dfloat11",
+   "df11",
+   "lossless compression",
+   "70% size, 100% accuracy",
+   "text-to-image",
+   "arxiv:2504.11651",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67453a6786ca007057393a18",
+  "id": "gaianet/FLUX.1-Fill-dev-GGUF",
+  "gated": false,
+  "lastModified": "2024-11-27T13:47:37.000Z",
+  "downloads": 476,
+  "tags": [
+   "gguf",
+   "text-to-image",
+   "image-generation",
+   "flux",
+   "en",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6837fc612ae6ccdb0c221e2a",
+  "id": "mit-han-lab/nunchaku-flux.1-fill-dev",
+  "gated": false,
+  "lastModified": "2025-07-21T05:31:26.000Z",
+  "downloads": 362,
+  "tags": [
+   "diffusers",
+   "image-to-image",
+   "SVDQuant",
+   "FLUX.1-Fill-dev",
+   "FLUX.1",
+   "Diffusion",
+   "Quantization",
+   "ICLR2025",
+   "en",
+   "dataset:mit-han-lab/svdquant-datasets",
+   "arxiv:2411.05007",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "69f2c2edec5f93ce1b009751",
+  "id": "akikuli/FLUX.1-Fill-dev-GGUF",
+  "gated": false,
+  "lastModified": "2026-04-30T02:48:13.000Z",
+  "downloads": 209,
+  "tags": [
+   "gguf",
+   "flux",
+   "image-generation",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67d6efe0a23a10ded4b6d6c2",
+  "id": "mit-han-lab/svdq-fp4-flux.1-fill-dev",
+  "gated": false,
+  "lastModified": "2025-07-21T05:33:19.000Z",
+  "downloads": 204,
+  "tags": [
+   "diffusers",
+   "image-to-image",
+   "SVDQuant",
+   "FLUX.1-Fill-dev",
+   "FLUX.1",
+   "Diffusion",
+   "Quantization",
+   "ICLR2025",
+   "en",
+   "dataset:mit-han-lab/svdquant-datasets",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "673fdc9b502969a0140d90d7",
+  "id": "dseditor/FLUXFillGGUF",
+  "gated": false,
+  "lastModified": "2025-04-18T23:54:33.000Z",
+  "downloads": 62,
+  "tags": [
+   "gguf",
+   "text-to-image",
+   "image-generation",
+   "flux",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ }
+]

@@ -1,0 +1,548 @@
+[
+ {
+  "_id": "68c1a5fb8a705779c9bf588c",
+  "id": "yichengup/flux.1-fill-dev-OneReward",
+  "gated": false,
+  "lastModified": "2026-01-26T10:31:38.000Z",
+  "downloads": 3641,
+  "tags": [
+   "diffusers",
+   "image-to-image",
+   "en",
+   "arxiv:2508.21066",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:cc-by-nc-4.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6a0d15a5d352b9f4ce7e772d",
+  "id": "cudabenchmarktest/flux1-fill-dev-fp8",
+  "gated": false,
+  "lastModified": "2026-05-20T02:15:57.000Z",
+  "downloads": 2686,
+  "tags": [
+   "diffusers",
+   "flux",
+   "inpainting",
+   "fp8",
+   "non-commercial",
+   "image-to-image",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "66ceb6104c8a29c6772185b9",
+  "id": "MLbackup/Flux_Scrape_Loras",
+  "gated": false,
+  "lastModified": "2026-02-01T01:13:13.000Z",
+  "downloads": 1402,
+  "tags": [
+   "diffusers",
+   "graphic",
+   "design",
+   "art",
+   "flux",
+   "sd3.5",
+   "en",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:mit",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6a545c85b731f4f55c4c3668",
+  "id": "wjndd/flux1-fill-dev-fp8",
+  "gated": false,
+  "lastModified": "2026-07-13T03:33:25.000Z",
+  "downloads": 1274,
+  "tags": [
+   "diffusers",
+   "flux",
+   "inpainting",
+   "fp8",
+   "non-commercial",
+   "image-to-image",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6742104fe736bfbb3a6b93f0",
+  "id": "xiaozaa/catvton-flux-alpha",
+  "gated": false,
+  "lastModified": "2024-11-26T15:42:26.000Z",
+  "downloads": 680,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "tryon",
+   "vto",
+   "image-to-image",
+   "arxiv:2407.15886",
+   "arxiv:2410.23775",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:cc-by-nc-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6817657399df4a96b0b3dc89",
+  "id": "RiverZ/normal-lora",
+  "gated": false,
+  "lastModified": "2025-05-04T13:14:46.000Z",
+  "downloads": 461,
+  "tags": [
+   "diffusers",
+   "art",
+   "image-to-image",
+   "en",
+   "dataset:osunlp/MagicBrush",
+   "dataset:TIGER-Lab/OmniEdit-Filtered-1.2M",
+   "arxiv:2504.20690",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6811a1c3439785d7ff87c5b1",
+  "id": "sanaka87/ICEdit-MoE-LoRA",
+  "gated": false,
+  "lastModified": "2025-05-02T13:42:03.000Z",
+  "downloads": 423,
+  "tags": [
+   "diffusers",
+   "art",
+   "image-to-image",
+   "en",
+   "dataset:osunlp/MagicBrush",
+   "dataset:TIGER-Lab/OmniEdit-Filtered-1.2M",
+   "arxiv:2504.20690",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67620fa841562706430e6872",
+  "id": "xiaozaa/catvton-flux-beta",
+  "gated": false,
+  "lastModified": "2025-01-16T11:26:07.000Z",
+  "downloads": 281,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "tryon",
+   "vto",
+   "image-to-image",
+   "arxiv:2407.15886",
+   "arxiv:2410.23775",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:cc-by-nc-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6752879bdae2133692fc538f",
+  "id": "xiaozaa/cat-tryoff-flux",
+  "gated": false,
+  "lastModified": "2024-12-06T05:52:31.000Z",
+  "downloads": 274,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "tryon",
+   "vto",
+   "image-to-image",
+   "arxiv:2407.15886",
+   "arxiv:2410.23775",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:cc-by-nc-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68061c25344d6d8a8fed5a19",
+  "id": "yyyyyxie/textflux",
+  "gated": false,
+  "lastModified": "2025-08-06T05:19:01.000Z",
+  "downloads": 194,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "scene-text-synthesis",
+   "multilingual",
+   "diffusion",
+   "dit",
+   "ocr-free",
+   "textflux",
+   "flux",
+   "text-to-image",
+   "arxiv:2505.17778",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:cc-by-nc-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "681b2e79dc861eb078215b6c",
+  "id": "RiverZ/ICEdit-normal-lora",
+  "gated": false,
+  "lastModified": "2025-05-07T10:03:42.000Z",
+  "downloads": 100,
+  "tags": [
+   "diffusers",
+   "image-to-image",
+   "en",
+   "dataset:osunlp/MagicBrush",
+   "dataset:TIGER-Lab/OmniEdit-Filtered-1.2M",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6808a4a4e9f54f97d2cbd4c3",
+  "id": "genex-world/World-Initializer-image-to-panorama",
+  "gated": false,
+  "lastModified": "2025-05-06T03:21:43.000Z",
+  "downloads": 67,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "image-to-image",
+   "dataset:TaiMingLu/GenEx-DB-Panorama-World",
+   "arxiv:2412.09624",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:cc-by-4.0",
+   "diffusers:FluxFillPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "688995688dd2c771554e1c43",
+  "id": "yyyyyxie/textflux-beta",
+  "gated": false,
+  "lastModified": "2025-09-15T05:36:57.000Z",
+  "downloads": 64,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "scene-text-synthesis",
+   "multilingual",
+   "diffusion",
+   "dit",
+   "ocr-free",
+   "textflux",
+   "flux",
+   "text-to-image",
+   "arxiv:2505.17778",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:cc-by-nc-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6a25bbe22681c53f9f08a56d",
+  "id": "superGong/DIRECT",
+  "gated": false,
+  "lastModified": "2026-06-09T06:37:14.000Z",
+  "downloads": 52,
+  "tags": [
+   "direct_pipeline",
+   "object-insertion",
+   "3d-aware",
+   "pose-controllable-generation",
+   "image-to-image",
+   "arxiv:2606.06601",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "688995888d2191791be5eb1d",
+  "id": "yyyyyxie/textflux-lora-beta",
+  "gated": false,
+  "lastModified": "2025-09-12T12:12:54.000Z",
+  "downloads": 42,
+  "tags": [
+   "diffusers",
+   "scene-text-synthesis",
+   "multilingual",
+   "diffusion",
+   "dit",
+   "ocr-free",
+   "textflux",
+   "flux",
+   "text-to-image",
+   "arxiv:2505.17778",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:cc-by-nc-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68ab0ad67ab0824ceb84525d",
+  "id": "TencentARC/IC-Custom",
+  "gated": false,
+  "lastModified": "2025-08-31T15:35:18.000Z",
+  "downloads": 34,
+  "tags": [
+   "custom_model",
+   "image customization",
+   "image-to-image",
+   "en",
+   "arxiv:2507.01926",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68061c51f9d9e5d123857f5e",
+  "id": "yyyyyxie/textflux-lora",
+  "gated": false,
+  "lastModified": "2025-05-29T07:52:52.000Z",
+  "downloads": 31,
+  "tags": [
+   "diffusers",
+   "scene-text-synthesis",
+   "multilingual",
+   "diffusion",
+   "dit",
+   "ocr-free",
+   "textflux",
+   "flux",
+   "text-to-image",
+   "arxiv:2505.17778",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:cc-by-nc-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68b93fa93efd936062a86386",
+  "id": "bytedance-research/OneReward",
+  "gated": false,
+  "lastModified": "2025-12-31T02:47:13.000Z",
+  "downloads": 22,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "image-to-image",
+   "en",
+   "arxiv:2508.21066",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:cc-by-nc-4.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67641c0a684ed3b61b1fe04e",
+  "id": "66yong/adayue",
+  "gated": false,
+  "lastModified": "2024-12-21T03:50:47.000Z",
+  "downloads": 3,
+  "tags": [
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67adb4456e18a019d2abe52d",
+  "id": "raresense/Sketch_to_Image",
+  "gated": "manual",
+  "lastModified": "2025-02-13T12:54:03.000Z",
+  "downloads": 0,
+  "tags": [
+   "diffusers",
+   "dataset:raresense/Sketch_to_Img",
+   "arxiv:1910.09700",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67cfc8e27ab8e507df13f26a",
+  "id": "raresense/Moodboard_to_Image",
+  "gated": "manual",
+  "lastModified": "2025-03-12T11:41:22.000Z",
+  "downloads": 0,
+  "tags": [
+   "diffusers",
+   "dataset:raresense/moodboard_to_dress",
+   "arxiv:1910.09700",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67cfcc82f8ee57c1444d730c",
+  "id": "raresense/Image_to_Sketch",
+  "gated": "manual",
+  "lastModified": "2025-03-12T11:34:37.000Z",
+  "downloads": 0,
+  "tags": [
+   "diffusers",
+   "dataset:raresense/Sketch_to_Img",
+   "arxiv:1910.09700",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67cfcf8b293bf2fc0c6b8797",
+  "id": "raresense/Textile_print_to_Image",
+  "gated": "manual",
+  "lastModified": "2025-03-12T11:39:44.000Z",
+  "downloads": 0,
+  "tags": [
+   "diffusers",
+   "dataset:raresense/textile_print_to_Img",
+   "arxiv:1910.09700",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67cfd858aff9c98bb3012f93",
+  "id": "raresense/Image_to_technical_flat",
+  "gated": "manual",
+  "lastModified": "2025-03-12T11:36:45.000Z",
+  "downloads": 0,
+  "tags": [
+   "diffusers",
+   "dataset:raresense/Img_to_technical_flat",
+   "arxiv:1910.09700",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67deea80213335ae74302ef3",
+  "id": "theunlikely/cat-tryoff-flux-lora",
+  "gated": false,
+  "lastModified": "2025-05-06T15:48:52.000Z",
+  "downloads": 0,
+  "tags": [
+   "tryon",
+   "vto",
+   "tryoff",
+   "image-to-image",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:cc-by-nc-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6807093ba296cac1cf8958ca",
+  "id": "WensongSong/Insert-Anything",
+  "gated": false,
+  "lastModified": "2025-04-24T17:42:46.000Z",
+  "downloads": 0,
+  "tags": [
+   "en",
+   "dataset:WensongSong/AnyInsertion",
+   "arxiv:2504.15009",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:mit",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "683ad53bb6adf0e19cce55be",
+  "id": "rkv1990/FLUX.1-Fill-dev-outpainting",
+  "gated": false,
+  "lastModified": "2025-06-02T12:06:31.000Z",
+  "downloads": 0,
+  "tags": [
+   "diffusers",
+   "outpainting",
+   "inpainting",
+   "flux",
+   "diffusion",
+   "text-to-image",
+   "en",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "685d0e26837ab6f75d2eb15b",
+  "id": "Calligrapher2025/Calligrapher",
+  "gated": false,
+  "lastModified": "2025-09-03T11:03:38.000Z",
+  "downloads": 0,
+  "tags": [
+   "transformers",
+   "art",
+   "text-to-image",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "endpoints_compatible",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6862648b9f17a914c5470bca",
+  "id": "Hzidan/PC25",
+  "gated": false,
+  "lastModified": "2025-06-30T17:02:03.000Z",
+  "downloads": 0,
+  "tags": [
+   "en",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68a44b420102e9fb7d74da2b",
+  "id": "Reallusion/fluxLora_Camila",
+  "gated": false,
+  "lastModified": "2025-08-19T10:20:38.000Z",
+  "downloads": 0,
+  "tags": [
+   "text-to-image",
+   "en",
+   "dataset:crystantine/fluxgym",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:creativeml-openrail-m",
+   "region:us"
+  ]
+ }
+]

@@ -1,0 +1,88 @@
+{
+ "_id": "67429fd506f2e52e35ba2d6b",
+ "id": "t8star/FLUX.1-Fill-dev-GGUF-Aix",
+ "private": false,
+ "tags": [
+  "gguf",
+  "region:us"
+ ],
+ "downloads": 331,
+ "likes": 22,
+ "modelId": "t8star/FLUX.1-Fill-dev-GGUF-Aix",
+ "author": "t8star",
+ "sha": "011036fae5718977d9e9cb63a05c77f4902d6948",
+ "lastModified": "2024-11-26T12:43:51.000Z",
+ "gated": false,
+ "disabled": false,
+ "config": {},
+ "gguf": {
+  "total": 11902391360,
+  "architecture": "flux",
+  "totalFileSize": 23941162272
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "f4101fe11085c41cc4fea99ef361a123232710be",
+   "size": 1753
+  },
+  {
+   "rfilename": "Flux Tool Fill\u91cf\u5316\u6a21\u578b\u6d4b\u8bc4\u5de5\u4f5c\u6d41.json",
+   "blobId": "2d90450433d4c0aebd84cf7f111c1737519d5f2c",
+   "size": 123635
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "6d20e479de1cf6c0f0a92dfed599772b146935d7",
+   "size": 751
+  },
+  {
+   "rfilename": "flux1-fill-dev-BF16.gguf",
+   "blobId": "acbcd128408eb73595ee2094464647fcd9f8845b",
+   "size": 23941162272,
+   "lfs": {
+    "sha256": "ce7788ac4dc657c523fa60de774db08aa6c4c4db6d87e454762f5f7d9191853b",
+    "size": 23941162272,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "ggml-model-Q4_K_M.gguf",
+   "blobId": "c2da8d6c9bb9f29eb23188e6eb9ea9625fcdb293",
+   "size": 6944400672,
+   "lfs": {
+    "sha256": "24f456bc2c4134318e423d4c25c7a0f7b62a3a3b6ab85da36d253415328a9f4b",
+    "size": 6944400672,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "ggml-model-Q6_K.gguf",
+   "blobId": "b83ebae1e82e36db640eb4e801ee2a51fc2956f4",
+   "size": 9860932896,
+   "lfs": {
+    "sha256": "d538635d81ed5eca59fa2f5a7b68709f0b5584d936570a8695e4d1ae4d518a72",
+    "size": 9860932896,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "ggml-model-Q8_0.gguf",
+   "blobId": "2030fdb01f506ce4d4b96ce78e0eed13480b0d9c",
+   "size": 12727035168,
+   "lfs": {
+    "sha256": "345ffd7acf39148e391133ae2a2fa7cc3f85e8dd0dbdb4636e760c3e7fe7952d",
+    "size": 12727035168,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "imagecreatemask.py",
+   "blobId": "948440bdc9c5f7ecd934ae2c4316ad6df6a1429c",
+   "size": 3972
+  }
+ ],
+ "spaces": [],
+ "createdAt": "2024-11-24T03:39:01.000Z",
+ "usedStorage": 53473531008
+}

@@ -1,0 +1,267 @@
+[
+ {
+  "file": "000-hf.json",
+  "url": "https://huggingface.co/api/models?search=inpainting&sort=downloads&direction=-1&limit=30&expand%5B%5D=downloads&expand%5B%5D=lastModified&expand%5B%5D=gated&expand%5B%5D=tags",
+  "fetched": "2026-10-09T12:38:57-0400"
+ },
+ {
+  "file": "001-hf.json",
+  "url": "https://huggingface.co/api/models?search=inpainting&sort=trendingScore&direction=-1&limit=30&expand%5B%5D=downloads&expand%5B%5D=lastModified&expand%5B%5D=gated&expand%5B%5D=tags",
+  "fetched": "2026-10-09T12:38:57-0400"
+ },
+ {
+  "file": "002-hf.json",
+  "url": "https://huggingface.co/api/models/Sanster/Realistic_Vision_V1.4-inpainting?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "003-hf.json",
+  "url": "https://huggingface.co/api/models/stable-diffusion-v1-5/stable-diffusion-inpainting?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "004-hf.json",
+  "url": "https://huggingface.co/api/models/Lykon/dreamshaper-8-inpainting?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "005-hf.json",
+  "url": "https://huggingface.co/api/models/Uminosachi/realisticVisionV51_v51VAE-inpainting?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "006-hf.json",
+  "url": "https://huggingface.co/api/models/gpustack/stable-diffusion-v1-5-inpainting-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "007-hf.json",
+  "url": "https://huggingface.co/api/models/benjamin-paine/stable-diffusion-v1-5-inpainting?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "008-hf.json",
+  "url": "https://huggingface.co/api/models/andregn/Realistic_Vision_V6.0-inpainting?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "009-hf.json",
+  "url": "https://huggingface.co/api/models/genai-archive/stable-diffusion-v1-5-inpainting?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "010-hf.json",
+  "url": "https://huggingface.co/api/models/botp/stable-diffusion-v1-5-inpainting?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "011-hf.json",
+  "url": "https://huggingface.co/api/models/ostris/qwen_image_edit_inpainting?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "012-civitai.json",
+  "url": "https://civitai.com/api/v1/models?types=Checkpoint&baseModels=SD+1.5&sort=Most+Downloaded&nsfw=false&limit=30",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "013-civitai.json",
+  "url": "https://civitai.com/api/v1/models?types=Checkpoint&baseModels=SD+1.5&sort=Most+Downloaded&nsfw=false&limit=30&query=inpainting",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "014-hf.json",
+  "url": "https://huggingface.co/api/models?filter=base_model%3Afinetune%3Astabilityai%2Fstable-diffusion-xl-base-1.0&sort=downloads&direction=-1&limit=30&expand%5B%5D=downloads&expand%5B%5D=lastModified&expand%5B%5D=gated&expand%5B%5D=tags",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "015-hf.json",
+  "url": "https://huggingface.co/api/models?filter=base_model%3Afinetune%3Astabilityai%2Fstable-diffusion-xl-base-1.0&sort=trendingScore&direction=-1&limit=30&expand%5B%5D=downloads&expand%5B%5D=lastModified&expand%5B%5D=gated&expand%5B%5D=tags",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "016-hf.json",
+  "url": "https://huggingface.co/api/models/RunDiffusion/Juggernaut-X-v10?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "017-hf.json",
+  "url": "https://huggingface.co/api/models/RunDiffusion/Juggernaut-XI-v11?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "018-hf.json",
+  "url": "https://huggingface.co/api/models/cagliostrolab/animagine-xl-4.0?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "019-hf.json",
+  "url": "https://huggingface.co/api/models/RunDiffusion/Juggernaut-XL-v9?blobs=true",
+  "fetched": "2026-10-09T12:38:58-0400"
+ },
+ {
+  "file": "020-hf.json",
+  "url": "https://huggingface.co/api/models/RunDiffusion/Juggernaut-XL-v8?blobs=true",
+  "fetched": "2026-10-09T12:38:59-0400"
+ },
+ {
+  "file": "021-hf.json",
+  "url": "https://huggingface.co/api/models/EnD-Diffusers/Dec2023?blobs=true",
+  "fetched": "2026-10-09T12:38:59-0400"
+ },
+ {
+  "file": "022-hf.json",
+  "url": "https://huggingface.co/api/models/MLbackup/2023_Scraped_SDXL?blobs=true",
+  "fetched": "2026-10-09T12:38:59-0400"
+ },
+ {
+  "file": "023-hf.json",
+  "url": "https://huggingface.co/api/models/fancyfeast/bigaspv2-5?blobs=true",
+  "fetched": "2026-10-09T12:38:59-0400"
+ },
+ {
+  "file": "024-hf.json",
+  "url": "https://huggingface.co/api/models/TencentARC/t2i-adapter-sketch-sdxl-1.0?blobs=true",
+  "fetched": "2026-10-09T12:38:59-0400"
+ },
+ {
+  "file": "025-hf.json",
+  "url": "https://huggingface.co/api/models/RunDiffusion/Juggernaut-XL?blobs=true",
+  "fetched": "2026-10-09T12:38:59-0400"
+ },
+ {
+  "file": "026-civitai.json",
+  "url": "https://civitai.com/api/v1/models?types=Checkpoint&baseModels=SDXL+1.0&sort=Most+Downloaded&nsfw=false&limit=30",
+  "fetched": "2026-10-09T12:38:59-0400"
+ },
+ {
+  "file": "027-hf.json",
+  "url": "https://huggingface.co/api/models?search=FLUX.1-Fill&sort=downloads&direction=-1&limit=30&expand%5B%5D=downloads&expand%5B%5D=lastModified&expand%5B%5D=gated&expand%5B%5D=tags",
+  "fetched": "2026-10-09T12:38:59-0400"
+ },
+ {
+  "file": "028-hf.json",
+  "url": "https://huggingface.co/api/models?filter=base_model%3Aquantized%3Ablack-forest-labs%2FFLUX.1-Fill-dev&sort=downloads&direction=-1&limit=30&expand%5B%5D=downloads&expand%5B%5D=lastModified&expand%5B%5D=gated&expand%5B%5D=tags",
+  "fetched": "2026-10-09T12:38:59-0400"
+ },
+ {
+  "file": "029-hf.json",
+  "url": "https://huggingface.co/api/models?filter=base_model%3Afinetune%3Ablack-forest-labs%2FFLUX.1-Fill-dev&sort=downloads&direction=-1&limit=30&expand%5B%5D=downloads&expand%5B%5D=lastModified&expand%5B%5D=gated&expand%5B%5D=tags",
+  "fetched": "2026-10-09T12:39:00-0400"
+ },
+ {
+  "file": "030-hf.json",
+  "url": "https://huggingface.co/api/models/cudabenchmarktest/flux1-fill-dev-fp8?blobs=true",
+  "fetched": "2026-10-09T12:39:00-0400"
+ },
+ {
+  "file": "031-hf.json",
+  "url": "https://huggingface.co/api/models/black-forest-labs/FLUX.1-Fill-dev?blobs=true",
+  "fetched": "2026-10-09T12:39:00-0400"
+ },
+ {
+  "file": "032-hf.json",
+  "url": "https://huggingface.co/api/models/YarvixPA/FLUX.1-Fill-dev-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:39:00-0400"
+ },
+ {
+  "file": "033-hf.json",
+  "url": "https://huggingface.co/api/models/yichengup/flux.1-fill-dev-OneReward?blobs=true",
+  "fetched": "2026-10-09T12:39:00-0400"
+ },
+ {
+  "file": "034-hf.json",
+  "url": "https://huggingface.co/api/models/SporkySporkness/FLUX.1-Fill-dev-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:39:00-0400"
+ },
+ {
+  "file": "035-hf.json",
+  "url": "https://huggingface.co/api/models/second-state/FLUX.1-Fill-dev-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:39:00-0400"
+ },
+ {
+  "file": "036-hf.json",
+  "url": "https://huggingface.co/api/models/wjndd/flux1-fill-dev-fp8?blobs=true",
+  "fetched": "2026-10-09T12:39:00-0400"
+ },
+ {
+  "file": "037-hf.json",
+  "url": "https://huggingface.co/api/models/gpustack/FLUX.1-Fill-dev-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:39:00-0400"
+ },
+ {
+  "file": "038-hf.json",
+  "url": "https://huggingface.co/api/models/t8star/FLUX.1-Fill-dev-GGUF-Aix?blobs=true",
+  "fetched": "2026-10-09T12:39:00-0400"
+ },
+ {
+  "file": "039-hf.json",
+  "url": "https://huggingface.co/api/models/gaianet/FLUX.1-Fill-dev-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:39:00-0400"
+ },
+ {
+  "file": "040-hf.json",
+  "url": "https://huggingface.co/api/models?search=Qwen-Image-Edit&filter=gguf&sort=downloads&direction=-1&limit=30&expand%5B%5D=downloads&expand%5B%5D=lastModified&expand%5B%5D=gated&expand%5B%5D=tags",
+  "fetched": "2026-10-09T12:39:00-0400"
+ },
+ {
+  "file": "041-hf.json",
+  "url": "https://huggingface.co/api/models?search=Qwen-Image-Edit&sort=downloads&direction=-1&limit=30&expand%5B%5D=downloads&expand%5B%5D=lastModified&expand%5B%5D=gated&expand%5B%5D=tags",
+  "fetched": "2026-10-09T12:39:00-0400"
+ },
+ {
+  "file": "042-hf.json",
+  "url": "https://huggingface.co/api/models?search=Qwen-Image-Edit&sort=trendingScore&direction=-1&limit=30&expand%5B%5D=downloads&expand%5B%5D=lastModified&expand%5B%5D=gated&expand%5B%5D=tags",
+  "fetched": "2026-10-09T12:39:01-0400"
+ },
+ {
+  "file": "043-hf.json",
+  "url": "https://huggingface.co/api/models/unsloth/Qwen-Image-Edit-2511-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:39:01-0400"
+ },
+ {
+  "file": "044-hf.json",
+  "url": "https://huggingface.co/api/models/calcuis/qwen-image-edit-plus-gguf?blobs=true",
+  "fetched": "2026-10-09T12:39:01-0400"
+ },
+ {
+  "file": "045-hf.json",
+  "url": "https://huggingface.co/api/models/QuantStack/Qwen-Image-Edit-2509-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:39:01-0400"
+ },
+ {
+  "file": "046-hf.json",
+  "url": "https://huggingface.co/api/models/QuantStack/Qwen-Image-Edit-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:39:01-0400"
+ },
+ {
+  "file": "047-hf.json",
+  "url": "https://huggingface.co/api/models/unsloth/Qwen-Image-Edit-2509-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:39:01-0400"
+ },
+ {
+  "file": "048-hf.json",
+  "url": "https://huggingface.co/api/models/calcuis/qwen-image-edit-gguf?blobs=true",
+  "fetched": "2026-10-09T12:39:01-0400"
+ },
+ {
+  "file": "049-hf.json",
+  "url": "https://huggingface.co/api/models/vantagewithai/Qwen-Image-Edit-2511-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:39:01-0400"
+ },
+ {
+  "file": "050-hf.json",
+  "url": "https://huggingface.co/api/models/Frederic75/Qwen-Image-Edit-2511-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:39:01-0400"
+ },
+ {
+  "file": "051-hf.json",
+  "url": "https://huggingface.co/api/models/unsloth/Qwen-Image-Edit-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:39:01-0400"
+ },
+ {
+  "file": "052-hf.json",
+  "url": "https://huggingface.co/api/models/ChrisColeTech/qwen-image-edit-multiple-angles-GGUF?blobs=true",
+  "fetched": "2026-10-09T12:39:01-0400"
+ }
+]

@@ -1,0 +1,158 @@
+{
+ "_id": "64f49e6fd3bcb4f933b625dc",
+ "id": "TencentARC/t2i-adapter-sketch-sdxl-1.0",
+ "private": false,
+ "pipeline_tag": "image-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "safetensors",
+  "art",
+  "t2i-adapter",
+  "image-to-image",
+  "stable-diffusion-xl-diffusers",
+  "stable-diffusion-xl",
+  "arxiv:2302.08453",
+  "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+  "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+  "license:apache-2.0",
+  "region:us"
+ ],
+ "downloads": 2529,
+ "likes": 77,
+ "modelId": "TencentARC/t2i-adapter-sketch-sdxl-1.0",
+ "author": "TencentARC",
+ "sha": "cc3c4e3362296c6825c370b83838306723ece983",
+ "lastModified": "2023-09-08T14:57:24.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "license": "apache-2.0",
+  "base_model": "stabilityai/stable-diffusion-xl-base-1.0",
+  "tags": [
+   "art",
+   "t2i-adapter",
+   "image-to-image",
+   "stable-diffusion-xl-diffusers",
+   "stable-diffusion-xl"
+  ]
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+   "size": 1519
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "f04b1e5caf1879969802e5aedfe5dc52378490f1",
+   "size": 9207
+  },
+  {
+   "rfilename": "config.json",
+   "blobId": "9c52d4e6065a2b2ab9253e251e71d0f72d094999",
+   "size": 279
+  },
+  {
+   "rfilename": "diffusion_pytorch_model.fp16.safetensors",
+   "blobId": "ffabcb2ccce9a6481f836740c4b3349024e659be",
+   "size": 158060440,
+   "lfs": {
+    "sha256": "9f88c53368d53bec6b70fc9d797ec12b88a512d2a7e9068d11fbf621917d9fdd",
+    "size": 158060440,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "diffusion_pytorch_model.safetensors",
+   "blobId": "7bc745fcd46958d935e54fef04727b7192bad379",
+   "size": 316116778,
+   "lfs": {
+    "sha256": "95ffaafde9e0a13061205c1d701dd22326be75884b1adfc0c1a1626dfa72d0a4",
+    "size": 316116778,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse",
+  "TencentARC/PhotoMaker-V2",
+  "TencentARC/T2I-Adapter-SDXL",
+  "TencentARC/T2I-Adapter-SDXL-Sketch",
+  "linoyts/olympics-photobooth",
+  "0xqtpie/doodle2vid",
+  "smartfeed/image2image",
+  "tsqn/PhotoMaker-V2",
+  "svjack/PhotoMaker-V2",
+  "kottu/stabble_diffusion_sketch",
+  "iccv23-diffusers-demo/T2I-Adapter-SDXL-Sketch",
+  "smartfeed/turbo_fm",
+  "waloneai/WalOPhotoSt",
+  "tianaco/tianacomakethedot",
+  "wei112311/T2I-Adapter-SDXL-Sketch",
+  "yrajaram/T2I-Adapter-SDXL-Sketch-p",
+  "we-r-ai/T2I-Adapter-SDXL-Sketch",
+  "ichsanbhrd/adaptor_gambar",
+  "satyac/TencentARC-t2i-adapter-sketch-sdxl-1.0",
+  "eg-art/art-st",
+  "ada-xh/T2I-Adapter-SDXL-Sketch",
+  "xiaoman79/T2I-Adapter-SDXL-Sketch",
+  "mugooo/TencentARC-t2i-adapter-sketch-sdxl-1.0",
+  "niggathug/creausdemo",
+  "vishnumg/TencentARC-t2i-adapter-sketch-sdxl-1.0",
+  "leena701/TencentARC-t2i-adapter-sketch-sdxl-1.0",
+  "acemetrics/T2I-Adapter-SDXL",
+  "niggathug/creausdemo2",
+  "WYHu/TencentARC-t2i-adapter-sketch-sdxl-1.0",
+  "Weber36/TencentARC-t2i-adapter-sketch-sdxl-1.0",
+  "ginipick/fashionfit",
+  "LujainHani/T2I-Adapter-SDXL",
+  "SewerXU/TencentARC-t2i-adapter-sketch-sdxl-1.0",
+  "instand/T2I-Adapter-SDXL-Sketch",
+  "daanidev/T2I-Adapter-SDXL-Sketch",
+  "TobDeBer/PhotoMaker-V2light",
+  "cocktailpeanut/PhotoMaker-V2",
+  "MohamedTalaat91/Photomaker-2B-Egypt",
+  "Rooc/PhotoMaker-V2",
+  "Fipper/PhotoMaker-V2-CPU",
+  "masonjames/PhotoMaker-V2",
+  "Animasikan/ImageToImage",
+  "waloneai/AIPhotoStudio-V2",
+  "lupemanzmia/PhotoMaker-V2",
+  "Drko222/PhotoMaker-V2",
+  "snyderline/PhotoMaker-V2",
+  "hamid267/1imagehamid267",
+  "John6666/PhotoMaker-V2",
+  "asdaswww/PhotoMaker-V2-torgovets",
+  "Significant/PhotoMaker-V2-gradio-UI",
+  "Alen432/PhotoMaker-V2",
+  "Raunakk8851/PhotoMaker-V2duplicated",
+  "Significant/PortfolioGeneration",
+  "Resetxt/PhotoMaker-V2",
+  "fazilmahesania/Facelix",
+  "frankyehk/T2I-Adapter-SDXL-Sketch-1",
+  "marceloamapa/PhotoMaker-V2sla",
+  "EuJonei/PhotoMaker-V2",
+  "recky101/check_photomaker_v2",
+  "grvt/PhotoMaker-V2",
+  "Fabrikator/PhotoMaker-V2",
+  "Rene78/PhotoMaker-V2",
+  "m7mdrmdan/PhotoMaker-V2",
+  "daicha/PhotoMaker-V2",
+  "bastianco/PhotoMaker-V2",
+  "rakamik1265/PhotoMaker-V2",
+  "sobaro/PhotoMaker-V2",
+  "Ovethemirror/mio2-PhotoMaker-V2",
+  "terteb/PhotoMaker-V2"
+ ],
+ "createdAt": "2023-09-03T14:55:43.000Z",
+ "safetensors": {
+  "parameters": {
+   "F32": 79028160
+  },
+  "total": 79028160
+ },
+ "usedStorage": 474177218
+}

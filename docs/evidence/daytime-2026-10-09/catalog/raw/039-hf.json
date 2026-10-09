@@ -1,0 +1,173 @@
+{
+ "_id": "67453a6786ca007057393a18",
+ "id": "gaianet/FLUX.1-Fill-dev-GGUF",
+ "private": false,
+ "pipeline_tag": "text-to-image",
+ "tags": [
+  "gguf",
+  "text-to-image",
+  "image-generation",
+  "flux",
+  "en",
+  "base_model:black-forest-labs/FLUX.1-Fill-dev",
+  "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+  "license:other",
+  "region:us"
+ ],
+ "downloads": 476,
+ "likes": 1,
+ "modelId": "gaianet/FLUX.1-Fill-dev-GGUF",
+ "author": "gaianet",
+ "sha": "873047e0d3a069720924a4a77f6f81fcfa7c7982",
+ "lastModified": "2024-11-27T13:47:37.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "base_model": "black-forest-labs/FLUX.1-Fill-dev",
+  "license": "other",
+  "license_name": "flux-1-dev-non-commercial-license",
+  "license_link": "LICENSE.md",
+  "model_creator": "black-forest-labs",
+  "model_name": "FLUX.1-Fill-dev",
+  "quantized_by": "Second State Inc.",
+  "language": [
+   "en"
+  ],
+  "tags": [
+   "text-to-image",
+   "image-generation",
+   "flux"
+  ]
+ },
+ "gguf": {
+  "total": 83819683,
+  "totalFileSize": 335238208
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "68947f364bdce6cf886e8534140ec1d3a5de778b",
+   "size": 2056
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "6feb111387b15a7fa2eaba1196d0afff81676ed5",
+   "size": 574
+  },
+  {
+   "rfilename": "ae-Q8_0.gguf",
+   "blobId": "8982028fa931ac9c3e9d7f75967cd4c96a3c4a68",
+   "size": 335238208,
+   "lfs": {
+    "sha256": "67b0c1209e68ab8d49ddf925fc8dc645cedc1a7d731dfe5c0d3808e815a60e7b",
+    "size": 335238208,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "ae.safetensors",
+   "blobId": "71f11a92800c4a93cead7cebc556531926ecfc33",
+   "size": 335304388,
+   "lfs": {
+    "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+    "size": 335304388,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q2_K.gguf",
+   "blobId": "55cdca4f26933e058c8564e14061373e7b822571",
+   "size": 4155810976,
+   "lfs": {
+    "sha256": "070d1c7151d9ef8c84b5fc8856f84320cc265b8597438a5f6553c5115f9828e2",
+    "size": 4155810976,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q3_K.gguf",
+   "blobId": "5cb9366342a1974f384e71f01d3e6541ca01dd55",
+   "size": 5357724832,
+   "lfs": {
+    "sha256": "2a5f9c42af6944ee5109ad21c557c5859ad5a48dd7eb92f6d3d63fd18d055a1b",
+    "size": 5357724832,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q4_0.gguf",
+   "blobId": "d53dad7ccb594d9741b64a78a6f51b6e3ede6417",
+   "size": 6929458336,
+   "lfs": {
+    "sha256": "e2e67fccd7d7130724cd8f58f27a43d2aa10bccfe45d4aac2d0534a1d2b79695",
+    "size": 6929458336,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q4_1.gguf",
+   "blobId": "91493c65462260ecc715bcd9ba52226d2067118d",
+   "size": 7669097632,
+   "lfs": {
+    "sha256": "f42c1b4315a31c401c0100d75825f0b3023a6877a0b3aada03bcb3cccc9cc9b7",
+    "size": 7669097632,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q4_K.gguf",
+   "blobId": "4d79aed74c2199900f2cbfd1dbb0fb494fad848e",
+   "size": 6929458336,
+   "lfs": {
+    "sha256": "325a6a7b984acee9a444b0497b24652053fefa5a76c552f95c1267fe9bcf4dd9",
+    "size": 6929458336,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q5_0.gguf",
+   "blobId": "79668237afbfc0fbb64e4783a5dc4b7e219eb927",
+   "size": 8408736928,
+   "lfs": {
+    "sha256": "a472135796c2eeb42419339b78c8be7649961383c7f804ecee090919d1a00184",
+    "size": 8408736928,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q5_1.gguf",
+   "blobId": "1fb69bffc76ede4f727a20ade27ba064bc2fe117",
+   "size": 9148376224,
+   "lfs": {
+    "sha256": "6f3445953f0095a3048fc99459af67eec62440a0c8ec2e8bc69d1e3e6f5fc99f",
+    "size": 9148376224,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q8_0.gguf",
+   "blobId": "9b8d7bd542a22c4b12dc7864327f0b8b5a170fa9",
+   "size": 12846572704,
+   "lfs": {
+    "sha256": "6ed89361ed163b787fad9e535f3e79005aa85ded044c06a4cbd9c94a20240167",
+    "size": 12846572704,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev.safetensors",
+   "blobId": "36b7da0c3ee0f2a5e0feaebf5be368649d698806",
+   "size": 23804922408,
+   "lfs": {
+    "sha256": "03e289f530df51d014f48e675a9ffa2141bc003259bf5f25d75b957e920a41ca",
+    "size": 23804922408,
+    "pointerSize": 136
+   }
+  }
+ ],
+ "spaces": [],
+ "createdAt": "2024-11-26T03:03:03.000Z",
+ "usedStorage": 85920700972
+}

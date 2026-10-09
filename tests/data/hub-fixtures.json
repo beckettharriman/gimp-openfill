@@ -1,0 +1,1230 @@
+{
+ "_note": "Trimmed real responses from huggingface.co/api/models and civitai.com/api/v1/models, fetched 2026-10-09 (see docs/evidence/daytime-2026-10-09/catalog). Keys are the request URLs.",
+ "responses": {
+  "https://huggingface.co/api/models?filter=base_model%3Aquantized%3Ablack-forest-labs%2FFLUX.1-Fill-dev&sort=downloads&direction=-1&limit=30&expand%5B%5D=downloads&expand%5B%5D=lastModified&expand%5B%5D=gated&expand%5B%5D=tags": [
+   {
+    "_id": "673fe95090613d5e14785593",
+    "id": "YarvixPA/FLUX.1-Fill-dev-GGUF",
+    "gated": false,
+    "lastModified": "2025-06-11T14:04:52.000Z",
+    "downloads": 33481,
+    "tags": [
+     "gguf",
+     "flux",
+     "image-generation",
+     "base_model:black-forest-labs/FLUX.1-Fill-dev",
+     "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+     "license:other",
+     "region:us"
+    ]
+   },
+   {
+    "_id": "67453a5a8eebd2eaf7e4c697",
+    "id": "second-state/FLUX.1-Fill-dev-GGUF",
+    "gated": false,
+    "lastModified": "2024-11-27T13:45:48.000Z",
+    "downloads": 1753,
+    "tags": [
+     "gguf",
+     "text-to-image",
+     "image-generation",
+     "flux",
+     "en",
+     "base_model:black-forest-labs/FLUX.1-Fill-dev",
+     "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+     "license:other",
+     "region:us"
+    ]
+   },
+   {
+    "_id": "67a19aabf79b3b8da55394ef",
+    "id": "mit-han-lab/svdq-int4-flux.1-fill-dev",
+    "gated": false,
+    "lastModified": "2025-07-21T05:33:03.000Z",
+    "downloads": 1543,
+    "tags": [
+     "diffusers",
+     "image-to-image",
+     "SVDQuant",
+     "FLUX.1-Fill-dev",
+     "FLUX.1",
+     "Diffusion",
+     "Quantization",
+     "ICLR2025",
+     "en",
+     "dataset:mit-han-lab/svdquant-datasets",
+     "base_model:black-forest-labs/FLUX.1-Fill-dev",
+     "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+     "license:other",
+     "region:us"
+    ]
+   },
+   {
+    "_id": "67453a6786ca007057393a18",
+    "id": "gaianet/FLUX.1-Fill-dev-GGUF",
+    "gated": false,
+    "lastModified": "2024-11-27T13:47:37.000Z",
+    "downloads": 476,
+    "tags": [
+     "gguf",
+     "text-to-image",
+     "image-generation",
+     "flux",
+     "en",
+     "base_model:black-forest-labs/FLUX.1-Fill-dev",
+     "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+     "license:other",
+     "region:us"
+    ]
+   }
+  ],
+  "https://huggingface.co/api/models/YarvixPA/FLUX.1-Fill-dev-GGUF?blobs=true": {
+   "id": "YarvixPA/FLUX.1-Fill-dev-GGUF",
+   "author": "YarvixPA",
+   "sha": "78b83f1da140a4dcd6466580516544e1f6effe3e",
+   "gated": false,
+   "downloads": 33481,
+   "lastModified": "2025-06-11T14:04:52.000Z",
+   "tags": [
+    "gguf",
+    "flux",
+    "image-generation",
+    "base_model:black-forest-labs/FLUX.1-Fill-dev",
+    "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+    "license:other",
+    "region:us"
+   ],
+   "cardData": {
+    "license": "other",
+    "license_name": "flux-1-dev-non-commercial-license",
+    "license_link": "LICENSE.md"
+   },
+   "siblings": [
+    {
+     "rfilename": "flux1-fill-dev-Q3_K_S.gguf",
+     "size": 5238187296,
+     "lfs": {
+      "sha256": "acc2a48ebfd3f7b983ff044f7be8cc7e3cfdd3013bf4187828ddda94315f3998",
+      "size": 5238187296,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q4_0.gguf",
+     "size": 6809920800,
+     "lfs": {
+      "sha256": "fc9c8398f7ba88d1fe670b5011330c1b08c70838828a0d8f876fe5402653321b",
+      "size": 6809920800,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q4_1.gguf",
+     "size": 7549560096,
+     "lfs": {
+      "sha256": "2f94a1f8343895ce53b49f5f5eecb6f432673ad4eaf449504f38e217d5a1990d",
+      "size": 7549560096,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q4_K_S.gguf",
+     "size": 6809920800,
+     "lfs": {
+      "sha256": "3782c22eda0622d50eb8683d2aa664e8534a8c1e29ce9e91df491cc400944dc8",
+      "size": 6809920800,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q5_0.gguf",
+     "size": 8289199392,
+     "lfs": {
+      "sha256": "1172081e79ff5b8f8dcfe5f145c9e62df20c9527589af17fe9e7bfefc44cffc4",
+      "size": 8289199392,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q5_1.gguf",
+     "size": 9028838688,
+     "lfs": {
+      "sha256": "51d1869c1d7c316a25a6d6cf8371d933ca6e09dfe330da40554e20aab1c53516",
+      "size": 9028838688,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q5_K_S.gguf",
+     "size": 8289199392,
+     "lfs": {
+      "sha256": "555e1cc1d84d5d27b394cdcb6e8f3be9bea9111649fd0c466e77b3747e708115",
+      "size": 8289199392,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q6_K.gguf",
+     "size": 9860932896,
+     "lfs": {
+      "sha256": "d538635d81ed5eca59fa2f5a7b68709f0b5584d936570a8695e4d1ae4d518a72",
+      "size": 9860932896,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q8_0.gguf",
+     "size": 12727035168,
+     "lfs": {
+      "sha256": "345ffd7acf39148e391133ae2a2fa7cc3f85e8dd0dbdb4636e760c3e7fe7952d",
+      "size": 12727035168,
+      "pointerSize": 136
+     }
+    }
+   ]
+  },
+  "https://huggingface.co/api/models/black-forest-labs/FLUX.1-Fill-dev?blobs=true": {
+   "id": "black-forest-labs/FLUX.1-Fill-dev",
+   "author": "black-forest-labs",
+   "sha": "358293da0354175698b67ec8299acf928313a78a",
+   "gated": "auto",
+   "downloads": 70510,
+   "lastModified": "2025-06-27T16:23:07.000Z",
+   "tags": [
+    "diffusers",
+    "safetensors",
+    "image-generation",
+    "flux",
+    "diffusion-single-file",
+    "en",
+    "license:other",
+    "diffusers:FluxFillPipeline",
+    "region:us"
+   ],
+   "cardData": {
+    "license": "other",
+    "license_name": "flux-1-dev-non-commercial-license",
+    "license_link": "LICENSE.md"
+   },
+   "siblings": [
+    {
+     "rfilename": "ae.safetensors",
+     "size": 335304388,
+     "lfs": {
+      "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+      "size": 335304388,
+      "pointerSize": 134
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev.safetensors",
+     "size": 23804922408,
+     "lfs": {
+      "sha256": "03e289f530df51d014f48e675a9ffa2141bc003259bf5f25d75b957e920a41ca",
+      "size": 23804922408,
+      "pointerSize": 136
+     }
+    },
+    {
+     "rfilename": "text_encoder/model.safetensors",
+     "size": 246144352,
+     "lfs": {
+      "sha256": "893d67a23f4693ed42cdab4cbad7fe3e727cf59609c40da28a46b5470f9ed082",
+      "size": 246144352,
+      "pointerSize": 134
+     }
+    },
+    {
+     "rfilename": "text_encoder_2/model-00001-of-00002.safetensors",
+     "size": 4994582224,
+     "lfs": {
+      "sha256": "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",
+      "size": 4994582224,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "text_encoder_2/model-00002-of-00002.safetensors",
+     "size": 4530066360,
+     "lfs": {
+      "sha256": "a5640855b301fcdbceddfa90ae8066cd9414aff020552a201a255ecf2059da00",
+      "size": 4530066360,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "transformer/diffusion_pytorch_model-00001-of-00003.safetensors",
+     "size": 9985006384,
+     "lfs": {
+      "sha256": "4cef6b166b2163ba9a01ccb68bf53054556852b69b32c0565dfe0741d28982d7",
+      "size": 9985006384,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "transformer/diffusion_pytorch_model-00002-of-00003.safetensors",
+     "size": 9949328904,
+     "lfs": {
+      "sha256": "cd99fdd45ac404a9c98c939bdc986647cd5160ca48b8e679e81d3d59c2b9a1e0",
+      "size": 9949328904,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "transformer/diffusion_pytorch_model-00003-of-00003.safetensors",
+     "size": 3870584832,
+     "lfs": {
+      "sha256": "ed878852603579083b4a4ea80544504faca9f42ebd41aaa103c3023ee2ebfbd5",
+      "size": 3870584832,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "vae/diffusion_pytorch_model.safetensors",
+     "size": 335306212,
+     "lfs": {
+      "sha256": "8c717328c8ad41faab2ccfd52ae17332505c6833cf176aad56e7b58f2c4d4c94",
+      "size": 335306212,
+      "pointerSize": 134
+     }
+    }
+   ]
+  },
+  "https://huggingface.co/api/models/second-state/FLUX.1-Fill-dev-GGUF?blobs=true": {
+   "id": "second-state/FLUX.1-Fill-dev-GGUF",
+   "author": "second-state",
+   "sha": "f4370bf5aedfa33a5776cdf1b92cc492b48cdcff",
+   "gated": false,
+   "downloads": 1753,
+   "lastModified": "2024-11-27T13:45:48.000Z",
+   "tags": [
+    "gguf",
+    "text-to-image",
+    "image-generation",
+    "flux",
+    "en",
+    "base_model:black-forest-labs/FLUX.1-Fill-dev",
+    "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+    "license:other",
+    "region:us"
+   ],
+   "cardData": {
+    "license": "other",
+    "license_name": "flux-1-dev-non-commercial-license",
+    "license_link": "LICENSE.md"
+   },
+   "siblings": [
+    {
+     "rfilename": "ae.safetensors",
+     "size": 335304388,
+     "lfs": {
+      "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+      "size": 335304388,
+      "pointerSize": 134
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q2_K.gguf",
+     "size": 4155810976,
+     "lfs": {
+      "sha256": "070d1c7151d9ef8c84b5fc8856f84320cc265b8597438a5f6553c5115f9828e2",
+      "size": 4155810976,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q3_K.gguf",
+     "size": 5357724832,
+     "lfs": {
+      "sha256": "2a5f9c42af6944ee5109ad21c557c5859ad5a48dd7eb92f6d3d63fd18d055a1b",
+      "size": 5357724832,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q4_0.gguf",
+     "size": 6929458336,
+     "lfs": {
+      "sha256": "e2e67fccd7d7130724cd8f58f27a43d2aa10bccfe45d4aac2d0534a1d2b79695",
+      "size": 6929458336,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q4_1.gguf",
+     "size": 7669097632,
+     "lfs": {
+      "sha256": "f42c1b4315a31c401c0100d75825f0b3023a6877a0b3aada03bcb3cccc9cc9b7",
+      "size": 7669097632,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q4_K.gguf",
+     "size": 6929458336,
+     "lfs": {
+      "sha256": "325a6a7b984acee9a444b0497b24652053fefa5a76c552f95c1267fe9bcf4dd9",
+      "size": 6929458336,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q5_0.gguf",
+     "size": 8408736928,
+     "lfs": {
+      "sha256": "a472135796c2eeb42419339b78c8be7649961383c7f804ecee090919d1a00184",
+      "size": 8408736928,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q5_1.gguf",
+     "size": 9148376224,
+     "lfs": {
+      "sha256": "6f3445953f0095a3048fc99459af67eec62440a0c8ec2e8bc69d1e3e6f5fc99f",
+      "size": 9148376224,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev-Q8_0.gguf",
+     "size": 12846572704,
+     "lfs": {
+      "sha256": "6ed89361ed163b787fad9e535f3e79005aa85ded044c06a4cbd9c94a20240167",
+      "size": 12846572704,
+      "pointerSize": 136
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev.safetensors",
+     "size": 23804922408,
+     "lfs": {
+      "sha256": "03e289f530df51d014f48e675a9ffa2141bc003259bf5f25d75b957e920a41ca",
+      "size": 23804922408,
+      "pointerSize": 136
+     }
+    }
+   ]
+  },
+  "https://huggingface.co/api/models/RunDiffusion/Juggernaut-XI-v11?blobs=true": {
+   "id": "RunDiffusion/Juggernaut-XI-v11",
+   "author": "RunDiffusion",
+   "sha": "f836518c7a75f47a9e26bc661ff9509ef2ceb7c0",
+   "gated": false,
+   "downloads": 17663,
+   "lastModified": "2026-05-08T17:23:19.000Z",
+   "tags": [
+    "diffusers",
+    "stable-diffusion",
+    "stable-diffusion-xl",
+    "sdxl",
+    "text-to-image",
+    "photorealistic",
+    "photography",
+    "cinematic",
+    "portrait",
+    "juggernaut",
+    "rundiffusion",
+    "kandooai",
+    "en",
+    "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+    "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+    "license:cc-by-nc-nd-4.0",
+    "endpoints_compatible",
+    "diffusers:StableDiffusionXLPipeline",
+    "region:us"
+   ],
+   "cardData": {
+    "license": "cc-by-nc-nd-4.0",
+    "license_name": null,
+    "license_link": null
+   },
+   "siblings": [
+    {
+     "rfilename": "Juggernaut-XI-byRunDiffusion.safetensors",
+     "size": 7105350536,
+     "lfs": {
+      "sha256": "33e58e86686f6b386c526682b5da9228ead4f91d994abd4b053442dc5b42719e",
+      "size": 7105350536,
+      "pointerSize": 135
+     }
+    }
+   ]
+  },
+  "https://huggingface.co/api/models/camenduru/FLUX.1-Fill-dev-ungated?blobs=true": {
+   "id": "camenduru/FLUX.1-Fill-dev-ungated",
+   "author": "camenduru",
+   "sha": "da3981208deaf7da0e80f83d1ae892c23c8f7310",
+   "gated": false,
+   "downloads": 544,
+   "lastModified": "2025-08-07T13:57:31.000Z",
+   "tags": [
+    "diffusers",
+    "safetensors",
+    "image-generation",
+    "flux",
+    "diffusion-single-file",
+    "en",
+    "license:other",
+    "diffusers:FluxFillPipeline",
+    "region:us"
+   ],
+   "cardData": {
+    "license": "other",
+    "license_name": "flux-1-dev-non-commercial-license",
+    "license_link": "LICENSE.md"
+   },
+   "siblings": [
+    {
+     "rfilename": "ae.safetensors",
+     "size": 335304388,
+     "lfs": {
+      "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+      "size": 335304388,
+      "pointerSize": 134
+     }
+    },
+    {
+     "rfilename": "flux1-fill-dev.safetensors",
+     "size": 23804922408,
+     "lfs": {
+      "sha256": "03e289f530df51d014f48e675a9ffa2141bc003259bf5f25d75b957e920a41ca",
+      "size": 23804922408,
+      "pointerSize": 136
+     }
+    },
+    {
+     "rfilename": "text_encoder/model.safetensors",
+     "size": 246144352,
+     "lfs": {
+      "sha256": "893d67a23f4693ed42cdab4cbad7fe3e727cf59609c40da28a46b5470f9ed082",
+      "size": 246144352,
+      "pointerSize": 134
+     }
+    },
+    {
+     "rfilename": "text_encoder_2/model-00001-of-00002.safetensors",
+     "size": 4994582224,
+     "lfs": {
+      "sha256": "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",
+      "size": 4994582224,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "text_encoder_2/model-00002-of-00002.safetensors",
+     "size": 4530066360,
+     "lfs": {
+      "sha256": "a5640855b301fcdbceddfa90ae8066cd9414aff020552a201a255ecf2059da00",
+      "size": 4530066360,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "transformer/diffusion_pytorch_model-00001-of-00003.safetensors",
+     "size": 9985006384,
+     "lfs": {
+      "sha256": "4cef6b166b2163ba9a01ccb68bf53054556852b69b32c0565dfe0741d28982d7",
+      "size": 9985006384,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "transformer/diffusion_pytorch_model-00002-of-00003.safetensors",
+     "size": 9949328904,
+     "lfs": {
+      "sha256": "cd99fdd45ac404a9c98c939bdc986647cd5160ca48b8e679e81d3d59c2b9a1e0",
+      "size": 9949328904,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "transformer/diffusion_pytorch_model-00003-of-00003.safetensors",
+     "size": 3870584832,
+     "lfs": {
+      "sha256": "ed878852603579083b4a4ea80544504faca9f42ebd41aaa103c3023ee2ebfbd5",
+      "size": 3870584832,
+      "pointerSize": 135
+     }
+    },
+    {
+     "rfilename": "vae/diffusion_pytorch_model.safetensors",
+     "size": 335306212,
+     "lfs": {
+      "sha256": "8c717328c8ad41faab2ccfd52ae17332505c6833cf176aad56e7b58f2c4d4c94",
+      "size": 335306212,
+      "pointerSize": 134
+     }
+    }
+   ]
+  },
+  "https://huggingface.co/api/models?filter=base_model%3Afinetune%3Astabilityai%2Fstable-diffusion-xl-base-1.0&sort=downloads&direction=-1&limit=30&expand%5B%5D=downloads&expand%5B%5D=lastModified&expand%5B%5D=gated&expand%5B%5D=tags": [
+   {
+    "_id": "64f1f00e5e0cf1f797040eaa",
+    "id": "diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
+    "gated": false,
+    "lastModified": "2023-09-03T16:36:39.000Z",
+    "downloads": 104113,
+    "tags": [
+     "diffusers",
+     "safetensors",
+     "stable-diffusion-xl",
+     "stable-diffusion-xl-diffusers",
+     "text-to-image",
+     "inpainting",
+     "arxiv:2112.10752",
+     "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+     "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+     "license:openrail++",
+     "diffusers:StableDiffusionXLInpaintPipeline",
+     "region:us"
+    ]
+   },
+   {
+    "_id": "65d903e9e0ae6398839a85ff",
+    "id": "RunDiffusion/Juggernaut-XL-Lightning",
+    "gated": false,
+    "lastModified": "2026-05-08T17:22:14.000Z",
+    "downloads": 24472,
+    "tags": [
+     "diffusers",
+     "stable-diffusion",
+     "stable-diffusion-xl",
+     "sdxl",
+     "sdxl-lightning",
+     "text-to-image",
+     "photorealistic",
+     "fast",
+     "low-step",
+     "juggernaut",
+     "rundiffusion",
+     "kandooai",
+     "en",
+     "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+     "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+     "license:creativeml-openrail-m",
+     "endpoints_compatible",
+     "diffusers:StableDiffusionXLPipeline",
+     "region:us"
+    ]
+   },
+   {
+    "_id": "668ffe8ae760dfd88d5139fa",
+    "id": "RunDiffusion/Juggernaut-XI-v11",
+    "gated": false,
+    "lastModified": "2026-05-08T17:23:19.000Z",
+    "downloads": 17663,
+    "tags": [
+     "diffusers",
+     "stable-diffusion",
+     "stable-diffusion-xl",
+     "sdxl",
+     "text-to-image",
+     "photorealistic",
+     "photography",
+     "cinematic",
+     "portrait",
+     "juggernaut",
+     "rundiffusion",
+     "kandooai",
+     "en",
+     "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+     "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+     "license:cc-by-nc-nd-4.0",
+     "endpoints_compatible",
+     "diffusers:StableDiffusionXLPipeline",
+     "region:us"
+    ]
+   }
+  ],
+  "https://civitai.com/api/v1/models?types=Checkpoint&baseModels=SDXL+1.0&sort=Most+Downloaded&nsfw=false&limit=30": {
+   "items": [
+    {
+     "id": 133005,
+     "name": "Juggernaut XL",
+     "type": "Checkpoint",
+     "nsfw": false,
+     "poi": false,
+     "availability": "Public",
+     "tags": [
+      "characters",
+      "photo",
+      "base model",
+      "cinematic",
+      "photorealistic",
+      "nsfw"
+     ],
+     "allowCommercialUse": [
+      "Image",
+      "RentCivit"
+     ],
+     "creator": {
+      "username": "KandooAI"
+     },
+     "stats": {
+      "downloadCount": 1662551
+     },
+     "modelVersions": [
+      {
+       "id": 1759168,
+       "name": "Ragnarok",
+       "baseModel": "SDXL 1.0",
+       "baseModelType": "Standard",
+       "publishedAt": "2025-05-07T21:02:16.940Z",
+       "availability": "Public",
+       "stats": {
+        "downloadCount": 507439
+       },
+       "files": [
+        {
+         "id": 1659952,
+         "name": "juggernautXL_ragnarok.safetensors",
+         "sizeKB": 6938818.517578125,
+         "type": "Model",
+         "primary": true,
+         "metadata": {
+          "format": "SafeTensor",
+          "size": "full",
+          "fp": "fp16"
+         },
+         "hashes": {
+          "AutoV1": "0DA7A319",
+          "AutoV2": "DD08FA32F9",
+          "SHA256": "DD08FA32F98D05A2443CA1419E46DF1575A0811F6E3B246D9DD47FF20F5EB66A",
+          "CRC32": "9C81DE64",
+          "BLAKE3": "8CAF423D1A47CF7AE59DFD0F4E63B82E1EF19D94DD31614B506E722935048432",
+          "AutoV3": "62BF44FDB632",
+          "SHA256_12": "DD08FA32F98D"
+         },
+         "downloadUrl": "https://civitai.com/api/download/models/1759168",
+         "pickleScanResult": "Success",
+         "virusScanResult": "Success"
+        }
+       ]
+      },
+      {
+       "id": 782002,
+       "name": "Jugg_XI_by_RunDiffusion",
+       "baseModel": "SDXL 1.0",
+       "baseModelType": "Standard",
+       "publishedAt": "2024-08-29T09:01:55.374Z",
+       "availability": "Public",
+       "stats": {
+        "downloadCount": 290151
+       },
+       "files": [
+        {
+         "id": 695423,
+         "name": "juggernautXL_juggXIByRundiffusion.safetensors",
+         "sizeKB": 6938818.8828125,
+         "type": "Model",
+         "primary": true,
+         "metadata": {
+          "format": "SafeTensor",
+          "size": "full",
+          "fp": "fp16"
+         },
+         "hashes": {
+          "AutoV1": "ED515F41",
+          "AutoV2": "33E58E8668",
+          "SHA256": "33E58E86686F6B386C526682B5DA9228EAD4F91D994ABD4B053442DC5B42719E",
+          "CRC32": "AC39AF06",
+          "BLAKE3": "1212FE43E0685029EBF39BE92FDBBCA2ECF2D46619153E031367168B3A8C1E35",
+          "AutoV3": "2F1DCC576292",
+          "SHA256_12": "33E58E86686F"
+         },
+         "downloadUrl": "https://civitai.com/api/download/models/782002",
+         "pickleScanResult": "Success",
+         "virusScanResult": "Success"
+        }
+       ]
+      },
+      {
+       "id": 456194,
+       "name": "Jugg_X_by RunDiffusion",
+       "baseModel": "SDXL 1.0",
+       "baseModelType": "Standard",
+       "publishedAt": "2024-04-19T22:00:02.343Z",
+       "availability": "Public",
+       "stats": {
+        "downloadCount": 121093
+       },
+       "files": [
+        {
+         "id": 375666,
+         "name": "Juggernaut_X_RunDiffusion.safetensors",
+         "sizeKB": 6938817.0625,
+         "type": "Model",
+         "primary": true,
+         "metadata": {
+          "format": "SafeTensor",
+          "size": "full",
+          "fp": "fp16"
+         },
+         "hashes": {
+          "AutoV1": "19743DE3",
+          "AutoV2": "D91D35736D",
+          "SHA256": "D91D35736D8F2BE038F760A9B0009A771ECF0A417E9B38C244A84EA4CB9C0C45",
+          "CRC32": "5433D35A",
+          "BLAKE3": "FC25FAEC012E3D4547736FCAEAE86A8A8B9861786C33955E8B38698FE9547B55",
+          "AutoV3": "039986F26F01",
+          "SHA256_12": "D91D35736D8F"
+         },
+         "downloadUrl": "https://civitai.com/api/download/models/456194",
+         "pickleScanResult": "Success",
+         "virusScanResult": "Success"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": 277058,
+     "name": "epiCRealism XL",
+     "type": "Checkpoint",
+     "nsfw": false,
+     "poi": false,
+     "availability": "Public",
+     "tags": [
+      "photo",
+      "photorealism",
+      "woman",
+      "realistic",
+      "photography",
+      "base model"
+     ],
+     "allowCommercialUse": [
+      "Image",
+      "RentCivit"
+     ],
+     "creator": {
+      "username": "epinikion"
+     },
+     "stats": {
+      "downloadCount": 605815
+     },
+     "modelVersions": [
+      {
+       "id": 2514955,
+       "name": "Pure_fix",
+       "baseModel": "SDXL 1.0",
+       "baseModelType": "Standard",
+       "publishedAt": "2025-12-18T15:41:24.384Z",
+       "availability": "Public",
+       "stats": {
+        "downloadCount": 205271
+       },
+       "files": [
+        {
+         "id": 2402914,
+         "name": "epicrealismXL_pureFix.safetensors",
+         "sizeKB": 6775430.8046875,
+         "type": "Model",
+         "primary": true,
+         "metadata": {
+          "format": "SafeTensor",
+          "size": "pruned",
+          "fp": "fp16"
+         },
+         "hashes": {
+          "AutoV1": "4052ECF3",
+          "AutoV2": "DD21ADCC3A",
+          "SHA256": "DD21ADCC3A04A4A631DCB5D6F48608C506701E6B7A978093230441C71BCAD3B6",
+          "CRC32": "E2E03A04",
+          "BLAKE3": "7E6EE78728FF4A77BE0629509A7EC1004BC91900582BB6E2364714DF42F6FC8E",
+          "AutoV3": "F9E5460BF1AB",
+          "SHA256_12": "DD21ADCC3A04"
+         },
+         "downloadUrl": "https://civitai.com/api/download/models/2514955",
+         "pickleScanResult": "Success",
+         "virusScanResult": "Success"
+        }
+       ]
+      },
+      {
+       "id": 2444158,
+       "name": "Pure",
+       "baseModel": "SDXL 1.0",
+       "baseModelType": "Standard",
+       "publishedAt": "2025-12-17T12:34:53.966Z",
+       "availability": "Public",
+       "stats": {
+        "downloadCount": 3268
+       },
+       "files": [
+        {
+         "id": 2399637,
+         "name": "epicrealismXL_pure.safetensors",
+         "sizeKB": 6775451.298828125,
+         "type": "Model",
+         "primary": true,
+         "metadata": {
+          "format": "SafeTensor",
+          "size": "pruned",
+          "fp": "fp16"
+         },
+         "hashes": {
+          "AutoV1": "C0C5B134",
+          "AutoV2": "8456BEE2BB",
+          "SHA256": "8456BEE2BB91C414D1BF9D2ED011ED3C02106C1B1B5982ABDDCE2CBB5774D885",
+          "CRC32": "425498A4",
+          "BLAKE3": "5CDD6091DD97A4152788F1E0B73381A9449A6C17220BB3EFA86BA56D1C717052",
+          "AutoV3": "9A87E65645C8",
+          "SHA256_12": "8456BEE2BB91"
+         },
+         "downloadUrl": "https://civitai.com/api/download/models/2444158",
+         "pickleScanResult": "Success",
+         "virusScanResult": "Success"
+        }
+       ]
+      },
+      {
+       "id": 1920523,
+       "name": "VXVII - CrystalClear (Realism)",
+       "baseModel": "SDXL 1.0",
+       "baseModelType": "Standard",
+       "publishedAt": "2025-06-20T14:32:32.518Z",
+       "availability": "Public",
+       "stats": {
+        "downloadCount": 127839
+       },
+       "files": [
+        {
+         "id": 1821905,
+         "name": "epicrealismXL_vxviiCrystalclear.safetensors",
+         "sizeKB": 6775451.298828125,
+         "type": "Model",
+         "primary": true,
+         "metadata": {
+          "format": "SafeTensor",
+          "size": "pruned",
+          "fp": "fp16"
+         },
+         "hashes": {
+          "AutoV1": "C0C5B134",
+          "AutoV2": "3267FD6443",
+          "SHA256": "3267FD64433C901D00631304B4FECC70CEBC84E11476C4029C5FFDFFEB4985AD",
+          "CRC32": "0DA0CAFF",
+          "BLAKE3": "09873CA9E1E668F0A3BC94BC78FE6EFA0354FCA6413F70868ECD6CBBC6ED50A4",
+          "AutoV3": "5DDFE731B92E",
+          "SHA256_12": "3267FD64433C"
+         },
+         "downloadUrl": "https://civitai.com/api/download/models/1920523",
+         "pickleScanResult": "Success",
+         "virusScanResult": "Success"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": 112902,
+     "name": "DreamShaper XL",
+     "type": "Checkpoint",
+     "nsfw": false,
+     "poi": false,
+     "availability": "Public",
+     "tags": [
+      "photography",
+      "art",
+      "xl",
+      "realistic",
+      "dreamshaper",
+      "artstyle",
+      "turbo",
+      "sdxl",
+      "base model",
+      "anime"
+     ],
+     "allowCommercialUse": [
+      "Image",
+      "RentCivit",
+      "Rent"
+     ],
+     "creator": {
+      "username": "Lykon"
+     },
+     "stats": {
+      "downloadCount": 634541
+     },
+     "modelVersions": [
+      {
+       "id": 126688,
+       "name": "alpha2 (xl1.0)",
+       "baseModel": "SDXL 1.0",
+       "baseModelType": "Standard",
+       "publishedAt": "2023-07-26T22:46:25.780Z",
+       "availability": "Public",
+       "stats": {
+        "downloadCount": 147049
+       },
+       "files": [
+        {
+         "id": 91562,
+         "name": "dreamshaperXL_alpha2Xl10.safetensors",
+         "sizeKB": 6775457.57421875,
+         "type": "Model",
+         "primary": true,
+         "metadata": {
+          "format": "SafeTensor",
+          "size": "full",
+          "fp": "fp16"
+         },
+         "hashes": {
+          "AutoV1": "C8AFE2EF",
+          "AutoV2": "0F1B80CFE8",
+          "SHA256": "0F1B80CFE81B9C3BDE7FDCBF6898897B2811B27BE1DF684583C3D85CBC9B1FA4",
+          "CRC32": "25F5C331",
+          "BLAKE3": "29E6AD33B3EB0BEE5A7B5EE2945AC613A403A0D76A8100685318F7C2DA439332",
+          "SHA256_12": "0F1B80CFE81B"
+         },
+         "downloadUrl": "https://civitai.com/api/download/models/126688",
+         "pickleScanResult": "Success",
+         "virusScanResult": "Success"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "https://civitai.com/api/v1/models?types=Checkpoint&baseModels=SD+1.5&sort=Most+Downloaded&nsfw=false&limit=30": {
+   "items": [
+    {
+     "id": 4384,
+     "name": "DreamShaper",
+     "type": "Checkpoint",
+     "nsfw": false,
+     "poi": false,
+     "availability": "Public",
+     "tags": [
+      "photorealistic",
+      "2d",
+      "woman",
+      "base model",
+      "portraits",
+      "digital art",
+      "illustration",
+      "art style",
+      "paintings",
+      "girls",
+      "fantasy art",
+      "realistic",
+      "anime",
+      "fantasy",
+      "landscapes",
+      "inpainting",
+      "scifi",
+      "3d",
+      "video game",
+      "digital illustration"
+     ],
+     "allowCommercialUse": [
+      "Image",
+      "RentCivit",
+      "Rent"
+     ],
+     "creator": {
+      "username": "Lykon"
+     },
+     "stats": {
+      "downloadCount": 1688808
+     },
+     "modelVersions": [
+      {
+       "id": 131004,
+       "name": "8-inpainting",
+       "baseModel": "SD 1.5",
+       "baseModelType": "Inpainting",
+       "publishedAt": "2023-08-01T13:41:14.861Z",
+       "availability": "Public",
+       "stats": {
+        "downloadCount": 51411
+       },
+       "files": [
+        {
+         "id": 95072,
+         "name": "dreamshaper_8Inpainting.safetensors",
+         "sizeKB": 2082718.615234375,
+         "type": "Model",
+         "primary": true,
+         "metadata": {
+          "format": "SafeTensor",
+          "size": "pruned",
+          "fp": "fp16"
+         },
+         "hashes": {
+          "AutoV1": "8A8A38BB",
+          "AutoV2": "AC84E05D50",
+          "SHA256": "AC84E05D5039D7A8AEA3CED335AC7C56DA6D3C6816465651F928B137C3A7B24A",
+          "CRC32": "40D6029A",
+          "BLAKE3": "28EA3701E662BD14DAC717EA15BD73A296E201674DFE12D1A844CDF448C9F39B",
+          "SHA256_12": "AC84E05D5039"
+         },
+         "downloadUrl": "https://civitai.com/api/download/models/131004",
+         "pickleScanResult": "Success",
+         "virusScanResult": "Success"
+        }
+       ]
+      },
+      {
+       "id": 110021,
+       "name": "7-inpainting",
+       "baseModel": "SD 1.5",
+       "baseModelType": "Inpainting",
+       "publishedAt": "2023-07-04T11:16:20.119Z",
+       "availability": "Public",
+       "stats": {
+        "downloadCount": 9553
+       },
+       "files": [
+        {
+         "id": 77716,
+         "name": "dreamshaper_7-inpainting.safetensors",
+         "sizeKB": 4165239.30859375,
+         "type": "Model",
+         "primary": true,
+         "metadata": {
+          "format": "SafeTensor",
+          "size": "pruned",
+          "fp": "fp16"
+         },
+         "hashes": {
+          "AutoV1": "3B04DDDE",
+          "AutoV2": "73903A3BAD",
+          "SHA256": "73903A3BAD50477E0641B4EBE529EF895A6DE4F8EF6E16825E15153B7D299F7C",
+          "CRC32": "5E2EB85B",
+          "BLAKE3": "2165858C39E8B8B6E2A7DB24EE05A7A9C9E8D6504B073EB23DDFCABEB924AB4C",
+          "SHA256_12": "73903A3BAD50"
+         },
+         "downloadUrl": "https://civitai.com/api/download/models/110021",
+         "pickleScanResult": "Success",
+         "virusScanResult": "Success"
+        }
+       ]
+      },
+      {
+       "id": 128713,
+       "name": "8",
+       "baseModel": "SD 1.5",
+       "baseModelType": "Standard",
+       "publishedAt": "2023-07-29T20:50:47.173Z",
+       "availability": "Public",
+       "stats": {
+        "downloadCount": 1082216
+       },
+       "files": [
+        {
+         "id": 93211,
+         "name": "dreamshaper_8.safetensors",
+         "sizeKB": 2082642.474609375,
+         "type": "Model",
+         "primary": true,
+         "metadata": {
+          "format": "SafeTensor",
+          "size": "pruned",
+          "fp": "fp16"
+         },
+         "hashes": {
+          "AutoV1": "9D40847D",
+          "AutoV2": "879DB523C3",
+          "SHA256": "879DB523C30D3B9017143D56705015E15A2CB5628762C11D086FED9538ABD7FD",
+          "CRC32": "6A63EC60",
+          "BLAKE3": "771C807DB56DBFC33FEDA5638D920F6C507DB971DA44772EE44A08DC38C3B437",
+          "SHA256_12": "879DB523C30D"
+         },
+         "downloadUrl": "https://civitai.com/api/download/models/128713",
+         "pickleScanResult": "Success",
+         "virusScanResult": "Success"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": 4468,
+     "name": "Counterfeit-V3.0",
+     "type": "Checkpoint",
+     "nsfw": false,
+     "poi": false,
+     "availability": "Public",
+     "tags": [
+      "anime",
+      "base model"
+     ],
+     "allowCommercialUse": [
+      "Image",
+      "RentCivit"
+     ],
+     "creator": {
+      "username": "rqdwdw"
+     },
+     "stats": {
+      "downloadCount": 483113
+     },
+     "modelVersions": [
+      {
+       "id": 57618,
+       "name": "v3.0",
+       "baseModel": "SD 1.5",
+       "baseModelType": "Standard",
+       "publishedAt": "2023-04-28T19:32:30.819Z",
+       "availability": "Public",
+       "stats": {
+        "downloadCount": 369098
+       },
+       "files": [
+        {
+         "id": 41074,
+         "name": "counterfeitV30_v30_pruned_fp32.safetensors",
+         "sizeKB": 5539838.646484375,
+         "type": "Model",
+         "primary": null,
+         "metadata": {
+          "format": "SafeTensor",
+          "size": "pruned",
+          "fp": "fp32"
+         },
+         "hashes": {
+          "AutoV1": "9E2A8F19",
+          "AutoV2": "17277FBE68",
+          "SHA256": "17277FBE68541B183F48855F7998E72068E96DCA55C102013A8CEFED92AAAAA3",
+          "CRC32": "13F89357",
+          "BLAKE3": "66AB01199614DCA910DC5F896237CA64780FB376374FB4844737A420E89590A1",
+          "SHA256_12": "17277FBE6854"
+         },
+         "downloadUrl": "https://civitai.com/api/download/models/57618?type=Model&format=SafeTensor&size=pruned&fp=fp32",
+         "pickleScanResult": "Success",
+         "virusScanResult": "Success"
+        },
+        {
+         "id": 41079,
+         "name": "counterfeitV30_v30_pruned_fp16.safetensors",
+         "sizeKB": 4144652.37109375,
+         "type": "Model",
+         "primary": true,
+         "metadata": {
+          "format": "SafeTensor",
+          "size": "pruned",
+          "fp": "fp16"
+         },
+         "hashes": {
+          "AutoV1": "9E2A8F19",
+          "AutoV2": "CBFBA64E66",
+          "SHA256": "CBFBA64E662370F59D4AA2AA69BF16749FCE93846CCCE20506AEE5DF01169859",
+          "CRC32": "12047227",
+          "BLAKE3": "4C83DEFCAF878764FE795ACC76371E909E723D15F9663ADB652567BC9CAD5EA1",
+          "SHA256_12": "CBFBA64E6623"
+         },
+         "downloadUrl": "https://civitai.com/api/download/models/57618",
+         "pickleScanResult": "Success",
+         "virusScanResult": "Success"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

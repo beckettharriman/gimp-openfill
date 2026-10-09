@@ -1,0 +1,41 @@
+Live model search - real run against the public APIs (2026-10-09, 12:38:57 to 12:39:01 local time, UTC-4)
+
+Command (repository root, system Python 3.13, no cache, every response recorded):
+  cd gimp-stable-boy
+  python -m stable_boy.hub --record <scratch>/raw --models "C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\models" --out <scratch>/search-result.json > <scratch>/search-output.txt
+
+Files
+  hardware.txt        python -m stable_boy.hardware <models folder>: what the "fits this PC" check saw
+                      (RTX 4070 Laptop 8 GB via nvidia-smi, 31 GiB RAM, free disk on the models drive).
+  search-output.txt   console output: per family, score, source, total size (model + companions),
+                      fit verdict, gated flag, name, license, downloads per month, last update.
+  search-result.json  the mapped candidates in the catalog schema ("candidates"), the Models tab rows
+                      ("rows") and the per family/source counts.
+  raw/index.json      request URL and fetch time of every raw response.
+  raw/NNN-hf.json     verbatim Hugging Face responses (search listings and ?blobs=true model details).
+  raw/NNN-civitai.json[.gz]  verbatim Civitai responses. The two listings over 500 KB are stored gzip
+                      compressed (content unchanged; gzip -d restores them). All 5,855 sample images in
+                      them are rated nsfwLevel 1; nothing was removed or redacted.
+
+Requests: 53 (Hugging Face 50, Civitai 3), no token or cookie sent, 4.1 s with 4 parallel detail fetches.
+
+Candidates after the rules (single safetensors/GGUF file, exact size, size range of the family,
+exclusions, stated license, de-duplication against the verified list and between mirrors):
+  sd15-inpaint  Hugging Face 2, Civitai 7
+  sdxl          Hugging Face 6, Civitai 8
+  flux-fill     Hugging Face 5 (Civitai is not searched for this family)
+  qwen-edit     Hugging Face 7 (Civitai is not searched for this family)
+Every candidate has a SHA-256 (Hugging Face LFS metadata or Civitai's hash), so none is marked
+"unverified checksum" in this run.
+
+Gated repositories seen in the raw responses (Hugging Face "gated" field): black-forest-labs/FLUX.1-Fill-dev
+(auto; dropped as the same file as the verified flux1-fill-dev entry), benjamin-paine/stable-diffusion-v1-5-inpainting
+(auto; same file as a higher-ranked mirror), fishpasters/qwen-image-edit-uncensored-GGUF (auto; excluded by name),
+five raresense/* repositories (manual; not image-fill models, excluded by the family rules). The five FLUX Fill
+candidates are marked as needing a Hugging Face login because they reuse the verified FLUX VAE, which is downloaded
+from the gated black-forest-labs/FLUX.1-schnell repository.
+
+ComfyUI /system_stats: parsed live earlier the same day while the backend was up
+(hardware.gpu_from_comfyui returned "NVIDIA GeForce RTX 4070 Laptop GPU", 8585216000 bytes VRAM,
+33598619648 bytes RAM); the backend had shut down (idle timeout) before this run and was not restarted,
+so no /system_stats response is stored here. tests/test_hardware.py holds the shape of that response.

@@ -1,0 +1,3151 @@
+{
+ "hardware": {
+  "gpu_name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+  "vram_bytes": 8585740288,
+  "ram_bytes": 33598619648,
+  "disk_free_bytes": 414510448640,
+  "os_name": "Windows 11",
+  "gpu_source": "nvidia-smi"
+ },
+ "offline": false,
+ "problems": [],
+ "counts": {
+  "sd15-inpaint/huggingface": 2,
+  "sd15-inpaint/civitai": 7,
+  "sdxl/huggingface": 6,
+  "sdxl/civitai": 8,
+  "flux-fill/huggingface": 5,
+  "flux-fill/civitai": 0,
+  "qwen-edit/huggingface": 7,
+  "qwen-edit/civitai": 0
+ },
+ "candidates": [
+  {
+   "id": "hf-genai-archive--stable-diffusion-v1-5-inpainting--sd-v1-5-inpainting",
+   "name": "genai-archive/stable-diffusion-v1-5-inpainting (sd-v1-5-inpainting)",
+   "tier": "fast",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sd15",
+   "template": "sd15_inpaint",
+   "page": "https://huggingface.co/genai-archive/stable-diffusion-v1-5-inpainting",
+   "license": {
+    "name": "creativeml-openrail-m",
+    "url": "https://huggingface.co/genai-archive/stable-diffusion-v1-5-inpainting"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "genai-archive",
+   "min_vram_gb": 4.7,
+   "requires_nodes": [],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://huggingface.co/genai-archive/stable-diffusion-v1-5-inpainting/resolve/50450c34c8946e0d4e6d973478d7b4c48387c23a/sd-v1-5-inpainting.safetensors",
+     "dest": "checkpoints/sd-v1-5-inpainting.safetensors",
+     "size": 4265216468,
+     "sha256": "ef97ac1fe87ed0406433ad8710ff1da6e07e873de9a1a107b828844336d015ec"
+    }
+   ],
+   "source": "huggingface",
+   "family": "sd15-inpaint",
+   "downloads": 2930,
+   "updated": "2024-12-25",
+   "repo": "genai-archive/stable-diffusion-v1-5-inpainting"
+  },
+  {
+   "id": "hf-andregn--Realistic_Vision_V6.0-inpainting--Realistic_Vision_V6.0_NV_B1_inpainting",
+   "name": "andregn/Realistic_Vision_V6.0-inpainting (Realistic_Vision_V6.0_NV_B1_inpainting)",
+   "tier": "fast",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sd15",
+   "template": "sd15_inpaint",
+   "page": "https://huggingface.co/andregn/Realistic_Vision_V6.0-inpainting",
+   "license": {
+    "name": "creativeml-openrail-m",
+    "url": "https://huggingface.co/andregn/Realistic_Vision_V6.0-inpainting"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "andregn",
+   "min_vram_gb": 4.7,
+   "requires_nodes": [],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://huggingface.co/andregn/Realistic_Vision_V6.0-inpainting/resolve/742b149a962cc5906837f308bad119919fd865e8/Realistic_Vision_V6.0_NV_B1_inpainting.safetensors",
+     "dest": "checkpoints/Realistic_Vision_V6.0_NV_B1_inpainting.safetensors",
+     "size": 4265203868,
+     "sha256": "e9c575dbbe237ea889e14c41f953fc9fb311439a88b15bb2e789b0630ae45efe"
+    }
+   ],
+   "source": "huggingface",
+   "family": "sd15-inpaint",
+   "downloads": 2305,
+   "updated": "2023-12-22",
+   "repo": "andregn/Realistic_Vision_V6.0-inpainting"
+  },
+  {
+   "id": "civitai-4201-130090-94320",
+   "name": "Realistic Vision V6.0 B1 (V5.1-inpainting (VAE))",
+   "tier": "fast",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sd15",
+   "template": "sd15_inpaint",
+   "page": "https://civitai.com/models/4201?modelVersionId=130090",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/4201"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "SG_161222",
+   "min_vram_gb": 3.1,
+   "requires_nodes": [],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/130090",
+     "dest": "checkpoints/realisticVisionV60B1_v51VAE-inpainting_pruned_fp16.safetensors",
+     "size": 2132679782,
+     "sha256": "f0d4872d24835c04e6c20840a17d043a3a4fa52aea0d327aa32850a3fabaf191"
+    }
+   ],
+   "source": "civitai",
+   "family": "sd15-inpaint",
+   "downloads": 2076,
+   "updated": "2023-07-31",
+   "repo": "Realistic Vision V6.0 B1"
+  },
+  {
+   "id": "civitai-15003-1464918-1366114",
+   "name": "CyberRealistic (v8.0-Inpainting)",
+   "tier": "fast",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sd15",
+   "template": "sd15_inpaint",
+   "page": "https://civitai.com/models/15003?modelVersionId=1464918",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/15003"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "Cyberdelia",
+   "min_vram_gb": 3.1,
+   "requires_nodes": [],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/1464918",
+     "dest": "checkpoints/cyberrealistic_v80Inpainting.safetensors",
+     "size": 2132679962,
+     "sha256": "0ee757321f40a95029c4ff7e4ae78352ed9ee67a3ddaa8d14b6b1a48161901f2"
+    }
+   ],
+   "source": "civitai",
+   "family": "sd15-inpaint",
+   "downloads": 419,
+   "updated": "2025-02-26",
+   "repo": "CyberRealistic"
+  },
+  {
+   "id": "civitai-25694-134361-98049",
+   "name": "epiCRealism (pure Evolution V5-inpainting)",
+   "tier": "fast",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sd15",
+   "template": "sd15_inpaint",
+   "page": "https://civitai.com/models/25694?modelVersionId=134361",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/25694"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "epinikion",
+   "min_vram_gb": 3.1,
+   "requires_nodes": [],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/134361",
+     "dest": "checkpoints/epicrealism_pureEvolutionV5-inpainting.safetensors",
+     "size": 2132703874,
+     "sha256": "caa95002a1c17218748a33473edcf29aac44653946baef832137aa50c398cced"
+    }
+   ],
+   "source": "civitai",
+   "family": "sd15-inpaint",
+   "downloads": 1408,
+   "updated": "2023-08-22",
+   "repo": "epiCRealism"
+  },
+  {
+   "id": "civitai-43331-221343-170564",
+   "name": "majicMIX realistic \u9ea6\u6a58\u5199\u5b9e (v7 inpainting)",
+   "tier": "fast",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sd15",
+   "template": "sd15_inpaint",
+   "page": "https://civitai.com/models/43331?modelVersionId=221343",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/43331"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "Merjic",
+   "min_vram_gb": 3.1,
+   "requires_nodes": [],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/221343",
+     "dest": "checkpoints/majicmixRealistic_v7-inpainting.safetensors",
+     "size": 2132705030,
+     "sha256": "b65f69645c4a02f66c163dab7201ef92f61260c6a8031bc1a7d028a14d916034"
+    }
+   ],
+   "source": "civitai",
+   "family": "sd15-inpaint",
+   "downloads": 1047,
+   "updated": "2023-11-11",
+   "repo": "majicMIX realistic \u9ea6\u6a58\u5199\u5b9e"
+  },
+  {
+   "id": "civitai-90018-95864-66510",
+   "name": "epiCRealism pureEvolution InPainting (v1.0)",
+   "tier": "fast",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sd15",
+   "template": "sd15_inpaint",
+   "page": "https://civitai.com/models/90018?modelVersionId=95864",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/90018"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "Gina",
+   "min_vram_gb": 3.1,
+   "requires_nodes": [],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/95864",
+     "dest": "checkpoints/epicrealism_v10-inpainting.safetensors",
+     "size": 2132654166,
+     "sha256": "ec6a1ba63656a7bc9eb69130afff5b30a82aa3585f57eef7b2b9bb0c7f3ba845"
+    }
+   ],
+   "source": "civitai",
+   "family": "sd15-inpaint",
+   "downloads": 759,
+   "updated": "2023-06-14",
+   "repo": "epiCRealism pureEvolution InPainting"
+  },
+  {
+   "id": "civitai-132632-201346-154297",
+   "name": "epiCPhotoGasm (Z - Inpainting)",
+   "tier": "fast",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sd15",
+   "template": "sd15_inpaint",
+   "page": "https://civitai.com/models/132632?modelVersionId=201346",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/132632"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "epinikion",
+   "min_vram_gb": 3.1,
+   "requires_nodes": [],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/201346",
+     "dest": "checkpoints/epicphotogasm_z-inpainting.safetensors",
+     "size": 2132703874,
+     "sha256": "d157850094fd7b5487682adf265c3530779a4eec054000b2c5a3c94e31901248"
+    }
+   ],
+   "source": "civitai",
+   "family": "sd15-inpaint",
+   "downloads": 614,
+   "updated": "2023-10-27",
+   "repo": "epiCPhotoGasm"
+  },
+  {
+   "id": "civitai-81458-134084-97798",
+   "name": "AbsoluteReality (v1.8.1-INPAINTING)",
+   "tier": "fast",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sd15",
+   "template": "sd15_inpaint",
+   "page": "https://civitai.com/models/81458?modelVersionId=134084",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/81458"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "Lykon",
+   "min_vram_gb": 4.7,
+   "requires_nodes": [],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/134084",
+     "dest": "checkpoints/absolutereality_v181INPAINTING.safetensors",
+     "size": 4265203868,
+     "sha256": "7e16c94105e0b72c0124a02d542e83937e38a0b96bb566f0bfa04d2ef17d0502"
+    }
+   ],
+   "source": "civitai",
+   "family": "sd15-inpaint",
+   "downloads": 454,
+   "updated": "2023-08-05",
+   "repo": "AbsoluteReality"
+  },
+  {
+   "id": "hf-RunDiffusion--Juggernaut-XI-v11--Juggernaut-XI-byRunDiffusion",
+   "name": "RunDiffusion/Juggernaut-XI-v11 (Juggernaut-XI-byRunDiffusion)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://huggingface.co/RunDiffusion/Juggernaut-XI-v11",
+   "license": {
+    "name": "cc-by-nc-nd-4.0",
+    "url": "https://huggingface.co/RunDiffusion/Juggernaut-XI-v11"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "RunDiffusion",
+   "min_vram_gb": 6.8,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://huggingface.co/RunDiffusion/Juggernaut-XI-v11/resolve/f836518c7a75f47a9e26bc661ff9509ef2ceb7c0/Juggernaut-XI-byRunDiffusion.safetensors",
+     "dest": "checkpoints/Juggernaut-XI-byRunDiffusion.safetensors",
+     "size": 7105350536,
+     "sha256": "33e58e86686f6b386c526682b5da9228ead4f91d994abd4b053442dc5b42719e"
+    }
+   ],
+   "source": "huggingface",
+   "family": "sdxl",
+   "downloads": 17663,
+   "updated": "2026-05-08",
+   "repo": "RunDiffusion/Juggernaut-XI-v11"
+  },
+  {
+   "id": "hf-RunDiffusion--Juggernaut-XL-v8--juggernautXL_v8Rundiffusion",
+   "name": "RunDiffusion/Juggernaut-XL-v8 (juggernautXL_v8Rundiffusion)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v8",
+   "license": {
+    "name": "creativeml-openrail-m",
+    "url": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v8"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "RunDiffusion",
+   "min_vram_gb": 6.8,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v8/resolve/5c38059bf38387bed17f70e5c1e5c00544caf41e/juggernautXL_v8Rundiffusion.safetensors",
+     "dest": "checkpoints/juggernautXL_v8Rundiffusion.safetensors",
+     "size": 7105348592,
+     "sha256": "aeb7e9e6897a1e58b10494bd989d001e3d4bc9b634633cd7b559838f612c2867"
+    }
+   ],
+   "source": "huggingface",
+   "family": "sdxl",
+   "downloads": 5220,
+   "updated": "2026-05-08",
+   "repo": "RunDiffusion/Juggernaut-XL-v8"
+  },
+  {
+   "id": "hf-cagliostrolab--animagine-xl-4.0--animagine-xl-4.0",
+   "name": "cagliostrolab/animagine-xl-4.0 (animagine-xl-4.0)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://huggingface.co/cagliostrolab/animagine-xl-4.0",
+   "license": {
+    "name": "openrail++",
+    "url": "https://huggingface.co/cagliostrolab/animagine-xl-4.0"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "cagliostrolab",
+   "min_vram_gb": 6.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://huggingface.co/cagliostrolab/animagine-xl-4.0/resolve/2b7c1b397761bf5bd3cc42e5b39ec99314a75a96/animagine-xl-4.0.safetensors",
+     "dest": "checkpoints/animagine-xl-4.0.safetensors",
+     "size": 6938434056,
+     "sha256": "1d5b43ff75b6ab598502d4c779d2fbfa3dceca51c60c3b609640a60772333916"
+    }
+   ],
+   "source": "huggingface",
+   "family": "sdxl",
+   "downloads": 383899,
+   "updated": "2025-02-13",
+   "repo": "cagliostrolab/animagine-xl-4.0"
+  },
+  {
+   "id": "hf-RunDiffusion--Juggernaut-XL--juggernautXL_version2",
+   "name": "RunDiffusion/Juggernaut-XL (juggernautXL_version2)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://huggingface.co/RunDiffusion/Juggernaut-XL",
+   "license": {
+    "name": "creativeml-openrail-m",
+    "url": "https://huggingface.co/RunDiffusion/Juggernaut-XL"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "RunDiffusion",
+   "min_vram_gb": 6.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://huggingface.co/RunDiffusion/Juggernaut-XL/resolve/d55567359a51aa7a2e11d66927427f4dda4fb380/juggernautXL_version2.safetensors",
+     "dest": "checkpoints/juggernautXL_version2.safetensors",
+     "size": 6938040706,
+     "sha256": "700528894b5ec7f8709d5a911c3c0b4e84877a0103126e5ea5cc2b003921acea"
+    }
+   ],
+   "source": "huggingface",
+   "family": "sdxl",
+   "downloads": 2918,
+   "updated": "2026-05-08",
+   "repo": "RunDiffusion/Juggernaut-XL"
+  },
+  {
+   "id": "hf-MLbackup--2023_Scraped_SDXL--oseearthbckmix1.fp16",
+   "name": "MLbackup/2023_Scraped_SDXL (FP16)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://huggingface.co/MLbackup/2023_Scraped_SDXL",
+   "license": {
+    "name": "creativeml-openrail-m",
+    "url": "https://huggingface.co/MLbackup/2023_Scraped_SDXL"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "MLbackup",
+   "min_vram_gb": 6.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://huggingface.co/MLbackup/2023_Scraped_SDXL/resolve/1379a9718ce76eb903986a1be3da85d119513362/oseearthbckmix1.fp16.safetensors",
+     "dest": "checkpoints/oseearthbckmix1.fp16.safetensors",
+     "size": 6939223210,
+     "sha256": "1d37ab98f85160b9b6a5e26468f1d609cdbd3fda5bbcfae1f28b53f63d336657"
+    }
+   ],
+   "source": "huggingface",
+   "family": "sdxl",
+   "downloads": 6859,
+   "updated": "2026-02-01",
+   "repo": "MLbackup/2023_Scraped_SDXL"
+  },
+  {
+   "id": "hf-EnD-Diffusers--Dec2023--ProtoVisComiAniCluck.fp16",
+   "name": "EnD-Diffusers/Dec2023 (FP16)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://huggingface.co/EnD-Diffusers/Dec2023",
+   "license": {
+    "name": "creativeml-openrail-m",
+    "url": "https://huggingface.co/EnD-Diffusers/Dec2023"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "EnD-Diffusers",
+   "min_vram_gb": 6.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://huggingface.co/EnD-Diffusers/Dec2023/resolve/3056772aef4492abbb6d4f402d686c778dc638e2/ProtoVisComiAniCluck.fp16.safetensors",
+     "dest": "checkpoints/ProtoVisComiAniCluck.fp16.safetensors",
+     "size": 6938043236,
+     "sha256": "cb83933fe450ed97baaf7528fc50aba1f0f48fee774480d138acb49e85232f7b"
+    }
+   ],
+   "source": "huggingface",
+   "family": "sdxl",
+   "downloads": 5088,
+   "updated": "2025-02-17",
+   "repo": "EnD-Diffusers/Dec2023"
+  },
+  {
+   "id": "civitai-312530-2840768-2727591",
+   "name": "CyberRealistic XL (v10.0)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://civitai.com/models/312530?modelVersionId=2840768",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/312530"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "Cyberdelia",
+   "min_vram_gb": 6.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/2840768",
+     "dest": "checkpoints/cyberrealisticXL_v100_pruned_fp16.safetensors",
+     "size": 6938041288,
+     "sha256": "fd5e870b5bbce4bddeb64f4bb8e49c57f84ab793c0262a503f0123be435e667d"
+    }
+   ],
+   "source": "civitai",
+   "family": "sdxl",
+   "downloads": 6248,
+   "updated": "2026-04-23",
+   "repo": "CyberRealistic XL"
+  },
+  {
+   "id": "civitai-277058-2514955-2402914",
+   "name": "epiCRealism XL (Pure_fix)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://civitai.com/models/277058?modelVersionId=2514955",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/277058"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "epinikion",
+   "min_vram_gb": 6.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/2514955",
+     "dest": "checkpoints/epicrealismXL_pureFix.safetensors",
+     "size": 6938041144,
+     "sha256": "dd21adcc3a04a4a631dcb5d6f48608c506701e6b7a978093230441c71bcad3b6"
+    }
+   ],
+   "source": "civitai",
+   "family": "sdxl",
+   "downloads": 21147,
+   "updated": "2025-12-18",
+   "repo": "epiCRealism XL"
+  },
+  {
+   "id": "civitai-133005-1759168-1659952",
+   "name": "Juggernaut XL (Ragnarok)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://civitai.com/models/133005?modelVersionId=1759168",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/133005"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "KandooAI",
+   "min_vram_gb": 6.8,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/1759168",
+     "dest": "checkpoints/juggernautXL_ragnarok.safetensors",
+     "size": 7105350162,
+     "sha256": "dd08fa32f98d05a2443ca1419e46df1575a0811f6e3b246d9dd47ff20f5eb66a"
+    }
+   ],
+   "source": "civitai",
+   "family": "sdxl",
+   "downloads": 29676,
+   "updated": "2025-05-07",
+   "repo": "Juggernaut XL"
+  },
+  {
+   "id": "civitai-194768-1966530-1864096",
+   "name": "Jib Mix Realistic XL (v18.0 Skin Supreme)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://civitai.com/models/194768?modelVersionId=1966530",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/194768"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "J1B",
+   "min_vram_gb": 6.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/1966530",
+     "dest": "checkpoints/jibMixRealisticXL_v180SkinSupreme_pruned_fp16.safetensors",
+     "size": 6938070306,
+     "sha256": "501235c0cde87b64a15bda378bb1c917c924ae7ec7d484b529b778f58d270a2f"
+    }
+   ],
+   "source": "civitai",
+   "family": "sdxl",
+   "downloads": 1556,
+   "updated": "2025-07-02",
+   "repo": "Jib Mix Realistic XL"
+  },
+  {
+   "id": "civitai-1188071-1408658-1310654",
+   "name": "Animagine XL 4.0 (v4 Opt)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://civitai.com/models/1188071?modelVersionId=1408658",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/1188071"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "CagliostroLab",
+   "min_vram_gb": 6.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/1408658",
+     "dest": "checkpoints/animagineXL40_v4Opt.safetensors",
+     "size": 6938350040,
+     "sha256": "6327eca98bfb6538dd7a4edce22484a1bbc57a8cff6b11d075d40da1afb847ac"
+    }
+   ],
+   "source": "civitai",
+   "family": "sdxl",
+   "downloads": 4073,
+   "updated": "2025-02-13",
+   "repo": "Animagine XL 4.0"
+  },
+  {
+   "id": "civitai-101055-128078-92696",
+   "name": "SD XL (v1.0 VAE fix)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://civitai.com/models/101055?modelVersionId=128078",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/101055"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "Civitai creator",
+   "min_vram_gb": 6.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/128078",
+     "dest": "checkpoints/sdXL_v10VAEFix.safetensors",
+     "size": 6938078334,
+     "sha256": "e6bb9ea85bbf7bf6478a7c6d18b71246f22e95d41bcdd80ed40aa212c33cfeff"
+    }
+   ],
+   "source": "civitai",
+   "family": "sdxl",
+   "downloads": 9009,
+   "updated": "2023-07-29",
+   "repo": "SD XL"
+  },
+  {
+   "id": "civitai-260267-403131-325600",
+   "name": "Animagine XL V3.1 (v3.1)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://civitai.com/models/260267?modelVersionId=403131",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/260267"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "CagliostroLab",
+   "min_vram_gb": 6.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/403131",
+     "dest": "checkpoints/animagineXLV31_v31.safetensors",
+     "size": 6938325776,
+     "sha256": "e3c47aedb06418c6c331443cd89f2b3b3b34b7ed2102a3d4c4408a8d35aad6b0"
+    }
+   ],
+   "source": "civitai",
+   "family": "sdxl",
+   "downloads": 5922,
+   "updated": "2024-03-21",
+   "repo": "Animagine XL V3.1"
+  },
+  {
+   "id": "civitai-9409-384264-308621",
+   "name": "\u4e07\u8c61\u7194\u7089 | Anything XL (XL)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "arch": "sdxl",
+   "template": "sdxl_fooocus",
+   "page": "https://civitai.com/models/9409?modelVersionId=384264",
+   "license": {
+    "name": "Creator's terms on Civitai (selling generated images allowed)",
+    "url": "https://civitai.com/models/9409"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "Yuno779",
+   "min_vram_gb": 6.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/Acly/comfyui-inpaint-nodes",
+     "folder": "comfyui-inpaint-nodes",
+     "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b",
+     "license": "GPL-3.0"
+    }
+   ],
+   "requires_models": [
+    "fooocus-inpaint-patch"
+   ],
+   "files": [
+    {
+     "role": "checkpoint",
+     "url": "https://civitai.com/api/download/models/384264",
+     "dest": "checkpoints/AnythingXL_xl.safetensors",
+     "size": 6938041578,
+     "sha256": "8421598e930be75d6e7afc80db0ef38cf324901966bd0fb8739e69c448e18a89"
+    }
+   ],
+   "source": "civitai",
+   "family": "sdxl",
+   "downloads": 5494,
+   "updated": "2024-03-10",
+   "repo": "\u4e07\u8c61\u7194\u7089 | Anything XL"
+  },
+  {
+   "id": "hf-cudabenchmarktest--flux1-fill-dev-fp8--flux1-fill-dev-fp8",
+   "name": "cudabenchmarktest/flux1-fill-dev-fp8 (FP8)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand"
+   ],
+   "arch": "flux",
+   "template": "flux_fill",
+   "page": "https://huggingface.co/cudabenchmarktest/flux1-fill-dev-fp8",
+   "license": {
+    "name": "flux-1-dev-non-commercial-license",
+    "url": "https://huggingface.co/cudabenchmarktest/flux1-fill-dev-fp8/blob/main/LICENSE"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "cudabenchmarktest",
+   "min_vram_gb": 13.1,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/city96/ComfyUI-GGUF",
+     "folder": "ComfyUI-GGUF",
+     "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a",
+     "license": "Apache-2.0"
+    }
+   ],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "unet",
+     "url": "https://huggingface.co/cudabenchmarktest/flux1-fill-dev-fp8/resolve/bc5ef4da6d294c45aa01aeb497cf199f28123665/flux1-fill-dev-fp8.safetensors",
+     "dest": "diffusion_models/flux1-fill-dev-fp8.safetensors",
+     "size": 11902539328,
+     "sha256": "0320d505ca42bca99c5bd600b1839ced2b2e980ea985917965d411d98a710729"
+    },
+    {
+     "role": "clip1",
+     "url": "https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/resolve/main/t5-v1_1-xxl-encoder-Q5_K_M.gguf",
+     "dest": "clip/t5-v1_1-xxl-encoder-Q5_K_M.gguf",
+     "size": 3386856640,
+     "sha256": "b51cbb10b1a7aac6dd1c3b62f0ed908bfd06e0b42d2f3577d43e061361f51dae",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "clip2",
+     "url": "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors",
+     "dest": "clip/clip_l.safetensors",
+     "size": 246144152,
+     "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "vae",
+     "url": "https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/ae.safetensors",
+     "dest": "vae/ae.safetensors",
+     "size": 335304388,
+     "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+     "gated": true,
+     "optional": true,
+     "license": "Apache-2.0"
+    }
+   ],
+   "source": "huggingface",
+   "family": "flux-fill",
+   "downloads": 2686,
+   "updated": "2026-05-20",
+   "repo": "cudabenchmarktest/flux1-fill-dev-fp8"
+  },
+  {
+   "id": "hf-yichengup--flux.1-fill-dev-OneReward--unet_fp8",
+   "name": "yichengup/flux.1-fill-dev-OneReward (FP8)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand"
+   ],
+   "arch": "flux",
+   "template": "flux_fill",
+   "page": "https://huggingface.co/yichengup/flux.1-fill-dev-OneReward",
+   "license": {
+    "name": "cc-by-nc-4.0",
+    "url": "https://huggingface.co/yichengup/flux.1-fill-dev-OneReward"
+   },
+   "gated": false,
+   "source_type": "first-party",
+   "uploader": "yichengup",
+   "min_vram_gb": 13.1,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/city96/ComfyUI-GGUF",
+     "folder": "ComfyUI-GGUF",
+     "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a",
+     "license": "Apache-2.0"
+    }
+   ],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "unet",
+     "url": "https://huggingface.co/yichengup/flux.1-fill-dev-OneReward/resolve/3358604bc95e1dbf4b8fa75e87bd5dfd86e531fa/unet_fp8.safetensors",
+     "dest": "diffusion_models/unet_fp8.safetensors",
+     "size": 11902532704,
+     "sha256": "dd5cc73df9d2fb1e5e9d8ec518bcb7ea1103f55f679ad58877aa192e00481d1a"
+    },
+    {
+     "role": "clip1",
+     "url": "https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/resolve/main/t5-v1_1-xxl-encoder-Q5_K_M.gguf",
+     "dest": "clip/t5-v1_1-xxl-encoder-Q5_K_M.gguf",
+     "size": 3386856640,
+     "sha256": "b51cbb10b1a7aac6dd1c3b62f0ed908bfd06e0b42d2f3577d43e061361f51dae",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "clip2",
+     "url": "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors",
+     "dest": "clip/clip_l.safetensors",
+     "size": 246144152,
+     "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "vae",
+     "url": "https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/ae.safetensors",
+     "dest": "vae/ae.safetensors",
+     "size": 335304388,
+     "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+     "gated": true,
+     "optional": true,
+     "license": "Apache-2.0"
+    }
+   ],
+   "source": "huggingface",
+   "family": "flux-fill",
+   "downloads": 3641,
+   "updated": "2026-01-26",
+   "repo": "yichengup/flux.1-fill-dev-OneReward"
+  },
+  {
+   "id": "hf-YarvixPA--FLUX.1-Fill-dev-GGUF--flux1-fill-dev-Q4_K_S",
+   "name": "YarvixPA/FLUX.1-Fill-dev-GGUF (Q4_K_S)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand"
+   ],
+   "arch": "flux",
+   "template": "flux_fill",
+   "page": "https://huggingface.co/YarvixPA/FLUX.1-Fill-dev-GGUF",
+   "license": {
+    "name": "flux-1-dev-non-commercial-license",
+    "url": "https://huggingface.co/YarvixPA/FLUX.1-Fill-dev-GGUF/blob/main/LICENSE.md"
+   },
+   "gated": false,
+   "source_type": "community-quantization",
+   "uploader": "YarvixPA",
+   "min_vram_gb": 8.3,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/city96/ComfyUI-GGUF",
+     "folder": "ComfyUI-GGUF",
+     "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a",
+     "license": "Apache-2.0"
+    }
+   ],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "unet",
+     "url": "https://huggingface.co/YarvixPA/FLUX.1-Fill-dev-GGUF/resolve/78b83f1da140a4dcd6466580516544e1f6effe3e/flux1-fill-dev-Q4_K_S.gguf",
+     "dest": "unet/flux1-fill-dev-Q4_K_S.gguf",
+     "size": 6809920800,
+     "sha256": "3782c22eda0622d50eb8683d2aa664e8534a8c1e29ce9e91df491cc400944dc8"
+    },
+    {
+     "role": "clip1",
+     "url": "https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/resolve/main/t5-v1_1-xxl-encoder-Q5_K_M.gguf",
+     "dest": "clip/t5-v1_1-xxl-encoder-Q5_K_M.gguf",
+     "size": 3386856640,
+     "sha256": "b51cbb10b1a7aac6dd1c3b62f0ed908bfd06e0b42d2f3577d43e061361f51dae",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "clip2",
+     "url": "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors",
+     "dest": "clip/clip_l.safetensors",
+     "size": 246144152,
+     "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "vae",
+     "url": "https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/ae.safetensors",
+     "dest": "vae/ae.safetensors",
+     "size": 335304388,
+     "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+     "gated": true,
+     "optional": true,
+     "license": "Apache-2.0"
+    }
+   ],
+   "source": "huggingface",
+   "family": "flux-fill",
+   "downloads": 33481,
+   "updated": "2025-06-11",
+   "repo": "YarvixPA/FLUX.1-Fill-dev-GGUF"
+  },
+  {
+   "id": "hf-SporkySporkness--FLUX.1-Fill-dev-GGUF--flux1-fill-dev-fp16-Q4_0-GGUF",
+   "name": "SporkySporkness/FLUX.1-Fill-dev-GGUF (Q4_0)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand"
+   ],
+   "arch": "flux",
+   "template": "flux_fill",
+   "page": "https://huggingface.co/SporkySporkness/FLUX.1-Fill-dev-GGUF",
+   "license": {
+    "name": "flux-1-dev-non-commercial-license",
+    "url": "https://huggingface.co/SporkySporkness/FLUX.1-Fill-dev-GGUF/blob/main/LICENSE"
+   },
+   "gated": false,
+   "source_type": "community-quantization",
+   "uploader": "SporkySporkness",
+   "min_vram_gb": 8.3,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/city96/ComfyUI-GGUF",
+     "folder": "ComfyUI-GGUF",
+     "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a",
+     "license": "Apache-2.0"
+    }
+   ],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "unet",
+     "url": "https://huggingface.co/SporkySporkness/FLUX.1-Fill-dev-GGUF/resolve/c6443442323fee58a8fd7d990422f00395c871dd/flux1-fill-dev-fp16-Q4_0-GGUF.gguf",
+     "dest": "unet/flux1-fill-dev-fp16-Q4_0-GGUF.gguf",
+     "size": 6799303968,
+     "sha256": "a8da3a4e20c32851f13d3619dcf4d16991d22d6703281e98b63ab03b5252b5df"
+    },
+    {
+     "role": "clip1",
+     "url": "https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/resolve/main/t5-v1_1-xxl-encoder-Q5_K_M.gguf",
+     "dest": "clip/t5-v1_1-xxl-encoder-Q5_K_M.gguf",
+     "size": 3386856640,
+     "sha256": "b51cbb10b1a7aac6dd1c3b62f0ed908bfd06e0b42d2f3577d43e061361f51dae",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "clip2",
+     "url": "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors",
+     "dest": "clip/clip_l.safetensors",
+     "size": 246144152,
+     "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "vae",
+     "url": "https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/ae.safetensors",
+     "dest": "vae/ae.safetensors",
+     "size": 335304388,
+     "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+     "gated": true,
+     "optional": true,
+     "license": "Apache-2.0"
+    }
+   ],
+   "source": "huggingface",
+   "family": "flux-fill",
+   "downloads": 1118,
+   "updated": "2024-11-22",
+   "repo": "SporkySporkness/FLUX.1-Fill-dev-GGUF"
+  },
+  {
+   "id": "hf-gpustack--FLUX.1-Fill-dev-GGUF--FLUX.1-Fill-dev-pure-Q4_0",
+   "name": "gpustack/FLUX.1-Fill-dev-GGUF (Q4_0)",
+   "tier": "quality",
+   "capabilities": [
+    "fill",
+    "expand"
+   ],
+   "arch": "flux",
+   "template": "flux_fill",
+   "page": "https://huggingface.co/gpustack/FLUX.1-Fill-dev-GGUF",
+   "license": {
+    "name": "flux-1-dev-non-commercial-license",
+    "url": "https://huggingface.co/gpustack/FLUX.1-Fill-dev-GGUF/blob/main/LICENSE.md"
+   },
+   "gated": false,
+   "source_type": "community-quantization",
+   "uploader": "gpustack",
+   "min_vram_gb": 11.4,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/city96/ComfyUI-GGUF",
+     "folder": "ComfyUI-GGUF",
+     "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a",
+     "license": "Apache-2.0"
+    }
+   ],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "unet",
+     "url": "https://huggingface.co/gpustack/FLUX.1-Fill-dev-GGUF/resolve/5012dbe6d49083e2f3946164d2fad3da8d53fbf6/FLUX.1-Fill-dev-pure-Q4_0.gguf",
+     "dest": "unet/FLUX.1-Fill-dev-pure-Q4_0.gguf",
+     "size": 10086974816,
+     "sha256": "fa4cd379ed6ca7d967bcc977023a666e489ee4a9cd41323c59a6e5360fef515a"
+    },
+    {
+     "role": "clip1",
+     "url": "https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/resolve/main/t5-v1_1-xxl-encoder-Q5_K_M.gguf",
+     "dest": "clip/t5-v1_1-xxl-encoder-Q5_K_M.gguf",
+     "size": 3386856640,
+     "sha256": "b51cbb10b1a7aac6dd1c3b62f0ed908bfd06e0b42d2f3577d43e061361f51dae",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "clip2",
+     "url": "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors",
+     "dest": "clip/clip_l.safetensors",
+     "size": 246144152,
+     "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "vae",
+     "url": "https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/ae.safetensors",
+     "dest": "vae/ae.safetensors",
+     "size": 335304388,
+     "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+     "gated": true,
+     "optional": true,
+     "license": "Apache-2.0"
+    }
+   ],
+   "source": "huggingface",
+   "family": "flux-fill",
+   "downloads": 482,
+   "updated": "2024-12-25",
+   "repo": "gpustack/FLUX.1-Fill-dev-GGUF"
+  },
+  {
+   "id": "hf-QuantStack--Qwen-Image-Edit-2509-GGUF--Qwen-Image-Edit-2509-Q4_K_M",
+   "name": "QuantStack/Qwen-Image-Edit-2509-GGUF (Q4_K_M)",
+   "tier": "edit",
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "arch": "qwen_image",
+   "template": "qwen_edit",
+   "page": "https://huggingface.co/QuantStack/Qwen-Image-Edit-2509-GGUF",
+   "license": {
+    "name": "apache-2.0",
+    "url": "https://huggingface.co/QuantStack/Qwen-Image-Edit-2509-GGUF"
+   },
+   "gated": false,
+   "source_type": "community-quantization",
+   "uploader": "QuantStack",
+   "min_vram_gb": 14.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/city96/ComfyUI-GGUF",
+     "folder": "ComfyUI-GGUF",
+     "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a",
+     "license": "Apache-2.0"
+    }
+   ],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "unet",
+     "url": "https://huggingface.co/QuantStack/Qwen-Image-Edit-2509-GGUF/resolve/84a3006979126011422eeeefe0c9485ddf431ef5/Qwen-Image-Edit-2509-Q4_K_M.gguf",
+     "dest": "unet/Qwen-Image-Edit-2509-Q4_K_M.gguf",
+     "size": 13065746976,
+     "sha256": "08f27cdf3e760edef5136ab0afdb9d3ed7a2799bd730b8d5cd9ecb291d808425"
+    },
+    {
+     "role": "clip1",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "dest": "text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "size": 9384670680,
+     "sha256": "cb5636d852a0ea6a9075ab1bef496c0db7aef13c02350571e388aea959c5c0b4",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "vae",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/vae/qwen_image_vae.safetensors",
+     "dest": "vae/qwen_image_vae.safetensors",
+     "size": 253806246,
+     "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    }
+   ],
+   "source": "huggingface",
+   "family": "qwen-edit",
+   "downloads": 106888,
+   "updated": "2025-10-18",
+   "repo": "QuantStack/Qwen-Image-Edit-2509-GGUF"
+  },
+  {
+   "id": "hf-ChrisColeTech--qwen-image-edit-multiple-angles-GGUF--qwen-image-edit-multiple-angles-Q4_K_M",
+   "name": "ChrisColeTech/qwen-image-edit-multiple-angles-GGUF (Q4_K_M)",
+   "tier": "edit",
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "arch": "qwen_image",
+   "template": "qwen_edit",
+   "page": "https://huggingface.co/ChrisColeTech/qwen-image-edit-multiple-angles-GGUF",
+   "license": {
+    "name": "apache-2.0",
+    "url": "https://huggingface.co/ChrisColeTech/qwen-image-edit-multiple-angles-GGUF"
+   },
+   "gated": false,
+   "source_type": "community-quantization",
+   "uploader": "ChrisColeTech",
+   "min_vram_gb": 13.4,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/city96/ComfyUI-GGUF",
+     "folder": "ComfyUI-GGUF",
+     "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a",
+     "license": "Apache-2.0"
+    }
+   ],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "unet",
+     "url": "https://huggingface.co/ChrisColeTech/qwen-image-edit-multiple-angles-GGUF/resolve/12cee536ffccb2eae97f69dd0b6f26871437f765/split/diffusion_models/qwen-image-edit-multiple-angles-Q4_K_M.gguf",
+     "dest": "unet/qwen-image-edit-multiple-angles-Q4_K_M.gguf",
+     "size": 11657702016,
+     "sha256": "7f75210c83f968659de786874a77fffe8d42b91e94576e6435985cf44fbb3fa5"
+    },
+    {
+     "role": "clip1",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "dest": "text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "size": 9384670680,
+     "sha256": "cb5636d852a0ea6a9075ab1bef496c0db7aef13c02350571e388aea959c5c0b4",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "vae",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/vae/qwen_image_vae.safetensors",
+     "dest": "vae/qwen_image_vae.safetensors",
+     "size": 253806246,
+     "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    }
+   ],
+   "source": "huggingface",
+   "family": "qwen-edit",
+   "downloads": 3607,
+   "updated": "2026-08-30",
+   "repo": "ChrisColeTech/qwen-image-edit-multiple-angles-GGUF"
+  },
+  {
+   "id": "hf-Frederic75--Qwen-Image-Edit-2511-GGUF--Qwen-Image-Edit-2511-Q4_K_M",
+   "name": "Frederic75/Qwen-Image-Edit-2511-GGUF (Q4_K_M)",
+   "tier": "edit",
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "arch": "qwen_image",
+   "template": "qwen_edit",
+   "page": "https://huggingface.co/Frederic75/Qwen-Image-Edit-2511-GGUF",
+   "license": {
+    "name": "apache-2.0",
+    "url": "https://huggingface.co/Frederic75/Qwen-Image-Edit-2511-GGUF"
+   },
+   "gated": false,
+   "source_type": "community-quantization",
+   "uploader": "Frederic75",
+   "min_vram_gb": 14.6,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/city96/ComfyUI-GGUF",
+     "folder": "ComfyUI-GGUF",
+     "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a",
+     "license": "Apache-2.0"
+    }
+   ],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "unet",
+     "url": "https://huggingface.co/Frederic75/Qwen-Image-Edit-2511-GGUF/resolve/a8a709544352342d24994a9ef309f3420570bcff/Qwen-Image-Edit-2511-Q4_K_M.gguf",
+     "dest": "unet/Qwen-Image-Edit-2511-Q4_K_M.gguf",
+     "size": 12990544480,
+     "sha256": "f2feaf9267a65d198cb4751db5dd8f5e69cb7bf53a924bdd36327ee167447638"
+    },
+    {
+     "role": "clip1",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "dest": "text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "size": 9384670680,
+     "sha256": "cb5636d852a0ea6a9075ab1bef496c0db7aef13c02350571e388aea959c5c0b4",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "vae",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/vae/qwen_image_vae.safetensors",
+     "dest": "vae/qwen_image_vae.safetensors",
+     "size": 253806246,
+     "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    }
+   ],
+   "source": "huggingface",
+   "family": "qwen-edit",
+   "downloads": 6475,
+   "updated": "2026-03-02",
+   "repo": "Frederic75/Qwen-Image-Edit-2511-GGUF"
+  },
+  {
+   "id": "hf-QuantStack--Qwen-Image-Edit-GGUF--Qwen_Image_Edit-Q4_K_M",
+   "name": "QuantStack/Qwen-Image-Edit-GGUF (Q4_K_M)",
+   "tier": "edit",
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "arch": "qwen_image",
+   "template": "qwen_edit",
+   "page": "https://huggingface.co/QuantStack/Qwen-Image-Edit-GGUF",
+   "license": {
+    "name": "apache-2.0",
+    "url": "https://huggingface.co/QuantStack/Qwen-Image-Edit-GGUF"
+   },
+   "gated": false,
+   "source_type": "community-quantization",
+   "uploader": "QuantStack",
+   "min_vram_gb": 14.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/city96/ComfyUI-GGUF",
+     "folder": "ComfyUI-GGUF",
+     "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a",
+     "license": "Apache-2.0"
+    }
+   ],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "unet",
+     "url": "https://huggingface.co/QuantStack/Qwen-Image-Edit-GGUF/resolve/acab6f9f09973bc8a128a1e04e809acb65784e1c/Qwen_Image_Edit-Q4_K_M.gguf",
+     "dest": "unet/Qwen_Image_Edit-Q4_K_M.gguf",
+     "size": 13065746976,
+     "sha256": "52fde8590c26b361158bf40c573cc18805c65279cdd86fb38710863771c8eaf0"
+    },
+    {
+     "role": "clip1",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "dest": "text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "size": 9384670680,
+     "sha256": "cb5636d852a0ea6a9075ab1bef496c0db7aef13c02350571e388aea959c5c0b4",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "vae",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/vae/qwen_image_vae.safetensors",
+     "dest": "vae/qwen_image_vae.safetensors",
+     "size": 253806246,
+     "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    }
+   ],
+   "source": "huggingface",
+   "family": "qwen-edit",
+   "downloads": 30552,
+   "updated": "2025-09-01",
+   "repo": "QuantStack/Qwen-Image-Edit-GGUF"
+  },
+  {
+   "id": "hf-unsloth--Qwen-Image-Edit-2509-GGUF--qwen-image-edit-2509-Q4_K_M",
+   "name": "unsloth/Qwen-Image-Edit-2509-GGUF (Q4_K_M)",
+   "tier": "edit",
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "arch": "qwen_image",
+   "template": "qwen_edit",
+   "page": "https://huggingface.co/unsloth/Qwen-Image-Edit-2509-GGUF",
+   "license": {
+    "name": "apache-2.0",
+    "url": "https://huggingface.co/unsloth/Qwen-Image-Edit-2509-GGUF"
+   },
+   "gated": false,
+   "source_type": "community-quantization",
+   "uploader": "unsloth",
+   "min_vram_gb": 14.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/city96/ComfyUI-GGUF",
+     "folder": "ComfyUI-GGUF",
+     "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a",
+     "license": "Apache-2.0"
+    }
+   ],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "unet",
+     "url": "https://huggingface.co/unsloth/Qwen-Image-Edit-2509-GGUF/resolve/a349e7937e24465cf9181f3bdd5183364a0e4236/qwen-image-edit-2509-Q4_K_M.gguf",
+     "dest": "unet/qwen-image-edit-2509-Q4_K_M.gguf",
+     "size": 13127088672,
+     "sha256": "b7dbf30df58a473561525a2961628358c4f04a5a4e60973455310264b299067b"
+    },
+    {
+     "role": "clip1",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "dest": "text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "size": 9384670680,
+     "sha256": "cb5636d852a0ea6a9075ab1bef496c0db7aef13c02350571e388aea959c5c0b4",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "vae",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/vae/qwen_image_vae.safetensors",
+     "dest": "vae/qwen_image_vae.safetensors",
+     "size": 253806246,
+     "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    }
+   ],
+   "source": "huggingface",
+   "family": "qwen-edit",
+   "downloads": 6906,
+   "updated": "2025-12-22",
+   "repo": "unsloth/Qwen-Image-Edit-2509-GGUF"
+  },
+  {
+   "id": "hf-unsloth--Qwen-Image-Edit-GGUF--qwen-image-edit-Q4_K_M",
+   "name": "unsloth/Qwen-Image-Edit-GGUF (Q4_K_M)",
+   "tier": "edit",
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "arch": "qwen_image",
+   "template": "qwen_edit",
+   "page": "https://huggingface.co/unsloth/Qwen-Image-Edit-GGUF",
+   "license": {
+    "name": "apache-2.0",
+    "url": "https://huggingface.co/unsloth/Qwen-Image-Edit-GGUF"
+   },
+   "gated": false,
+   "source_type": "community-quantization",
+   "uploader": "unsloth",
+   "min_vram_gb": 14.7,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/city96/ComfyUI-GGUF",
+     "folder": "ComfyUI-GGUF",
+     "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a",
+     "license": "Apache-2.0"
+    }
+   ],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "unet",
+     "url": "https://huggingface.co/unsloth/Qwen-Image-Edit-GGUF/resolve/4156a20df93f16635a50638c1f50b563817e2f2f/qwen-image-edit-Q4_K_M.gguf",
+     "dest": "unet/qwen-image-edit-Q4_K_M.gguf",
+     "size": 13127088672,
+     "sha256": "a12d6bd6dbce9bc58081e2c3ea6a1daa6f80fff19c48889dd1ddea08125d0711"
+    },
+    {
+     "role": "clip1",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "dest": "text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "size": 9384670680,
+     "sha256": "cb5636d852a0ea6a9075ab1bef496c0db7aef13c02350571e388aea959c5c0b4",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "vae",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/vae/qwen_image_vae.safetensors",
+     "dest": "vae/qwen_image_vae.safetensors",
+     "size": 253806246,
+     "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    }
+   ],
+   "source": "huggingface",
+   "family": "qwen-edit",
+   "downloads": 4598,
+   "updated": "2025-12-22",
+   "repo": "unsloth/Qwen-Image-Edit-GGUF"
+  },
+  {
+   "id": "hf-calcuis--qwen-image-edit-plus-gguf--qwen-image-edit-plus-q4_k_m",
+   "name": "calcuis/qwen-image-edit-plus-gguf (Q4_K_M)",
+   "tier": "edit",
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "arch": "qwen_image",
+   "template": "qwen_edit",
+   "page": "https://huggingface.co/calcuis/qwen-image-edit-plus-gguf",
+   "license": {
+    "name": "apache-2.0",
+    "url": "https://huggingface.co/calcuis/qwen-image-edit-plus-gguf"
+   },
+   "gated": false,
+   "source_type": "community-quantization",
+   "uploader": "calcuis",
+   "min_vram_gb": 13.4,
+   "requires_nodes": [
+    {
+     "repo": "https://github.com/city96/ComfyUI-GGUF",
+     "folder": "ComfyUI-GGUF",
+     "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a",
+     "license": "Apache-2.0"
+    }
+   ],
+   "requires_models": [],
+   "files": [
+    {
+     "role": "unet",
+     "url": "https://huggingface.co/calcuis/qwen-image-edit-plus-gguf/resolve/dd731a343489d142358abaace12f983818f892ac/qwen-image-edit-plus-q4_k_m.gguf",
+     "dest": "unet/qwen-image-edit-plus-q4_k_m.gguf",
+     "size": 11738053152,
+     "sha256": "bd93360c4c6b164805e66d63eeacfd6c986ec04b4ca55e9e33dae1958dd43ae4"
+    },
+    {
+     "role": "clip1",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "dest": "text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors",
+     "size": 9384670680,
+     "sha256": "cb5636d852a0ea6a9075ab1bef496c0db7aef13c02350571e388aea959c5c0b4",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    },
+    {
+     "role": "vae",
+     "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/vae/qwen_image_vae.safetensors",
+     "dest": "vae/qwen_image_vae.safetensors",
+     "size": 253806246,
+     "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
+     "gated": false,
+     "optional": true,
+     "license": "Apache-2.0"
+    }
+   ],
+   "source": "huggingface",
+   "family": "qwen-edit",
+   "downloads": 9954,
+   "updated": "2025-10-03",
+   "repo": "calcuis/qwen-image-edit-plus-gguf"
+  }
+ ],
+ "rows": [
+  {
+   "id": "hf-genai-archive--stable-diffusion-v1-5-inpainting--sd-v1-5-inpainting",
+   "name": "genai-archive/stable-diffusion-v1-5-inpainting (sd-v1-5-inpainting)",
+   "tier": "fast",
+   "status": "Available",
+   "installed": false,
+   "size": "4.0 GB",
+   "bytes": 4265216468,
+   "license": "creativeml-openrail-m",
+   "license_url": "https://huggingface.co/genai-archive/stable-diffusion-v1-5-inpainting",
+   "page": "https://huggingface.co/genai-archive/stable-diffusion-v1-5-inpainting",
+   "source": "first-party",
+   "uploader": "genai-archive",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 4.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "sd15-inpaint",
+   "checksum_known": true,
+   "downloads": 2930,
+   "updated": "2024-12-25",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 4.7 GB of graphics memory, this PC has 8 GB",
+   "score": 5.29
+  },
+  {
+   "id": "hf-andregn--Realistic_Vision_V6.0-inpainting--Realistic_Vision_V6.0_NV_B1_inpainting",
+   "name": "andregn/Realistic_Vision_V6.0-inpainting (Realistic_Vision_V6.0_NV_B1_inpainting)",
+   "tier": "fast",
+   "status": "Available",
+   "installed": false,
+   "size": "4.0 GB",
+   "bytes": 4265203868,
+   "license": "creativeml-openrail-m",
+   "license_url": "https://huggingface.co/andregn/Realistic_Vision_V6.0-inpainting",
+   "page": "https://huggingface.co/andregn/Realistic_Vision_V6.0-inpainting",
+   "source": "first-party",
+   "uploader": "andregn",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 4.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "sd15-inpaint",
+   "checksum_known": true,
+   "downloads": 2305,
+   "updated": "2023-12-22",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 4.7 GB of graphics memory, this PC has 8 GB",
+   "score": 5.02
+  },
+  {
+   "id": "civitai-4201-130090-94320",
+   "name": "Realistic Vision V6.0 B1 (V5.1-inpainting (VAE))",
+   "tier": "fast",
+   "status": "Available",
+   "installed": false,
+   "size": "2.0 GB",
+   "bytes": 2132679782,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/4201",
+   "page": "https://civitai.com/models/4201?modelVersionId=130090",
+   "source": "first-party",
+   "uploader": "SG_161222",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 3.1,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sd15-inpaint",
+   "checksum_known": true,
+   "downloads": 2076,
+   "updated": "2023-07-31",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 3.1 GB of graphics memory, this PC has 8 GB",
+   "score": 4.99
+  },
+  {
+   "id": "civitai-15003-1464918-1366114",
+   "name": "CyberRealistic (v8.0-Inpainting)",
+   "tier": "fast",
+   "status": "Available",
+   "installed": false,
+   "size": "2.0 GB",
+   "bytes": 2132679962,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/15003",
+   "page": "https://civitai.com/models/15003?modelVersionId=1464918",
+   "source": "first-party",
+   "uploader": "Cyberdelia",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 3.1,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sd15-inpaint",
+   "checksum_known": true,
+   "downloads": 419,
+   "updated": "2025-02-26",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 3.1 GB of graphics memory, this PC has 8 GB",
+   "score": 4.96
+  },
+  {
+   "id": "civitai-25694-134361-98049",
+   "name": "epiCRealism (pure Evolution V5-inpainting)",
+   "tier": "fast",
+   "status": "Available",
+   "installed": false,
+   "size": "2.0 GB",
+   "bytes": 2132703874,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/25694",
+   "page": "https://civitai.com/models/25694?modelVersionId=134361",
+   "source": "first-party",
+   "uploader": "epinikion",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 3.1,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sd15-inpaint",
+   "checksum_known": true,
+   "downloads": 1408,
+   "updated": "2023-08-22",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 3.1 GB of graphics memory, this PC has 8 GB",
+   "score": 4.89
+  },
+  {
+   "id": "civitai-43331-221343-170564",
+   "name": "majicMIX realistic \u9ea6\u6a58\u5199\u5b9e (v7 inpainting)",
+   "tier": "fast",
+   "status": "Available",
+   "installed": false,
+   "size": "2.0 GB",
+   "bytes": 2132705030,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/43331",
+   "page": "https://civitai.com/models/43331?modelVersionId=221343",
+   "source": "first-party",
+   "uploader": "Merjic",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 3.1,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sd15-inpaint",
+   "checksum_known": true,
+   "downloads": 1047,
+   "updated": "2023-11-11",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 3.1 GB of graphics memory, this PC has 8 GB",
+   "score": 4.81
+  },
+  {
+   "id": "civitai-90018-95864-66510",
+   "name": "epiCRealism pureEvolution InPainting (v1.0)",
+   "tier": "fast",
+   "status": "Available",
+   "installed": false,
+   "size": "2.0 GB",
+   "bytes": 2132654166,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/90018",
+   "page": "https://civitai.com/models/90018?modelVersionId=95864",
+   "source": "first-party",
+   "uploader": "Gina",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 3.1,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sd15-inpaint",
+   "checksum_known": true,
+   "downloads": 759,
+   "updated": "2023-06-14",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 3.1 GB of graphics memory, this PC has 8 GB",
+   "score": 4.73
+  },
+  {
+   "id": "civitai-132632-201346-154297",
+   "name": "epiCPhotoGasm (Z - Inpainting)",
+   "tier": "fast",
+   "status": "Available",
+   "installed": false,
+   "size": "2.0 GB",
+   "bytes": 2132703874,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/132632",
+   "page": "https://civitai.com/models/132632?modelVersionId=201346",
+   "source": "first-party",
+   "uploader": "epinikion",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 3.1,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sd15-inpaint",
+   "checksum_known": true,
+   "downloads": 614,
+   "updated": "2023-10-27",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 3.1 GB of graphics memory, this PC has 8 GB",
+   "score": 4.67
+  },
+  {
+   "id": "civitai-81458-134084-97798",
+   "name": "AbsoluteReality (v1.8.1-INPAINTING)",
+   "tier": "fast",
+   "status": "Available",
+   "installed": false,
+   "size": "4.0 GB",
+   "bytes": 4265203868,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/81458",
+   "page": "https://civitai.com/models/81458?modelVersionId=134084",
+   "source": "first-party",
+   "uploader": "Lykon",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 4.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sd15-inpaint",
+   "checksum_known": true,
+   "downloads": 454,
+   "updated": "2023-08-05",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 4.7 GB of graphics memory, this PC has 8 GB",
+   "score": 4.59
+  },
+  {
+   "id": "hf-RunDiffusion--Juggernaut-XI-v11--Juggernaut-XI-byRunDiffusion",
+   "name": "RunDiffusion/Juggernaut-XI-v11 (Juggernaut-XI-byRunDiffusion)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.6 GB",
+   "bytes": 7105350536,
+   "license": "cc-by-nc-nd-4.0",
+   "license_url": "https://huggingface.co/RunDiffusion/Juggernaut-XI-v11",
+   "page": "https://huggingface.co/RunDiffusion/Juggernaut-XI-v11",
+   "source": "first-party",
+   "uploader": "RunDiffusion",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.8,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 17663,
+   "updated": "2026-05-08",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.8 GB of graphics memory, this PC has 8 GB",
+   "score": 7.13
+  },
+  {
+   "id": "hf-RunDiffusion--Juggernaut-XL-v8--juggernautXL_v8Rundiffusion",
+   "name": "RunDiffusion/Juggernaut-XL-v8 (juggernautXL_v8Rundiffusion)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.6 GB",
+   "bytes": 7105348592,
+   "license": "creativeml-openrail-m",
+   "license_url": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v8",
+   "page": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v8",
+   "source": "first-party",
+   "uploader": "RunDiffusion",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.8,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 5220,
+   "updated": "2026-05-08",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.8 GB of graphics memory, this PC has 8 GB",
+   "score": 6.81
+  },
+  {
+   "id": "hf-cagliostrolab--animagine-xl-4.0--animagine-xl-4.0",
+   "name": "cagliostrolab/animagine-xl-4.0 (animagine-xl-4.0)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.5 GB",
+   "bytes": 6938434056,
+   "license": "openrail++",
+   "license_url": "https://huggingface.co/cagliostrolab/animagine-xl-4.0",
+   "page": "https://huggingface.co/cagliostrolab/animagine-xl-4.0",
+   "source": "first-party",
+   "uploader": "cagliostrolab",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 383899,
+   "updated": "2025-02-13",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.7 GB of graphics memory, this PC has 8 GB",
+   "score": 6.7
+  },
+  {
+   "id": "hf-RunDiffusion--Juggernaut-XL--juggernautXL_version2",
+   "name": "RunDiffusion/Juggernaut-XL (juggernautXL_version2)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.5 GB",
+   "bytes": 6938040706,
+   "license": "creativeml-openrail-m",
+   "license_url": "https://huggingface.co/RunDiffusion/Juggernaut-XL",
+   "page": "https://huggingface.co/RunDiffusion/Juggernaut-XL",
+   "source": "first-party",
+   "uploader": "RunDiffusion",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 2918,
+   "updated": "2026-05-08",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.7 GB of graphics memory, this PC has 8 GB",
+   "score": 6.66
+  },
+  {
+   "id": "hf-MLbackup--2023_Scraped_SDXL--oseearthbckmix1.fp16",
+   "name": "MLbackup/2023_Scraped_SDXL (FP16)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.5 GB",
+   "bytes": 6939223210,
+   "license": "creativeml-openrail-m",
+   "license_url": "https://huggingface.co/MLbackup/2023_Scraped_SDXL",
+   "page": "https://huggingface.co/MLbackup/2023_Scraped_SDXL",
+   "source": "first-party",
+   "uploader": "MLbackup",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 6859,
+   "updated": "2026-02-01",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.7 GB of graphics memory, this PC has 8 GB",
+   "score": 6.62
+  },
+  {
+   "id": "hf-EnD-Diffusers--Dec2023--ProtoVisComiAniCluck.fp16",
+   "name": "EnD-Diffusers/Dec2023 (FP16)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.5 GB",
+   "bytes": 6938043236,
+   "license": "creativeml-openrail-m",
+   "license_url": "https://huggingface.co/EnD-Diffusers/Dec2023",
+   "page": "https://huggingface.co/EnD-Diffusers/Dec2023",
+   "source": "first-party",
+   "uploader": "EnD-Diffusers",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 5088,
+   "updated": "2025-02-17",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.7 GB of graphics memory, this PC has 8 GB",
+   "score": 5.58
+  },
+  {
+   "id": "civitai-312530-2840768-2727591",
+   "name": "CyberRealistic XL (v10.0)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.5 GB",
+   "bytes": 6938041288,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/312530",
+   "page": "https://civitai.com/models/312530?modelVersionId=2840768",
+   "source": "first-party",
+   "uploader": "Cyberdelia",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 6248,
+   "updated": "2026-04-23",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.7 GB of graphics memory, this PC has 8 GB",
+   "score": 6.81
+  },
+  {
+   "id": "civitai-277058-2514955-2402914",
+   "name": "epiCRealism XL (Pure_fix)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.5 GB",
+   "bytes": 6938041144,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/277058",
+   "page": "https://civitai.com/models/277058?modelVersionId=2514955",
+   "source": "first-party",
+   "uploader": "epinikion",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 21147,
+   "updated": "2025-12-18",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.7 GB of graphics memory, this PC has 8 GB",
+   "score": 6.79
+  },
+  {
+   "id": "civitai-133005-1759168-1659952",
+   "name": "Juggernaut XL (Ragnarok)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.6 GB",
+   "bytes": 7105350162,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/133005",
+   "page": "https://civitai.com/models/133005?modelVersionId=1759168",
+   "source": "first-party",
+   "uploader": "KandooAI",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.8,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 29676,
+   "updated": "2025-05-07",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.8 GB of graphics memory, this PC has 8 GB",
+   "score": 6.26
+  },
+  {
+   "id": "civitai-194768-1966530-1864096",
+   "name": "Jib Mix Realistic XL (v18.0 Skin Supreme)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.5 GB",
+   "bytes": 6938070306,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/194768",
+   "page": "https://civitai.com/models/194768?modelVersionId=1966530",
+   "source": "first-party",
+   "uploader": "J1B",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 1556,
+   "updated": "2025-07-02",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.7 GB of graphics memory, this PC has 8 GB",
+   "score": 5.64
+  },
+  {
+   "id": "civitai-1188071-1408658-1310654",
+   "name": "Animagine XL 4.0 (v4 Opt)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.5 GB",
+   "bytes": 6938350040,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/1188071",
+   "page": "https://civitai.com/models/1188071?modelVersionId=1408658",
+   "source": "first-party",
+   "uploader": "CagliostroLab",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 4073,
+   "updated": "2025-02-13",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.7 GB of graphics memory, this PC has 8 GB",
+   "score": 5.51
+  },
+  {
+   "id": "civitai-101055-128078-92696",
+   "name": "SD XL (v1.0 VAE fix)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.5 GB",
+   "bytes": 6938078334,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/101055",
+   "page": "https://civitai.com/models/101055?modelVersionId=128078",
+   "source": "first-party",
+   "uploader": "Civitai creator",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 9009,
+   "updated": "2023-07-29",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.7 GB of graphics memory, this PC has 8 GB",
+   "score": 5.37
+  },
+  {
+   "id": "civitai-260267-403131-325600",
+   "name": "Animagine XL V3.1 (v3.1)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.5 GB",
+   "bytes": 6938325776,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/260267",
+   "page": "https://civitai.com/models/260267?modelVersionId=403131",
+   "source": "first-party",
+   "uploader": "CagliostroLab",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 5922,
+   "updated": "2024-03-21",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.7 GB of graphics memory, this PC has 8 GB",
+   "score": 5.26
+  },
+  {
+   "id": "civitai-9409-384264-308621",
+   "name": "\u4e07\u8c61\u7194\u7089 | Anything XL (XL)",
+   "tier": "quality",
+   "status": "Available",
+   "installed": false,
+   "size": "6.5 GB",
+   "bytes": 6938041578,
+   "license": "Creator's terms on Civitai (selling generated images allowed)",
+   "license_url": "https://civitai.com/models/9409",
+   "page": "https://civitai.com/models/9409?modelVersionId=384264",
+   "source": "first-party",
+   "uploader": "Yuno779",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 6.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "txt2img"
+   ],
+   "seen_by_server": null,
+   "origin": "civitai",
+   "family": "sdxl",
+   "checksum_known": true,
+   "downloads": 5494,
+   "updated": "2024-03-10",
+   "fit": "comfortable",
+   "fit_label": "Runs well on this PC",
+   "fit_reason": "needs about 6.7 GB of graphics memory, this PC has 8 GB",
+   "score": 5.24
+  },
+  {
+   "id": "hf-cudabenchmarktest--flux1-fill-dev-fp8--flux1-fill-dev-fp8",
+   "name": "cudabenchmarktest/flux1-fill-dev-fp8 (FP8)",
+   "tier": "quality",
+   "status": "Needs token",
+   "installed": false,
+   "size": "14.8 GB",
+   "bytes": 15870844508,
+   "license": "flux-1-dev-non-commercial-license",
+   "license_url": "https://huggingface.co/cudabenchmarktest/flux1-fill-dev-fp8/blob/main/LICENSE",
+   "page": "https://huggingface.co/cudabenchmarktest/flux1-fill-dev-fp8",
+   "source": "first-party",
+   "uploader": "cudabenchmarktest",
+   "gated": true,
+   "needs_login": true,
+   "login_pages": [
+    "https://huggingface.co/cudabenchmarktest/flux1-fill-dev-fp8"
+   ],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 13.1,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "flux-fill",
+   "checksum_known": true,
+   "downloads": 2686,
+   "updated": "2026-05-20",
+   "fit": "offload",
+   "fit_label": "Runs on this PC, slower (uses system memory too)",
+   "fit_reason": "needs about 13.1 GB of graphics memory, this PC has 8 GB; the rest is kept in system memory, which is slower",
+   "score": 4.67
+  },
+  {
+   "id": "hf-yichengup--flux.1-fill-dev-OneReward--unet_fp8",
+   "name": "yichengup/flux.1-fill-dev-OneReward (FP8)",
+   "tier": "quality",
+   "status": "Needs token",
+   "installed": false,
+   "size": "14.8 GB",
+   "bytes": 15870837884,
+   "license": "cc-by-nc-4.0",
+   "license_url": "https://huggingface.co/yichengup/flux.1-fill-dev-OneReward",
+   "page": "https://huggingface.co/yichengup/flux.1-fill-dev-OneReward",
+   "source": "first-party",
+   "uploader": "yichengup",
+   "gated": true,
+   "needs_login": true,
+   "login_pages": [
+    "https://huggingface.co/yichengup/flux.1-fill-dev-OneReward"
+   ],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 13.1,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "flux-fill",
+   "checksum_known": true,
+   "downloads": 3641,
+   "updated": "2026-01-26",
+   "fit": "offload",
+   "fit_label": "Runs on this PC, slower (uses system memory too)",
+   "fit_reason": "needs about 13.1 GB of graphics memory, this PC has 8 GB; the rest is kept in system memory, which is slower",
+   "score": 4.43
+  },
+  {
+   "id": "hf-YarvixPA--FLUX.1-Fill-dev-GGUF--flux1-fill-dev-Q4_K_S",
+   "name": "YarvixPA/FLUX.1-Fill-dev-GGUF (Q4_K_S)",
+   "tier": "quality",
+   "status": "Needs token",
+   "installed": false,
+   "size": "10.0 GB",
+   "bytes": 10778225980,
+   "license": "flux-1-dev-non-commercial-license",
+   "license_url": "https://huggingface.co/YarvixPA/FLUX.1-Fill-dev-GGUF/blob/main/LICENSE.md",
+   "page": "https://huggingface.co/YarvixPA/FLUX.1-Fill-dev-GGUF",
+   "source": "community quant",
+   "uploader": "YarvixPA",
+   "gated": true,
+   "needs_login": true,
+   "login_pages": [
+    "https://huggingface.co/YarvixPA/FLUX.1-Fill-dev-GGUF"
+   ],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 8.3,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "flux-fill",
+   "checksum_known": true,
+   "downloads": 33481,
+   "updated": "2025-06-11",
+   "fit": "offload",
+   "fit_label": "Runs on this PC, slower (uses system memory too)",
+   "fit_reason": "needs about 8.3 GB of graphics memory, this PC has 8 GB; the rest is kept in system memory, which is slower",
+   "score": 4.39
+  },
+  {
+   "id": "hf-SporkySporkness--FLUX.1-Fill-dev-GGUF--flux1-fill-dev-fp16-Q4_0-GGUF",
+   "name": "SporkySporkness/FLUX.1-Fill-dev-GGUF (Q4_0)",
+   "tier": "quality",
+   "status": "Needs token",
+   "installed": false,
+   "size": "10.0 GB",
+   "bytes": 10767609148,
+   "license": "flux-1-dev-non-commercial-license",
+   "license_url": "https://huggingface.co/SporkySporkness/FLUX.1-Fill-dev-GGUF/blob/main/LICENSE",
+   "page": "https://huggingface.co/SporkySporkness/FLUX.1-Fill-dev-GGUF",
+   "source": "community quant",
+   "uploader": "SporkySporkness",
+   "gated": true,
+   "needs_login": true,
+   "login_pages": [
+    "https://huggingface.co/SporkySporkness/FLUX.1-Fill-dev-GGUF"
+   ],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 8.3,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "flux-fill",
+   "checksum_known": true,
+   "downloads": 1118,
+   "updated": "2024-11-22",
+   "fit": "offload",
+   "fit_label": "Runs on this PC, slower (uses system memory too)",
+   "fit_reason": "needs about 8.3 GB of graphics memory, this PC has 8 GB; the rest is kept in system memory, which is slower",
+   "score": 2.95
+  },
+  {
+   "id": "hf-gpustack--FLUX.1-Fill-dev-GGUF--FLUX.1-Fill-dev-pure-Q4_0",
+   "name": "gpustack/FLUX.1-Fill-dev-GGUF (Q4_0)",
+   "tier": "quality",
+   "status": "Needs token",
+   "installed": false,
+   "size": "13.1 GB",
+   "bytes": 14055279996,
+   "license": "flux-1-dev-non-commercial-license",
+   "license_url": "https://huggingface.co/gpustack/FLUX.1-Fill-dev-GGUF/blob/main/LICENSE.md",
+   "page": "https://huggingface.co/gpustack/FLUX.1-Fill-dev-GGUF",
+   "source": "community quant",
+   "uploader": "gpustack",
+   "gated": true,
+   "needs_login": true,
+   "login_pages": [
+    "https://huggingface.co/gpustack/FLUX.1-Fill-dev-GGUF"
+   ],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 11.4,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "flux-fill",
+   "checksum_known": true,
+   "downloads": 482,
+   "updated": "2024-12-25",
+   "fit": "offload",
+   "fit_label": "Runs on this PC, slower (uses system memory too)",
+   "fit_reason": "needs about 11.4 GB of graphics memory, this PC has 8 GB; the rest is kept in system memory, which is slower",
+   "score": 2.82
+  },
+  {
+   "id": "hf-QuantStack--Qwen-Image-Edit-2509-GGUF--Qwen-Image-Edit-2509-Q4_K_M",
+   "name": "QuantStack/Qwen-Image-Edit-2509-GGUF (Q4_K_M)",
+   "tier": "edit",
+   "status": "Available",
+   "installed": false,
+   "size": "21.1 GB",
+   "bytes": 22704223902,
+   "license": "apache-2.0",
+   "license_url": "https://huggingface.co/QuantStack/Qwen-Image-Edit-2509-GGUF",
+   "page": "https://huggingface.co/QuantStack/Qwen-Image-Edit-2509-GGUF",
+   "source": "community quant",
+   "uploader": "QuantStack",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 14.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "qwen-edit",
+   "checksum_known": true,
+   "downloads": 106888,
+   "updated": "2025-10-18",
+   "fit": "offload",
+   "fit_label": "Runs on this PC, slower (uses system memory too)",
+   "fit_reason": "needs about 14.7 GB of graphics memory, this PC has 8 GB; the rest is kept in system memory, which is slower",
+   "score": 5.04
+  },
+  {
+   "id": "hf-ChrisColeTech--qwen-image-edit-multiple-angles-GGUF--qwen-image-edit-multiple-angles-Q4_K_M",
+   "name": "ChrisColeTech/qwen-image-edit-multiple-angles-GGUF (Q4_K_M)",
+   "tier": "edit",
+   "status": "Available",
+   "installed": false,
+   "size": "19.8 GB",
+   "bytes": 21296178942,
+   "license": "apache-2.0",
+   "license_url": "https://huggingface.co/ChrisColeTech/qwen-image-edit-multiple-angles-GGUF",
+   "page": "https://huggingface.co/ChrisColeTech/qwen-image-edit-multiple-angles-GGUF",
+   "source": "community quant",
+   "uploader": "ChrisColeTech",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 13.4,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "qwen-edit",
+   "checksum_known": true,
+   "downloads": 3607,
+   "updated": "2026-08-30",
+   "fit": "offload",
+   "fit_label": "Runs on this PC, slower (uses system memory too)",
+   "fit_reason": "needs about 13.4 GB of graphics memory, this PC has 8 GB; the rest is kept in system memory, which is slower",
+   "score": 5.02
+  },
+  {
+   "id": "hf-Frederic75--Qwen-Image-Edit-2511-GGUF--Qwen-Image-Edit-2511-Q4_K_M",
+   "name": "Frederic75/Qwen-Image-Edit-2511-GGUF (Q4_K_M)",
+   "tier": "edit",
+   "status": "Available",
+   "installed": false,
+   "size": "21.1 GB",
+   "bytes": 22629021406,
+   "license": "apache-2.0",
+   "license_url": "https://huggingface.co/Frederic75/Qwen-Image-Edit-2511-GGUF",
+   "page": "https://huggingface.co/Frederic75/Qwen-Image-Edit-2511-GGUF",
+   "source": "community quant",
+   "uploader": "Frederic75",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 14.6,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "qwen-edit",
+   "checksum_known": true,
+   "downloads": 6475,
+   "updated": "2026-03-02",
+   "fit": "offload",
+   "fit_label": "Runs on this PC, slower (uses system memory too)",
+   "fit_reason": "needs about 14.6 GB of graphics memory, this PC has 8 GB; the rest is kept in system memory, which is slower",
+   "score": 4.68
+  },
+  {
+   "id": "hf-QuantStack--Qwen-Image-Edit-GGUF--Qwen_Image_Edit-Q4_K_M",
+   "name": "QuantStack/Qwen-Image-Edit-GGUF (Q4_K_M)",
+   "tier": "edit",
+   "status": "Available",
+   "installed": false,
+   "size": "21.1 GB",
+   "bytes": 22704223902,
+   "license": "apache-2.0",
+   "license_url": "https://huggingface.co/QuantStack/Qwen-Image-Edit-GGUF",
+   "page": "https://huggingface.co/QuantStack/Qwen-Image-Edit-GGUF",
+   "source": "community quant",
+   "uploader": "QuantStack",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 14.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "qwen-edit",
+   "checksum_known": true,
+   "downloads": 30552,
+   "updated": "2025-09-01",
+   "fit": "offload",
+   "fit_label": "Runs on this PC, slower (uses system memory too)",
+   "fit_reason": "needs about 14.7 GB of graphics memory, this PC has 8 GB; the rest is kept in system memory, which is slower",
+   "score": 4.59
+  },
+  {
+   "id": "hf-unsloth--Qwen-Image-Edit-2509-GGUF--qwen-image-edit-2509-Q4_K_M",
+   "name": "unsloth/Qwen-Image-Edit-2509-GGUF (Q4_K_M)",
+   "tier": "edit",
+   "status": "Available",
+   "installed": false,
+   "size": "21.2 GB",
+   "bytes": 22765565598,
+   "license": "apache-2.0",
+   "license_url": "https://huggingface.co/unsloth/Qwen-Image-Edit-2509-GGUF",
+   "page": "https://huggingface.co/unsloth/Qwen-Image-Edit-2509-GGUF",
+   "source": "community quant",
+   "uploader": "unsloth",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 14.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "qwen-edit",
+   "checksum_known": true,
+   "downloads": 6906,
+   "updated": "2025-12-22",
+   "fit": "offload",
+   "fit_label": "Runs on this PC, slower (uses system memory too)",
+   "fit_reason": "needs about 14.7 GB of graphics memory, this PC has 8 GB; the rest is kept in system memory, which is slower",
+   "score": 4.51
+  },
+  {
+   "id": "hf-unsloth--Qwen-Image-Edit-GGUF--qwen-image-edit-Q4_K_M",
+   "name": "unsloth/Qwen-Image-Edit-GGUF (Q4_K_M)",
+   "tier": "edit",
+   "status": "Available",
+   "installed": false,
+   "size": "21.2 GB",
+   "bytes": 22765565598,
+   "license": "apache-2.0",
+   "license_url": "https://huggingface.co/unsloth/Qwen-Image-Edit-GGUF",
+   "page": "https://huggingface.co/unsloth/Qwen-Image-Edit-GGUF",
+   "source": "community quant",
+   "uploader": "unsloth",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 14.7,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "qwen-edit",
+   "checksum_known": true,
+   "downloads": 4598,
+   "updated": "2025-12-22",
+   "fit": "offload",
+   "fit_label": "Runs on this PC, slower (uses system memory too)",
+   "fit_reason": "needs about 14.7 GB of graphics memory, this PC has 8 GB; the rest is kept in system memory, which is slower",
+   "score": 4.4
+  },
+  {
+   "id": "hf-calcuis--qwen-image-edit-plus-gguf--qwen-image-edit-plus-q4_k_m",
+   "name": "calcuis/qwen-image-edit-plus-gguf (Q4_K_M)",
+   "tier": "edit",
+   "status": "Available",
+   "installed": false,
+   "size": "19.9 GB",
+   "bytes": 21376530078,
+   "license": "apache-2.0",
+   "license_url": "https://huggingface.co/calcuis/qwen-image-edit-plus-gguf",
+   "page": "https://huggingface.co/calcuis/qwen-image-edit-plus-gguf",
+   "source": "community quant",
+   "uploader": "calcuis",
+   "gated": false,
+   "needs_login": false,
+   "login_pages": [],
+   "runnable": true,
+   "active": false,
+   "min_vram_gb": 13.4,
+   "missing_nodes": [],
+   "missing_models": [],
+   "partial": [],
+   "capabilities": [
+    "fill",
+    "expand",
+    "edit"
+   ],
+   "seen_by_server": null,
+   "origin": "huggingface",
+   "family": "qwen-edit",
+   "checksum_known": true,
+   "downloads": 9954,
+   "updated": "2025-10-03",
+   "fit": "offload",
+   "fit_label": "Runs on this PC, slower (uses system memory too)",
+   "fit_reason": "needs about 13.4 GB of graphics memory, this PC has 8 GB; the rest is kept in system memory, which is slower",
+   "score": 4.38
+  }
+ ]
+}

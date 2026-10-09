@@ -1,0 +1,210 @@
+{
+ "_id": "65d698b090f11951bce5b38e",
+ "id": "RunDiffusion/Juggernaut-XL",
+ "private": false,
+ "pipeline_tag": "text-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "stable-diffusion",
+  "stable-diffusion-xl",
+  "sdxl",
+  "text-to-image",
+  "photorealistic",
+  "juggernaut",
+  "rundiffusion",
+  "kandooai",
+  "legacy",
+  "en",
+  "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+  "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+  "license:creativeml-openrail-m",
+  "endpoints_compatible",
+  "diffusers:StableDiffusionXLPipeline",
+  "region:us"
+ ],
+ "downloads": 2918,
+ "likes": 13,
+ "modelId": "RunDiffusion/Juggernaut-XL",
+ "author": "RunDiffusion",
+ "sha": "d55567359a51aa7a2e11d66927427f4dda4fb380",
+ "lastModified": "2026-05-08T17:26:06.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {
+  "diffusers": {
+   "_class_name": "StableDiffusionXLPipeline"
+  }
+ },
+ "cardData": {
+  "license": "creativeml-openrail-m",
+  "language": [
+   "en"
+  ],
+  "library_name": "diffusers",
+  "pipeline_tag": "text-to-image",
+  "base_model": "stabilityai/stable-diffusion-xl-base-1.0",
+  "tags": [
+   "stable-diffusion",
+   "stable-diffusion-xl",
+   "sdxl",
+   "text-to-image",
+   "photorealistic",
+   "juggernaut",
+   "rundiffusion",
+   "kandooai",
+   "legacy"
+  ]
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "9ab807103731dba363d6b860eda946acb9ded6f4",
+   "size": 1585
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "6b337ea038e77ed313e9adb66c73271327d973e6",
+   "size": 5787
+  },
+  {
+   "rfilename": "assets/Juggernaut_Banner.webp",
+   "blobId": "6b80b6db51e6dc8902a1136f132c61385dcc4b77",
+   "size": 458462,
+   "lfs": {
+    "sha256": "200223c851be9ce4b42d181222ccc554ac27dea410f5972a12301731bf3351b1",
+    "size": 458462,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "juggernautXL_version2.safetensors",
+   "blobId": "4b2bf91e407b87263f32c83a7658636ddc9ea871",
+   "size": 6938040706,
+   "lfs": {
+    "sha256": "700528894b5ec7f8709d5a911c3c0b4e84877a0103126e5ea5cc2b003921acea",
+    "size": 6938040706,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "model_index.json",
+   "blobId": "c4971ec3f753cbdc0dcf0021d8f29bc84ba0ea7f",
+   "size": 671
+  },
+  {
+   "rfilename": "scheduler/scheduler_config.json",
+   "blobId": "fc79d9b7d87cc4422536aa872b855f2341001d15",
+   "size": 558
+  },
+  {
+   "rfilename": "text_encoder/config.json",
+   "blobId": "7f361ca3d9da2cd471438f1cd5834794b08d98f7",
+   "size": 560
+  },
+  {
+   "rfilename": "text_encoder/pytorch_model.bin",
+   "blobId": "9130eb8f9910a29a3ba1b84e4cad6dc6cce471fa",
+   "size": 492307041,
+   "lfs": {
+    "sha256": "8d64092f5613e3224902970d547b969d677956514d7dc4a39f51393840025a62",
+    "size": 492307041,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "text_encoder_2/config.json",
+   "blobId": "528790d1a982a736149fc6863711cd0fdf988172",
+   "size": 570
+  },
+  {
+   "rfilename": "text_encoder_2/pytorch_model.bin",
+   "blobId": "8e8782d339e94371a57a061495ede96a9ae16b52",
+   "size": 2778810597,
+   "lfs": {
+    "sha256": "556509b0e49af4c6e981273c6a2fb6184fb64a98293a17f5e6de66a27bcd0c71",
+    "size": 2778810597,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "tokenizer/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer/special_tokens_map.json",
+   "blobId": "2c2130b544c0c5a72d5d00da071ba130a9800fb2",
+   "size": 472
+  },
+  {
+   "rfilename": "tokenizer/tokenizer_config.json",
+   "blobId": "2e8612a429492973fe60635b3f44a28b065cfac0",
+   "size": 737
+  },
+  {
+   "rfilename": "tokenizer/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "tokenizer_2/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer_2/special_tokens_map.json",
+   "blobId": "ae0c5be6f35217e51c4c000fd325d8de0294e99c",
+   "size": 460
+  },
+  {
+   "rfilename": "tokenizer_2/tokenizer_config.json",
+   "blobId": "a8438e020c4497a429240d6b89e0bf9a6e2ffa92",
+   "size": 725
+  },
+  {
+   "rfilename": "tokenizer_2/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "unet/config.json",
+   "blobId": "ae0e13ab9e256164d01be6cadae046b03a3e1a07",
+   "size": 1773
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.bin",
+   "blobId": "5c17b78938db157853b6e18bc9edcc625a9169ac",
+   "size": 10270603837,
+   "lfs": {
+    "sha256": "25f34d37ce9b9c45c7fcabda11ff176cd18893f1ce8b7a2e937236ff60bd6bc0",
+    "size": 10270603837,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "vae/config.json",
+   "blobId": "e9b208cce788aac2a8b78350d8273d8f76157de4",
+   "size": 602
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.bin",
+   "blobId": "62a8afc838de268cb0d8cbe7f4d245e81b399c8a",
+   "size": 334712113,
+   "lfs": {
+    "sha256": "fba39a4eb933b024732dc038237963d42ec5e4891bb011ee6c4013670281d2e9",
+    "size": 334712113,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse",
+  "artificialguybr/JUGGERNAUT-XL-FREE-DEMO",
+  "corporate-slave/RunDiffusion-Juggernaut-XL",
+  "Surae007/PanCreator_1"
+ ],
+ "createdAt": "2024-02-22T00:43:28.000Z",
+ "usedStorage": 20814932756
+}

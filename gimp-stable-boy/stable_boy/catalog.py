@@ -1,15 +1,33 @@
 # Stable Boy - generative fill for GIMP 3
 # Copyright (C) 2026 Stable Boy contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Model catalog: loading, validation, install status, template selection.
+"""Model catalog: loading, validation, install status, template selection,
+and the view model of the Models tab.
 
-The catalog (``models/catalog.json``) describes every model the plug-in can
-download and run. This module has no GIMP dependency.
+Two kinds of entries share one schema:
+
+- *bundled* (``models/catalog.json``): the short verified list shipped with the
+  plug-in; every file has a published SHA-256.
+- *live* (``source`` "huggingface" or "civitai"): candidates found by
+  ``hub.py`` within the model families the plug-in can drive. They are checked
+  more strictly (:func:`parse_live_entries`): one main model file from a
+  Hugging Face ``resolve`` URL or a Civitai download URL, an exact size, a
+  data-only format (safetensors or GGUF), and every other file, custom node and
+  companion model taken verbatim from the bundled list.
+
+A live entry the user chose to download is remembered in
+``<profile>/stable-boy/hub-selected.json`` (:func:`remember_live_entry`) so the
+plug-in and the supervisor's task worker know it later (:func:`load_merged`).
+Nothing is ever downloaded automatically. This module has no GIMP dependency.
 """
 
 from __future__ import annotations
 
 import json
+import math
+import os
+import re
+import time
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -23,6 +41,45 @@ CAPABILITIES = ("fill", "expand", "txt2img", "remove", "edit", "patch")
 SOURCE_TYPES = ("first-party", "community-quantization")
 TEMPLATES = ("sd15_inpaint", "sdxl_fooocus", "flux_fill", "qwen_edit", "inpaint_model")
 ARCHS = {"sd15": "sd15", "sdxl": "sdxl", "flux": "flux", "qwen_image": "qwen_image", "inpaint_model": "inpaint_model"}
+SOURCES = ("bundled", "huggingface", "civitai")
+
+# Model families the plug-in can drive (one workflow template each), in display order.
+FAMILIES: dict[str, str] = {
+    "sd15-inpaint": "Stable Diffusion 1.5 inpainting",
+    "sdxl": "Stable Diffusion XL",
+    "flux-fill": "FLUX.1 Fill",
+    "qwen-edit": "Qwen-Image-Edit",
+    "removal": "Object removal",
+}
+FAMILY_OF_TEMPLATE = {
+    "sd15_inpaint": "sd15-inpaint",
+    "sdxl_fooocus": "sdxl",
+    "flux_fill": "flux-fill",
+    "qwen_edit": "qwen-edit",
+    "inpaint_model": "removal",
+}
+TEMPLATE_ARCH = {"sd15_inpaint": "sd15", "sdxl_fooocus": "sdxl", "flux_fill": "flux", "qwen_edit": "qwen_image"}
+# Operations of the plug-in and the capabilities that can serve them.
+OPERATION_CAPABILITIES = {
+    "fill": ("fill",),
+    "expand": ("expand",),
+    "txt2img": ("txt2img",),
+    "edit": ("edit",),
+    "remove": ("remove", "fill"),  # Remove object falls back to a prompt-led fill without LaMa/MAT
+}
+NO_MODEL_MESSAGE = "No AI model is installed yet. Open the download manager to get one."
+HUB_SELECTED_FILENAME = "hub-selected.json"
+
+# Live entries: where the main file may come from and where it may go.
+_HF_RESOLVE_RE = re.compile(
+    r"^https://huggingface\.co/([A-Za-z0-9][A-Za-z0-9_.-]*/[A-Za-z0-9][A-Za-z0-9_.-]*)/resolve/"
+    r"([0-9a-f]{40}|main)/((?:[A-Za-z0-9_][A-Za-z0-9_.+-]*/)*[A-Za-z0-9_][A-Za-z0-9_.+-]*)$"
+)
+_CIVITAI_RE = re.compile(r"^https://civitai\.com/api/download/models/(\d+)(\?[A-Za-z0-9=&%._-]*)?$")
+_LIVE_ID_RE = re.compile(r"^(hf|civitai)-[A-Za-z0-9_.+-]{1,160}$")
+LIVE_EXTENSIONS = (".safetensors", ".gguf")  # data-only formats; pickled .ckpt/.pt/.bin are never taken live
+LIVE_MAIN_DEST = {"checkpoint": ("checkpoints",), "unet": ("unet", "diffusion_models")}
+LIVE_PAGE_PREFIXES = ("https://huggingface.co/", "https://civitai.com/models/")
 
 
 class CatalogError(ValueError):
@@ -84,6 +141,21 @@ class ModelEntry:
     requires_nodes: tuple[NodeSpec, ...]
     requires_models: tuple[str, ...]
     files: tuple[FileSpec, ...]
+    source: str = "bundled"  # bundled | huggingface | civitai
+    family: str = ""  # key of FAMILIES ("" for companion files such as the Fooocus patch)
+    downloads: int = 0  # live entries: recent downloads per month (see hub.py)
+    updated: str = ""  # live entries: ISO date of the last upload
+    repo: str = ""  # live entries: Hugging Face repository or Civitai model name
+
+    @property
+    def verified(self) -> bool:
+        """Bundled entries are the hand-checked list."""
+        return self.source == "bundled"
+
+    @property
+    def checksum_known(self) -> bool:
+        """Every file has a SHA-256 to verify the download against."""
+        return all(f.sha256 for f in self.files)
 
     @property
     def total_size(self) -> int:
@@ -135,19 +207,26 @@ def _req(d: dict[str, Any], key: str, where: str) -> Any:
     return d[key]
 
 
-def parse_catalog(data: dict[str, Any]) -> list[ModelEntry]:
+def parse_catalog(data: dict[str, Any], source: str = "bundled", known_ids: Iterable[str] = ()) -> list[ModelEntry]:
     """Validate the decoded catalog JSON and return its entries.
 
     Besides the schema this enforces the security rules: https URLs only, file
     destinations that are plain relative paths (no ``..``, no drive, no absolute
-    path) ending in a plain file name, lowercase hex SHA-256 values, and custom
-    node repos on GitHub pinned to a full 40-character commit.
+    path) ending in a plain file name, lowercase hex SHA-256 values, positive
+    integer sizes, and custom node repos on GitHub pinned to a full
+    40-character commit. Bundled entries must give every file a SHA-256.
+    ``known_ids`` are ids defined elsewhere (the bundled list, for live
+    entries) that ``requires_models`` may name.
     """
+    if source not in SOURCES:
+        raise CatalogError(f"unknown source '{source}'")
     if not isinstance(data, dict) or "models" not in data:
         raise CatalogError("catalog must be an object with a 'models' list")
     entries: list[ModelEntry] = []
     seen: set[str] = set()
     for raw in data["models"]:
+        if not isinstance(raw, dict):
+            raise CatalogError("every model must be an object")
         where = f"model '{raw.get('id', '?')}'"
         mid = _req(raw, "id", where)
         if not isinstance(mid, str) or not mid or any(c in mid for c in " /\\"):
@@ -184,14 +263,21 @@ def parse_catalog(data: dict[str, Any]) -> list[ModelEntry]:
             except ValueError as err:
                 raise CatalogError(f"{where}: unsafe dest '{dest}'") from err
             sha = fr.get("sha256")
-            if sha is not None and (len(sha) != 64 or any(c not in "0123456789abcdef" for c in sha)):
+            if sha is not None and (
+                not isinstance(sha, str) or len(sha) != 64 or any(c not in "0123456789abcdef" for c in sha)
+            ):
                 raise CatalogError(f"{where}: bad sha256 for {dest}")
+            if sha is None and source == "bundled":
+                raise CatalogError(f"{where}: bundled file {dest} needs a sha256")
+            size = fr.get("size")
+            if size is not None and (not isinstance(size, int) or isinstance(size, bool) or size <= 0):
+                raise CatalogError(f"{where}: bad size for {dest}")
             files.append(
                 FileSpec(
                     fr.get("role", "file"),
                     url,
                     dest,
-                    fr.get("size"),
+                    size,
                     sha,
                     bool(fr.get("gated", False)),
                     bool(fr.get("optional", False)),
@@ -209,6 +295,10 @@ def parse_catalog(data: dict[str, Any]) -> list[ModelEntry]:
                 validate_node_spec(n.repo, n.folder, n.commit)
             except ValueError as err:
                 raise CatalogError(f"{where}: node {n.folder} needs a pinned commit: {err}") from err
+        try:
+            downloads = int(raw.get("downloads") or 0)
+        except (TypeError, ValueError):
+            downloads = 0
         entries.append(
             ModelEntry(
                 id=mid,
@@ -227,9 +317,14 @@ def parse_catalog(data: dict[str, Any]) -> list[ModelEntry]:
                 requires_nodes=nodes,
                 requires_models=tuple(raw.get("requires_models", [])),
                 files=tuple(files),
+                source=source,
+                family=str(raw.get("family") or FAMILY_OF_TEMPLATE.get(template or "", "")),
+                downloads=max(0, downloads),
+                updated=str(raw.get("updated") or "")[:10],
+                repo=str(raw.get("repo") or ""),
             )
         )
-    ids = {e.id for e in entries}
+    ids = {e.id for e in entries} | set(known_ids)
     for e in entries:
         for dep in e.requires_models:
             if dep not in ids:
@@ -244,7 +339,7 @@ def catalog_search_paths(plugin_dir: str | Path) -> list[Path]:
 
 
 def load_catalog(path: str | Path | None = None, plugin_dir: str | Path | None = None) -> list[ModelEntry]:
-    """Load and validate the catalog from ``path`` or the default search paths."""
+    """Load and validate the bundled catalog from ``path`` or the default search paths."""
     candidates = [Path(path)] if path else catalog_search_paths(plugin_dir or Path(__file__).resolve().parent.parent)
     for candidate in candidates:
         if candidate.is_file():
@@ -259,6 +354,187 @@ def by_id(entries: Iterable[ModelEntry], model_id: str) -> ModelEntry:
         if e.id == model_id:
             return e
     raise CatalogError(f"unknown model id '{model_id}'")
+
+
+# ------------------------------------------------------------ live entries ----
+
+
+def _live_checks(raw: dict[str, Any], bundled: list[ModelEntry]) -> None:
+    """The extra rules for a live entry (see the module docstring); raises CatalogError."""
+    mid = raw.get("id")
+    where = f"live model '{mid}'"
+    if not isinstance(mid, str) or not _LIVE_ID_RE.match(mid):
+        raise CatalogError(f"{where}: live ids start with hf- or civitai- and use plain characters")
+    source = raw.get("source")
+    if source not in ("huggingface", "civitai"):
+        raise CatalogError(f"{where}: source must be huggingface or civitai")
+    template = raw.get("template")
+    if template not in TEMPLATE_ARCH or raw.get("arch") != TEMPLATE_ARCH[template]:
+        raise CatalogError(f"{where}: template and arch must be one of the generative families")
+    page = raw.get("page", "")
+    if not isinstance(page, str) or not page.startswith(LIVE_PAGE_PREFIXES):
+        raise CatalogError(f"{where}: page must be on huggingface.co or civitai.com")
+    lic_url = (raw.get("license") or {}).get("url", "")
+    if not isinstance(lic_url, str) or not lic_url.startswith("https://"):
+        raise CatalogError(f"{where}: license url must be https")
+    bundled_files = {(f.url, f.dest, f.size, f.sha256): f for e in bundled for f in e.files}
+    bundled_nodes = {(n.repo, n.folder, n.commit) for e in bundled for n in e.requires_nodes}
+    bundled_ids = {e.id for e in bundled}
+    main = 0
+    for fr in raw.get("files") or []:
+        key = (fr.get("url"), fr.get("dest"), fr.get("size"), fr.get("sha256"))
+        if key in bundled_files:
+            continue  # a companion (text encoder, VAE) copied verbatim from the bundled list
+        main += 1
+        role, url, dest = fr.get("role"), str(fr.get("url") or ""), str(fr.get("dest") or "")
+        if role not in LIVE_MAIN_DEST:
+            raise CatalogError(f"{where}: the live file must be a checkpoint or a diffusion model")
+        folder, _, name = dest.replace("\\", "/").partition("/")
+        if folder not in LIVE_MAIN_DEST[role] or "/" in name:
+            raise CatalogError(f"{where}: {role} files go to {' or '.join(LIVE_MAIN_DEST[role])}/<file>")
+        if not name.lower().endswith(LIVE_EXTENSIONS):
+            raise CatalogError(f"{where}: only {', '.join(LIVE_EXTENSIONS)} files are taken from the hubs")
+        hf = _HF_RESOLVE_RE.match(url)
+        if source == "huggingface" and (hf is None or hf.group(3).rsplit("/", 1)[-1] != name):
+            raise CatalogError(f"{where}: not a Hugging Face file URL for {name}: {url}")
+        if source == "civitai" and not _CIVITAI_RE.match(url):
+            raise CatalogError(f"{where}: not a Civitai download URL: {url}")
+        size = fr.get("size")
+        if not isinstance(size, int) or isinstance(size, bool) or size <= 0:
+            raise CatalogError(f"{where}: the file size must be known")
+        if fr.get("optional"):
+            raise CatalogError(f"{where}: the main file cannot be optional")
+    if main != 1:
+        raise CatalogError(f"{where}: needs exactly one model file besides the verified companions")
+    for n in raw.get("requires_nodes") or []:
+        if (n.get("repo"), n.get("folder"), n.get("commit")) not in bundled_nodes:
+            raise CatalogError(f"{where}: custom node {n.get('folder')!r} is not one of the verified list")
+    for dep in raw.get("requires_models") or []:
+        if dep not in bundled_ids:
+            raise CatalogError(f"{where}: companion model {dep!r} is not one of the verified list")
+
+
+def parse_live_entries(
+    raws: Iterable[dict[str, Any]], bundled: list[ModelEntry], problems: list[str] | None = None
+) -> list[ModelEntry]:
+    """Validate live (hub) entries one by one; invalid ones are skipped (and
+    described in ``problems``). Ids and main files already in ``bundled`` are dropped."""
+    out: list[ModelEntry] = []
+    taken = {e.id for e in bundled}
+    bundled_urls = {f.url.split("/resolve/", 1)[-1] for e in bundled for f in e.files}
+    bundled_shas = {f.sha256 for e in bundled for f in e.files if f.sha256}
+    bundled_dests = {f.dest for e in bundled for f in e.files}
+    for raw in raws:
+        try:
+            if not isinstance(raw, dict):
+                raise CatalogError("not an object")
+            _live_checks(raw, bundled)
+            (entry,) = parse_catalog({"models": [raw]}, source=raw["source"], known_ids=taken)
+        except (CatalogError, KeyError, TypeError, ValueError) as err:
+            if problems is not None:
+                problems.append(str(err))
+            continue
+        main = live_main_file(entry)
+        if entry.id in taken or main is None:
+            continue
+        if (
+            main.url.split("/resolve/", 1)[-1] in bundled_urls
+            or (main.sha256 and main.sha256 in bundled_shas)
+            or main.dest in bundled_dests
+        ):
+            continue  # the same file is already on the verified list
+        taken.add(entry.id)
+        out.append(entry)
+    return out
+
+
+def live_main_file(entry: ModelEntry) -> FileSpec | None:
+    """The diffusion model file of an entry (checkpoint or unet)."""
+    return entry.file_by_role("checkpoint") or entry.file_by_role("unet")
+
+
+def hub_selected_path(base: str | Path) -> Path:
+    """``<profile>/stable-boy/hub-selected.json``: live entries the user chose to download."""
+    return Path(base) / HUB_SELECTED_FILENAME
+
+
+def _read_selected(path: Path) -> list[dict[str, Any]]:
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    models = data.get("models") if isinstance(data, dict) else None
+    return [m for m in models or [] if isinstance(m, dict)]
+
+
+def _write_selected(path: Path, models: list[dict[str, Any]]) -> None:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(json.dumps({"version": 1, "models": models}, indent=2) + "\n", encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def remember_live_entry(base: str | Path, raw: dict[str, Any], bundled: list[ModelEntry]) -> ModelEntry:
+    """Validate ``raw`` and store it in ``hub-selected.json`` (replacing an entry
+    with the same id) so it can be downloaded, resolved and removed later."""
+    problems: list[str] = []
+    parsed = parse_live_entries([raw], bundled, problems)
+    if not parsed:
+        raise CatalogError(problems[0] if problems else f"'{raw.get('id')}' duplicates a verified model")
+    path = hub_selected_path(base)
+    models = [m for m in _read_selected(path) if m.get("id") != raw["id"]]
+    models.append(raw)
+    _write_selected(path, models)
+    return parsed[0]
+
+
+def record_live_checksum(base: str | Path, model_id: str, dest: str, sha256: str) -> bool:
+    """After a download of a file without a published checksum, pin the computed
+    SHA-256 so later downloads and repairs are verified. True when recorded."""
+    if not isinstance(sha256, str) or not re.match(r"^[0-9a-f]{64}$", sha256):
+        return False
+    path = hub_selected_path(base)
+    models = _read_selected(path)
+    changed = False
+    for m in models:
+        if m.get("id") != model_id:
+            continue
+        for f in m.get("files") or []:
+            if f.get("dest") == dest and not f.get("sha256"):
+                f["sha256"] = sha256
+                f["sha256_recorded"] = time.strftime("%Y-%m-%d")
+                changed = True
+    if changed:
+        _write_selected(path, models)
+    return changed
+
+
+def load_selected(base: str | Path | None, bundled: list[ModelEntry]) -> list[ModelEntry]:
+    """The remembered live entries, validated (invalid ones are left out)."""
+    if not base:
+        return []
+    return parse_live_entries(_read_selected(hub_selected_path(base)), bundled)
+
+
+def load_merged(
+    plugin_dir: str | Path | None = None, base: str | Path | None = None, path: str | Path | None = None
+) -> list[ModelEntry]:
+    """Bundled catalog plus the remembered live entries of the profile folder ``base``."""
+    bundled = load_catalog(path, plugin_dir)
+    return bundled + load_selected(base, bundled)
+
+
+def merge_entries(*groups: Iterable[ModelEntry]) -> list[ModelEntry]:
+    """Concatenate entry lists, keeping the first entry of each id."""
+    seen: set[str] = set()
+    out = []
+    for group in groups:
+        for e in group:
+            if e.id not in seen:
+                seen.add(e.id)
+                out.append(e)
+    return out
 
 
 # ---------------------------------------------------------------- status ----
@@ -314,6 +590,35 @@ def install_status(
     return InstallStatus(not missing, missing, partial, missing_nodes, missing_models, seen)
 
 
+def runnable_installed(
+    entries: Iterable[ModelEntry],
+    models_root: Path,
+    custom_nodes_dir: Path | None,
+    operation: str = "fill",
+) -> list[ModelEntry]:
+    """Installed models that can run ``operation`` (fill, expand, txt2img, edit,
+    remove) right now: files, companion models and custom nodes all present."""
+    entries = list(entries)
+    wanted = OPERATION_CAPABILITIES.get(operation, (operation,))
+    out = []
+    for e in entries:
+        if not e.runnable or not any(c in e.capabilities for c in wanted):
+            continue
+        st = install_status(e, models_root, custom_nodes_dir, entries)
+        if st.installed and not st.missing_models and not st.missing_nodes:
+            out.append(e)
+    return out
+
+
+def suggest_active(installed: list[ModelEntry], active_id: str) -> str | None:
+    """A new active model id when the current one is not usable but another
+    installed model is (the first download becomes the active model); else None."""
+    if not installed or any(e.id == active_id for e in installed):
+        return None
+    generative = [e for e in installed if "fill" in e.capabilities and e.template != "inpaint_model"]
+    return (generative or installed)[0].id
+
+
 # -------------------------------------------------------------- model spec ----
 
 
@@ -362,3 +667,307 @@ def default_custom_nodes_dir(comfy_dir: str | Path) -> Path:
     if (root / "ComfyUI" / "custom_nodes").is_dir():
         return root / "ComfyUI" / "custom_nodes"
     return root / "custom_nodes"
+
+
+# ------------------------------------------------------------- view model ----
+# Pure functions behind the Models tab (models_ui.py draws them with GTK).
+
+SECTION_INSTALLED = "installed"
+SECTION_RECOMMENDED = "recommended"
+SECTION_VERIFIED = "verified"
+SECTION_MORE = "more"
+SECTION_TITLES = {
+    SECTION_INSTALLED: "Installed",
+    SECTION_RECOMMENDED: "Recommended for this PC",
+    SECTION_VERIFIED: "Verified",
+    SECTION_MORE: "More from Hugging Face and Civitai",
+}
+SOURCE_LABELS = {"bundled": "verified", "huggingface": "Hugging Face", "civitai": "Civitai"}
+
+
+def model_row(
+    entry: ModelEntry,
+    status: InstallStatus,
+    active_id: str = "",
+    has_token: bool = False,
+    fit: Any = None,
+    gated_files_missing: bool | None = None,
+    login_pages: list[str] | None = None,
+) -> dict[str, Any]:
+    """One row of the Models tab: the keys of ``App.model_rows`` plus origin, family, fit and checksum."""
+    label = status.label
+    needs_login = entry.gated if gated_files_missing is None else gated_files_missing
+    if label == "Available" and needs_login and not has_token:
+        label = "Needs token"
+    return {
+        "id": entry.id,
+        "name": entry.name,
+        "tier": entry.tier,
+        "status": label,
+        "installed": status.installed,
+        "size": human_size(entry.total_size),
+        "bytes": entry.total_size,
+        "license": entry.license_name,
+        "license_url": entry.license_url,
+        "page": entry.page,
+        "source": "first-party" if entry.source_type == "first-party" else "community quant",
+        "uploader": entry.uploader,
+        "gated": entry.gated,
+        "needs_login": bool(needs_login),
+        "login_pages": list(login_pages if login_pages is not None else ([entry.page] if entry.gated else [])),
+        "runnable": entry.runnable,
+        "active": entry.id == active_id,
+        "min_vram_gb": entry.min_vram_gb,
+        "missing_nodes": status.missing_nodes,
+        "missing_models": status.missing_models,
+        "partial": status.partial,
+        "capabilities": list(entry.capabilities),
+        "seen_by_server": status.seen_by_server,
+        "origin": entry.source,
+        "family": entry.family,
+        "checksum_known": entry.checksum_known,
+        "downloads": entry.downloads,
+        "updated": entry.updated,
+        "fit": getattr(fit, "level", "unknown") if fit is not None else "unknown",
+        "fit_label": getattr(fit, "label", "") if fit is not None else "",
+        "fit_reason": getattr(fit, "reason", "") if fit is not None else "",
+    }
+
+
+def _hf_repo_page(url: str) -> str | None:
+    m = _HF_RESOLVE_RE.match(url)
+    return f"https://huggingface.co/{m.group(1)}" if m else None
+
+
+def login_pages(entry: ModelEntry, models_root: Path | None = None) -> list[str]:
+    """Hugging Face pages whose license must be accepted before the missing gated
+    files can be downloaded (the repository of each file, not only the entry's page)."""
+    files = [f for f in entry.files if models_root is None or not file_installed(models_root, f)]
+    gated = [f for f in files if f.gated]
+    if not gated and entry.gated and files and not any(f.gated for f in entry.files):
+        return [entry.page] if entry.page.startswith("https://huggingface.co/") else []
+    pages: list[str] = []
+    for f in gated:
+        page = _hf_repo_page(f.url) or entry.page
+        if page and page not in pages:
+            pages.append(page)
+    return pages
+
+
+def gated_files_missing(entry: ModelEntry, models_root: Path) -> bool:
+    """True when a file that needs a Hugging Face login is still to be downloaded."""
+    missing = [f for f in entry.files if not file_installed(models_root, f)]
+    if any(f.gated for f in entry.files):
+        return any(f.gated for f in missing)
+    return entry.gated and bool(missing)  # gated as a whole, no per-file flags
+
+
+def row_status(row: dict[str, Any], current: dict[str, Any] | None = None, pending: Iterable[str] = ()) -> str:
+    """Short state shown next to the model name."""
+    current = current or {}
+    if current.get("model_id") == row["id"]:
+        kind = current.get("type")
+        if kind == "download":
+            total = current.get("total") or 0
+            pct = 100.0 * (current.get("done") or 0) / total if total else 0.0
+            return f"Downloading {pct:.0f}%"
+        if kind == "install_nodes":
+            return "Installing extra parts"
+        if kind == "remove":
+            return "Removing"
+        return "Working"
+    if row["id"] in set(pending):
+        return "Waiting"
+    if row.get("active") and row.get("installed") and not row.get("missing_models") and not row.get("missing_nodes"):
+        return "Active"
+    if row.get("installed"):
+        if row.get("missing_models"):
+            return "Needs one more download"
+        if row.get("missing_nodes"):
+            return "Needs extra parts"
+        if row.get("seen_by_server") is False:
+            return "Installed, restart the AI backend to use it"
+        return "Installed"
+    if row.get("partial"):
+        return "Partly downloaded"
+    if row.get("needs_login") and row.get("status") == "Needs token":
+        return "Needs a free Hugging Face login"
+    return ""
+
+
+def row_details(row: dict[str, Any]) -> str:
+    """The small grey line under the name: size, license, fit, origin, checksum."""
+    parts = [str(row.get("size") or "?")]
+    if row.get("license"):
+        parts.append(str(row["license"]))
+    if not row.get("installed") and row.get("fit_label"):
+        parts.append(str(row["fit_label"]))
+    origin = row.get("origin", "bundled")
+    if origin != "bundled":
+        parts.append("from " + SOURCE_LABELS.get(origin, origin))
+    if not row.get("checksum_known", True):
+        parts.append("unverified checksum")
+    if not row.get("runnable", True):
+        parts.append("helper file for another model")
+    return "  ·  ".join(parts)
+
+
+def _months_since(iso_date: str, now: float | None = None) -> float | None:
+    try:
+        then = time.mktime(time.strptime(iso_date[:10], "%Y-%m-%d"))
+    except (ValueError, OverflowError):
+        return None
+    return max(0.0, ((now if now is not None else time.time()) - then) / (30.44 * 86400))
+
+
+FIT_POINTS = {"comfortable": 3.0, "offload": 1.0, "unknown": 0.5, "too_big": -10.0}
+
+
+def rank_score(row: dict[str, Any], now: float | None = None) -> float:
+    """Recommendation score: fits this PC (dominant), popularity (log of monthly
+    downloads), recency (up to 2 points, fading over two years), and a bonus
+    for the verified list. Higher is better."""
+    score = FIT_POINTS.get(row.get("fit", "unknown"), 0.0)
+    score += 0.6 * math.log10(1 + max(0, int(row.get("downloads") or 0)))
+    months = _months_since(str(row.get("updated") or ""), now)
+    if months is not None:
+        score += max(0.0, 2.0 - months / 12.0)
+    if row.get("origin", "bundled") == "bundled":
+        score += 1.0
+    if not row.get("checksum_known", True):
+        score -= 1.0
+    return score
+
+
+def recommended(rows: list[dict[str, Any]], limit: int = 5, now: float | None = None) -> list[dict[str, Any]]:
+    """Up to ``limit`` (3 to 5) not-installed models for this PC: the best fitting
+    one per family first, then the next best overall. Too-big models never qualify."""
+    candidates = [
+        r
+        for r in rows
+        if r.get("runnable", True)
+        and not r.get("installed")
+        and not r.get("partial")
+        and r.get("fit", "unknown") != "too_big"
+    ]
+    ranked = sorted(candidates, key=lambda r: -rank_score(r, now))
+    picked: list[dict[str, Any]] = []
+    families: set[str] = set()
+    for r in ranked:
+        fam = r.get("family") or r["id"]
+        if fam not in families:
+            families.add(fam)
+            picked.append(r)
+    for r in ranked:
+        if len(picked) >= limit:
+            break
+        if r not in picked:
+            picked.append(r)
+    return sorted(picked[:limit], key=lambda r: -rank_score(r, now))
+
+
+def build_sections(
+    rows: list[dict[str, Any]], limit: int = 5, now: float | None = None
+) -> list[tuple[str, str, list[dict[str, Any]]]]:
+    """``[(key, title, rows)]`` in display order: Installed (active first, then
+    partly downloaded ones), Recommended for this PC, Verified (the bundled list
+    not shown above), More from Hugging Face and Civitai (by family, best first).
+    Every row appears exactly once; empty sections are left out."""
+    installed = [r for r in rows if r.get("installed") or r.get("partial")]
+    installed.sort(key=lambda r: (0 if r.get("active") else 1 if r.get("installed") else 2))
+    shown = {r["id"] for r in installed}
+    rec = [r for r in recommended([r for r in rows if r["id"] not in shown], limit, now)]
+    shown |= {r["id"] for r in rec}
+    verified = [r for r in rows if r["id"] not in shown and r.get("origin", "bundled") == "bundled"]
+    verified.sort(key=lambda r: (0 if r.get("runnable", True) else 1, -rank_score(r, now)))
+    shown |= {r["id"] for r in verified}
+    order = list(FAMILIES)
+    more = [r for r in rows if r["id"] not in shown]
+    more.sort(key=lambda r: (order.index(r["family"]) if r.get("family") in order else 99, -rank_score(r, now)))
+    sections = [
+        (SECTION_INSTALLED, installed),
+        (SECTION_RECOMMENDED, rec),
+        (SECTION_VERIFIED, verified),
+        (SECTION_MORE, more),
+    ]
+    return [(key, SECTION_TITLES[key], items) for key, items in sections if items]
+
+
+# ---------------------------------------------------------- login steps ----
+
+TOKEN_PAGE = "https://huggingface.co/settings/tokens"
+TOKEN_NEW_PAGE = "https://huggingface.co/settings/tokens/new?tokenType=read"
+JOIN_PAGE = "https://huggingface.co/join"
+
+
+def gated_steps(row: dict[str, Any]) -> list[tuple[str, str | None, str | None]]:
+    """The step-by-step panel for a model that needs a Hugging Face login:
+    ``[(text, button label or None, url or None)]`` in plain words."""
+    name = row.get("name") or row.get("id")
+    pages = list(row.get("login_pages") or ([row["page"]] if row.get("page") else []))
+    if len(pages) <= 1:
+        first = [
+            (
+                f"Open the page of {name} and sign in to Hugging Face there (creating an account is free).",
+                "Open the model page",
+                pages[0] if pages else None,
+            )
+        ]
+        agree = "On that page, read the license and press the button to agree to it."
+    else:
+        first = [
+            (
+                f"{name} uses files from {len(pages)} pages. Open each one and sign in to Hugging Face there "
+                "(creating an account is free).",
+                None,
+                None,
+            )
+        ] + [(f"Page {i + 1}: {page.split('huggingface.co/', 1)[-1]}", "Open", page) for i, page in enumerate(pages)]
+        agree = "On each page, read the license and press the button to agree to it."
+    return [
+        *first,
+        (agree + " It may take a few minutes until access is granted.", None, None),
+        (
+            "Create an access key: on the next page give it any name, keep the type 'Read', "
+            "press Create, then copy the key (it starts with hf_).",
+            "Create an access key",
+            TOKEN_NEW_PAGE,
+        ),
+        ("Paste the key here and press Save. It stays on this computer.", None, None),
+    ]
+
+
+def state_button(
+    row: dict[str, Any], current: dict[str, Any] | None = None, pending: Iterable[str] = (), has_token: bool = False
+) -> tuple[str, str | None, bool]:
+    """(label, action, sensitive) of a row's single state button.
+
+    ``ui_text.primary_action`` with two adjustments: the login question only
+    comes up while a file that needs it is still missing, and prompt-free
+    removal models (LaMa, MAT) are never made the active model - Remove object
+    picks them up by itself - so they show "Ready" instead of "Set active".
+    """
+    from . import ui_text
+
+    label, action, sensitive = ui_text.primary_action(
+        {**row, "gated": row.get("needs_login", row.get("gated"))}, current, list(pending), has_token
+    )
+    caps = row.get("capabilities") or []
+    if action == "activate" and "remove" in caps and "fill" not in caps:
+        return "Ready", None, False
+    return label, action, sensitive
+
+
+def apply_repo_stats(rows: list[dict[str, Any]], stats: dict[str, dict[str, Any]]) -> None:
+    """Give bundled rows the download count and date the live search saw for
+    their Hugging Face repository, so verified and live models rank on the same
+    scale. ``stats`` maps ``owner/name`` to ``{"downloads": int, "updated": "YYYY-MM-DD"}``."""
+    for r in rows:
+        if r.get("origin", "bundled") != "bundled":
+            continue
+        page = str(r.get("page") or "")
+        repo = page.split("https://huggingface.co/", 1)[-1] if page.startswith("https://huggingface.co/") else ""
+        found = stats.get(repo)
+        if found:
+            r["downloads"] = max(int(r.get("downloads") or 0), int(found.get("downloads") or 0))
+            r["updated"] = r.get("updated") or str(found.get("updated") or "")[:10]

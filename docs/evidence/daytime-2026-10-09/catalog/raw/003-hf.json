@@ -1,0 +1,294 @@
+{
+ "_id": "66d19a03b003aeb6d1578a57",
+ "id": "stable-diffusion-v1-5/stable-diffusion-inpainting",
+ "private": false,
+ "pipeline_tag": "text-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "stable-diffusion",
+  "stable-diffusion-diffusers",
+  "text-to-image",
+  "arxiv:2207.12598",
+  "arxiv:2112.10752",
+  "arxiv:2103.00020",
+  "arxiv:2205.11487",
+  "arxiv:1910.09700",
+  "license:creativeml-openrail-m",
+  "diffusers:StableDiffusionInpaintPipeline",
+  "region:us"
+ ],
+ "downloads": 196493,
+ "likes": 120,
+ "modelId": "stable-diffusion-v1-5/stable-diffusion-inpainting",
+ "author": "stable-diffusion-v1-5",
+ "sha": "8a4288a76071f7280aedbdb3253bdb9e9d5d84bb",
+ "lastModified": "2024-09-06T18:58:07.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {
+  "diffusers": {
+   "_class_name": "StableDiffusionInpaintPipeline"
+  }
+ },
+ "cardData": {
+  "license": "creativeml-openrail-m",
+  "tags": [
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image"
+  ],
+  "inference": false,
+  "library_name": "diffusers"
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "9dbaac88fc97eeec9181a953f635e45af36d3e48",
+   "size": 1753
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "65e886af144b9d8bb5bbb4ca040d2b013fd45f12",
+   "size": 15107
+  },
+  {
+   "rfilename": "config.json",
+   "blobId": "432f2ef043de459ffb66e7e49d22131fc596a5d5",
+   "size": 748
+  },
+  {
+   "rfilename": "feature_extractor/preprocessor_config.json",
+   "blobId": "5294955ff7801083f720b34b55d0f1f51313c5c5",
+   "size": 342
+  },
+  {
+   "rfilename": "model_index.json",
+   "blobId": "1dda6689b6bed16a8b69f3df22fdc06983de68da",
+   "size": 548
+  },
+  {
+   "rfilename": "safety_checker/config.json",
+   "blobId": "9cfcfb854009626cec64993a947316d42eb255ea",
+   "size": 4777
+  },
+  {
+   "rfilename": "safety_checker/model.fp16.safetensors",
+   "blobId": "d802a3abeacaea6d76e2c6c62b20a6b59372597c",
+   "size": 608018440,
+   "lfs": {
+    "sha256": "08902f19b1cfebd7c989f152fc0507bef6898c706a91d666509383122324b511",
+    "size": 608018440,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "safety_checker/pytorch_model.bin",
+   "blobId": "faa7c232cc5d9bce74eb4889572f683a773e96bf",
+   "size": 1216061799,
+   "lfs": {
+    "sha256": "193490b58ef62739077262e833bf091c66c29488058681ac25cf7df3d8190974",
+    "size": 1216061799,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "safety_checker/pytorch_model.fp16.bin",
+   "blobId": "6f73e24d32843d04f16c85b717883c62bbc45226",
+   "size": 608103564,
+   "lfs": {
+    "sha256": "22ba87205445ad5def13e54919b038dcfb7321ec1c3f4b12487d4fba6036125f",
+    "size": 608103564,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "scheduler/scheduler_config.json",
+   "blobId": "3a6a9a51b8ea8eb2b0c55e2811e608f2eca3ffd2",
+   "size": 313
+  },
+  {
+   "rfilename": "sd-v1-5-inpainting.ckpt",
+   "blobId": "477945c30dcad9c3d629470f7f52ceb86acd4cd7",
+   "size": 4265437280,
+   "lfs": {
+    "sha256": "c6bbc15e3224e6973459ba78de4998b80b50112b0ae5b5c67113d56b4e366b19",
+    "size": 4265437280,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "text_encoder/config.json",
+   "blobId": "4d3e873ab5086ad989f407abd50fdce66db8d657",
+   "size": 617
+  },
+  {
+   "rfilename": "text_encoder/model.fp16.safetensors",
+   "blobId": "1ee9520565624366f70ff4ff21b8e79cc70cfb22",
+   "size": 246144864,
+   "lfs": {
+    "sha256": "77795e2023adcf39bc29a884661950380bd093cf0750a966d473d1718dc9ef4e",
+    "size": 246144864,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "text_encoder/pytorch_model.bin",
+   "blobId": "b7d12c62d43f947efeeba58b833ed8182541a73f",
+   "size": 492305335,
+   "lfs": {
+    "sha256": "770a47a9ffdcfda0b05506a7888ed714d06131d60267e6cf52765d61cf59fd67",
+    "size": 492305335,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "text_encoder/pytorch_model.fp16.bin",
+   "blobId": "cf6210a38f2e3e8930081442a3a2cf2ef77c6e4c",
+   "size": 246187076,
+   "lfs": {
+    "sha256": "05eee911f195625deeab86f0b22b115d7d8bc3adbfc1404f03557f7e4e6a8fd7",
+    "size": 246187076,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "tokenizer/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer/special_tokens_map.json",
+   "blobId": "2c2130b544c0c5a72d5d00da071ba130a9800fb2",
+   "size": 472
+  },
+  {
+   "rfilename": "tokenizer/tokenizer_config.json",
+   "blobId": "5ba7bf706515bc60487ad0e1816b4929b82542d6",
+   "size": 806
+  },
+  {
+   "rfilename": "tokenizer/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "unet/config.json",
+   "blobId": "432f2ef043de459ffb66e7e49d22131fc596a5d5",
+   "size": 748
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.bin",
+   "blobId": "17f7d6d9ab25e85ce56cb8e638af992d7e99c593",
+   "size": 3438412325,
+   "lfs": {
+    "sha256": "af4e22eecaca7a1c5dd849f51924effdccc1f765141e898c323b775cc80a43b3",
+    "size": 3438412325,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.fp16.bin",
+   "blobId": "b8985fa77725c28c29cad78ba93a5b67bb1f30df",
+   "size": 1719356693,
+   "lfs": {
+    "sha256": "a71dec5f3ee7004b84b22c26b6d8f6681aea1c038a75ee4b9dd68c6b3401d8d6",
+    "size": 1719356693,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.fp16.safetensors",
+   "blobId": "2049bec0e66d389318e2d419997b394fe6a20e5c",
+   "size": 1719154104,
+   "lfs": {
+    "sha256": "24b788b4a777748377cc20364eea4ae113c8c42f4468c16bc8c02fdae5492af9",
+    "size": 1719154104,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "vae/config.json",
+   "blobId": "25c63fb3a9303446a3c9bae3a90afc818641984f",
+   "size": 552
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.bin",
+   "blobId": "61cd2251b94778221280a2265b093fab4b2287df",
+   "size": 334707217,
+   "lfs": {
+    "sha256": "1b134cded8eb78b184aefb8805b6b572f36fa77b255c483665dda931fa0130c5",
+    "size": 334707217,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.fp16.bin",
+   "blobId": "b89db697a0ccaceb59d634fa9ce874f36a98ffdb",
+   "size": 167405651,
+   "lfs": {
+    "sha256": "b7643b3e40b9f128eda5fe174fea73c3ef3903562651fb344a79439709c2e503",
+    "size": 167405651,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.fp16.safetensors",
+   "blobId": "6dc048fdbcb71764cbd7af4ec6eb2a0e8a7bfbb2",
+   "size": 167335342,
+   "lfs": {
+    "sha256": "4fbcf0ebe55a0984f5a5e00d8c4521d52359af7229bb4d81890039d2aa16dd7c",
+    "size": 167335342,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse",
+  "1aurent/TryOffAnyone",
+  "smartfeed/image2image",
+  "ixarchakos/TryOffAnyone",
+  "MetricMogul/SD15-inpainting-IPAdapter",
+  "wencheng256/DiffusionRAWSpace",
+  "kailashjha123/ai-image-editor",
+  "openmen-gif/reroom-ai",
+  "svjack/LucidDreamer",
+  "Suchinthana/VisualizeGeoMap",
+  "Kainyyy/stable-diffusion-v1-5-stable-diffusion-inpainting",
+  "wencheng256/DiffusionRAWSpaceZeroGPU",
+  "Yatheshr/image-generation-manipuation",
+  "4n0nym05-R3s34rch3r/pandora-removal",
+  "mkhou00000/AI-Media-Studio",
+  "longnt04/swap-face",
+  "tuidcarlos/waska",
+  "tuidcarlos/waskav2",
+  "tuidcarlos/sd-inpainting",
+  "tuidcarlos/waskav3",
+  "tuidcarlos/waskav5",
+  "tuidcarlos/waskav4",
+  "tuidcarlos/waskav6",
+  "tuidcarlos/waskav8",
+  "tuidcarlos/waskarlos",
+  "tuidcarlos/waskav9",
+  "tuidcarlos/waskav7",
+  "tuidcarlos/waskarlosv3",
+  "mustafa334/space10",
+  "amrhisham123/clawset-ghost-mannequin",
+  "Danyal178/landscape-backend",
+  "CyCrawwler/safegen-arena",
+  "Rana095/clothing-bump-adjuster",
+  "LiXiY/Reference-Anomaly-Generation",
+  "Artasam-Khan/OutfitAura-Backend",
+  "skye6/room_remix-demo",
+  "MetricMogul/SD15-Light-Inpaint-CPU",
+  "jangminhyeok/ai-privacy-labs",
+  "TechnoSamurai02/truthshield-ai-backend",
+  "Nisha56/editify-backend",
+  "juras3k/hairstyle-inpainting",
+  "Fernando21Plus/ai-image-editor",
+  "lukebransby/skin-lesion-counterfactual-demo"
+ ],
+ "createdAt": "2024-08-30T10:08:03.000Z",
+ "usedStorage": 15228944928
+}

@@ -1,0 +1,178 @@
+{
+ "_id": "6454a0d2fe2f48cb4b5bcb3d",
+ "id": "botp/stable-diffusion-v1-5-inpainting",
+ "private": false,
+ "pipeline_tag": "text-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "stable-diffusion",
+  "stable-diffusion-diffusers",
+  "text-to-image",
+  "arxiv:2207.12598",
+  "arxiv:2112.10752",
+  "arxiv:2103.00020",
+  "arxiv:2205.11487",
+  "arxiv:1910.09700",
+  "license:creativeml-openrail-m",
+  "diffusers:StableDiffusionInpaintPipeline",
+  "region:us"
+ ],
+ "downloads": 1803,
+ "likes": 10,
+ "modelId": "botp/stable-diffusion-v1-5-inpainting",
+ "author": "botp",
+ "sha": "069f0782bc637fcbf3310d985b3d0ebffc668535",
+ "lastModified": "2023-05-05T06:23:14.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {
+  "diffusers": {
+   "_class_name": "StableDiffusionInpaintPipeline"
+  }
+ },
+ "cardData": {
+  "license": "creativeml-openrail-m",
+  "tags": [
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image"
+  ],
+  "inference": false,
+  "library_name": "diffusers",
+  "extra_gated_prompt": "One more step before getting this model.\nThis model is open access and available to all, with a CreativeML OpenRAIL-M license further specifying rights and usage.\nThe CreativeML OpenRAIL License specifies: \n\n1. You can't use the model to deliberately produce nor share illegal or harmful outputs or content \n2. CompVis claims no rights on the outputs you generate, you are free to use them and are accountable for their use which must not go against the provisions set in the license\n3. You may re-distribute the weights and use the model commercially and/or as a service. If you do, please be aware you have to include the same use restrictions as the ones in the license and share a copy of the CreativeML OpenRAIL-M to all your users (please read the license entirely and carefully)\nPlease read the full license here: https://huggingface.co/spaces/CompVis/stable-diffusion-license\n\nBy clicking on \"Access repository\" below, you accept that your *contact information* (email address and username) can be shared with the model authors as well.\n  ",
+  "extra_gated_fields": {
+   "I have read the License and agree with its terms": "checkbox"
+  },
+  "duplicated_from": "runwayml/stable-diffusion-inpainting"
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "7a606f349e34f72a50b8c9beb57b23a61b6d0298",
+   "size": 1444
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "0a007c975984502bf97d5b8f5230369a1143f0df",
+   "size": 15886
+  },
+  {
+   "rfilename": "config.json",
+   "blobId": "432f2ef043de459ffb66e7e49d22131fc596a5d5",
+   "size": 748
+  },
+  {
+   "rfilename": "feature_extractor/preprocessor_config.json",
+   "blobId": "5294955ff7801083f720b34b55d0f1f51313c5c5",
+   "size": 342
+  },
+  {
+   "rfilename": "model_index.json",
+   "blobId": "6d669abf8df453f1724661222dc95c5cbc6bb0e5",
+   "size": 550
+  },
+  {
+   "rfilename": "safety_checker/config.json",
+   "blobId": "9cfcfb854009626cec64993a947316d42eb255ea",
+   "size": 4777
+  },
+  {
+   "rfilename": "safety_checker/pytorch_model.bin",
+   "blobId": "faa7c232cc5d9bce74eb4889572f683a773e96bf",
+   "size": 1216061799,
+   "lfs": {
+    "sha256": "193490b58ef62739077262e833bf091c66c29488058681ac25cf7df3d8190974",
+    "size": 1216061799,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "scheduler/scheduler_config.json",
+   "blobId": "3a6a9a51b8ea8eb2b0c55e2811e608f2eca3ffd2",
+   "size": 313
+  },
+  {
+   "rfilename": "sd-v1-5-inpainting.ckpt",
+   "blobId": "477945c30dcad9c3d629470f7f52ceb86acd4cd7",
+   "size": 4265437280,
+   "lfs": {
+    "sha256": "c6bbc15e3224e6973459ba78de4998b80b50112b0ae5b5c67113d56b4e366b19",
+    "size": 4265437280,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "text_encoder/config.json",
+   "blobId": "4d3e873ab5086ad989f407abd50fdce66db8d657",
+   "size": 617
+  },
+  {
+   "rfilename": "text_encoder/pytorch_model.bin",
+   "blobId": "b7d12c62d43f947efeeba58b833ed8182541a73f",
+   "size": 492305335,
+   "lfs": {
+    "sha256": "770a47a9ffdcfda0b05506a7888ed714d06131d60267e6cf52765d61cf59fd67",
+    "size": 492305335,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "tokenizer/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer/special_tokens_map.json",
+   "blobId": "2c2130b544c0c5a72d5d00da071ba130a9800fb2",
+   "size": 472
+  },
+  {
+   "rfilename": "tokenizer/tokenizer_config.json",
+   "blobId": "5ba7bf706515bc60487ad0e1816b4929b82542d6",
+   "size": 806
+  },
+  {
+   "rfilename": "tokenizer/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "unet/config.json",
+   "blobId": "432f2ef043de459ffb66e7e49d22131fc596a5d5",
+   "size": 748
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.bin",
+   "blobId": "17f7d6d9ab25e85ce56cb8e638af992d7e99c593",
+   "size": 3438412325,
+   "lfs": {
+    "sha256": "af4e22eecaca7a1c5dd849f51924effdccc1f765141e898c323b775cc80a43b3",
+    "size": 3438412325,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "vae/config.json",
+   "blobId": "25c63fb3a9303446a3c9bae3a90afc818641984f",
+   "size": 552
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.bin",
+   "blobId": "61cd2251b94778221280a2265b093fab4b2287df",
+   "size": 334707217,
+   "lfs": {
+    "sha256": "1b134cded8eb78b184aefb8805b6b572f36fa77b255c483665dda931fa0130c5",
+    "size": 334707217,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [
+  "yigitekin/CLIPAway",
+  "Spooke/fitview-vton"
+ ],
+ "createdAt": "2023-05-05T06:23:14.000Z",
+ "usedStorage": 54461855598
+}

@@ -1,0 +1,232 @@
+{
+ "_id": "65d68770bbe0ee135d36a7d6",
+ "id": "RunDiffusion/Juggernaut-XL-v8",
+ "private": false,
+ "pipeline_tag": "text-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "stable-diffusion",
+  "stable-diffusion-xl",
+  "sdxl",
+  "text-to-image",
+  "photorealistic",
+  "photography",
+  "cinematic",
+  "portrait",
+  "juggernaut",
+  "rundiffusion",
+  "kandooai",
+  "en",
+  "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+  "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+  "license:creativeml-openrail-m",
+  "endpoints_compatible",
+  "diffusers:StableDiffusionXLPipeline",
+  "region:us"
+ ],
+ "downloads": 5220,
+ "likes": 24,
+ "modelId": "RunDiffusion/Juggernaut-XL-v8",
+ "author": "RunDiffusion",
+ "sha": "5c38059bf38387bed17f70e5c1e5c00544caf41e",
+ "lastModified": "2026-05-08T17:20:19.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {
+  "diffusers": {
+   "_class_name": "StableDiffusionXLPipeline"
+  }
+ },
+ "cardData": {
+  "license": "creativeml-openrail-m",
+  "language": [
+   "en"
+  ],
+  "library_name": "diffusers",
+  "pipeline_tag": "text-to-image",
+  "base_model": "stabilityai/stable-diffusion-xl-base-1.0",
+  "tags": [
+   "stable-diffusion",
+   "stable-diffusion-xl",
+   "sdxl",
+   "text-to-image",
+   "photorealistic",
+   "photography",
+   "cinematic",
+   "portrait",
+   "juggernaut",
+   "rundiffusion",
+   "kandooai"
+  ]
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "9ab807103731dba363d6b860eda946acb9ded6f4",
+   "size": 1585
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "3394c128a534a36d0a0907a1f329bec9d016f902",
+   "size": 8051
+  },
+  {
+   "rfilename": "assets/Juggernaut_Banner.webp",
+   "blobId": "6b80b6db51e6dc8902a1136f132c61385dcc4b77",
+   "size": 458462,
+   "lfs": {
+    "sha256": "200223c851be9ce4b42d181222ccc554ac27dea410f5972a12301731bf3351b1",
+    "size": 458462,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "juggernautXL_v8Rundiffusion.safetensors",
+   "blobId": "2de0d44caadf7be6fd5e88999cc58c29c2d05389",
+   "size": 7105348592,
+   "lfs": {
+    "sha256": "aeb7e9e6897a1e58b10494bd989d001e3d4bc9b634633cd7b559838f612c2867",
+    "size": 7105348592,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "model_index.json",
+   "blobId": "c4971ec3f753cbdc0dcf0021d8f29bc84ba0ea7f",
+   "size": 671
+  },
+  {
+   "rfilename": "scheduler/scheduler_config.json",
+   "blobId": "fc79d9b7d87cc4422536aa872b855f2341001d15",
+   "size": 558
+  },
+  {
+   "rfilename": "text_encoder/config.json",
+   "blobId": "7f361ca3d9da2cd471438f1cd5834794b08d98f7",
+   "size": 560
+  },
+  {
+   "rfilename": "text_encoder/pytorch_model.bin",
+   "blobId": "d84f8360ad5aa734317ecf3f92f986a7cfa212bb",
+   "size": 492307041,
+   "lfs": {
+    "sha256": "9752793801fe259ef38fe0ecb1dedc8e2a035ee3dc64f63a207da9ec91631417",
+    "size": 492307041,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "text_encoder_2/config.json",
+   "blobId": "528790d1a982a736149fc6863711cd0fdf988172",
+   "size": 570
+  },
+  {
+   "rfilename": "text_encoder_2/pytorch_model.bin",
+   "blobId": "d3d0ecd85b5e84f825160c690e81bebd3f82b77d",
+   "size": 2778810597,
+   "lfs": {
+    "sha256": "0ef044f29036aedfb8ecba5715ce592bf5679bda697c3ae5dc78713484a0f9b0",
+    "size": 2778810597,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "tokenizer/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer/special_tokens_map.json",
+   "blobId": "2c2130b544c0c5a72d5d00da071ba130a9800fb2",
+   "size": 472
+  },
+  {
+   "rfilename": "tokenizer/tokenizer_config.json",
+   "blobId": "2e8612a429492973fe60635b3f44a28b065cfac0",
+   "size": 737
+  },
+  {
+   "rfilename": "tokenizer/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "tokenizer_2/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer_2/special_tokens_map.json",
+   "blobId": "ae0c5be6f35217e51c4c000fd325d8de0294e99c",
+   "size": 460
+  },
+  {
+   "rfilename": "tokenizer_2/tokenizer_config.json",
+   "blobId": "a8438e020c4497a429240d6b89e0bf9a6e2ffa92",
+   "size": 725
+  },
+  {
+   "rfilename": "tokenizer_2/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "unet/config.json",
+   "blobId": "ae0e13ab9e256164d01be6cadae046b03a3e1a07",
+   "size": 1773
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.bin",
+   "blobId": "14fa19a7a95b6290d1e9cd88eb57ac16cd70c7f0",
+   "size": 10270603837,
+   "lfs": {
+    "sha256": "8dcfd0fe60d3e1bd9e67e509ab03d40d0fde92c7eeeb6a972b783527695f6085",
+    "size": 10270603837,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "vae/config.json",
+   "blobId": "e9b208cce788aac2a8b78350d8273d8f76157de4",
+   "size": 602
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.bin",
+   "blobId": "a1f44c213105683604fdcb072bfe8da77c6cfaf5",
+   "size": 334712113,
+   "lfs": {
+    "sha256": "37eb3e09ae1ce3d6891ddf809ca927b618e501091142cf07fdd9cd170e3a046f",
+    "size": 334712113,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse",
+  "YupengZhou/StoryDiffusion",
+  "artificialguybr/JUGGERNAUT-XL-FREE-DEMO",
+  "ZENLLC/StoryDiffusion",
+  "cocktailpeanut/StoryDiffusion",
+  "ChrisJohnson111/test1",
+  "jtanner/StoryDiffusion",
+  "jacktheporsche/StoryDiffusion",
+  "ConceptaMAGIC/demo-text2video-storydiffusion",
+  "benskibenski/JingleSharkStories",
+  "mberke11/content",
+  "shawn642/StoryDiffusion-main",
+  "mberke11/story",
+  "jasoncharles/StoryDiffusion",
+  "immanuelzhu/StoryDiffusion",
+  "FlexTheAi/Flexstorydiff",
+  "henryas/storydiffusion",
+  "dungmai/StoryDiffusion",
+  "huzefa11/Ai_Comic_Generator_v1",
+  "lixiang6/demo",
+  "kainngo/chatgpt-helper-bot",
+  "AnLee-ai/my-story-diffusion"
+ ],
+ "createdAt": "2024-02-21T23:29:52.000Z",
+ "usedStorage": 20982240642
+}

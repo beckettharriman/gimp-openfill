@@ -1,0 +1,161 @@
+{
+ "_id": "64adb7400d0826bdd8ab6b20",
+ "id": "andregn/Realistic_Vision_V6.0-inpainting",
+ "private": false,
+ "pipeline_tag": "text-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "safetensors",
+  "v8",
+  "license:creativeml-openrail-m",
+  "endpoints_compatible",
+  "diffusers:StableDiffusionPipeline",
+  "region:us"
+ ],
+ "downloads": 2305,
+ "likes": 2,
+ "modelId": "andregn/Realistic_Vision_V6.0-inpainting",
+ "author": "andregn",
+ "sha": "742b149a962cc5906837f308bad119919fd865e8",
+ "lastModified": "2023-12-22T22:53:33.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {
+  "model_type": "v8",
+  "diffusers": {
+   "_class_name": "StableDiffusionPipeline"
+  }
+ },
+ "cardData": {
+  "license": "creativeml-openrail-m"
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+   "size": 1519
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "03db88f5fc4c65ef20eb61be9e7d963debe3ca09",
+   "size": 1175
+  },
+  {
+   "rfilename": "Realistic_Vision_V6.0_NV_B1_inpainting.safetensors",
+   "blobId": "97aa4d7ddef6dd605eb983e58dfca71f6560f010",
+   "size": 4265203868,
+   "lfs": {
+    "sha256": "e9c575dbbe237ea889e14c41f953fc9fb311439a88b15bb2e789b0630ae45efe",
+    "size": 4265203868,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "config.json",
+   "blobId": "68fbb2009cc955e31d8f59803fc41de3323240ea",
+   "size": 159
+  },
+  {
+   "rfilename": "face_yolov8n_v2.pt",
+   "blobId": "9b6b46cd95f3979e422b3a1c25f8a4c3eb01a774",
+   "size": 6215608,
+   "lfs": {
+    "sha256": "1e561e2edfcc99d815c8489d3770fef52b8d46325de70d0a96f3950ec05a9023",
+    "size": 6215608,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "model_index.json",
+   "blobId": "fa00c65d4f646d617af58c81a707ecbf736fa8d0",
+   "size": 609
+  },
+  {
+   "rfilename": "scheduler/scheduler_config.json",
+   "blobId": "f9c6494d1e602bf1a8d3ba6c9307291069469e10",
+   "size": 548
+  },
+  {
+   "rfilename": "text_encoder/config.json",
+   "blobId": "56152a729b512eead674d3babd4f49ce4714b2e4",
+   "size": 612
+  },
+  {
+   "rfilename": "text_encoder/model.safetensors",
+   "blobId": "07b2e30b519ab4c91d138d0abbc62eb456450d7a",
+   "size": 492265880,
+   "lfs": {
+    "sha256": "8ee67788c3c9a6f5d73de077b644f1d4317258b55fbcc372dc385e8e5587c1cc",
+    "size": 492265880,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "tokenizer/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer/special_tokens_map.json",
+   "blobId": "2c2130b544c0c5a72d5d00da071ba130a9800fb2",
+   "size": 472
+  },
+  {
+   "rfilename": "tokenizer/tokenizer_config.json",
+   "blobId": "2e8612a429492973fe60635b3f44a28b065cfac0",
+   "size": 737
+  },
+  {
+   "rfilename": "tokenizer/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "unet/config.json",
+   "blobId": "e5e40ac430de10e63843ab94fc565692f93a7852",
+   "size": 1547
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.bin",
+   "blobId": "1dd8a0b80d618c376a5fed6dd495e2b14ccbaddc",
+   "size": 1719353253,
+   "lfs": {
+    "sha256": "63692153675d112389b4ad7adc3b8cebab20902dfaa942bc3eef16a6489bab0f",
+    "size": 1719353253,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model_old.fp16.safetensors",
+   "blobId": "2049bec0e66d389318e2d419997b394fe6a20e5c",
+   "size": 1719154104,
+   "lfs": {
+    "sha256": "24b788b4a777748377cc20364eea4ae113c8c42f4468c16bc8c02fdae5492af9",
+    "size": 1719154104,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "vae/config.json",
+   "blobId": "dfd089d10af46742c906a19ba8950367d2acd6f1",
+   "size": 577
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.safetensors",
+   "blobId": "1b1140539028c1516bc2f086ccccbf15a6f178fd",
+   "size": 334643276,
+   "lfs": {
+    "sha256": "68a430f8a51413e80ecec6c13fff4b6b63e57600a2ec661a016a14fd1037fa4b",
+    "size": 334643276,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse"
+ ],
+ "createdAt": "2023-07-11T20:10:40.000Z",
+ "usedStorage": 17067243725
+}

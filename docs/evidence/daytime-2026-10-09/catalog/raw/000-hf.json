@@ -1,0 +1,562 @@
+[
+ {
+  "_id": "66d19a03b003aeb6d1578a57",
+  "id": "stable-diffusion-v1-5/stable-diffusion-inpainting",
+  "gated": false,
+  "lastModified": "2024-09-06T18:58:07.000Z",
+  "downloads": 196493,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image",
+   "arxiv:2207.12598",
+   "arxiv:2112.10752",
+   "arxiv:2103.00020",
+   "arxiv:2205.11487",
+   "arxiv:1910.09700",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64f1f00e5e0cf1f797040eaa",
+  "id": "diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
+  "gated": false,
+  "lastModified": "2023-09-03T16:36:39.000Z",
+  "downloads": 104113,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "stable-diffusion-xl",
+   "stable-diffusion-xl-diffusers",
+   "text-to-image",
+   "inpainting",
+   "arxiv:2112.10752",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "license:openrail++",
+   "diffusers:StableDiffusionXLInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67bdd10e2a3b870483aec91d",
+  "id": "andro-flock/LUSTIFY-SDXL-NSFW-checkpoint-v2-0-INPAINTING",
+  "gated": false,
+  "lastModified": "2025-03-01T14:05:15.000Z",
+  "downloads": 10681,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "Safetensors",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionXLInpaintPipeline",
+   "region:us",
+   "not-for-all-audiences"
+  ]
+ },
+ {
+  "_id": "69170a8ede2dd4ab3a81e947",
+  "id": "sd2-community/stable-diffusion-2-inpainting",
+  "gated": false,
+  "lastModified": "2025-11-15T10:28:04.000Z",
+  "downloads": 9610,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "stable-diffusion",
+   "arxiv:2112.10752",
+   "arxiv:2202.00512",
+   "arxiv:1910.09700",
+   "license:openrail++",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64ea2c994a2e1742116b974a",
+  "id": "Lykon/dreamshaper-8-inpainting",
+  "gated": false,
+  "lastModified": "2024-09-17T18:23:38.000Z",
+  "downloads": 6898,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "inpainting",
+   "art",
+   "artistic",
+   "anime",
+   "dreamshaper",
+   "en",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68be880b477ad84157e06fad",
+  "id": "InstantX/Qwen-Image-ControlNet-Inpainting",
+  "gated": false,
+  "lastModified": "2025-09-12T03:33:03.000Z",
+  "downloads": 6026,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "Image-to-Image",
+   "ControlNet",
+   "Diffusers",
+   "QwenImageControlNetInpaintPipeline",
+   "Qwen-Image",
+   "image-to-image",
+   "en",
+   "base_model:Qwen/Qwen-Image",
+   "base_model:finetune:Qwen/Qwen-Image",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64c86594d33e6a7f82974c3e",
+  "id": "Uminosachi/realisticVisionV51_v51VAE-inpainting",
+  "gated": false,
+  "lastModified": "2023-08-01T02:05:37.000Z",
+  "downloads": 5112,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "license:creativeml-openrail-m",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "66233880d323727f81abcfe4",
+  "id": "OzzyGT/RealVisXL_V4.0_inpainting",
+  "gated": false,
+  "lastModified": "2025-07-24T11:57:39.000Z",
+  "downloads": 4655,
+  "tags": [
+   "diffusers",
+   "base_model:SG161222/RealVisXL_V4.0",
+   "base_model:finetune:SG161222/RealVisXL_V4.0",
+   "license:openrail++",
+   "diffusers:StableDiffusionXLInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63ff51b15caf40b74186f0c0",
+  "id": "Sanster/Realistic_Vision_V1.4-inpainting",
+  "gated": false,
+  "lastModified": "2023-03-01T13:35:30.000Z",
+  "downloads": 3604,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "license:openrail",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67050f3793d4b481cb7edd5e",
+  "id": "alimama-creative/FLUX.1-dev-Controlnet-Inpainting-Beta",
+  "gated": false,
+  "lastModified": "2024-10-12T10:03:10.000Z",
+  "downloads": 3161,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "ComfyUI",
+   "Inpainting",
+   "image-to-image",
+   "en",
+   "base_model:black-forest-labs/FLUX.1-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6719a7be9665701fd68b0854",
+  "id": "genai-archive/stable-diffusion-v1-5-inpainting",
+  "gated": false,
+  "lastModified": "2024-12-25T08:58:47.000Z",
+  "downloads": 2930,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image",
+   "arxiv:2207.12598",
+   "arxiv:2112.10752",
+   "arxiv:2103.00020",
+   "arxiv:2205.11487",
+   "arxiv:1910.09700",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "69e9355c8b2dc2df5c566618",
+  "id": "aimi-models/inpainting",
+  "gated": false,
+  "lastModified": "2026-04-22T21:07:05.000Z",
+  "downloads": 2732,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "inpainting",
+   "sdxl",
+   "sd15",
+   "mirror",
+   "license:openrail++",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "66d11fa05ab9ab8cb4d6934e",
+  "id": "benjamin-paine/stable-diffusion-v1-5-inpainting",
+  "gated": "auto",
+  "lastModified": "2024-09-04T18:16:15.000Z",
+  "downloads": 2454,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image",
+   "arxiv:2207.12598",
+   "arxiv:2112.10752",
+   "arxiv:2103.00020",
+   "arxiv:2205.11487",
+   "arxiv:1910.09700",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64adb7400d0826bdd8ab6b20",
+  "id": "andregn/Realistic_Vision_V6.0-inpainting",
+  "gated": false,
+  "lastModified": "2023-12-22T22:53:33.000Z",
+  "downloads": 2305,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "v8",
+   "license:creativeml-openrail-m",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6720b32f84d262dd1f6437c7",
+  "id": "TheImposterImposters/lustifySDXLNSFW_v20-inpainting",
+  "gated": false,
+  "lastModified": "2024-11-04T14:50:17.000Z",
+  "downloads": 2116,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "not-for-all-audiences",
+   "arxiv:1910.09700",
+   "diffusers:StableDiffusionXLInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "676a9c79b04e11a6e8471d19",
+  "id": "gpustack/stable-diffusion-v1-5-inpainting-GGUF",
+  "gated": false,
+  "lastModified": "2024-12-25T07:49:50.000Z",
+  "downloads": 1814,
+  "tags": [
+   "diffusers",
+   "gguf",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image",
+   "arxiv:2207.12598",
+   "arxiv:2112.10752",
+   "arxiv:2103.00020",
+   "arxiv:2205.11487",
+   "arxiv:1910.09700",
+   "license:creativeml-openrail-m",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6454a0d2fe2f48cb4b5bcb3d",
+  "id": "botp/stable-diffusion-v1-5-inpainting",
+  "gated": false,
+  "lastModified": "2023-05-05T06:23:14.000Z",
+  "downloads": 1803,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image",
+   "arxiv:2207.12598",
+   "arxiv:2112.10752",
+   "arxiv:2103.00020",
+   "arxiv:2205.11487",
+   "arxiv:1910.09700",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "66db3a7f1cccd8f74b7a2d9e",
+  "id": "alimama-creative/FLUX.1-dev-Controlnet-Inpainting-Alpha",
+  "gated": false,
+  "lastModified": "2024-10-09T07:52:20.000Z",
+  "downloads": 1755,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "Text-to-Image",
+   "ControlNet",
+   "Inpainting",
+   "FLUX",
+   "Stable Diffusion",
+   "en",
+   "base_model:black-forest-labs/FLUX.1-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68b8539d944ffcd68fcd58ba",
+  "id": "ostris/qwen_image_edit_inpainting",
+  "gated": false,
+  "lastModified": "2025-09-03T15:52:09.000Z",
+  "downloads": 1696,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "lora",
+   "template:diffusion-lora",
+   "base_model:Qwen/Qwen-Image-Edit",
+   "base_model:adapter:Qwen/Qwen-Image-Edit",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6718bd6cfdfb25de6809216b",
+  "id": "TheImposterImposters/URPM-SD1.5-v2.3.inpainting",
+  "gated": false,
+  "lastModified": "2024-10-30T16:03:34.000Z",
+  "downloads": 1664,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "not-for-all-audiences",
+   "text-to-image",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6588eb0a35f23c0f1c265173",
+  "id": "Sanster/PowerPaint-V1-stable-diffusion-inpainting",
+  "gated": false,
+  "lastModified": "2023-12-25T10:23:51.000Z",
+  "downloads": 1520,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63fcb926550fcf9204c0c9bc",
+  "id": "Sanster/anything-4.0-inpainting",
+  "gated": false,
+  "lastModified": "2023-03-01T13:08:41.000Z",
+  "downloads": 1295,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "69d0e1806ed2ccd849d819e9",
+  "id": "mayocream/aot-inpainting",
+  "gated": false,
+  "lastModified": "2026-07-12T21:04:35.000Z",
+  "downloads": 890,
+  "tags": [
+   "candle",
+   "safetensors",
+   "manga-image-translator-aot",
+   "image-inpainting",
+   "manga",
+   "anime",
+   "comic",
+   "aot",
+   "image-to-image",
+   "license:mit",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6825830fc4185dd6c7abe60b",
+  "id": "hf-tuner/Mistoon_Anime_v3_0_Inpainting",
+  "gated": false,
+  "lastModified": "2025-05-15T06:05:57.000Z",
+  "downloads": 843,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "Safetensors",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63cb95e128e49dcd9f5d056a",
+  "id": "booksforcharlie/stable-diffusion-inpainting",
+  "gated": false,
+  "lastModified": "2023-01-22T01:14:32.000Z",
+  "downloads": 650,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image",
+   "arxiv:2207.12598",
+   "arxiv:2112.10752",
+   "arxiv:2103.00020",
+   "arxiv:2205.11487",
+   "arxiv:1910.09700",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "66003458573abbcdb9795a84",
+  "id": "fluently/Fluently-XL-v3-inpainting",
+  "gated": false,
+  "lastModified": "2024-05-24T21:21:48.000Z",
+  "downloads": 564,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "stable-diffusion",
+   "sdxl",
+   "inpainting",
+   "fluetnly-xl",
+   "fluently",
+   "trained",
+   "image-to-image",
+   "dataset:ehristoforu/midjourney-images",
+   "dataset:ehristoforu/dalle-3-images",
+   "dataset:ehristoforu/fav_images",
+   "base_model:diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
+   "base_model:finetune:diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "669e61f15bd3f749a3495aa3",
+  "id": "TheImposterImposters/LazyMix-v4.0-inpainting",
+  "gated": false,
+  "lastModified": "2024-11-23T21:26:26.000Z",
+  "downloads": 484,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "not-for-all-audiences",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64eb7476171e6c9862cb31c7",
+  "id": "Lykon/absolute-reality-1.6525-inpainting",
+  "gated": false,
+  "lastModified": "2023-12-06T00:57:03.000Z",
+  "downloads": 389,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "inpainting",
+   "art",
+   "artistic",
+   "anime",
+   "absolute-realism",
+   "en",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "65c68402252d6c5795db06d9",
+  "id": "alwold/stable-diffusion-2-inpainting",
+  "gated": false,
+  "lastModified": "2024-04-09T15:37:14.000Z",
+  "downloads": 302,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "stable-diffusion",
+   "arxiv:2112.10752",
+   "arxiv:2202.00512",
+   "arxiv:1910.09700",
+   "license:openrail++",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d2b0e0e9955005b0ab8ff7",
+  "id": "masterful/gligen-1-4-inpainting-text-box",
+  "gated": false,
+  "lastModified": "2023-08-28T04:02:23.000Z",
+  "downloads": 267,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "image-to-image",
+   "arxiv:2112.10752",
+   "arxiv:2103.00020",
+   "arxiv:2205.11487",
+   "arxiv:2301.07093",
+   "license:creativeml-openrail-m",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionPipeline",
+   "region:us"
+  ]
+ }
+]

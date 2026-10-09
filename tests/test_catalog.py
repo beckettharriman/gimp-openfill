@@ -4,6 +4,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 
 from stable_boy import catalog as cat
 
@@ -112,6 +113,11 @@ class ValidationTests(unittest.TestCase):
     def test_unknown_dependency(self):
         self._expect(lambda d: d["models"][1].__setitem__("requires_models", ["ghost"]), "unknown model")
 
+    def test_bundled_files_need_sha256_and_size(self):
+        self._expect(lambda d: d["models"][0]["files"][0].pop("sha256"), "needs a sha256")
+        self._expect(lambda d: d["models"][0]["files"][0].__setitem__("size", -1), "bad size")
+        self._expect(lambda d: d["models"][0]["files"][0].__setitem__("size", "4 GB"), "bad size")
+
 
 class StatusTests(unittest.TestCase):
     def test_install_status_and_label(self):
@@ -183,6 +189,335 @@ class ModelSpecTests(unittest.TestCase):
         self.assertEqual(cat.human_size(0), "?")
         self.assertEqual(cat.human_size(4265437280), "4.0 GB")
         self.assertEqual(cat.human_size(52602), "51 KB")
+
+
+def live_raw(**over):
+    """A valid live entry: one Hugging Face GGUF plus the verified FLUX companions."""
+    entries = cat.load_catalog(CATALOG)
+    base = cat.by_id(entries, "flux1-fill-dev-gguf-q4")
+    companions = [
+        {
+            "role": f.role,
+            "url": f.url,
+            "dest": f.dest,
+            "size": f.size,
+            "sha256": f.sha256,
+            "gated": f.gated,
+            "optional": True,
+        }
+        for f in base.files
+        if f.role != "unet"
+    ]
+    raw = {
+        "id": "hf-someone--FLUX.1-Fill-dev-GGUF--flux1-fill-dev-Q5_K_S",
+        "name": "someone/FLUX.1-Fill-dev-GGUF (Q5_K_S)",
+        "tier": "quality",
+        "capabilities": ["fill", "expand"],
+        "arch": "flux",
+        "template": "flux_fill",
+        "page": "https://huggingface.co/someone/FLUX.1-Fill-dev-GGUF",
+        "license": {"name": "flux-1-dev-non-commercial-license", "url": "https://huggingface.co/someone/x"},
+        "gated": False,
+        "source_type": "community-quantization",
+        "uploader": "someone",
+        "min_vram_gb": 9.8,
+        "requires_nodes": [{"repo": n.repo, "folder": n.folder, "commit": n.commit} for n in base.requires_nodes],
+        "requires_models": [],
+        "files": [
+            {
+                "role": "unet",
+                "url": "https://huggingface.co/someone/FLUX.1-Fill-dev-GGUF/resolve/"
+                + "a" * 40
+                + "/flux1-fill-dev-Q5_K_S.gguf",
+                "dest": "unet/flux1-fill-dev-Q5_K_S.gguf",
+                "size": 8_000_000_000,
+                "sha256": "c" * 64,
+            },
+            *companions,
+        ],
+        "source": "huggingface",
+        "family": "flux-fill",
+        "downloads": 1234,
+        "updated": "2026-09-01T10:00:00.000Z",
+        "repo": "someone/FLUX.1-Fill-dev-GGUF",
+    }
+    raw.update(over)
+    return raw
+
+
+class LiveEntryTests(unittest.TestCase):
+    def setUp(self):
+        self.bundled = cat.load_catalog(CATALOG)
+
+    def refused(self, raw):
+        problems = []
+        self.assertEqual(cat.parse_live_entries([raw], self.bundled, problems), [], raw.get("id"))
+        return problems
+
+    def main_file(self, **over):
+        raw = live_raw()
+        raw["files"][0].update(over)
+        return raw
+
+    def test_valid_entry(self):
+        (e,) = cat.parse_live_entries([live_raw()], self.bundled)
+        self.assertEqual((e.source, e.family, e.downloads, e.updated), ("huggingface", "flux-fill", 1234, "2026-09-01"))
+        self.assertFalse(e.verified)
+        self.assertTrue(e.checksum_known)
+        self.assertTrue(e.gated)  # the FLUX VAE companion is gated
+        self.assertEqual(cat.live_main_file(e).dest, "unet/flux1-fill-dev-Q5_K_S.gguf")
+        spec = cat.model_spec_for(e, [*self.bundled, e])
+        self.assertEqual((spec.unet, spec.clip2), ("flux1-fill-dev-Q5_K_S.gguf", "clip_l.safetensors"))
+
+    def test_main_file_rules(self):
+        cases = {
+            "foreign host": self.main_file(
+                url="https://evil.example/someone/x/resolve/main/flux1-fill-dev-Q5_K_S.gguf"
+            ),
+            "http": self.main_file(url="http://huggingface.co/someone/x/resolve/main/flux1-fill-dev-Q5_K_S.gguf"),
+            "name mismatch": self.main_file(url="https://huggingface.co/someone/x/resolve/main/other.gguf"),
+            "pickle": self.main_file(
+                url="https://huggingface.co/someone/x/resolve/main/flux1.ckpt", dest="unet/flux1.ckpt"
+            ),
+            "folder": self.main_file(dest="custom_nodes/flux1-fill-dev-Q5_K_S.gguf"),
+            "nested dest": self.main_file(dest="unet/sub/flux1-fill-dev-Q5_K_S.gguf"),
+            "no size": self.main_file(size=None),
+            "role": self.main_file(role="vae"),
+            "optional main": self.main_file(optional=True),
+            "id": live_raw(id="someone-flux"),
+            "source": live_raw(source="bundled"),
+            "page": live_raw(page="https://evil.example/x"),
+            "template": live_raw(template="inpaint_model", arch="inpaint_model"),
+            "arch mismatch": live_raw(arch="sdxl"),
+        }
+        for why, raw in cases.items():
+            with self.subTest(why):
+                self.assertTrue(self.refused(raw))
+
+    def test_companions_and_nodes_must_be_verbatim(self):
+        raw = live_raw()
+        raw["files"][1]["url"] = "https://huggingface.co/evil/x/resolve/main/t5.gguf"  # now a second main file
+        self.refused(raw)
+        raw = live_raw()
+        raw["files"][1]["sha256"] = "d" * 64
+        self.refused(raw)
+        evil_node = {"repo": "https://github.com/evil/nodes", "folder": "nodes", "commit": "e" * 40}
+        self.refused(live_raw(requires_nodes=[evil_node]))
+        self.refused(live_raw(requires_models=["ghost"]))
+
+    def test_civitai_url(self):
+        raw = live_raw(id="civitai-1-2-3", source="civitai", page="https://civitai.com/models/1")
+        raw["files"][0]["url"] = "https://civitai.com/api/download/models/2?type=Model&format=SafeTensor"
+        self.assertEqual(len(cat.parse_live_entries([raw], self.bundled)), 1)
+        raw["files"][0]["url"] = "https://civitai.com/api/download/models/2/../x"
+        self.refused(raw)
+
+    def test_duplicates_of_the_verified_list_and_each_other_are_dropped(self):
+        same_sha = self.main_file(sha256=cat.by_id(self.bundled, "flux1-fill-dev-gguf-q4").files[0].sha256)
+        self.assertEqual(cat.parse_live_entries([same_sha], self.bundled), [])
+        self.assertEqual(len(cat.parse_live_entries([live_raw(), live_raw()], self.bundled)), 1)
+
+    def test_remember_merge_and_checksum(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            raw = self.main_file(sha256=None)
+            entry = cat.remember_live_entry(tmp, raw, self.bundled)
+            self.assertFalse(entry.checksum_known)
+            merged = cat.load_merged(path=CATALOG, base=tmp)
+            self.assertEqual(merged[-1].id, raw["id"])
+            self.assertEqual(len(merged), len(self.bundled) + 1)
+            cat.remember_live_entry(tmp, raw, self.bundled)  # replaces, does not duplicate
+            self.assertEqual(len(cat.load_merged(path=CATALOG, base=tmp)), len(self.bundled) + 1)
+            dest = raw["files"][0]["dest"]
+            self.assertFalse(cat.record_live_checksum(tmp, raw["id"], dest, "not-a-sha"))
+            self.assertTrue(cat.record_live_checksum(tmp, raw["id"], dest, "f" * 64))
+            self.assertFalse(cat.record_live_checksum(tmp, raw["id"], dest, "e" * 64))  # never overwritten
+            (again,) = cat.load_selected(tmp, self.bundled)
+            self.assertEqual(cat.live_main_file(again).sha256, "f" * 64)
+            # a tampered record is skipped, the rest still loads
+            path = cat.hub_selected_path(tmp)
+            data = json.loads(path.read_text(encoding="utf-8"))
+            bad = copy.deepcopy(data["models"][0])
+            bad["id"] = "hf-bad"
+            bad["files"][0]["url"] = "https://evil.example/x.gguf"
+            data["models"].append(bad)
+            path.write_text(json.dumps(data), encoding="utf-8")
+            self.assertEqual([e.id for e in cat.load_selected(tmp, self.bundled)], [raw["id"]])
+            with self.assertRaises(cat.CatalogError):
+                cat.remember_live_entry(tmp, bad, self.bundled)
+        self.assertEqual(cat.load_selected(None, self.bundled), [])
+
+
+class FirstRunTests(unittest.TestCase):
+    def test_runnable_installed_and_suggest_active(self):
+        entries = cat.load_catalog(CATALOG)
+        self.assertEqual(cat.NO_MODEL_MESSAGE, "No AI model is installed yet. Open the download manager to get one.")
+        with tempfile.TemporaryDirectory() as tmp:
+            root, nodes = Path(tmp) / "models", Path(tmp) / "custom_nodes"
+            self.assertEqual(cat.runnable_installed(entries, root, nodes, "fill"), [])
+            mat = cat.by_id(entries, "mat-places512")
+            (root / "inpaint").mkdir(parents=True)
+            with open(root / mat.files[0].dest, "wb") as fh:
+                fh.truncate(mat.files[0].size)
+            self.assertEqual(cat.runnable_installed(entries, root, nodes, "remove"), [])  # node missing
+            (nodes / "comfyui-inpaint-nodes").mkdir(parents=True)
+            self.assertEqual([e.id for e in cat.runnable_installed(entries, root, nodes, "remove")], ["mat-places512"])
+            self.assertEqual(cat.runnable_installed(entries, root, nodes, "fill"), [])
+            sd15 = cat.by_id(entries, "sd15-inpainting")
+            (root / "checkpoints").mkdir()
+            with open(root / sd15.files[0].dest, "wb") as fh:
+                fh.truncate(sd15.files[0].size)
+            fill = cat.runnable_installed(entries, root, nodes, "fill")
+            self.assertEqual([e.id for e in fill], ["sd15-inpainting"])
+            self.assertEqual(len(cat.runnable_installed(entries, root, nodes, "remove")), 2)
+            self.assertIsNone(cat.suggest_active(fill, "sd15-inpainting"))
+            self.assertEqual(cat.suggest_active(fill, "flux1-fill-dev"), "sd15-inpainting")
+            self.assertIsNone(cat.suggest_active([], "flux1-fill-dev"))
+
+
+def vm_row(mid, **over):
+    row = {
+        "id": mid,
+        "name": mid,
+        "installed": False,
+        "partial": [],
+        "active": False,
+        "runnable": True,
+        "origin": "bundled",
+        "family": "sdxl",
+        "fit": "comfortable",
+        "downloads": 0,
+        "updated": "",
+        "checksum_known": True,
+        "capabilities": ["fill"],
+        "missing_models": [],
+        "missing_nodes": [],
+        "status": "Available",
+    }
+    row.update(over)
+    return row
+
+
+class ViewModelTests(unittest.TestCase):
+    NOW = 1791590400.0  # 2026-10-09
+
+    def test_model_row_and_labels(self):
+        entries = cat.load_catalog(CATALOG)
+        flux = cat.by_id(entries, "flux1-fill-dev-gguf-q4")
+        st = cat.InstallStatus(False)
+        verdict = SimpleNamespace(level="offload", label="Runs on this PC, slower", reason="r")
+        row = cat.model_row(flux, st, "sd15-inpainting", False, verdict, True, ["https://huggingface.co/a/b"])
+        self.assertEqual(row["status"], "Needs token")
+        self.assertTrue(row["needs_login"])
+        self.assertEqual(row["origin"], "bundled")
+        self.assertEqual(row["fit"], "offload")
+        self.assertEqual(cat.row_status(row), "Needs a free Hugging Face login")
+        details = cat.row_details(row)
+        self.assertIn("10.0 GB", details)
+        self.assertIn("Non-Commercial", details)
+        self.assertIn("Runs on this PC, slower", details)
+        row = cat.model_row(flux, st, "", False, None, False)  # gated file already on disk: no login needed
+        self.assertEqual(row["status"], "Available")
+        self.assertEqual(cat.row_status(row), "")
+        self.assertEqual(row["fit"], "unknown")
+
+    def test_row_status_states(self):
+        self.assertEqual(cat.row_status(vm_row("a", installed=True, active=True)), "Active")
+        self.assertEqual(cat.row_status(vm_row("a", installed=True)), "Installed")
+        self.assertEqual(cat.row_status(vm_row("a", installed=True, missing_models=["p"])), "Needs one more download")
+        self.assertEqual(cat.row_status(vm_row("a", partial=["x"])), "Partly downloaded")
+        self.assertEqual(cat.row_status(vm_row("a"), pending=["a"]), "Waiting")
+        cur = {"model_id": "a", "type": "download", "done": 43, "total": 100}
+        self.assertEqual(cat.row_status(vm_row("a"), cur), "Downloading 43%")
+
+    def test_row_details_flags(self):
+        text = cat.row_details(vm_row("a", size="2.0 GB", license="L", origin="civitai", checksum_known=False))
+        self.assertTrue(text.startswith("2.0 GB"))
+        self.assertIn("from Civitai", text)
+        self.assertIn("unverified checksum", text)
+        self.assertIn("helper file", cat.row_details(vm_row("p", runnable=False)))
+
+    def test_state_button(self):
+        removal = vm_row("mat", installed=True, capabilities=["remove"])
+        self.assertEqual(cat.state_button(removal), ("Ready", None, False))
+        self.assertEqual(cat.state_button(vm_row("x", installed=True))[1], "activate")
+        gated = vm_row("g", gated=True, needs_login=True)
+        self.assertEqual(cat.state_button(gated, has_token=False)[1], "token")
+        self.assertEqual(cat.state_button(vm_row("g", gated=True, needs_login=False), has_token=False)[1], "download")
+
+    def test_recommended_one_per_family_fit_only(self):
+        rows = [
+            vm_row("sdxl-a", family="sdxl", downloads=100000, updated="2026-09-01", origin="huggingface"),
+            vm_row("sdxl-b", family="sdxl", downloads=10),
+            vm_row("sd15-a", family="sd15-inpaint"),
+            vm_row("flux-big", family="flux-fill", fit="too_big", downloads=10**6),
+            vm_row("qwen-a", family="qwen-edit", fit="offload"),
+            vm_row("lama", family="removal"),
+            vm_row("patch", family="", runnable=False),
+            vm_row("done", family="sd15-inpaint", installed=True),
+        ]
+        rec = [r["id"] for r in cat.recommended(rows, 5, self.NOW)]
+        self.assertEqual(rec[0], "sdxl-a")
+        self.assertEqual(set(rec), {"sdxl-a", "sd15-a", "qwen-a", "lama", "sdxl-b"})
+        self.assertEqual(len(cat.recommended(rows, 3, self.NOW)), 3)
+
+    def test_rank_score(self):
+        new_popular = vm_row("a", origin="huggingface", downloads=50000, updated="2026-09-01")
+        old_quiet = vm_row("b", origin="huggingface", downloads=50, updated="2023-01-01")
+        self.assertGreater(cat.rank_score(new_popular, self.NOW), cat.rank_score(old_quiet, self.NOW))
+        live = vm_row("l", origin="civitai")
+        self.assertGreater(cat.rank_score(vm_row("v"), self.NOW), cat.rank_score(live, self.NOW))
+        self.assertLess(cat.rank_score(vm_row("t", fit="too_big"), self.NOW), 0)
+        unverified = vm_row("u", origin="civitai", checksum_known=False)
+        self.assertLess(cat.rank_score(unverified, self.NOW), cat.rank_score(live, self.NOW))
+
+    def test_sections(self):
+        rows = [
+            vm_row("inst", installed=True),
+            vm_row("act", installed=True, active=True),
+            vm_row("part", partial=["x"], family="flux-fill"),
+            vm_row("sd15", family="sd15-inpaint"),
+            vm_row("v2", family="sd15-inpaint", downloads=1),
+            vm_row("hf1", family="qwen-edit", origin="huggingface", fit="too_big"),
+            vm_row("civ", family="sdxl", origin="civitai"),
+            vm_row("patch", runnable=False, family=""),
+        ]
+        sections = cat.build_sections(rows, 5, self.NOW)
+        self.assertEqual([k for k, _t, _r in sections], ["installed", "recommended", "verified", "more"])
+        by = {k: [r["id"] for r in rs] for k, _t, rs in sections}
+        self.assertEqual(by["installed"], ["act", "inst", "part"])
+        self.assertNotIn("hf1", by["recommended"])
+        self.assertIn("hf1", by["more"])
+        self.assertEqual(by["verified"][-1], "patch")  # helper files last
+        flat = [i for ids in by.values() for i in ids]
+        self.assertEqual(sorted(flat), sorted(r["id"] for r in rows))  # every row exactly once
+        self.assertEqual({k: t for k, t, _r in sections}["recommended"], "Recommended for this PC")
+        self.assertEqual(cat.build_sections([], 5, self.NOW), [])
+
+    def test_login_pages_and_steps(self):
+        entries = cat.load_catalog(CATALOG)
+        flux = cat.by_id(entries, "flux1-fill-dev-gguf-q4")
+        self.assertEqual(cat.login_pages(flux), ["https://huggingface.co/black-forest-labs/FLUX.1-schnell"])
+        first_party = cat.by_id(entries, "flux1-fill-dev")
+        self.assertEqual(cat.login_pages(first_party), ["https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev"])
+        self.assertEqual(cat.login_pages(cat.by_id(entries, "sd15-inpainting")), [])
+        steps = cat.gated_steps({"name": "M", "login_pages": cat.login_pages(flux)})
+        self.assertEqual(len(steps), 4)
+        self.assertEqual(steps[0][2], "https://huggingface.co/black-forest-labs/FLUX.1-schnell")
+        self.assertIn("tokens/new", steps[2][2])
+        for text, _button, _url in steps:
+            for jargon in ("token", "API", "LFS", "gated", "repository"):
+                self.assertNotIn(jargon, text)
+        two = cat.gated_steps(
+            {"name": "M", "login_pages": ["https://huggingface.co/a/b", "https://huggingface.co/c/d"]}
+        )
+        self.assertEqual([s[2] for s in two[1:3]], ["https://huggingface.co/a/b", "https://huggingface.co/c/d"])
+
+    def test_apply_repo_stats(self):
+        page = "https://huggingface.co/RunDiffusion/Juggernaut-XL-v9"
+        rows = [vm_row("b", page=page), vm_row("l", origin="huggingface", page=page)]
+        cat.apply_repo_stats(rows, {"RunDiffusion/Juggernaut-XL-v9": {"downloads": 284237, "updated": "2026-05-08"}})
+        self.assertEqual((rows[0]["downloads"], rows[0]["updated"]), (284237, "2026-05-08"))
+        self.assertEqual(rows[1]["downloads"], 0)  # live rows carry their own numbers
 
 
 if __name__ == "__main__":

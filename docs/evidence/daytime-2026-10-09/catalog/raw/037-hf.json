@@ -1,0 +1,123 @@
+{
+ "_id": "676ad7a0ac3c4cc6f39eedfb",
+ "id": "gpustack/FLUX.1-Fill-dev-GGUF",
+ "private": false,
+ "library_name": "diffusion-single-file",
+ "tags": [
+  "diffusion-single-file",
+  "gguf",
+  "image-generation",
+  "flux",
+  "en",
+  "license:other",
+  "region:us"
+ ],
+ "downloads": 482,
+ "likes": 3,
+ "modelId": "gpustack/FLUX.1-Fill-dev-GGUF",
+ "author": "gpustack",
+ "sha": "5012dbe6d49083e2f3946164d2fad3da8d53fbf6",
+ "lastModified": "2024-12-25T10:02:39.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "language": [
+   "en"
+  ],
+  "license": "other",
+  "license_name": "flux-1-dev-non-commercial-license",
+  "license_link": "LICENSE.md",
+  "extra_gated_prompt": "By clicking \"Agree\", you agree to the [FluxDev Non-Commercial License Agreement](https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/blob/main/LICENSE.md) and acknowledge the [Acceptable Use Policy](https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/blob/main/POLICY.md).",
+  "tags": [
+   "image-generation",
+   "flux",
+   "diffusion-single-file"
+  ]
+ },
+ "gguf": {
+  "total": 17003178467,
+  "totalFileSize": 34142914592
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "0406c7ba7190dce158cbb1b688ad847c32c40c4c",
+   "size": 1614
+  },
+  {
+   "rfilename": "FLUX.1-Fill-dev-FP16.gguf",
+   "blobId": "c42cb670f2c81012eabd97384fde383f6f6121c2",
+   "size": 34142914592,
+   "lfs": {
+    "sha256": "05af94314c3eece281ab2fb83213ede63afd87143538ae9a38f16c177d031448",
+    "size": 34142914592,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "FLUX.1-Fill-dev-Q4_0.gguf",
+   "blobId": "75905bdff238e6e442fe55d7eafb8fdec3c47943",
+   "size": 10263727008,
+   "lfs": {
+    "sha256": "a82901365cf0bf548039d08ab161c551952ed60e4cc21a20dca952a8ef0e8d4f",
+    "size": 10263727008,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "FLUX.1-Fill-dev-Q4_1.gguf",
+   "blobId": "f1a95d6349bbaad9f0edf0b7731913ef83dbd0c4",
+   "size": 11309235488,
+   "lfs": {
+    "sha256": "c7a87fbb8d557171c2cc793ebc2b3775c6e1310091891823bb709f903a16eb64",
+    "size": 11309235488,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "FLUX.1-Fill-dev-Q8_0.gguf",
+   "blobId": "e72388880a6fb80e59590ac0b7d79f87841f434d",
+   "size": 18627794848,
+   "lfs": {
+    "sha256": "ded77442bc3d53a7c2da66a361cf9fce50be6dfa24dd8c50647b57300d3435d6",
+    "size": 18627794848,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "FLUX.1-Fill-dev-pure-Q4_0.gguf",
+   "blobId": "605c649e6e1ea368e450b3f2cffd25c89d3122ce",
+   "size": 10086974816,
+   "lfs": {
+    "sha256": "fa4cd379ed6ca7d967bcc977023a666e489ee4a9cd41323c59a6e5360fef515a",
+    "size": 10086974816,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "FLUX.1-Fill-dev-pure-Q8_0.gguf",
+   "blobId": "a968d600ae230ccc5bb825437d06a7142e5cf13b",
+   "size": 18512521824,
+   "lfs": {
+    "sha256": "c5f4256ec0fb043ba05aefe45635df22e19d1f320d8d1b849b5207f3746641e1",
+    "size": 18512521824,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "LICENSE.md",
+   "blobId": "2e071518f6b079b9b571f56e51d6732bda5e1500",
+   "size": 17091
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "a743847d31117526f11c2d1ca58c48a8337664e1",
+   "size": 4928
+  }
+ ],
+ "spaces": [],
+ "createdAt": "2024-12-24T15:47:44.000Z",
+ "usedStorage": 102943168576
+}

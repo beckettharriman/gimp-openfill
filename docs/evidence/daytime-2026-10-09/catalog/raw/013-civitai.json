@@ -1,0 +1,2378 @@
+{
+ "items": [
+  {
+   "id": 340683,
+   "name": "Inpainting By ZenityX AI Studio",
+   "description": "<p><span style=\"color:rgb(5, 5, 5)\">Inpainting Model</span></p>",
+   "allowNoCredit": true,
+   "allowCommercialUse": [
+    "Image",
+    "RentCivit",
+    "Rent",
+    "Sell",
+    "SellMerge"
+   ],
+   "allowDerivatives": true,
+   "allowDifferentLicense": true,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 3,
+   "availability": "Public",
+   "userId": 534126,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": true,
+   "stats": {
+    "downloadCount": 8806,
+    "thumbsUpCount": 171,
+    "thumbsDownCount": 1,
+    "commentCount": 5,
+    "tippedAmountCount": 0
+   },
+   "creator": {
+    "username": "sepeboy123456180",
+    "image": null
+   },
+   "tags": [
+    "clothing"
+   ],
+   "modelVersions": [
+    {
+     "id": 381459,
+     "index": 0,
+     "name": "v1.0",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Standard",
+     "publishedAt": "2024-03-08T19:15:02.402Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 3,
+     "description": null,
+     "trainedWords": [
+      "Clothes"
+     ],
+     "vaeId": null,
+     "coveredNext": true,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 8806,
+      "thumbsUpCount": 171,
+      "thumbsDownCount": 1
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 305985,
+       "sizeKB": 3102720.048828125,
+       "name": "inpaintingByZenityxAI_v10.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2024-03-08T19:11:53.984Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "full",
+        "fp": "fp32"
+       },
+       "hashes": {
+        "AutoV1": "40410494",
+        "AutoV2": "8583EE9022",
+        "SHA256": "8583EE9022219358C5DB078CABFD2510701BBA187D5E76AD42FCED794C7A40F2",
+        "CRC32": "9878BADB",
+        "BLAKE3": "4FA49AB977C6BF32EB065A78727DDC24FAA4A4D3613D1E41F9F57BF0FCAAFECF",
+        "AutoV3": "4A390C880DC1",
+        "SHA256_12": "8583EE902221"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/381459",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 7641305,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/9da5beec-8c30-419b-85bf-89dd4ef2bbc5/original=true/7641305.jpeg",
+       "nsfwLevel": 1,
+       "width": 2048,
+       "height": 2048,
+       "hash": "U9Lfy=00x+~U%KxY?HE2OnWC4;E2^%WBM|xa",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/381459"
+    }
+   ]
+  },
+  {
+   "id": 132821,
+   "name": "Inpainting Product Design (minimalism-eddiemauro)",
+   "description": "<p>Inpainting version for <a target=\"_blank\" rel=\"ugc\" href=\"https://civitai.com/models/23893?modelVersionId=85831\">Product Design (minimalism-eddiemauro)</a><br /><br />Example of usage:<br /></p><p>Replacing the background:<br /><br />Initial image:<br /><img src=\"https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/1c938a03-f51e-433a-98e8-4fbd0f52b456/width=525/1c938a03-f51e-433a-98e8-4fbd0f52b456.jpeg\" /></p><p></p><p>Mask (generated with groundingDino + segment_anything):</p><p><img src=\"https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/cd1aaf68-7738-49ea-869d-987ee754b25e/width=525/cd1aaf68-7738-49ea-869d-987ee754b25e.jpeg\" /></p><p></p><p>Prompt for the new background:</p><p>\"bed, 3D product render, design, 4k\"</p><p></p><p>(negative prompt: \"low resolution, ugly, cheap\")</p><p>(Seed: 5147867205638994576)</p><p></p><p>Result:</p><p><img src=\"https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/e0a6ed35-9c98-4514-a173-e00145136e76/width=525/e0a6ed35-9c98-4514-a173-e00145136e76.jpeg\" /></p><p></p><p>Replacing the object in image:</p><p></p><p><br />Initial image:</p><p><img src=\"https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/c90e0708-6943-440f-875e-8b2191d2ad4f/width=525/c90e0708-6943-440f-875e-8b2191d2ad4f.jpeg\" /></p><p>Mask (generated with groundingDino + segment_anything):</p><p><img src=\"https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/c25f2d5f-f753-4fb3-b2b9-d54d498ae755/width=525/c25f2d5f-f753-4fb3-b2b9-d54d498ae755.jpeg\" /></p><p></p><p></p><p>Prompt for the new background:</p><p>\"bottle of expensive wine, 3D product render, luxury, 4k\"</p><p>(negative prompt: \"low resolution, ugly, cheap\")</p><p>(Seed: -6538116481278372840)</p><p><img src=\"https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/2394ceff-56d1-494d-9a7f-09a6bb70025b/width=525/2394ceff-56d1-494d-9a7f-09a6bb70025b.jpeg\" /></p>",
+   "allowNoCredit": true,
+   "allowCommercialUse": [
+    "Image",
+    "RentCivit",
+    "Rent",
+    "Sell",
+    "SellMerge"
+   ],
+   "allowDerivatives": true,
+   "allowDifferentLicense": true,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 1,
+   "availability": "Public",
+   "userId": 2365445,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": false,
+   "stats": {
+    "downloadCount": 1861,
+    "thumbsUpCount": 102,
+    "thumbsDownCount": 0,
+    "commentCount": 2,
+    "tippedAmountCount": 0
+   },
+   "creator": {
+    "username": "kirnev_artyom",
+    "image": null
+   },
+   "tags": [
+    "product design",
+    "product",
+    "car design",
+    "vehicles",
+    "cars",
+    "objects",
+    "3d render",
+    "industrial design",
+    "design"
+   ],
+   "modelVersions": [
+    {
+     "id": 146135,
+     "index": 0,
+     "name": "v1.0",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Inpainting",
+     "publishedAt": "2023-08-22T18:10:47.952Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": null,
+     "trainedWords": [
+      "3D product render",
+      "3D product render style"
+     ],
+     "vaeId": null,
+     "coveredNext": false,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 1861,
+      "thumbsUpCount": 102,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 108209,
+       "sizeKB": 4144705.044921875,
+       "name": "inpaintingProductDesign_v10.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-08-22T15:08:38.963Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "pruned",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "36AE2BFF",
+        "AutoV2": "26B9A9C263",
+        "SHA256": "26B9A9C26330B815EE3914FC8000F9C19D444D1813C1E0D8C11A51A036ADA8F2",
+        "CRC32": "E09F999E",
+        "BLAKE3": "4C221DFB404760EA2A19C4FFCE83876942A1369D50953883F5296BE224EDF965",
+        "SHA256_12": "26B9A9C26330"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/146135",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 2155355,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/cae42e2b-8970-4845-8469-73937d1dd69c/original=true/2155355.jpeg",
+       "nsfwLevel": 1,
+       "width": 960,
+       "height": 1280,
+       "hash": "U6HfFq+ofQ+ox[jbfQjbfQfQfQfQx[jbfQjb",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/146135"
+    }
+   ]
+  },
+  {
+   "id": 90365,
+   "name": "RPG - Inpainting",
+   "description": "<p>Inpainting model for <a rel=\"ugc\" href=\"https://civitai.com/models/1116?modelVersionId=7133\">RPG V4</a> from <a rel=\"ugc\" href=\"https://civitai.com/user/Anashel\">Anashel</a></p><p>I don't take any credits for this as i just made the inpaint model and upload it for other people that like the RPG model like me. I will do the V5 when it is release and if the owner isn't agaisnt me uploading this!</p>",
+   "allowNoCredit": true,
+   "allowCommercialUse": [],
+   "allowDerivatives": false,
+   "allowDifferentLicense": true,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 3,
+   "availability": "Public",
+   "userId": 685576,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": false,
+   "stats": {
+    "downloadCount": 5450,
+    "thumbsUpCount": 239,
+    "thumbsDownCount": 0,
+    "commentCount": 2,
+    "tippedAmountCount": 200
+   },
+   "creator": {
+    "username": "AstreaPixie",
+    "image": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/c76e581a-25cd-446b-8beb-29c9e4c21706/width=96/AstreaPixie.jpeg"
+   },
+   "tags": [
+    "baldur\u2019s gate",
+    "new world",
+    "fantasy",
+    "rpg",
+    "world of warcraft",
+    "style"
+   ],
+   "modelVersions": [
+    {
+     "id": 96255,
+     "index": 0,
+     "name": "V4",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Standard",
+     "publishedAt": "2023-06-15T04:34:23.299Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 3,
+     "description": "<p>Inpainting model for RPG V4</p>",
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": false,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 5450,
+      "thumbsUpCount": 239,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 66813,
+       "sizeKB": 2082719.736328125,
+       "name": "rpgInpainting_v4-inpainting.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-06-15T02:13:57.870Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "full",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "14A77FFE",
+        "AutoV2": "BDBDEA13DD",
+        "SHA256": "BDBDEA13DDBAACBDBE448878F4F0423E0AEF5C390F32571FD73A855498C188B8",
+        "CRC32": "D71C35B9",
+        "BLAKE3": "824C19D80E34079A7389EA9843E70CE62A15A39ACAF13BB4BA8AA41749A97F89",
+        "SHA256_12": "BDBDEA13DDBA"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/96255",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 1149316,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/1eb03c63-dc73-4369-ac0f-d068acbb86d4/original=true/1149316.jpeg",
+       "nsfwLevel": 1,
+       "width": 1024,
+       "height": 1536,
+       "hash": "UCE{IL00%f9b-;~V4o%f~UE2t6s-xut6aLIV",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 1149317,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/d692d862-7be4-41c4-961d-0c6ecc17742c/original=true/1149317.jpeg",
+       "nsfwLevel": 1,
+       "width": 481,
+       "height": 723,
+       "hash": "UBEVc.00?u4:?a~V01?a~V9bjYs.Nvxts:D*",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/96255"
+    }
+   ]
+  },
+  {
+   "id": 92465,
+   "name": "Fasmatik\u00f3s_in-painting",
+   "description": null,
+   "allowNoCredit": true,
+   "allowCommercialUse": [
+    "Image",
+    "RentCivit",
+    "Rent"
+   ],
+   "allowDerivatives": true,
+   "allowDifferentLicense": true,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 1,
+   "availability": "Public",
+   "userId": 107650,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": true,
+   "stats": {
+    "downloadCount": 481,
+    "thumbsUpCount": 42,
+    "thumbsDownCount": 0,
+    "commentCount": 1,
+    "tippedAmountCount": 0
+   },
+   "creator": {
+    "username": "PrshaGraphx",
+    "image": null
+   },
+   "tags": [
+    "inpainting",
+    "tool"
+   ],
+   "modelVersions": [
+    {
+     "id": 98577,
+     "index": 0,
+     "name": "v1",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Standard",
+     "publishedAt": "2023-06-18T10:39:27.400Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": null,
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": true,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 481,
+      "thumbsUpCount": 42,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 68714,
+       "sizeKB": 4144704.462890625,
+       "name": "fasmatikSInPainting_v1.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-06-18T10:27:37.014Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "full",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "1E8B0F21",
+        "AutoV2": "7212E5D737",
+        "SHA256": "7212E5D737DB523E2E0E727C6F62403E59DF967910EF5FDC9E593A906C5C2110",
+        "CRC32": "1D7FEBC1",
+        "BLAKE3": "CF41A5E536E3E20F14A57EF85D98D822AF7D85E4F9F4B29BF9ADA0629C26BC9B",
+        "SHA256_12": "7212E5D737DB"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/98577",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 1191978,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/1413569b-36c7-4935-8272-6749ce79fb78/original=true/1191978.jpeg",
+       "nsfwLevel": 1,
+       "width": 576,
+       "height": 702,
+       "hash": "UA9Fsar{[-9@OI}YM|=X|{I[-mS|Vv-9Oqoy",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/98577"
+    }
+   ]
+  },
+  {
+   "id": 233521,
+   "name": "cetus-inpainting",
+   "description": "<p>Test inpainting model</p>",
+   "allowNoCredit": true,
+   "allowCommercialUse": [
+    "Image",
+    "RentCivit",
+    "Rent"
+   ],
+   "allowDerivatives": true,
+   "allowDifferentLicense": true,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 1,
+   "availability": "Public",
+   "userId": 1936041,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": false,
+   "stats": {
+    "downloadCount": 517,
+    "thumbsUpCount": 18,
+    "thumbsDownCount": 0,
+    "commentCount": 1,
+    "tippedAmountCount": 0
+   },
+   "creator": {
+    "username": "tomokikun12",
+    "image": null
+   },
+   "tags": [
+    "style"
+   ],
+   "modelVersions": [
+    {
+     "id": 265577,
+     "index": 0,
+     "name": "v2-inpainting",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Inpainting",
+     "publishedAt": "2023-12-17T14:07:26.990Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": "<p>Beta Version</p>",
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": false,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 373,
+      "thumbsUpCount": 10,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 206821,
+       "sizeKB": 4144716.427734375,
+       "name": "cetusInpainting_v2-inpainting.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-12-17T14:07:34.058Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "pruned",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "344AB2CA",
+        "AutoV2": "FF448A1B4C",
+        "SHA256": "FF448A1B4C2B2981FF6E9CCA5827511465FD7ADB18FADC1C3EAEBD8C4DF7A4D6",
+        "CRC32": "4EBB77D0",
+        "BLAKE3": "0A75EEB2A74A51D493365F2C21BEDCE88BC78EC02CD1CA9A9339D51B9E103C72",
+        "AutoV3": "1F242A464CD9",
+        "SHA256_12": "FF448A1B4C2B"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/265577",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 4658786,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/07d8355d-a5b4-498d-b482-af82235d03d0/original=true/4658786.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 768,
+       "hash": "UHIqo?6BxI%N_MIb_3aO0zXBxVS~ETogNEbt",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": true,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/265577"
+    },
+    {
+     "id": 264394,
+     "index": 1,
+     "name": "h-inpainting",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Inpainting",
+     "publishedAt": "2023-12-16T13:35:57.641Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": "<p>Test inpaint model</p>",
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": false,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 71,
+      "thumbsUpCount": 7,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 205812,
+       "sizeKB": 4144716.302734375,
+       "name": "cetusInpainting_h-inpainting.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-12-16T13:41:41.984Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "pruned",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "E9DF1186",
+        "AutoV2": "3A0390E04D",
+        "SHA256": "3A0390E04D53DE004860DFE093024529DD5F3B6FE82A5880DCF6F78032BDE5EC",
+        "CRC32": "2A4F01B7",
+        "BLAKE3": "DB1C793A8640A646CBB5B1822D528C4D1A4C1CD48DB8AE79A1D19C5C3062C1AC",
+        "AutoV3": "1F242A464CD9",
+        "SHA256_12": "3A0390E04D53"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/264394",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 4630280,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/221da62a-4a21-4562-985a-38bf9ec17db7/original=true/4630280.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 768,
+       "hash": "UeLWnpoMHDTKuhoJJBazx]wHs9Ny=GS#jEof",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": true,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/264394"
+    },
+    {
+     "id": 263414,
+     "index": 2,
+     "name": "v1.0-inpainting",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Inpainting",
+     "publishedAt": "2023-12-15T14:03:47.934Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": "<p>Inpainting model test</p>",
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": false,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 73,
+      "thumbsUpCount": 1,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 204935,
+       "sizeKB": 2082719.767578125,
+       "name": "cetusInpainting_v10-inpainting.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-12-15T14:06:15.045Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "full",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "3CBE79A5",
+        "AutoV2": "013F7230A9",
+        "SHA256": "013F7230A936C7D7D73B34A4A9A1253FA58B03D8CBF4DA25D7E2E29D9713188B",
+        "CRC32": "A4DAEDA7",
+        "BLAKE3": "838CD3B81C9CFF6FF7D6DE474AA2068B91D7D2B29658600BC45674655642B948",
+        "AutoV3": "4D5601F7AAE3",
+        "SHA256_12": "013F7230A936"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/263414",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 4605332,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/7e2cd529-8c4d-403f-8065-0cb9149c515f/original=true/4605332.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 512,
+       "hash": "UUK-tUSiCm%KxxS59bs-9vV[v}j@%#s:oyWB",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": true,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/263414"
+    }
+   ]
+  },
+  {
+   "id": 5152,
+   "name": "GalaxyTimeMachine's GTM Inpainting models",
+   "description": "<p>If you like my creations, then please consider buying me a coffee. Thank you! :)<br /><a target=\"_blank\" rel=\"ugc\" href=\"https://ko-fi.com/galaxytimemachine\">Ko-Fi</a></p><p>No models using any license other than the standard creativeml-openrail-m license were used in this merge.</p><p><img src=\"https://imagecache.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/07bc9364-6b3f-47cd-7757-7be7c1cebd00/width=525/07bc9364-6b3f-47cd-7757-7be7c1cebd00\" /></p><p></p><p>I have added an inpainting model, based on my v3 model, which works very well with any version of the GTM_UltimateBlend, and with many other models as well. Give it a try!</p><p></p><p><strong>IMPORTANT!!</strong> <u>For some reason the filename changes on Civitai. Please ensure you rename it to \"GTM_UltimateBlend_inpainting_v3.safetensors\"</u></p><p></p><p>If you're not already using it, I do recommend this in/outpainting app. It uses the AUTOMATIC1111 API to integrate with it, but setup instructions are in the \"Help\" button.</p><p><a target=\"_blank\" rel=\"ugc\" href=\"https://www.painthua.com/\">https://www.painthua.com/</a></p><p></p><p>The correct inpainting VAE is now baked into the model.</p><p></p><p>If you want to help me out, or just have a look at the public images, then please hop over to my Patreon: <a target=\"_blank\" rel=\"ugc\" href=\"https://www.patreon.com/galaxytimemachine\">https://www.patreon.com/galaxytimemachine</a></p><p></p><p>Some before and after inpainting and outpainting examples below.</p>",
+   "allowNoCredit": false,
+   "allowCommercialUse": [],
+   "allowDerivatives": true,
+   "allowDifferentLicense": true,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 31,
+   "availability": "Public",
+   "userId": 13261,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": false,
+   "stats": {
+    "downloadCount": 21807,
+    "thumbsUpCount": 1014,
+    "thumbsDownCount": 0,
+    "commentCount": 21,
+    "tippedAmountCount": 0
+   },
+   "creator": {
+    "username": "galaxytimemachine",
+    "image": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/2b32711e-88a8-4f2f-85d6-c28858f50829/width=96/galaxytimemachine.jpeg"
+   },
+   "tags": [
+    "inpainting",
+    "photorealistic",
+    "gtm"
+   ],
+   "modelVersions": [
+    {
+     "id": 30199,
+     "index": 0,
+     "name": "v5",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Standard",
+     "publishedAt": "2023-03-27T18:00:42.812Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 28,
+     "description": "<p>Updated to version 5.</p>",
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": false,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 14333,
+      "thumbsUpCount": 488,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 24939,
+       "sizeKB": 4165238.1875,
+       "name": "galaxytimemachinesGTM_v5.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-03-27T18:04:41.162Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "full",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "F0A2955A",
+        "AutoV2": "747E13E576",
+        "SHA256": "747E13E5768245F8C8796C1BD2FB04760CCB6684B56E16D5BF6125271ABBFC70",
+        "CRC32": "396B2BB2",
+        "BLAKE3": "B5539BFAB8EEF53E8584CBD546B153CE43DFDD1D6A3DC60EB9DF43C38D1C2874",
+        "SHA256_12": "747E13E57682"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/30199",
+       "primary": true
+      }
+     ],
+     "images": [],
+     "downloadUrl": "https://civitai.com/api/download/models/30199"
+    },
+    {
+     "id": 6304,
+     "index": 1,
+     "name": "v3",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Standard",
+     "publishedAt": "2023-01-27T12:47:40.586Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 28,
+     "description": "<p>Now based on my v3 model and with correct inpainting VAE baked in.</p>",
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": false,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 5348,
+      "thumbsUpCount": 473,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 6558,
+       "sizeKB": 4165506.610351562,
+       "name": "galaxytimemachinesGTM_v3.ckpt",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-01-27T22:23:14.271Z",
+       "metadata": {
+        "format": "PickleTensor",
+        "size": "full",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "3FC7A359",
+        "AutoV2": "40F1A153B2",
+        "SHA256": "40F1A153B2074751DF93688B10E47448778AD2663312FAACEDBC14227AC8AAB6",
+        "CRC32": "BA7BC1C3",
+        "BLAKE3": "C82CFCF882F1DD65869056072560AC34A5928B967D953F2CA9C2B9EB00441524",
+        "SHA256_12": "40F1A153B207"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/6304?type=Model&format=PickleTensor&size=full&fp=fp16"
+      },
+      {
+       "id": 6557,
+       "sizeKB": 4165238.1875,
+       "name": "galaxytimemachinesGTM_v3.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-01-27T21:56:17.834Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "full",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "FDA98CAE",
+        "AutoV2": "A31E1893CD",
+        "SHA256": "A31E1893CDFDC20959EE82BC872E0C3640DC68E09990B41449C5E0E4AD32C0FB",
+        "CRC32": "B98BA6D3",
+        "BLAKE3": "4BDD5B39B4B7E036E50E63DA277BFC520876C18CA4657FD5CDA6326B7EDFC409",
+        "SHA256_12": "A31E1893CDFD"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/6304",
+       "primary": true
+      }
+     ],
+     "images": [],
+     "downloadUrl": "https://civitai.com/api/download/models/6304"
+    },
+    {
+     "id": 5974,
+     "index": 2,
+     "name": "GTM_UltimateBlend_inpainting_v1",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Inpainting",
+     "publishedAt": "2023-01-24T12:24:43.006Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 31,
+     "description": null,
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": false,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 2126,
+      "thumbsUpCount": 60,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 6419,
+       "sizeKB": 8004037.055664062,
+       "name": "galaxytimemachinesGTM_gtmUltimateblend.ckpt",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "**Detected Pickle imports (3)**\n```\ntorch._utils._rebuild_tensor_v2\ncollections.OrderedDict\ntorch.FloatStorage\n```",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-01-27T19:04:17.609Z",
+       "metadata": {
+        "format": "PickleTensor",
+        "size": "full",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "D0C81AD6",
+        "AutoV2": "5F799B1AD8",
+        "SHA256": "5F799B1AD81CCB3A89CB674AA1BA429AFC55032795FFB79C7FEE95D615BA4E3D",
+        "CRC32": "B1F6DE50",
+        "BLAKE3": "A33A4A3F254737C0E40A66B2C9617508C1CFF6B1A7B658A1A434A4345A5F22FA",
+        "SHA256_12": "5F799B1AD81C"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/5974?type=Model&format=PickleTensor&size=full&fp=fp16"
+      },
+      {
+       "id": 6230,
+       "sizeKB": 8003569.713867188,
+       "name": "galaxytimemachinesGTM_gtmUltimateblend.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-01-27T03:54:52.976Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "full",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "FBB0902E",
+        "AutoV2": "052B73E5F2",
+        "SHA256": "052B73E5F20752617388670C9008CA4820C0EC622130E4FEAEC0EB708A2D6F89",
+        "CRC32": "F48C9D9C",
+        "BLAKE3": "844D3671E6F9D2414683A0643380CD98772F8B7F8880909C421A1AF37E9D105E",
+        "SHA256_12": "052B73E5F207"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/5974",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 50874,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/1b515e4b-b81c-427c-606b-e6e3f2212900/original=true/50874.jpeg",
+       "nsfwLevel": 1,
+       "width": 768,
+       "height": 768,
+       "hash": "U9E_58^MSi-paPsn0ORQ0}9}58M|_1t6~9tQ",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 50873,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/13b651fb-1b65-4286-e7ab-d78d41ee9400/original=true/50873.jpeg",
+       "nsfwLevel": 1,
+       "width": 768,
+       "height": 768,
+       "hash": "UFEBHQ}=EQ-o$*M}9cRk9^EOE3M|tk-n-nxs",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 50868,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/fc8640b8-c238-4dd1-0c3e-82998ec9ae00/original=true/50868.jpeg",
+       "nsfwLevel": 1,
+       "width": 768,
+       "height": 768,
+       "hash": "U8F|#h?t040hra9_R-~9F1J758V@9wJk]*9v",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 50867,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/9b2d00d0-1338-4498-cfee-50fd3f22c200/original=true/50867.jpeg",
+       "nsfwLevel": 1,
+       "width": 896,
+       "height": 960,
+       "hash": "U6FD^-~p0h0N0jxW9vxZ0*9{I;nO10w^}p59",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/5974"
+    }
+   ]
+  },
+  {
+   "id": 90018,
+   "name": "epiCRealism pureEvolution InPainting",
+   "description": "<p>This is an inpainting model for the fantastic epiCRealism model, specifically version <a target=\"_blank\" rel=\"ugc\" href=\"https://civitai.com/models/25694?modelVersionId=94744\">pure Evolution.</a> It works remarkably well, both for inpainting and outpainting, can be used with pictures generated by any other model. Most importantly, the inpainting is very smooth and rarely shows any transition.</p><p>The author had already published an inpainting model, but that was based on version 1. pure Evolution is version 5. I updated the inpainting model by using v1 as a base, adding the differences from v5.</p><p>Differential mix formula:</p><p>model 1 (inpainting): epiCRealism v1-inpainting (mixing ratio 1.0)<br />model 2 (new): epiCRealism pure Evolution (mixing ratio 0.8)<br />model 3 (base): epiCRealism v1 (mixing ratio 0.2)</p><p></p>",
+   "allowNoCredit": true,
+   "allowCommercialUse": [
+    "Image",
+    "RentCivit",
+    "Rent",
+    "Sell",
+    "SellMerge"
+   ],
+   "allowDerivatives": true,
+   "allowDifferentLicense": true,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 1,
+   "availability": "Public",
+   "userId": 11582,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": true,
+   "stats": {
+    "downloadCount": 30263,
+    "thumbsUpCount": 629,
+    "thumbsDownCount": 2,
+    "commentCount": 6,
+    "tippedAmountCount": 0
+   },
+   "creator": {
+    "username": "Gina",
+    "image": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/f1667274-64e7-4c28-96b2-de9b768ccceb/width=96/Gina.jpeg"
+   },
+   "tags": [
+    "natural colours",
+    "inpainting",
+    "analog",
+    "photoreal",
+    "photoshoot",
+    "female",
+    "base model",
+    "photorealistic",
+    "portrait",
+    "raw photo",
+    "woman"
+   ],
+   "modelVersions": [
+    {
+     "id": 95864,
+     "index": 0,
+     "name": "v1.0",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Standard",
+     "publishedAt": "2023-06-14T14:36:07.285Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": "<p>VAE baked in</p>",
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": true,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 30263,
+      "thumbsUpCount": 629,
+      "thumbsDownCount": 2
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 66510,
+       "sizeKB": 2082670.083984375,
+       "name": "epicrealism_v10-inpainting.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-06-14T14:36:50.925Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "pruned",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "81B8ADED",
+        "AutoV2": "EC6A1BA636",
+        "SHA256": "EC6A1BA63656A7BC9EB69130AFFF5B30A82AA3585F57EEF7B2B9BB0C7F3BA845",
+        "CRC32": "793338A1",
+        "BLAKE3": "6A21E6271B61153BD071C791469BEC0881B929FE3163F0A3C9CDAE02FDB537B4",
+        "SHA256_12": "EC6A1BA63656"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/95864",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 1142184,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/bab6121c-ab5c-4f35-accd-ecd7f1d5875e/original=true/1142184.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 512,
+       "hash": "U8HdW_010eE39uS%4n4:X+E3~VWB%1$j9tNa",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 1142204,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/f7a82e7e-545d-4bfb-b84a-d78b167b904e/original=true/1142204.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 512,
+       "hash": "U7HKRt000d9u9uS%0J0fyCE2~VWBs.$*9tNH",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 1143471,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/0ebdbf5e-52a0-4c55-95a9-6eacacb86ecf/original=true/1143471.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 512,
+       "hash": "UPHd$^t701of~VkBIpoeKibHr=aetRofNGV[",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 1143472,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/9149772f-c51d-43b0-a0a6-98d1f7f323a9/original=true/1143472.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 512,
+       "hash": "UPHd,2t701of~VoeIpoeKibHr=aetRofM|WB",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/95864"
+    }
+   ]
+  },
+  {
+   "id": 3128,
+   "name": "Anything-v3-inpainting",
+   "description": "<p>This is a merge of the \"Anything-v3\" and \"sd-1.5-inpainting\" models with the \"Add difference\" option. This model allows you to do high-quality inpainting in anime style</p>",
+   "allowNoCredit": true,
+   "allowCommercialUse": [
+    "Image",
+    "RentCivit",
+    "Rent",
+    "Sell",
+    "SellMerge"
+   ],
+   "allowDerivatives": true,
+   "allowDifferentLicense": true,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 1,
+   "availability": "Public",
+   "userId": 50161,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": false,
+   "stats": {
+    "downloadCount": 5323,
+    "thumbsUpCount": 301,
+    "thumbsDownCount": 1,
+    "commentCount": 0,
+    "tippedAmountCount": 0
+   },
+   "creator": {
+    "username": "MindInTheDigits",
+    "image": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/3e321523-b741-4c2d-bf5a-1d62fdc70600/width=96/MindInTheDigits.jpeg"
+   },
+   "tags": [
+    "anime",
+    "inpainting",
+    "base model"
+   ],
+   "modelVersions": [
+    {
+     "id": 3433,
+     "index": 0,
+     "name": "1",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Standard",
+     "publishedAt": "2022-12-29T20:50:30.307Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": null,
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": false,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 4812,
+      "thumbsUpCount": 41,
+      "thumbsDownCount": 1
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 3358,
+       "sizeKB": 7523209.537109375,
+       "name": "anythingV3Inpainting_1-inpainting.ckpt",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "**Detected Pickle imports (4)**\n```\ntorch._utils._rebuild_tensor_v2\ntorch.HalfStorage\ncollections.OrderedDict\ntorch.FloatStorage\n```",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2022-12-29T20:55:08.153Z",
+       "metadata": {
+        "format": "PickleTensor",
+        "size": "full",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "FFEC31FF",
+        "AutoV2": "92CB44CC9A",
+        "SHA256": "92CB44CC9AF3E9A959019B639472DC1E9839E44A2298BE846B565CCD91303B0E",
+        "CRC32": "79260992",
+        "BLAKE3": "9266FB0FA92A3234E208562B672F07FBAEF778EDCAED78BBC03BE02A13C22850",
+        "SHA256_12": "92CB44CC9AF3"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/3433",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 22912,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/c15246a8-c111-46d8-cf54-9693d77d7400/original=true/22912.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 512,
+       "hash": "UGKA$y~W00NwIUnj00E2?cjG%3XSxDniD%Io",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 22917,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/34253926-fc46-483f-c722-dcbc7756c900/original=true/22917.jpeg",
+       "nsfwLevel": 1,
+       "width": 422,
+       "height": 421,
+       "hash": "U86HT9NG0K-p?GWBE1xa4.t6?HIo0Kt7~CIo",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 22916,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/77ce228a-be9d-4901-446c-e2e77a975f00/original=true/22916.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 512,
+       "hash": "UMJHjv9Z4o%L-?ofIq%L~VWYM}j[XTj]Mxbb",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 22915,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/26fffe57-00d1-4a7b-f724-99fd3b261300/original=true/22915.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 512,
+       "hash": "UQIEts%M01IVM{t6E2Rj~WoLM{WUJ7t6nPRj",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 22914,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/a19d8ae1-6426-4376-2374-48551b17ca00/original=true/22914.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 512,
+       "hash": "UGKAsX%L00D%Y5E10Ls:_NWBrYxurDRjjukW",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 22913,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/2d9ee9aa-f883-4d22-0433-b4c2b470e600/original=true/22913.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 512,
+       "hash": "UKI;;m~q008_o{i_4otS^%xukEIUtlV@IARk",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/3433"
+    },
+    {
+     "id": 3720,
+     "index": 1,
+     "name": "1_emaonly",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Standard",
+     "publishedAt": "2022-12-30T18:54:29.617Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": "<p>Same model, but 1.5-emaonly model instead of 1.5-pruned was used for \"Add difference\" merge. This model is slightly lighter</p>",
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": false,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 511,
+      "thumbsUpCount": 260,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 3513,
+       "sizeKB": 5844457.689453125,
+       "name": "anythingV3Inpainting_1Emaonly-inpainting.ckpt",
+       "overrideName": null,
+       "type": "Pruned Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "**Detected Pickle imports (4)**\n```\ntorch._utils._rebuild_tensor_v2\ntorch.FloatStorage\ntorch.HalfStorage\ncollections.OrderedDict\n```",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2022-12-30T19:00:43.715Z",
+       "metadata": {
+        "format": "PickleTensor",
+        "size": "pruned",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "2AB16D61",
+        "AutoV2": "E51E11FB8C",
+        "SHA256": "E51E11FB8CC571F1AC827F207DB1A3B9AC920163DEC4498D10B4520EEDF69EB0",
+        "CRC32": "2B9A8E9D",
+        "BLAKE3": "1A61F1F3AF817125590FBBAEAC9F3D34EDE873CB50E14D653B0E11F041A8F523",
+        "SHA256_12": "E51E11FB8CC5"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/3720",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 24125,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/fe2bfa58-6656-4671-b9d8-204f5314ef00/original=true/24125.jpeg",
+       "nsfwLevel": 1,
+       "width": 4016,
+       "height": 2152,
+       "hash": "UeP?t3oL?bof%Nj[WBj[_NofIUoeofj[j[ay",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/3720"
+    }
+   ]
+  },
+  {
+   "id": 172576,
+   "name": "Anything 4.5 Inpainting",
+   "description": "<p>this model isn't mine (here's the <a rel=\"ugc\" href=\"https://huggingface.co/Koolchh/anything-v4.5-inpainting/blob/main/anything-v4.5-inpainting.safetensors\">link</a> of the original Hugging face Page) and i decided to upload it so that you could download it like i did easly with the civitai expansion</p>",
+   "allowNoCredit": true,
+   "allowCommercialUse": [],
+   "allowDerivatives": true,
+   "allowDifferentLicense": true,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 1,
+   "availability": "Public",
+   "userId": 45513,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": false,
+   "stats": {
+    "downloadCount": 5479,
+    "thumbsUpCount": 115,
+    "thumbsDownCount": 1,
+    "commentCount": 0,
+    "tippedAmountCount": 200
+   },
+   "creator": {
+    "username": "flusk",
+    "image": "https://lh3.googleusercontent.com/a/AEdFTp4l32b_V5cA4JGEPJ-qdYEA4uX_SxrtwNDIFGVg=s96-c"
+   },
+   "tags": [],
+   "modelVersions": [
+    {
+     "id": 193819,
+     "index": 0,
+     "name": "v1.0",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Standard",
+     "publishedAt": "2023-10-22T09:34:56.641Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": "<p>this model isn't mine (i can't find the link to the original hugging face page since i got it in my pc for a while so if you have it pls share it) it's a way to have a shortcut for who like me has the civitai extension</p>",
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": false,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 5479,
+      "thumbsUpCount": 115,
+      "thumbsDownCount": 1
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 148215,
+       "sizeKB": 4165238.1875,
+       "name": "anything45Inpainting_v10-inpainting.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-10-22T09:40:16.320Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "full",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "B7BA6F11",
+        "AutoV2": "6D9A152B7A",
+        "SHA256": "6D9A152B7AFF4D7E416F7AFDFB07DC9C8286A2FD01AC30D87B55DE953327938F",
+        "CRC32": "41014F6A",
+        "BLAKE3": "10F74223A16FE1AA1F983B76C2B133442EF78AB5FCF44556626F64B881EF4F49",
+        "SHA256_12": "6D9A152B7AFF"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/193819",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 3094143,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/aee30c65-183a-42bf-bf7c-399bba482650/original=true/3094143.jpeg",
+       "nsfwLevel": 1,
+       "width": 561,
+       "height": 784,
+       "hash": "UKI}nw_NBMo}xbkrTetRIex_EmNFRVjdi{R-",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/193819"
+    }
+   ]
+  },
+  {
+   "id": 117263,
+   "name": "sd1.5 inpainting",
+   "description": "<p>inpainting model of sd1.5</p>",
+   "allowNoCredit": true,
+   "allowCommercialUse": [],
+   "allowDerivatives": true,
+   "allowDifferentLicense": true,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 1,
+   "availability": "Public",
+   "userId": 2124586,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": false,
+   "stats": {
+    "downloadCount": 4311,
+    "thumbsUpCount": 71,
+    "thumbsDownCount": 0,
+    "commentCount": 2,
+    "tippedAmountCount": 0
+   },
+   "creator": {
+    "username": "rexputin",
+    "image": null
+   },
+   "tags": [
+    "inpainting",
+    "tool",
+    "inpaint"
+   ],
+   "modelVersions": [
+    {
+     "id": 127060,
+     "index": 0,
+     "name": "v1.0",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Standard",
+     "publishedAt": "2023-07-27T10:55:49.804Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": null,
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": false,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 4311,
+      "thumbsUpCount": 71,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 91876,
+       "sizeKB": 4165466.09375,
+       "name": "sd15Inpainting_v10-inpainting.ckpt",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-07-27T10:57:19.647Z",
+       "metadata": {
+        "format": "PickleTensor",
+        "size": "full",
+        "fp": "fp32"
+       },
+       "hashes": {
+        "AutoV1": "3E16EFC8",
+        "AutoV2": "C6BBC15E32",
+        "SHA256": "C6BBC15E3224E6973459BA78DE4998B80B50112B0AE5B5C67113D56B4E366B19",
+        "CRC32": "0A5663E4",
+        "BLAKE3": "077D474A993D26E16C57820AA15B890A68290A438814BF6637AFE0B9B01B3AD5",
+        "SHA256_12": "C6BBC15E3224"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/127060",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 1743778,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/bc6943f5-dc8d-4818-ab02-117533585153/original=true/1743778.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 768,
+       "hash": "U784e=V{00x[=}tjIVWB0Ks:~VM{9sWB-pt7",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": false,
+       "hasPositivePrompt": false,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/127060"
+    }
+   ]
+  },
+  {
+   "id": 52534,
+   "name": "Char V10 - Inpainting",
+   "description": "<p>It is a inpainting merge of the Char-V10 model, which was trained on some 1024px images.</p>",
+   "allowNoCredit": true,
+   "allowCommercialUse": [
+    "Image",
+    "RentCivit",
+    "Rent",
+    "Sell",
+    "SellMerge"
+   ],
+   "allowDerivatives": true,
+   "allowDifferentLicense": true,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 1,
+   "availability": "Public",
+   "userId": 318961,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": true,
+   "stats": {
+    "downloadCount": 507,
+    "thumbsUpCount": 62,
+    "thumbsDownCount": 0,
+    "commentCount": 0,
+    "tippedAmountCount": 0
+   },
+   "creator": {
+    "username": "georglegeato",
+    "image": null
+   },
+   "tags": [
+    "guide"
+   ],
+   "modelVersions": [
+    {
+     "id": 56944,
+     "index": 0,
+     "name": "v10",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Standard",
+     "publishedAt": "2023-04-27T23:28:54.456Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": "<p>INPAINTING MODEL</p>",
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": true,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 507,
+      "thumbsUpCount": 62,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 40672,
+       "sizeKB": 4165238.1875,
+       "name": "charV10Inpainting_v10-inpainting.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-04-27T23:22:50.722Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "pruned",
+        "fp": "fp32"
+       },
+       "hashes": {
+        "AutoV1": "0AD612B8",
+        "AutoV2": "52FDDEBB93",
+        "SHA256": "52FDDEBB93C47483E9EE1C9C17ECE8B8DF5CB7819F3672E904F7A8DD6CBEFE5F",
+        "CRC32": "99A1DBE1",
+        "BLAKE3": "E92A590809862ABD49FB2187BD6FF0B2221D9E83658B9BF38D3F02ECE361B1AA",
+        "SHA256_12": "52FDDEBB93C4"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/56944",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 617899,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/b4b1ca0b-8ae7-446d-3e2b-c667caa92b00/original=true/617899.jpeg",
+       "nsfwLevel": 1,
+       "width": 890,
+       "height": 893,
+       "hash": "UA5?AHW9V$V?X+a}aeafI7ogW8oOxzohbDa#",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/56944"
+    }
+   ]
+  },
+  {
+   "id": 1376191,
+   "name": "BRAVO - Anime Essence Inpainting",
+   "description": "<p>\"BRAVO - Anime Essence Inpainting\" for \"<a target=\"_blank\" rel=\"ugc\" href=\"https://civitai.com/models/1376097\">BRAVO - Anime Essence</a>\".</p><p><strong>This inpainting model is not intended for generating full images from scratch. </strong>It is specifically designed for correcting mistakes, refining details, and making adjustments to existing images. For best results, use it to fix small areas rather than attempting full-scale generation.</p><p><span style=\"color:rgb(18, 184, 134)\">Enjoyed the model? Drop a couple of buzz \u2014 you'll look cool, and I'll be grateful</span> \u26a1\ud83d\ude0a</p>",
+   "allowNoCredit": true,
+   "allowCommercialUse": [
+    "Image",
+    "RentCivit",
+    "Rent",
+    "Sell",
+    "SellMerge"
+   ],
+   "allowDerivatives": true,
+   "allowDifferentLicense": true,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 1,
+   "availability": "Public",
+   "userId": 3663799,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": false,
+   "stats": {
+    "downloadCount": 136,
+    "thumbsUpCount": 4,
+    "thumbsDownCount": 0,
+    "commentCount": 0,
+    "tippedAmountCount": 0
+   },
+   "creator": {
+    "username": "postbravo550",
+    "image": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/c3622bbc-bbab-41a0-bf4d-ceda8a33ccd8/width=96/postbravo550.jpeg"
+   },
+   "tags": [
+    "inpainting",
+    "style",
+    "bravo",
+    "anime",
+    "bravo - anime essence"
+   ],
+   "modelVersions": [
+    {
+     "id": 1554979,
+     "index": 0,
+     "name": "v1.0",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Inpainting",
+     "publishedAt": "2025-03-20T01:56:29.044Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": null,
+     "trainedWords": [],
+     "vaeId": null,
+     "coveredNext": false,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 136,
+      "thumbsUpCount": 4,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 1454925,
+       "sizeKB": 2082719.67578125,
+       "name": "bravoAnimeEssence_v10.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2025-03-20T01:32:16.126Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "pruned",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "C286112B",
+        "AutoV2": "D9DF5E257E",
+        "SHA256": "D9DF5E257EF10814D7B10E018B2B74E213EFF2B614149EFE61FAFF93BCFF323F",
+        "CRC32": "1819D678",
+        "BLAKE3": "A89E1E7FFB4BD22F61AE17490C87247CCA1C564FB3DBDEB901E9EE2A51FEE187",
+        "AutoV3": "C7849ABF4CD8",
+        "SHA256_12": "D9DF5E257EF1"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/1554979",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 64566230,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/6a6f028f-95e1-4c1a-9a3c-b66345aea3b0/original=true/64566230.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 896,
+       "hash": "UZH2v8xpaikC.AtQofW=cFWaV[kBP9kCjGo0",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 64566229,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/07cae138-8032-4062-b2ac-604464560387/original=true/64566229.jpeg",
+       "nsfwLevel": 1,
+       "width": 512,
+       "height": 896,
+       "hash": "UAF$Y700M{D%~q9F-;?bRjj[9FWBofRjD%%M",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/1554979"
+    }
+   ]
+  },
+  {
+   "id": 4666,
+   "name": "djz GingerTomCat V21-768 / V21-512-inpainting / V15",
+   "description": "<ul><li><p><strong><em>update</em></strong><em> - 4th Feb 2023: V15 version added</em></p></li><li><p><strong>update</strong> - 19th Jan 2023: Johnson has been experimenting and passed this to me to include on this listing: <br /><strong>djzGingerTomCatV21-512-inpainting</strong><br /><em>please use an SD-V21-512-inpainting.yaml config (included below)</em><br /><em>we recommend using latent nothing mask mode.</em><br /></p></li></ul><p>This Model combines two <em>GingerTomCat</em> datasets, created by DriftJohnson. It is then reinforced by two textual inversions;<br /><strong>the </strong><a target=\"_blank\" rel=\"ugc\" href=\"https://civitai.com/models/1917/kittypic-for-sd-2x\"><strong>KittyPics </strong></a><strong>embedding by </strong><a target=\"_blank\" rel=\"ugc\" href=\"https://civitai.com/user/stille_willem\"><strong>stille_willem </strong></a><strong>&amp; </strong><br /><strong>the </strong><a target=\"_blank\" rel=\"ugc\" href=\"https://civitai.com/models/4044/doctor-diffusions-point-e-negative-embedding\"><strong>Point-E</strong></a><strong> negative embedding by </strong><a target=\"_blank\" rel=\"ugc\" href=\"https://civitai.com/user/doctor_diffusion\"><strong>Doctor_Diffusion</strong></a></p><p><em>3x3 grid used both embeddings, 2x2 grid shows same seed outputs with some suggested upscaler settings.</em></p><img src=\"https://imagecache.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/caf909d4-2a39-4604-22c7-1b08a0cab100/width=525\" /><img src=\"https://imagecache.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/9d9a407c-41a8-4da0-0cd2-72d18dc1a400/width=525\" /><p>showcase credit: <a target=\"_blank\" rel=\"ugc\" href=\"https://civitai.com/user/DriftJohnson\">DriftJohnson</a><br /><br />\"strong style\" Models are intended to be merged with each other and any model for Stable Diffusion 2.1 -- although you can also use these without the Trigger word like any model</p><p></p><p>I recommend merging with 0.5 (50/50 blend) then using prompt weighting to control the Aesthetic gradient.</p><p>example merged model prompt with automatic1111:</p><p><strong>(GingerTomCat:1.2) (yourmodeltoken:0.8)</strong></p><p>if you drop the \"djz\" and the \"V21\" what remains is the token you need to call up the concept in the model. All examples shown were the Raw Token, no other words. Tokens are case sensitive and in almost all models it will match the filename.</p><p>It is possible to merge these models with each other using a different value. It is possible to pair models and then merge those resulting models. In this way we can blend abstract concepts together and then weight the tokens to achieve the result we may wish to create. <br /><em>Of course to eliminate all those tokens, you can simply train a new custom model from the outputs, which means you are back to a single token.</em></p><p>A video explanation will follow, but for now the above explanation should do. We are focused on getting as many style/aesthetic models into artist hands to enhance the creativity already at their finger tips.</p><p>Art Freedom for all!!</p><p>[all original artwork used for training with <a target=\"_blank\" rel=\"ugc\" href=\"https://twitter.com/MushroomFleet/status/1609633158864961539\">full permission from Drift Johnson</a>]</p><p></p>",
+   "allowNoCredit": false,
+   "allowCommercialUse": [
+    "Image",
+    "RentCivit",
+    "Rent"
+   ],
+   "allowDerivatives": true,
+   "allowDifferentLicense": false,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 1,
+   "availability": "Public",
+   "userId": 3682,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 2.1 768",
+    "SD 2.1",
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": true,
+   "stats": {
+    "downloadCount": 2060,
+    "thumbsUpCount": 143,
+    "thumbsDownCount": 0,
+    "commentCount": 0,
+    "tippedAmountCount": 0
+   },
+   "creator": {
+    "username": "driftjohnson",
+    "image": "https://lh3.googleusercontent.com/a/ALm5wu1XI8XayJ2Ix8lPi5iQQYsuINx-ajiFNaXeiemB6hY=s96-c"
+   },
+   "tags": [
+    "ginger",
+    "tom",
+    "cats",
+    "style"
+   ],
+   "modelVersions": [
+    {
+     "id": 7787,
+     "index": 2,
+     "name": "V15",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Standard",
+     "publishedAt": "2023-02-04T15:45:58.321Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": null,
+     "trainedWords": [
+      "gingertomcat"
+     ],
+     "vaeId": null,
+     "coveredNext": true,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 245,
+      "thumbsUpCount": 125,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 7845,
+       "sizeKB": 2082642.052734375,
+       "name": "djzGingertomcatV21768V21_v15.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-02-04T22:02:06.083Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "full",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "1400E684",
+        "AutoV2": "7FB557C9DF",
+        "SHA256": "7FB557C9DF15B6897BDF9463DFBA88087806EF7B262C08AD97CCB2821E7792D2",
+        "CRC32": "D4C15E85",
+        "BLAKE3": "89CAFC2047C9F8DA7408B69B5C44F083B32B5FFF488321A1884B2A8284053797",
+        "SHA256_12": "7FB557C9DF15"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/7787",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 73149,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/c954a87e-1d5a-499e-4d57-7703620a8a00/original=true/73149.jpeg",
+       "nsfwLevel": 1,
+       "width": 768,
+       "height": 768,
+       "hash": "U9HA|W$l008_00M{_Nx]57t7=yW95:oL-6WE",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 73148,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/ec4fac07-79a2-428a-2aa7-b283ec101700/original=true/73148.jpeg",
+       "nsfwLevel": 1,
+       "width": 1280,
+       "height": 1280,
+       "hash": "U9HA|SR*9Y^i]{-p?ct602xZ}@Ek0PWBv_s-",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 73147,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/46535be2-1636-4c49-7abe-af1a369e6400/original=true/73147.jpeg",
+       "nsfwLevel": 1,
+       "width": 1280,
+       "height": 1280,
+       "hash": "UIF;+i~B4oIV$y?FxGNK-oW=bcV@58SOadRj",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 73146,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/f355d8d3-4eb9-4e7b-f2bb-2db97f745000/original=true/73146.jpeg",
+       "nsfwLevel": 1,
+       "width": 768,
+       "height": 768,
+       "hash": "UWIq7BE1WSxa~9s;R-s-R$oft8Rk-oR+t5R-",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 73145,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/d3142ad4-059a-46c5-97dc-309777187400/original=true/73145.jpeg",
+       "nsfwLevel": 1,
+       "width": 768,
+       "height": 768,
+       "hash": "UVIDz19Zo#RQ}lt8R*t6aJxtWBoe-ANGbING",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 73144,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/88439e1c-bcb2-411b-4060-50dbd56ef500/original=true/73144.jpeg",
+       "nsfwLevel": 1,
+       "width": 1280,
+       "height": 1280,
+       "hash": "UVIgfO9aW,%1~9ofX8s,NFt6xbR*-nS4xYW=",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 73143,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/bf58574a-f127-4aaf-2f93-66cc638a4000/original=true/73143.jpeg",
+       "nsfwLevel": 1,
+       "width": 768,
+       "height": 768,
+       "hash": "UBF=,D4T4pyW%k~VkYEfx.PAMxR4B?4m-;xJ",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/7787"
+    }
+   ]
+  },
+  {
+   "id": 4043,
+   "name": "djz Airlock V21-768, V21-512-inpainting, V15",
+   "description": "<ul><li><p><em>31st January 2023 Update:</em><br /><strong>djzAirlockV15 </strong>released!</p></li><li><p><em>19th January 2023 Update: </em><br /><strong>djzAirlockV21-512-inpainting</strong> released!<br />you will need the 2-1-512-inpainting.yaml config, so grab that too!</p><p></p></li></ul><p>2.1-768 model: Example merging <a target=\"_blank\" rel=\"ugc\" href=\"https://civitai.com/models/3410/rick-roll-style\">Rick-Roll</a>, <a target=\"_blank\" rel=\"ugc\" href=\"https://civitai.com/models/4007/djz-junglepunk-v21\">JunglePunk</a> &amp; <a target=\"_blank\" rel=\"ugc\" href=\"https://civitai.com/models/4043/djz-airlock-v21\">Airlock</a>:</p><img src=\"https://imagecache.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/ce27e991-6393-411b-29da-cffddc77d400/width=525\" /><p>credit: <a target=\"_blank\" rel=\"ugc\" href=\"https://civitai.com/user/RickInversion\">RickInversion</a><br /><br />These \"strong style\" Models are intended to be merged with each other and any model for Stable Diffusion 2.1</p><p>I recommend merging with 0.5 (50/50 blend) then using prompt weighting to control the Aesthetic gradient.</p><p>example merged model prompt with automatic1111:</p><p><strong>(Airlock:1.2) (yourmodeltoken:0.8)</strong></p><p>if you drop the \"djz\" and the \"V21\" what remains is the token you need to call up the concept in the model. All examples shown were the Raw Token, no other words. Tokens are case sensitive and in almost all models it will match the filename.</p><p>It is possible to merge these models with each other using a different value. It is possible to pair models and then merge those resulting models. In this way we can blend abstract concepts together and then weight the tokens to achieve the result we may wish to create. Of course to eliminate all those tokens, you can simply train a new custom model from the outputs, which means you are back to a single token.</p><p>A video explanation will follow, but for now the above explanation should do. We are focused on getting as many style/aesthetic models into artist hands to enhance the creativity already at their finger tips.</p><p>Art Freedom for all!!</p><p>[all original artwork used for training with <a target=\"_blank\" rel=\"ugc\" href=\"https://twitter.com/MushroomFleet/status/1609633158864961539\">full permission from Drift Johnson</a>]</p><p></p>",
+   "allowNoCredit": false,
+   "allowCommercialUse": [
+    "Image",
+    "RentCivit",
+    "Rent"
+   ],
+   "allowDerivatives": true,
+   "allowDifferentLicense": false,
+   "type": "Checkpoint",
+   "minor": false,
+   "sfwOnly": false,
+   "poi": false,
+   "nsfw": false,
+   "nsfwLevel": 1,
+   "availability": "Public",
+   "userId": 3682,
+   "hasActivePaidAccess": false,
+   "baseModels": [
+    "SD 2.1 768",
+    "SD 2.1",
+    "SD 1.5"
+   ],
+   "cosmetic": null,
+   "eventDecoration": null,
+   "supportsGeneration": true,
+   "stats": {
+    "downloadCount": 2148,
+    "thumbsUpCount": 318,
+    "thumbsDownCount": 0,
+    "commentCount": 33,
+    "tippedAmountCount": 0
+   },
+   "creator": {
+    "username": "driftjohnson",
+    "image": "https://lh3.googleusercontent.com/a/ALm5wu1XI8XayJ2Ix8lPi5iQQYsuINx-ajiFNaXeiemB6hY=s96-c"
+   },
+   "tags": [
+    "scifi",
+    "airlock",
+    "style"
+   ],
+   "modelVersions": [
+    {
+     "id": 6922,
+     "index": 2,
+     "name": "V15",
+     "baseModel": "SD 1.5",
+     "baseModelType": "Standard",
+     "publishedAt": "2023-01-31T01:34:36.077Z",
+     "flags": 0,
+     "availability": "Public",
+     "nsfwLevel": 1,
+     "description": "<p>SD 1.5 version</p>",
+     "trainedWords": [
+      "Airlock"
+     ],
+     "vaeId": null,
+     "coveredNext": true,
+     "paidAccess": null,
+     "stats": {
+      "downloadCount": 228,
+      "thumbsUpCount": 268,
+      "thumbsDownCount": 0
+     },
+     "supportsGeneration": false,
+     "files": [
+      {
+       "id": 7046,
+       "sizeKB": 2082642.052734375,
+       "name": "djzAirlockV21768V21512_v15.safetensors",
+       "overrideName": null,
+       "type": "Model",
+       "pickleScanResult": "Success",
+       "pickleScanMessage": "No Pickle imports",
+       "virusScanResult": "Success",
+       "virusScanMessage": null,
+       "scannedAt": "2023-01-31T01:46:17.964Z",
+       "metadata": {
+        "format": "SafeTensor",
+        "size": "full",
+        "fp": "fp16"
+       },
+       "hashes": {
+        "AutoV1": "1400E684",
+        "AutoV2": "3355547484",
+        "SHA256": "3355547484424886EAB0A2B8AFAF3E0E8008E8585A06153FD0BF5A49FBDB84C5",
+        "CRC32": "FF9A7869",
+        "BLAKE3": "97911D4598C7651254637CBBC8CA03280BD4590AFA0CFC9A89A9AD6F200A9FFF",
+        "SHA256_12": "335554748442"
+       },
+       "downloadUrl": "https://civitai.com/api/download/models/6922",
+       "primary": true
+      }
+     ],
+     "images": [
+      {
+       "id": 63293,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/d93cf632-ca98-42dc-0e5f-8ce265058b00/original=true/63293.jpeg",
+       "nsfwLevel": 1,
+       "width": 1280,
+       "height": 1280,
+       "hash": "U9F$6A0L00?HI:V@WBxt~Vay0foe01ofD%oe",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 63292,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/6d5c71b7-bdc3-4775-0c82-5dd67aea1e00/original=true/63292.jpeg",
+       "nsfwLevel": 1,
+       "width": 1024,
+       "height": 1024,
+       "hash": "UIHLVS0g~VIp-oE2_2xt$$RjNc%LxtWVRjof",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 63291,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/3d5fba41-0e01-4c9b-0484-c6505f54ba00/original=true/63291.jpeg",
+       "nsfwLevel": 1,
+       "width": 1024,
+       "height": 1024,
+       "hash": "UFG9EZ4.00t7wbWBIpWB-;%2D%R*~WofNGj[",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 63290,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/d3b9f284-a5d2-4c42-e132-c12eb4248800/original=true/63290.jpeg",
+       "nsfwLevel": 1,
+       "width": 1368,
+       "height": 1368,
+       "hash": "U7HK|H4;8wxtX:$$I99v~U-:00E20L%Lr;D*",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 63289,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/45b36825-9f4f-4888-24bd-4296ed743800/original=true/63289.jpeg",
+       "nsfwLevel": 1,
+       "width": 1280,
+       "height": 1280,
+       "hash": "U3E3M300R-ay00of?GRjQ,-;IAt700t7~pfj",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 63288,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/6d12890d-6b5c-46a2-dd47-bb9fa5aa3e00/original=true/63288.jpeg",
+       "nsfwLevel": 1,
+       "width": 1024,
+       "height": 1024,
+       "hash": "UDEWK~IUMxof~WRj.7of.8WBRjofRjayD%j[",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      },
+      {
+       "id": 63287,
+       "url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/eac3ed4d-af98-4147-a6c6-35b7d4966200/original=true/63287.jpeg",
+       "nsfwLevel": 1,
+       "width": 1024,
+       "height": 1024,
+       "hash": "U8E36j9GMy%L?Gt7~pWB00t7%2WBD%j[oJj@",
+       "type": "image",
+       "minor": false,
+       "poi": false,
+       "hasMeta": true,
+       "hasPositivePrompt": true,
+       "onSite": false,
+       "remixOfId": null
+      }
+     ],
+     "downloadUrl": "https://civitai.com/api/download/models/6922"
+    }
+   ]
+  }
+ ],
+ "metadata": {}
+}

@@ -25,6 +25,8 @@ STATE_FILENAME = "server-state.json"
 LOG_FILENAME = "stable-boy.log"
 SERVER_LOG_FILENAME = "comfyui.log"
 MODELS_CACHE_FILENAME = "models-cache.json"
+HUB_CACHE_FILENAME = "hub-cache.json"
+HUB_SELECTED_FILENAME = "hub-selected.json"
 
 
 def default_comfy_dir() -> str:
@@ -78,6 +80,8 @@ class Settings:
     progress_window_x: int = -1  # last position; -1 = top-right of the image window
     progress_window_y: int = -1
     prompt_history: str = ""  # JSON list of recent prompts, newest first (dialogs)
+    hub_search: bool = True  # Models tab: also list current models from Hugging Face and Civitai (read-only API calls)
+    hub_civitai: bool = True  # include Civitai in that search (Hugging Face only when False)
     # Not persisted: why the last :meth:`load` fell back to defaults (None when it did not).
     load_problem: str | None = field(default=None, repr=False, compare=False, metadata={"persist": False})
     # Not persisted: a damaged settings file that could not be moved aside; :meth:`save` refuses to overwrite it.
@@ -234,6 +238,16 @@ class Paths:
     def models_cache(self) -> Path:
         """Model files the server listed last time (no secrets)."""
         return self.base / MODELS_CACHE_FILENAME
+
+    @property
+    def hub_cache(self) -> Path:
+        """Hugging Face / Civitai search results, kept for 24 hours (no secrets)."""
+        return self.base / HUB_CACHE_FILENAME
+
+    @property
+    def hub_selected(self) -> Path:
+        """Models from the live search the user chose to download (re-validated on every read)."""
+        return self.base / HUB_SELECTED_FILENAME
 
     @property
     def temp(self) -> Path:

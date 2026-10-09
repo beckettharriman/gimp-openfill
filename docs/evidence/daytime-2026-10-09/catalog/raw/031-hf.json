@@ -1,0 +1,347 @@
+{
+ "_id": "673e3c5da3eda9a8c99bda8a",
+ "id": "black-forest-labs/FLUX.1-Fill-dev",
+ "private": false,
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "safetensors",
+  "image-generation",
+  "flux",
+  "diffusion-single-file",
+  "en",
+  "license:other",
+  "diffusers:FluxFillPipeline",
+  "region:us"
+ ],
+ "downloads": 70510,
+ "likes": 1234,
+ "modelId": "black-forest-labs/FLUX.1-Fill-dev",
+ "author": "black-forest-labs",
+ "sha": "358293da0354175698b67ec8299acf928313a78a",
+ "lastModified": "2025-06-27T16:23:07.000Z",
+ "gated": "auto",
+ "disabled": false,
+ "model-index": null,
+ "config": {
+  "diffusers": {
+   "_class_name": "FluxFillPipeline"
+  }
+ },
+ "cardData": {
+  "language": [
+   "en"
+  ],
+  "license": "other",
+  "license_name": "flux-1-dev-non-commercial-license",
+  "license_link": "LICENSE.md",
+  "extra_gated_prompt": "By clicking \"Agree\", you agree to the [FluxDev Non-Commercial License Agreement](https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/blob/main/LICENSE.md) and acknowledge the [Acceptable Use Policy](https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/blob/main/POLICY.md).",
+  "tags": [
+   "image-generation",
+   "flux",
+   "diffusion-single-file"
+  ]
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "6c07b2b184c926a167c96895381a7c9e8c54c905",
+   "size": 1571
+  },
+  {
+   "rfilename": "LICENSE.md",
+   "blobId": "763a44c31c02064a8388981040487ce8731ddc86",
+   "size": 18621
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "06057201e2db0fa1b096171b0a3921b88cd4a12d",
+   "size": 4096
+  },
+  {
+   "rfilename": "ae.safetensors",
+   "blobId": "71f11a92800c4a93cead7cebc556531926ecfc33",
+   "size": 335304388,
+   "lfs": {
+    "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+    "size": 335304388,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev.safetensors",
+   "blobId": "36b7da0c3ee0f2a5e0feaebf5be368649d698806",
+   "size": 23804922408,
+   "lfs": {
+    "sha256": "03e289f530df51d014f48e675a9ffa2141bc003259bf5f25d75b957e920a41ca",
+    "size": 23804922408,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "model_index.json",
+   "blobId": "b09a49f0a56a59b9fcaba3087ab3982fcdc79b95",
+   "size": 540
+  },
+  {
+   "rfilename": "scheduler/scheduler_config.json",
+   "blobId": "9ab63efc0533c769b781dddbd177fad8c8c18d49",
+   "size": 299
+  },
+  {
+   "rfilename": "text_encoder/config.json",
+   "blobId": "d496a6a2474172a0b3f2b19ea97d90e84287b075",
+   "size": 561
+  },
+  {
+   "rfilename": "text_encoder/model.safetensors",
+   "blobId": "40a62c5746d88a2483eb10db5ef38d12c5b6b893",
+   "size": 246144352,
+   "lfs": {
+    "sha256": "893d67a23f4693ed42cdab4cbad7fe3e727cf59609c40da28a46b5470f9ed082",
+    "size": 246144352,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "text_encoder_2/config.json",
+   "blobId": "cf6c4d78b3b4f575a8b296ee5fccf6ab4e14c686",
+   "size": 741
+  },
+  {
+   "rfilename": "text_encoder_2/model-00001-of-00002.safetensors",
+   "blobId": "fb543745ed2f4aa1105e3a8f97ff89a6ff7b5662",
+   "size": 4994582224,
+   "lfs": {
+    "sha256": "ec87bffd1923e8b2774a6d240c922a41f6143081d52cf83b8fe39e9d838c893e",
+    "size": 4994582224,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "text_encoder_2/model-00002-of-00002.safetensors",
+   "blobId": "c1596ab4886c9962503f01891b16715d1469fbe5",
+   "size": 4530066360,
+   "lfs": {
+    "sha256": "a5640855b301fcdbceddfa90ae8066cd9414aff020552a201a255ecf2059da00",
+    "size": 4530066360,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "text_encoder_2/model.safetensors.index.json",
+   "blobId": "c8728bc3dca59d2616a2a594cbac3ddb9eb77d5b",
+   "size": 19885
+  },
+  {
+   "rfilename": "tokenizer/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer/special_tokens_map.json",
+   "blobId": "cf0682d6de72c1547f41b4f6d7c59f62deffef94",
+   "size": 588
+  },
+  {
+   "rfilename": "tokenizer/tokenizer_config.json",
+   "blobId": "180a4e1be2a7d0b38a44108d6f24f585f35147b1",
+   "size": 705
+  },
+  {
+   "rfilename": "tokenizer/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "tokenizer_2/special_tokens_map.json",
+   "blobId": "17ade346a1042cbe0c1436f5bedcbd85c099d582",
+   "size": 2543
+  },
+  {
+   "rfilename": "tokenizer_2/spiece.model",
+   "blobId": "317a5ccbde45300f5d1d970d4d449af2108b147e",
+   "size": 791656,
+   "lfs": {
+    "sha256": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86",
+    "size": 791656,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "tokenizer_2/tokenizer.json",
+   "blobId": "21ed409afa3df5a822caa0fd5da30d13941f90b5",
+   "size": 2424235
+  },
+  {
+   "rfilename": "tokenizer_2/tokenizer_config.json",
+   "blobId": "b336fa236135e6c87e246485e4d69e415cc57da0",
+   "size": 20817
+  },
+  {
+   "rfilename": "transformer/config.json",
+   "blobId": "9a19ee2be2959dc5e225b4d9c61f3e969dbfefb1",
+   "size": 393
+  },
+  {
+   "rfilename": "transformer/diffusion_pytorch_model-00001-of-00003.safetensors",
+   "blobId": "3bfaac0cde61d073c40682b9a9b85c883dec8610",
+   "size": 9985006384,
+   "lfs": {
+    "sha256": "4cef6b166b2163ba9a01ccb68bf53054556852b69b32c0565dfe0741d28982d7",
+    "size": 9985006384,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "transformer/diffusion_pytorch_model-00002-of-00003.safetensors",
+   "blobId": "009a9fcdbc7f44c98dc68fbd4f053f17fe7e6a30",
+   "size": 9949328904,
+   "lfs": {
+    "sha256": "cd99fdd45ac404a9c98c939bdc986647cd5160ca48b8e679e81d3d59c2b9a1e0",
+    "size": 9949328904,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "transformer/diffusion_pytorch_model-00003-of-00003.safetensors",
+   "blobId": "78fe952fe44963134c76b977f5fa6f90da80d77e",
+   "size": 3870584832,
+   "lfs": {
+    "sha256": "ed878852603579083b4a4ea80544504faca9f42ebd41aaa103c3023ee2ebfbd5",
+    "size": 3870584832,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "transformer/diffusion_pytorch_model.safetensors.index.json",
+   "blobId": "21f6c277a5b661e77f9b259c05ca7dad2a29f559",
+   "size": 121262
+  },
+  {
+   "rfilename": "vae/config.json",
+   "blobId": "ed8c04742888d41b78298d360299f40710fa20ae",
+   "size": 774
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.safetensors",
+   "blobId": "2fba9e4bc6a3c24f3926795dd6a4f80b520839a2",
+   "size": 335306212,
+   "lfs": {
+    "sha256": "8c717328c8ad41faab2ccfd52ae17332505c6833cf176aad56e7b58f2c4d4c94",
+    "size": 335306212,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse",
+  "embedl/hfviewer",
+  "multimodalart/flux-fill-outpaint",
+  "black-forest-labs/FLUX.1-Fill-dev",
+  "zhengchong/CatVTON",
+  "xiaozaa/catvton-flux-try-on",
+  "vilarin/Flux.1-Fill-dev",
+  "jallenjia/flux-fill-outpaint",
+  "pngwn/FLUX.1-Fill-dev",
+  "TencentARC/IC-Custom",
+  "WensongSong/Insert-Anything",
+  "Calligrapher2025/Calligrapher",
+  "Kunbyte/OmniTry",
+  "VisualCloze/VisualCloze",
+  "Nymbo/flux-fill-outpaint",
+  "ginigen/VisualCloze",
+  "not-lain/gpu-utils",
+  "Surn/HexaGrid",
+  "sitatech/vibe-shopping",
+  "roi/EditP23",
+  "sariyam/flux-fill-outpaint",
+  "bep40/Insert-Anything",
+  "jdavis/Flux-1.0-Fill-Inpaint",
+  "SahilCarterr/Calligrapher",
+  "pbgo/OmniTry",
+  "blanchon/FurnitureDemo",
+  "RageshAntony/RG-CatVTON",
+  "innoai/flux-fill-outpaint",
+  "buxiangzhiren/GeoRemover",
+  "Ashoka74/RefurnishAI",
+  "nuwandaa/flux-fill-outpaint",
+  "FIT-Check/CatVTON",
+  "rahul7star/WANGP1",
+  "Jonny001/Fill-Images",
+  "USF00/Wan2GP_Demo",
+  "multimodalart/CatVTON-zerogpu",
+  "maccmaccmaccc/5428-p-llamaindexRAG",
+  "gradiopro/flux-fill-outpaint",
+  "gradiopro/FLUX.1-Fill-dev",
+  "ZetaWolf2003/flux-fill-outpaint",
+  "skinnymixes/flux-fill-outpaint",
+  "gunvattagurukulqci/flux-fill-outpaint",
+  "xragejp/flux-fill-outpaint",
+  "vjsiddhufp/flux-fill-outpaint",
+  "nvn04/DemoStyleSnap",
+  "Perry1323/flux-fill-outpaint",
+  "nuwandaa/FLUX.1-Fill-dev",
+  "rtallam45/MarketingCopilot",
+  "botai3/CHELUMORE_AI",
+  "botai3/CatVTON",
+  "Gainward777/Try-On_Flux",
+  "Himanshu806/fluxInpaint-testing",
+  "DJStomp/Flux.1-Fill-dev",
+  "Alisha21032002/flux-fill-demo",
+  "sphinxsolution/flux-fill-demo",
+  "WolseyTheCat/fc-simple",
+  "Justo19/mvp-catvton",
+  "Everybody8454/inpaint-text",
+  "K00B404/VisualCloze",
+  "Jeshnu06/HyperGen-Inpainting",
+  "svjack/flux-inpainting",
+  "yupengtang/flux-poc",
+  "zeenai2025/Insert-Anything2",
+  "sahal42/SAKS-backend",
+  "HAL1993/imageexpanddeprecated",
+  "samirk08/vtontry",
+  "Alen432/FLUX.1-Fill-dev",
+  "kp-forks/OmniTry",
+  "luanngo/Insert-Anything",
+  "zoro008/flux-fill-outpaint",
+  "SnapwearAI/Saks-backend-new",
+  "USF00/Text_to_Video_Demo",
+  "KAD001/Wan2GP",
+  "feylur/Try-Space-Project",
+  "feylur/Try-Space-Tryon",
+  "GreyOrangeRobotics/OmniTry",
+  "pbgo/CatVTON",
+  "Identita25/FLUX.1-Fill-dev",
+  "Sungclaude/flux-fill-outpaint",
+  "br2evans/flux-fill-outpaint",
+  "aizaz171/CatVTON",
+  "grover8/my-indo-western-tryon",
+  "DesmondOSG/flux-fill-outpaint",
+  "forbidryan/flux-fill-outpaint",
+  "ahuggingface01/OmniTry",
+  "Chenxi240629/FLUX.1-Fill-dev",
+  "wmy111/CatVTON",
+  "fatslappa/Wan2GP_Demo",
+  "asda1sa/flux-fill-outpaint",
+  "zantrua/astorya3-step4-inpaint",
+  "sTWWY/catvton-flux-try-on",
+  "Sergiuss/sx-provador-fast",
+  "Sergiuss/SX",
+  "Sergiuss/sx-provador",
+  "Sergiuss/sergius-provador-online",
+  "Zhurou/FLUX.1-Fill-dev",
+  "justflamin/flux-fill-outpaint",
+  "OMEGA-99/V-Trials",
+  "xinhelu/CatVTON",
+  "TienVu2204/CatVTON"
+ ],
+ "createdAt": "2024-11-20T19:45:33.000Z",
+ "safetensors": {
+  "parameters": {
+   "BF16": 11902391360
+  },
+  "total": 11902391360
+ },
+ "usedStorage": 58052037720
+}

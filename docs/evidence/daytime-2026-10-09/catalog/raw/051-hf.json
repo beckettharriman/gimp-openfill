@@ -1,0 +1,301 @@
+{
+ "_id": "69459f7cc131e07a139d8b3b",
+ "id": "unsloth/Qwen-Image-Edit-GGUF",
+ "private": false,
+ "pipeline_tag": "image-to-image",
+ "library_name": "ggml",
+ "tags": [
+  "ggml",
+  "gguf",
+  "quantized",
+  "unsloth",
+  "qwen",
+  "image-to-image",
+  "en",
+  "zh",
+  "arxiv:2508.02324",
+  "base_model:Qwen/Qwen-Image-Edit",
+  "base_model:quantized:Qwen/Qwen-Image-Edit",
+  "license:apache-2.0",
+  "region:us"
+ ],
+ "downloads": 4598,
+ "likes": 29,
+ "modelId": "unsloth/Qwen-Image-Edit-GGUF",
+ "author": "unsloth",
+ "sha": "4156a20df93f16635a50638c1f50b563817e2f2f",
+ "lastModified": "2025-12-22T08:24:13.000Z",
+ "gated": false,
+ "disabled": false,
+ "widgetData": [
+  {
+   "text": "a cute sloth",
+   "output": {
+    "url": "https://huggingface.co/unsloth/Qwen-Image-Edit-GGUF/resolve/main/cute_sloth.png"
+   }
+  }
+ ],
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "base_model": "Qwen/Qwen-Image-Edit",
+  "license": "apache-2.0",
+  "language": [
+   "en",
+   "zh"
+  ],
+  "library_name": "ggml",
+  "pipeline_tag": "image-to-image",
+  "tags": [
+   "gguf",
+   "quantized",
+   "unsloth",
+   "qwen"
+  ],
+  "widget": [
+   {
+    "text": "a cute sloth",
+    "output": {
+     "url": "https://huggingface.co/unsloth/Qwen-Image-Edit-GGUF/resolve/main/cute_sloth.png"
+    }
+   }
+  ]
+ },
+ "gguf": {
+  "total": 20430401088,
+  "architecture": "qwen_image",
+  "totalFileSize": 40872114720
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "7b45d3937b392ec48b02c207f4bd59137b963126",
+   "size": 2779
+  },
+  {
+   "rfilename": "LICENSE",
+   "blobId": "6634c8cc3133b3848ec74b9f275acaaa1ea618ab",
+   "size": 11343
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "487817c5b18f5a4f96868dc119f57dba3243a6a3",
+   "size": 13168
+  },
+  {
+   "rfilename": "babysloth.jpg",
+   "blobId": "8691303c9b845be6f4b469638da660eafbae19e6",
+   "size": 446076,
+   "lfs": {
+    "sha256": "bc97aa9c034650bf4899d3bbd8d537a460cc60fac94097eff7f6103a2ce6817a",
+    "size": 446076,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "cute_sloth.png",
+   "blobId": "d5507ba43053c6d3463c1a907f4ecdf17b5509a8",
+   "size": 528096,
+   "lfs": {
+    "sha256": "0119ebaeff6ada1a63744001e528e083cec0d78abd8c776fbb072a7f0b464563",
+    "size": 528096,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "fur_sloth.png",
+   "blobId": "170e7da59be331027146f9e753f26a9b441ae96d",
+   "size": 478520,
+   "lfs": {
+    "sha256": "628f9e469ae56dc54ac35a4d19d0d66982a918c6bea737a5cc65c3cfd1cb3684",
+    "size": 478520,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "gogh_sloth.png",
+   "blobId": "3e525138ad5d626375a3168006de104335b7dd3f",
+   "size": 734424,
+   "lfs": {
+    "sha256": "06ec1fd654b3b45f430508a70e459b85a5447ab002786abbc4a9aab6841bb9f3",
+    "size": 734424,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-BF16.gguf",
+   "blobId": "66d8fb4de23fe31d1361ce312fcf8019e94976dc",
+   "size": 40872114720,
+   "lfs": {
+    "sha256": "6daacbd258cfc4560dd0f41c231e34cc1405e57482d78bc5b5ee8076792880df",
+    "size": 40872114720,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-F16.gguf",
+   "blobId": "08187b1df0d1f0d0352abe2b8c5b6082666a5552",
+   "size": 40872114720,
+   "lfs": {
+    "sha256": "0b5d21f05dd4ecb6adf408c51d590112152158c8ee4fd44dfcccfc78effc7434",
+    "size": 40872114720,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q2_K.gguf",
+   "blobId": "38d169b16630b36e12415435b42e4691c71bdfa8",
+   "size": 7217936928,
+   "lfs": {
+    "sha256": "9f6eec3782d587a7dfc062635c3e1d8213c86c72086f0a87135da403c95863cc",
+    "size": 7217936928,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q3_K_L.gguf",
+   "blobId": "35ee1a1bed0f024ed831a72a38f33f2ddd1a637f",
+   "size": 10428938784,
+   "lfs": {
+    "sha256": "3a5c71118ffcbeabbcbebb24965bbc05720f2aaa13824f63546df94ca344c1aa",
+    "size": 10428938784,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q3_K_M.gguf",
+   "blobId": "97f0b05797f97c3b14af2bb5bcafd3ac8da3fe6e",
+   "size": 9744742944,
+   "lfs": {
+    "sha256": "fdf8221c09669652145ac7844bfacad44754b4711ae1555e62aa861931ebf000",
+    "size": 9744742944,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q3_K_S.gguf",
+   "blobId": "0eecf538f08198be84f03b80d6fc21e02f5c68ff",
+   "size": 9042852384,
+   "lfs": {
+    "sha256": "85f88470e1053d8d7fff0bb96b8e55327c9bfde14d84833cd8e7d9cc27986d68",
+    "size": 9042852384,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q4_0.gguf",
+   "blobId": "7b1f53f6bb7ef05e778f18e12ca13ba1fb515241",
+   "size": 11852773920,
+   "lfs": {
+    "sha256": "398edd2a8e38263c150fc301988417ea5d81a0244ac9c68142ab8c77a28ecd05",
+    "size": 11852773920,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q4_1.gguf",
+   "blobId": "373a15b8c2d3a6dd475e557c73410c1c5384aa48",
+   "size": 12843678240,
+   "lfs": {
+    "sha256": "04266a84c084f60bb74803a21accfb46fcdaf65b2bb20e082a0591d41d82634b",
+    "size": 12843678240,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q4_K_M.gguf",
+   "blobId": "0f64eb2cba7a2f76b6857e201aebd51a929cb0b8",
+   "size": 13127088672,
+   "lfs": {
+    "sha256": "a12d6bd6dbce9bc58081e2c3ea6a1daa6f80fff19c48889dd1ddea08125d0711",
+    "size": 13127088672,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q4_K_S.gguf",
+   "blobId": "eda3191e6f1f9e33a867dfacb89b566cf55816d9",
+   "size": 12268010016,
+   "lfs": {
+    "sha256": "da2394cc3f902e9eca7e1123a57f4581e9989b6c73d4f1daac511ccbb623f4e4",
+    "size": 12268010016,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q5_0.gguf",
+   "blobId": "671301b7aa9cf5d5662577aa8894475374841a4e",
+   "size": 14400813600,
+   "lfs": {
+    "sha256": "25e798e65a6224fc0c3c6122dcb701bbf7da065185a5099fc0da73428bf891b3",
+    "size": 14400813600,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q5_1.gguf",
+   "blobId": "ee62c614dc586b325ad1d126b850edbea5784d06",
+   "size": 15391717920,
+   "lfs": {
+    "sha256": "aa009aaccbb5cbc261c83c6452ee517f94af5b1eeaeba53f7a903db06b112022",
+    "size": 15391717920,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q5_K_M.gguf",
+   "blobId": "e700d8e586da527825eaf237721e528b5022e6b2",
+   "size": 15000074784,
+   "lfs": {
+    "sha256": "df6c76e497fc749f52b5b1367bb57004bd2374f86b1269bbf7fb861fe11e3475",
+    "size": 15000074784,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q5_K_S.gguf",
+   "blobId": "213d5ab6149b228b0cc81a0d7b26eb7d4785c8fc",
+   "size": 14298184224,
+   "lfs": {
+    "sha256": "ec19989316c97a8b7292370c7decd3a27efa317456bb0096655477cd2ec7a10b",
+    "size": 14298184224,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q6_K.gguf",
+   "blobId": "85fea8e2937be19bc01bc4e9685e0cd48bd8eabb",
+   "size": 16824990240,
+   "lfs": {
+    "sha256": "c8f15e4623b2178384cece8f16415be4e4450fca3895e08eb26bf5d39e209926",
+    "size": 16824990240,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-Q8_0.gguf",
+   "blobId": "fef7d616105d5af9c33ecff3483cc73c2008566f",
+   "size": 21761817120,
+   "lfs": {
+    "sha256": "d881a65010b10f9a6aff6e0ab6d00eda0382ab939c833f7e1507b6ab6d309ac9",
+    "size": 21761817120,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "sketch_sloth.png",
+   "blobId": "24c1db2945e3eab537910cdfdda0ae1c68a4683b",
+   "size": 532851,
+   "lfs": {
+    "sha256": "2d921955dc459590f588d108b8cc27bdcdd8022c5b2e47f814461c52ea8d14a8",
+    "size": 532851,
+    "pointerSize": 131
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse"
+ ],
+ "createdAt": "2025-12-19T18:54:52.000Z",
+ "usedStorage": 265950569183
+}

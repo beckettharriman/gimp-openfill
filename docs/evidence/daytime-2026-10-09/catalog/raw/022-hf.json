@@ -1,0 +1,712 @@
+{
+ "_id": "64bb122ae38420aaba98039a",
+ "id": "MLbackup/2023_Scraped_SDXL",
+ "private": false,
+ "pipeline_tag": "text-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "sdxl",
+  "stable diffusion",
+  "anime",
+  "earth and dusk",
+  "duskfallcrew",
+  "safetensors",
+  "sdxl-anikme",
+  "sdxl anime",
+  "text-to-image",
+  "en",
+  "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+  "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+  "license:creativeml-openrail-m",
+  "region:us"
+ ],
+ "downloads": 6859,
+ "likes": 4,
+ "modelId": "MLbackup/2023_Scraped_SDXL",
+ "author": "MLbackup",
+ "sha": "1379a9718ce76eb903986a1be3da85d119513362",
+ "lastModified": "2026-02-01T01:03:39.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "license": "creativeml-openrail-m",
+  "language": [
+   "en"
+  ],
+  "tags": [
+   "sdxl",
+   "stable diffusion",
+   "anime",
+   "earth and dusk",
+   "duskfallcrew",
+   "safetensors",
+   "sdxl-anikme",
+   "sdxl anime"
+  ],
+  "pipeline_tag": "text-to-image",
+  "base_model": [
+   "stabilityai/stable-diffusion-xl-base-1.0"
+  ],
+  "library_name": "diffusers"
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+   "size": 1519
+  },
+  {
+   "rfilename": "AgendaMix-BackBETAMIXFIX.fp16.safetensors",
+   "blobId": "5f0e7bd985621b528030c347f88e98fa5fa22912",
+   "size": 6938041722,
+   "lfs": {
+    "sha256": "8ac6bed03655b0575e50c9f131b0a04591514ea9546a3c6388d8c2a510dca8bf",
+    "size": 6938041722,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "AgendaMix-BackBETAMIXFIX1a.fp16.safetensors",
+   "blobId": "3ca723febd02721ba020ea7bbab447e17c1a071d",
+   "size": 6938044264,
+   "lfs": {
+    "sha256": "7e7767fa4ea51b30fbdafa6acd251051abc113e8cf4858126759a41232e1f2b0",
+    "size": 6938044264,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "AgendaXLBeta-FINAL.fp16.safetensors",
+   "blobId": "0b112c0062177d7693a299ddf6e85d29597e9c10",
+   "size": 6938042890,
+   "lfs": {
+    "sha256": "4e8afde2484175ca433f7fe2356919cf4444ed1ad7c647d78d5e3a436c11555b",
+    "size": 6938042890,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "ComicMIx3.fp16.safetensors",
+   "blobId": "6adaaa77e38fe3cf5ae08b7d8a68ca9dd044aea9",
+   "size": 6938042898,
+   "lfs": {
+    "sha256": "30c2de376a27771bc364197e1be38b941cf81a4c14e214d0d5b9dcf19605d59b",
+    "size": 6938042898,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "ComicXLBackMix.fp16.safetensors",
+   "blobId": "8c373973af083c46fba7c4404e60858e4f4d2ae8",
+   "size": 6939220266,
+   "lfs": {
+    "sha256": "068eeb04d5adb0cfabcd68b8199f27f70889cf692480b5b4f83b54e12b9495ac",
+    "size": 6939220266,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DarkvoidAnimix.safetensors",
+   "blobId": "f52c45488b05dedefac03f063621da742773a2e2",
+   "size": 6938041546,
+   "lfs": {
+    "sha256": "ae6f66a803178e0702d6dbe4a1c65b3d008fc8180a260a19b7a02d811e433435",
+    "size": 6938041546,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DaunltessbetaFin5Feb.fp16.safetensors",
+   "blobId": "2910ada1b74c0479ef0ae5f15bd9d8f15d4ae9af",
+   "size": 6938042906,
+   "lfs": {
+    "sha256": "093ed93ab434ea18ef918b3ff834c0aa10a9415f463a3f804e3ed95798697879",
+    "size": 6938042906,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DauntlessXL-BETA.fp16.safetensors",
+   "blobId": "a8ed3004016e31a1f1e78cc59744ee92b322062b",
+   "size": 6938042922,
+   "lfs": {
+    "sha256": "8184354d70d1088eb1255ec01d7a5ac54203f10a7b1e704d58eeb3b9616a36da",
+    "size": 6938042922,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DauntlessXLBackMIx.fp16.safetensors",
+   "blobId": "4e6e4b4395283f04ab39fa9c2d57d9ab97b8f2d1",
+   "size": 6938042922,
+   "lfs": {
+    "sha256": "ff2ff5aeecea7ce9810c3c6cf96bfa3d29b50fbe20d1090fd49aee09fb277072",
+    "size": 6938042922,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DetailerMix.fp16.safetensors",
+   "blobId": "08b3a5b7f0067522faaf6de1f42c0f4bc659eaff",
+   "size": 6938040706,
+   "lfs": {
+    "sha256": "21e187772f361dbf0e7fc47c39d4450408284b03e74cfc8af957af6c8fb77a48",
+    "size": 6938040706,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DuskAnimeBETA-Final.fp16.safetensors",
+   "blobId": "da97362970806630af9f8901b79982c9e25c98a2",
+   "size": 6938042914,
+   "lfs": {
+    "sha256": "dc741c9520644ef155fe6bce71f3253d659a9a56153546f5f273bc3198775b1c",
+    "size": 6938042914,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DuskAnimeBackMix001.fp16.safetensors",
+   "blobId": "5fce95f1726f5b95f217c65d1287f67064504c02",
+   "size": 6938042914,
+   "lfs": {
+    "sha256": "e170e14d9247ecb578bc3b6f79dae5cb0c06ad3d445eb850d467a2b7308ab3ce",
+    "size": 6938042914,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DuskAnimeBackMix002.fp16.safetensors",
+   "blobId": "72936d305e6d832564f0d2a6112a640f65cdd9b9",
+   "size": 6939222764,
+   "lfs": {
+    "sha256": "7772f4f2a9789e50e5ee603e2f2b5a7b24128a9017b267b1243522af178f930d",
+    "size": 6939222764,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DuskAnimeBackMix003.fp16.safetensors",
+   "blobId": "5d6cf8893b08b9544e157c0fbb2a93d0707b690a",
+   "size": 6938042914,
+   "lfs": {
+    "sha256": "2ec13b7908254062a9cc0556accd0df7dd41d81411bde90fa5afac30f325b22b",
+    "size": 6938042914,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DuskMix_ANIME_XL_Alpha.safetensors",
+   "blobId": "f302fb303c3b6dc79021ab5717c99b4030e1d2f1",
+   "size": 6938042978,
+   "lfs": {
+    "sha256": "864d4821cfb11c7d1e62a04020cc112360f7846dee163eca49a6b327b1d63447",
+    "size": 6938042978,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DuskMix_XL.safetensors",
+   "blobId": "5e835b3c2fe2e9c2389db6daef73ea07e16dc744",
+   "size": 6938041642,
+   "lfs": {
+    "sha256": "46499d315a8f2b351e3f0a727ff7c34c9f693a2d45e73ae29973041d39d03030",
+    "size": 6938041642,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DuskMix_XL_Alpha.safetensors",
+   "blobId": "d6f7be551ced85f7cbff09cfcc07e14aea6bc36f",
+   "size": 6938042298,
+   "lfs": {
+    "sha256": "d9e2d707732037a85adb2bbee921d1d57a2404982c8f0318a1dc626c2265bca8",
+    "size": 6938042298,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DuskSlimeMixUltraInifity-YamerXL.fp16.safetensors",
+   "blobId": "20cc21fb7536cbe124acbc1ef83aeb1be174fa5a",
+   "size": 6938040706,
+   "lfs": {
+    "sha256": "06064da749a3410a37b650c190073f943469ed865db367a58920640028ec2f46",
+    "size": 6938040706,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "DuskartSDXL.fp16.safetensors",
+   "blobId": "585d9dae9de8491a726bfa1fa5fc1e5baa583830",
+   "size": 6938040706,
+   "lfs": {
+    "sha256": "147ffbab6f89849686309331002d6eb7d5c643b3ffc92fe3e8cc7223b216cce2",
+    "size": 6938040706,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "EarthAniBackMix.fp16.safetensors",
+   "blobId": "971b4b1f9d64cd7321e70fa8e5b9d93c6e5c9598",
+   "size": 6938042898,
+   "lfs": {
+    "sha256": "96cc77ddafe8d617f02df359bfeee2eda9f28c3009614319b03311820ae79c79",
+    "size": 6938042898,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "EarthAniMiX2ptFix.fp16.safetensors",
+   "blobId": "fdb83c5503f3ce22c4b326f4bd9e6d4ddf1ac7eb",
+   "size": 6939221580,
+   "lfs": {
+    "sha256": "41c9f3430364e187c0fa3c8dbfad91344d76b3c0f9a63d9c1e73d757df181996",
+    "size": 6939221580,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "EarthAniMix2Bettera.fp16.safetensors",
+   "blobId": "3f9b44a54fe98c9ed8c6cd825dcd81a3aa7a789e",
+   "size": 6939222764,
+   "lfs": {
+    "sha256": "bd8ca16661f12270007a218ba957c27ac1a56fe4bf06888422773a2d1d447e44",
+    "size": 6939222764,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "EarthAniMixSemiFLATNEXTXL.fp16.safetensors",
+   "blobId": "91ea71b40d37f0b9d454de83cd9bb690a038a01b",
+   "size": 6938042906,
+   "lfs": {
+    "sha256": "dae3d9aa2a54f9c3581fc21a233dbc7fb9ebe58770cfe64cb7ce9d7d2eac45fd",
+    "size": 6938042906,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "EarthAniMixTwopt5XL.fp16.safetensors",
+   "blobId": "faaa78b9ebdb52670a9760facf433eb72f035899",
+   "size": 6939222756,
+   "lfs": {
+    "sha256": "814c2841fca5c1b1c96b4e863c9de4988aab138a9dc0b5bf842dfc5402760efc",
+    "size": 6939222756,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "EarthAniMixXLv15.fp16.safetensors",
+   "blobId": "f28c18abd1ecb49cb0d0495a4109af23bacc68e4",
+   "size": 6938042906,
+   "lfs": {
+    "sha256": "cf6f8026802d5bca0c4d876948a12269910ea6d19c0f7b4e57f59b30854d0c8a",
+    "size": 6938042906,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "EarthAniMixXLv15b.fp16.safetensors",
+   "blobId": "a8aaee5b7fc6fb62fcf7330b1407d1bbb486063c",
+   "size": 6938042906,
+   "lfs": {
+    "sha256": "d5dba8f3c9d49dc92204fdc8cb60d756ace5212b136d8b55e90107b82b9e7ea4",
+    "size": 6938042906,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "EarthAniMix_XL------9819-----.safetensors",
+   "blobId": "e627e642a951fd55851251191f68fc99c1137e0e",
+   "size": 6938040682,
+   "lfs": {
+    "sha256": "0c484d4c9bb004f4cea7bdf8209e860c322433ffcd9b02abee7564bb73536aa5",
+    "size": 6938040682,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "EarthAniMix_XL.safetensors",
+   "blobId": "64920bfa562a88ab110867a7994207c2528f9292",
+   "size": 13685878172,
+   "lfs": {
+    "sha256": "d412c9dcca38d3f4bf3442aa57835448b0c13936e7a6bada3399c40c41b7e6e1",
+    "size": 13685878172,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "EarthMix_SemiFlatXL.fp16.safetensors",
+   "blobId": "5bbfcdf106e78e2facbe657e36e56e09a43198c0",
+   "size": 6938041004,
+   "lfs": {
+    "sha256": "e1e0115cf223f63e9c619be3184b2252b0e1a4b77ad9a4d5844ae8eaa4f2ea48",
+    "size": 6938041004,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "EarthanimixSemiFlatXL15-BACKMIX.fp16.safetensors",
+   "blobId": "40830ad53093ba5c81d488838d5535024fbe9473",
+   "size": 6938040706,
+   "lfs": {
+    "sha256": "e2f6d6b2900e06fb4adc8bfc99b424945d0a1897204b46870e469424f03f3184",
+    "size": 6938040706,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "EarthanimixSemiFlatXL15.fp16.safetensors",
+   "blobId": "26fbc00ce9f90dd20cca3c662faa0112c68e0f13",
+   "size": 6938042786,
+   "lfs": {
+    "sha256": "a1dfa3cc4756d4b56f43fe265c64440319a74d858ef763c05d90069d4baad5ae",
+    "size": 6938042786,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "EnvyOseanayanBabes.fp16.safetensors",
+   "blobId": "00bfe68795227d74d6e9956032de32f07ad8e7f2",
+   "size": 6938042898,
+   "lfs": {
+    "sha256": "1fcf62ec0549a3742846a7fe58e210d85f2df74f9f6f6447c03276913102eb7c",
+    "size": 6938042898,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "HeartSteeackMix.fp16.safetensors",
+   "blobId": "0c8d04298addf762e23b750dfb53dcdfc011e445",
+   "size": 6939221018,
+   "lfs": {
+    "sha256": "a64a1536428b771c97268e0aa3882082b1721889818ecdffa4c01d5bca09c180",
+    "size": 6939221018,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "Incursio-OsenayanMix.fp16.safetensors",
+   "blobId": "740332f9dc1318b3af362c1d02b90ebd749b4e1f",
+   "size": 6938041722,
+   "lfs": {
+    "sha256": "74d80e75e4763eb468e6ede387885eba9c16551b06094040709f4faea721c43c",
+    "size": 6938041722,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "MJOseaMix2.fp16.safetensors",
+   "blobId": "fd2f9da73bbf430ced1a97d04079e71fb94bdde1",
+   "size": 6938041706,
+   "lfs": {
+    "sha256": "93556a7e395706b472f24600586b979c42ee58da2a70a329153822ed46c4fc06",
+    "size": 6938041706,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "Nightfallenvy_XL.safetensors",
+   "blobId": "7baac3aa16a4fd20c949c42f9c17b1aaa11c95bc",
+   "size": 6938044410,
+   "lfs": {
+    "sha256": "eb70630bcb7c5f0a13874670ec79ead0add07754358586556bc40512eb977b55",
+    "size": 6938044410,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "Osea XL/Osea_XL-V1-Alpha.safetensors",
+   "blobId": "851cb7921eba6aa1593241c5f43eeec3376e9025",
+   "size": 6938041010,
+   "lfs": {
+    "sha256": "f346e25ef618a16ef1b0420174235e575ee888b04766511ad54cf07ceb32a0a7",
+    "size": 6938041010,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "Osea XL/test1.safetensors",
+   "blobId": "aebb19c8d2835d94ee45f7954638e37be1f2f17e",
+   "size": 6938041010,
+   "lfs": {
+    "sha256": "652fa2971ecff8ed74ad25fe273143ab2c37a682e35024a47cf07ce6ff7dac93",
+    "size": 6938041010,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "Osea17BACKMIX.fp16.safetensors",
+   "blobId": "bddcf8493ad610c53053f02aa3ad46290609ad9a",
+   "size": 6939222772,
+   "lfs": {
+    "sha256": "e84f4572c71e1ff2ca53c8b66a98b16cddb580f6f19754247347d84d05d2408d",
+    "size": 6939222772,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "OseaAnimationFix.fp16.safetensors",
+   "blobId": "e559ef482a5fed58f14e9b78c82b7f5dbd2e7b65",
+   "size": 6938041714,
+   "lfs": {
+    "sha256": "6a99fff91a6fed6f47a11829eeec9482bd13889494ac4e00081f256e6410d3cf",
+    "size": 6938041714,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "OseaXL-15.fp16.safetensors",
+   "blobId": "41d3b9d3b02a7eea47ed7f9abaa78d4492e1a045",
+   "size": 6938042914,
+   "lfs": {
+    "sha256": "4b595f35571e74b76bb94fe647ff6af203e8411b83af7f449e28bf6715fc66e8",
+    "size": 6938042914,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "OseaXL-FIX.fp16.safetensors",
+   "blobId": "ab8d79f841ca5b8f65adc95193ef5617a82d1f22",
+   "size": 6938042906,
+   "lfs": {
+    "sha256": "f3ccd15f341a64339b236d0e4a2d01b40f90f081fbf5397d60b91d319f59c9d9",
+    "size": 6938042906,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "OseaXL-ILLUS-FIXFINAL.fp16.safetensors",
+   "blobId": "ad3d87eba7b4cb16865f5a6f15b93f214d78e7be",
+   "size": 6938042898,
+   "lfs": {
+    "sha256": "5ed5c25edc974dfd7216b88f0440f35f9a40153ca2c231fb4dc9798edb8e5aa7",
+    "size": 6938042898,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "OseaXLAnimeted1pt5.fp16.safetensors",
+   "blobId": "2d7ec68553dbd67dc0c7b5723e98d45094d66268",
+   "size": 6939222756,
+   "lfs": {
+    "sha256": "5c88fb1abcd0099c37ea8d30701d52d465a54fb11b090a59350a56909b58ce49",
+    "size": 6939222756,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "OseaXLIllust15Backmix.fp16.safetensors",
+   "blobId": "d14cabb7b8691030571ea3f6537b291a759b0591",
+   "size": 6938040706,
+   "lfs": {
+    "sha256": "8b045cbf870e7b2d406d421c20be5c0067329986315ea14a5821a3fe2f96524d",
+    "size": 6938040706,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "OseaXL_AlphaV2.fp16.safetensors",
+   "blobId": "4f317bff2ab4a2ae0ff1ecb781b648ba036ec320",
+   "size": 6938040706,
+   "lfs": {
+    "sha256": "f4a93cc8cef14e25e9f8a36b1ad4be42ad4b7d496c59a96dabc62ad92aeed745",
+    "size": 6938040706,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "Poltergeist1pt2bck.fp16.safetensors",
+   "blobId": "28bdd3bb0958210d598ce0d2907354fc0a9c89e0",
+   "size": 6938042906,
+   "lfs": {
+    "sha256": "77737dc17582d4281ccc4ea45a146b50a604f144539a66a1eb9908821c57c3c1",
+    "size": 6938042906,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "Poltergeist1pt2fin.fp16.safetensors",
+   "blobId": "9b4716d2b48067e0fd9578148e3b35c15c99fb63",
+   "size": 6938041730,
+   "lfs": {
+    "sha256": "407b6ee59dcaeaa3db455f7ed6dbb2e0766451a0e74cc7d7acc851e90941dbd0",
+    "size": 6938041730,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "PoltergeistMix-SDXL.fp16.safetensors",
+   "blobId": "8802cf6c3d635cc9717724770445b972416a93c1",
+   "size": 6938042114,
+   "lfs": {
+    "sha256": "cdb192a4d3a171c3a8b1447fa54ef231e08e8779ebb975b740a5aef0e0a3163e",
+    "size": 6938042114,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "PoltergeistXL-Test-B.fp16.safetensors",
+   "blobId": "2b1baee9990b5f7ff5fa0539e9c2b13779405019",
+   "size": 6938040706,
+   "lfs": {
+    "sha256": "e7b9c202dac766db129301b3693c794e1ae776070da6a710e79dbac43793d96f",
+    "size": 6938040706,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "PoltergeistXL-Test-C.fp16.safetensors",
+   "blobId": "5a0509dd5c674ecc07801eca500b2364265e5a6c",
+   "size": 6938040706,
+   "lfs": {
+    "sha256": "f225ecb40c57c04a3ed6d537c89a98962583f0c7810a95ae276e067647853473",
+    "size": 6938040706,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "PoltergeistXL-Test-D.fp16.safetensors",
+   "blobId": "10a9494cea4e3787eb8c7a0fc9573c347ca6a4f4",
+   "size": 6938040706,
+   "lfs": {
+    "sha256": "16e77a913a16f6aa7293d9fa5306bfd3e559b9766263f01e11c30f594bcc1795",
+    "size": 6938040706,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "PoltergeistXL-Test.fp16.safetensors",
+   "blobId": "b57a719097e9035819104b8824392b64dd6ca106",
+   "size": 6938040706,
+   "lfs": {
+    "sha256": "f94537d5ffb1898c912d7acf5e10c351cedaaf02ce21dd140cbdbaa21b48dbdc",
+    "size": 6938040706,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "fda46253219f95f6e4460a550bb4db804d42dee2",
+   "size": 302
+  },
+  {
+   "rfilename": "SlimyMixBetaXL-FINAL.fp16.safetensors",
+   "blobId": "ffb77e3d567481c066edcbd05c637fe8576f2b84",
+   "size": 6938042906,
+   "lfs": {
+    "sha256": "96744df43386827be9e112de7dad55f7761ad9b9a10877f9964ed8c98588f55e",
+    "size": 6938042906,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "SlimyMixSDXL.safetensors",
+   "blobId": "5f595a291c6e01dba3f4c43f1ebae6a0b7478ee4",
+   "size": 13685877866,
+   "lfs": {
+    "sha256": "ff1242bddaf7a6e300e7692203f1e8f285e1d4e6e29409fd64b9cf5fc9533af9",
+    "size": 13685877866,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "SlimyMixSDXLPRUNED.safetensors",
+   "blobId": "e7b112a915222beb7fb2dc2a3142d083a72a1cce",
+   "size": 6938040682,
+   "lfs": {
+    "sha256": "28e315ffe8ed6421d0c2b93448d16acb7e505024a4767dd37c00da0602b048ae",
+    "size": 6938040682,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "SplatterPunkXL-ALPHA.safetensors",
+   "blobId": "ae6413e35742a04e49daa4d90725a468267bf5e9",
+   "size": 6938042906,
+   "lfs": {
+    "sha256": "b5730102eb8c96117245052d11056f6d93a1fb25f67749f4205126d8b559efa2",
+    "size": 6938042906,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "SplatterXLBASE1.fp16.safetensors",
+   "blobId": "04d22994408508e071545e3ea979b414a050f575",
+   "size": 6938042906,
+   "lfs": {
+    "sha256": "57603822ffdfd959eb47d8fc945387d98e2da3befc9442964d3160f47fdfb4c4",
+    "size": 6938042906,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "SplatterXLBASE2.fp16.safetensors",
+   "blobId": "595cb91804d4fc8c57c7fb2100d0a81a265d0706",
+   "size": 6938042906,
+   "lfs": {
+    "sha256": "ba47cb0557fa42c1a774379180a3542e14326049a43730556abb06805a235d42",
+    "size": 6938042906,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "SplatterXLBASE3.fp16.safetensors",
+   "blobId": "2674e6ad4628041b82615cac6bf4c69b66f2e689",
+   "size": 6938042914,
+   "lfs": {
+    "sha256": "003aa40d454d4628ea9355e5594cb2bda98f6daf61f0c23c4ef343248d0ed382",
+    "size": 6938042914,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "VirtualDiffusionSDXL.fp16.safetensors",
+   "blobId": "d778284b8d509768f560077818df96f3bc71aa85",
+   "size": 6938042482,
+   "lfs": {
+    "sha256": "cc14d86c8e70586fbb02eda232e7c063d51b2cb5a42ac7df199d318e7414ab56",
+    "size": 6938042482,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "VirtualDiffusionXL-TEST.fp16.safetensors",
+   "blobId": "27b7e9f1c082250e16445562d542045d7b947719",
+   "size": 6938042922,
+   "lfs": {
+    "sha256": "d999dd3a668355c163a6ca01faf307d9fad451cddaec9f858d040bda7167cc5b",
+    "size": 6938042922,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "eerthbckmix.fp16.safetensors",
+   "blobId": "a9ad6075edd8ee7e58c2679034263059b2ca7a32",
+   "size": 6938040706,
+   "lfs": {
+    "sha256": "6789a948fc82d195b5767afb0e33dde0f48ddeb6d2c1df151a765bcedce76103",
+    "size": 6938040706,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "oseearthbckmix1.fp16.safetensors",
+   "blobId": "4fab55f7a3fede7e77052eb4745430a827819f17",
+   "size": 6939223210,
+   "lfs": {
+    "sha256": "1d37ab98f85160b9b6a5e26468f1d609cdbd3fda5bbcfae1f28b53f63d336657",
+    "size": 6939223210,
+    "pointerSize": 135
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse"
+ ],
+ "createdAt": "2023-07-21T23:18:02.000Z",
+ "usedStorage": 485293158104
+}

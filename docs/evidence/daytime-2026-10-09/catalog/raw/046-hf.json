@@ -1,0 +1,212 @@
+{
+ "_id": "68a3babd9bb214075c9a7f16",
+ "id": "QuantStack/Qwen-Image-Edit-GGUF",
+ "private": false,
+ "pipeline_tag": "image-to-image",
+ "library_name": "gguf",
+ "tags": [
+  "gguf",
+  "image-to-image",
+  "en",
+  "zh",
+  "base_model:Qwen/Qwen-Image-Edit",
+  "base_model:quantized:Qwen/Qwen-Image-Edit",
+  "license:apache-2.0",
+  "region:us"
+ ],
+ "downloads": 30552,
+ "likes": 303,
+ "modelId": "QuantStack/Qwen-Image-Edit-GGUF",
+ "author": "QuantStack",
+ "sha": "acab6f9f09973bc8a128a1e04e809acb65784e1c",
+ "lastModified": "2025-09-01T19:35:52.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "language": [
+   "en",
+   "zh"
+  ],
+  "license": "apache-2.0",
+  "base_model": [
+   "Qwen/Qwen-Image-Edit"
+  ],
+  "library_name": "gguf",
+  "pipeline_tag": "image-to-image"
+ },
+ "gguf": {
+  "total": 20430401088,
+  "architecture": "qwen_image",
+  "totalFileSize": 7062518304
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "1ff712f78b56efe783a04e995063835be247b7d8",
+   "size": 2611
+  },
+  {
+   "rfilename": "Qwen_Image_Edit-Q2_K.gguf",
+   "blobId": "c3f67e542808575ad3e85e16ac8bfe3693523783",
+   "size": 7062518304,
+   "lfs": {
+    "sha256": "a3f1680339685f558cbdf0254684e3529aab52b7e37aa8055eed0e8844a2b304",
+    "size": 7062518304,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "Qwen_Image_Edit-Q3_K_M.gguf",
+   "blobId": "4c61bcecd837c8e501b4fb6e89e23e3728078c54",
+   "size": 9679567392,
+   "lfs": {
+    "sha256": "091ae31a0a9c2c0e39a9a0dc8c6b5c7e40715d1d84c62683d7b978241f655ec8",
+    "size": 9679567392,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "Qwen_Image_Edit-Q3_K_S.gguf",
+   "blobId": "797a6345600318cbc423cee4ae57a51d90868097",
+   "size": 8952609312,
+   "lfs": {
+    "sha256": "69a54ec267d22ce2235fb1d2a681a3ddefa46e207b4844e03e1283cdf1845f51",
+    "size": 8952609312,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "Qwen_Image_Edit-Q4_0.gguf",
+   "blobId": "38cca87e2c88b18409db79f791fee74a5b4e45dd",
+   "size": 11852773920,
+   "lfs": {
+    "sha256": "bbcfeee45b03f84c9d5f980652f2532e891100e67e7a6f9f1dbdbb63f88a70b3",
+    "size": 11852773920,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen_Image_Edit-Q4_1.gguf",
+   "blobId": "373a15b8c2d3a6dd475e557c73410c1c5384aa48",
+   "size": 12843678240,
+   "lfs": {
+    "sha256": "04266a84c084f60bb74803a21accfb46fcdaf65b2bb20e082a0591d41d82634b",
+    "size": 12843678240,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen_Image_Edit-Q4_K_M.gguf",
+   "blobId": "b1a1082d2e753489ac667174fc036bb9990ec0e6",
+   "size": 13065746976,
+   "lfs": {
+    "sha256": "52fde8590c26b361158bf40c573cc18805c65279cdd86fb38710863771c8eaf0",
+    "size": 13065746976,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen_Image_Edit-Q4_K_S.gguf",
+   "blobId": "96b8c85587d2fd96f0b1bacb9ddb134b5085876f",
+   "size": 12140608032,
+   "lfs": {
+    "sha256": "78bf89a8d18b6a5fb10858ed98f9843c50eb89af6fd83140ff7b0d4aaa6a8c28",
+    "size": 12140608032,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen_Image_Edit-Q5_0.gguf",
+   "blobId": "240fe9b127b288d4389d71790e0a7c7b5504dae4",
+   "size": 14400813600,
+   "lfs": {
+    "sha256": "4bc51cf30685c962619e3c833f98ed15bb7693cfb051e50a8ddeea500531dd68",
+    "size": 14400813600,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen_Image_Edit-Q5_1.gguf",
+   "blobId": "ee62c614dc586b325ad1d126b850edbea5784d06",
+   "size": 15391717920,
+   "lfs": {
+    "sha256": "aa009aaccbb5cbc261c83c6452ee517f94af5b1eeaeba53f7a903db06b112022",
+    "size": 15391717920,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen_Image_Edit-Q5_K_M.gguf",
+   "blobId": "61976c2d4ebe7be5d76e96c8b3c497b3af9f1152",
+   "size": 14934899232,
+   "lfs": {
+    "sha256": "5a6224c76ef8b7737b4d0f29080a6c506a6d2d8a91cd4b93e320da0e18306f10",
+    "size": 14934899232,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen_Image_Edit-Q5_K_S.gguf",
+   "blobId": "b20852553c6911291378dfd9a5fd5566e7315582",
+   "size": 14117698080,
+   "lfs": {
+    "sha256": "2c4c69f06b7a5304b1da99f68788fd61065f57190f4850d3d2c7c146bb77043f",
+    "size": 14117698080,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen_Image_Edit-Q6_K.gguf",
+   "blobId": "6d1e3a90e19dccec8ed1fd296abdffc45970c437",
+   "size": 16824990240,
+   "lfs": {
+    "sha256": "59ab5e015de35ca1c4cacbf95caff49c02d36ebe713ba51ef878c0481a988656",
+    "size": 16824990240,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen_Image_Edit-Q8_0.gguf",
+   "blobId": "fef7d616105d5af9c33ecff3483cc73c2008566f",
+   "size": 21761817120,
+   "lfs": {
+    "sha256": "d881a65010b10f9a6aff6e0ab6d00eda0382ab939c833f7e1507b6ab6d309ac9",
+    "size": 21761817120,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "e8e7622d3ef209e5ee8f73130fafe7f9f9a1d2ba",
+   "size": 1369
+  },
+  {
+   "rfilename": "VAE/Qwen_Image-VAE.safetensors",
+   "blobId": "0e2c65956cb47e2be7d1def5a08ddd58a0d5beb5",
+   "size": 253806246,
+   "lfs": {
+    "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
+    "size": 253806246,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "mmproj/Qwen2.5-VL-7B-Instruct-mmproj-BF16.gguf",
+   "blobId": "dfa2aa1902ad0e9851f3dc151f0cfef4e138f6f6",
+   "size": 1354163040,
+   "lfs": {
+    "sha256": "f0edf43c09b69d6e5dd24262f33b356a1e9dd978e7c3299b3e69141fcbb87553",
+    "size": 1354163040,
+    "pointerSize": 135
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse",
+  "fastgpu/vram-and-gpu-cost-calculator"
+ ],
+ "createdAt": "2025-08-18T23:43:57.000Z",
+ "usedStorage": 176245386012
+}

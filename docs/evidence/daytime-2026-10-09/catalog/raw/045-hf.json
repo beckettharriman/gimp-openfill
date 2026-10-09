@@ -1,0 +1,194 @@
+{
+ "_id": "68d1b745e5f1afea30be3965",
+ "id": "QuantStack/Qwen-Image-Edit-2509-GGUF",
+ "private": false,
+ "pipeline_tag": "image-to-image",
+ "library_name": "gguf",
+ "tags": [
+  "gguf",
+  "image-to-image",
+  "en",
+  "zh",
+  "base_model:Qwen/Qwen-Image-Edit-2509",
+  "base_model:quantized:Qwen/Qwen-Image-Edit-2509",
+  "license:apache-2.0",
+  "region:us"
+ ],
+ "downloads": 106888,
+ "likes": 357,
+ "modelId": "QuantStack/Qwen-Image-Edit-2509-GGUF",
+ "author": "QuantStack",
+ "sha": "84a3006979126011422eeeefe0c9485ddf431ef5",
+ "lastModified": "2025-10-18T08:08:53.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "language": [
+   "en",
+   "zh"
+  ],
+  "license": "apache-2.0",
+  "base_model": [
+   "Qwen/Qwen-Image-Edit-2509"
+  ],
+  "library_name": "gguf",
+  "pipeline_tag": "image-to-image"
+ },
+ "gguf": {
+  "total": 20430401088,
+  "architecture": "qwen_image",
+  "totalFileSize": 7147452960
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "06c5add91cc0d90fdb8b39d600d667af95e0c691",
+   "size": 2402
+  },
+  {
+   "rfilename": "Qwen-Image-Edit-2509-Q2_K.gguf",
+   "blobId": "798d01abb08045d1e6fd999bd37443138ac7061e",
+   "size": 7147452960,
+   "lfs": {
+    "sha256": "8d65b6f3b02c93ad5163b9bb7580ae6dd4cee776224b8d64528459c1e197fe93",
+    "size": 7147452960,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "Qwen-Image-Edit-2509-Q3_K_M.gguf",
+   "blobId": "8a3ac7a87f9d45ab87c28c61fab742b197bbd01c",
+   "size": 9764502048,
+   "lfs": {
+    "sha256": "8fc24bbc4f818dd767f5219f38b8011bf1f2d196b9d1c3cab8df51f8e9f3bd43",
+    "size": 9764502048,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "Qwen-Image-Edit-2509-Q3_K_S.gguf",
+   "blobId": "e42e6e2c2d1920f7163ae1430ceb5b7b729dae83",
+   "size": 9037543968,
+   "lfs": {
+    "sha256": "03e46bb9666f15c282d316989bd082c449074e5f4cf186382444d4dfad1e8308",
+    "size": 9037543968,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "Qwen-Image-Edit-2509-Q4_0.gguf",
+   "blobId": "931efb309f7232294c6668585ca33b436d603b55",
+   "size": 11928271392,
+   "lfs": {
+    "sha256": "4f6cda402e1dbc36ee4b601b10b9ee0da2dbefedfbfa53eae3efb0ddff48c3e2",
+    "size": 11928271392,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen-Image-Edit-2509-Q4_1.gguf",
+   "blobId": "0c0d786a2f935327bdbebb29f66a2d3292e4d7f8",
+   "size": 12886145568,
+   "lfs": {
+    "sha256": "cec10dd533706d47bb690d6c4ba9a20afc89686d4c1a7024552fca226aad9706",
+    "size": 12886145568,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen-Image-Edit-2509-Q4_K_M.gguf",
+   "blobId": "1c0c1523741bdf0ff2dfadc9a9f7df8fc1121288",
+   "size": 13065746976,
+   "lfs": {
+    "sha256": "08f27cdf3e760edef5136ab0afdb9d3ed7a2799bd730b8d5cd9ecb291d808425",
+    "size": 13065746976,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen-Image-Edit-2509-Q4_K_S.gguf",
+   "blobId": "9e5d53e26c296a9d5ca39b7eec0ac24d1c80c186",
+   "size": 12204309024,
+   "lfs": {
+    "sha256": "07e64364812e527e0e39db3770440f76a5ed4732926c54a0a0e7da841cbe0ce6",
+    "size": 12204309024,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen-Image-Edit-2509-Q5_0.gguf",
+   "blobId": "fcebca70f6934b1e17d986ea22dd7e52aa84d20b",
+   "size": 14400813600,
+   "lfs": {
+    "sha256": "f9f8ac45665c82d4b0dfd2bd60df4dc37d90b4e9906a8cdc4ef3ab75f5403fa6",
+    "size": 14400813600,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen-Image-Edit-2509-Q5_1.gguf",
+   "blobId": "4fe79e00d21b7cec7f4bf9961f3d706a2bd0cd57",
+   "size": 15391717920,
+   "lfs": {
+    "sha256": "c85582fcefbf44c156484e90611f8598c991240418b85d3df19efb361f593e5a",
+    "size": 15391717920,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen-Image-Edit-2509-Q5_K_M.gguf",
+   "blobId": "c47268ef10944954f3dbdea05ef18289ab63b0f4",
+   "size": 14934899232,
+   "lfs": {
+    "sha256": "9e3f23a2c662fd4ccc84ca259fa93a6e5a6beec81a51662f4437a6a399b84d87",
+    "size": 14934899232,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen-Image-Edit-2509-Q5_K_S.gguf",
+   "blobId": "9f76c59cc33a919db7ea8ecab1781a5fe6bf4faa",
+   "size": 14117698080,
+   "lfs": {
+    "sha256": "3e1360f542502f7bc7cc923dad0f16ee6f331bda85fdd2558c989617aa75f4e0",
+    "size": 14117698080,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen-Image-Edit-2509-Q6_K.gguf",
+   "blobId": "d78660a1d18abe8abd4d6b64cb2899f6d9b5c992",
+   "size": 16824990240,
+   "lfs": {
+    "sha256": "ec5694f11a2908c10ef5324c50c79b1bb433547a39a211996551417b4b16f0ce",
+    "size": 16824990240,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "Qwen-Image-Edit-2509-Q8_0.gguf",
+   "blobId": "c2de3aa0e4f98895e860301423071a7a3da5dba0",
+   "size": 21761817120,
+   "lfs": {
+    "sha256": "f8f0773e56f94f7f4508ca15a5bc9acf1d6ca2863bebaba7a1b80fbf76198e02",
+    "size": 21761817120,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "8d1d0cd7d5061ebe469ee5db4a2b9c65915bafaf",
+   "size": 1548
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse",
+  "sammakeitt/qwen-image-edit",
+  "Luminia/Marigold-V2-CPU",
+  "fastgpu/vram-and-gpu-cost-calculator"
+ ],
+ "createdAt": "2025-09-22T20:53:25.000Z",
+ "usedStorage": 235997663328
+}

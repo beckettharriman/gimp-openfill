@@ -1,0 +1,45 @@
+hardware: NVIDIA GeForce RTX 4070 Laptop GPU, 8 GB graphics memory, 31 GB memory, 386 GB free disk space  (nvidia-smi)
+35 candidates in 4.1 s; offline=False from_cache=False
+
+== sd15-inpaint: 9
+   5.29 hugging   4.0 GB comfortable genai-archive/stable-diffusion-v1-5-inpainting (sd-v1-5-inpainting)  [creativeml-openrail-m] dl/mo=2930 upd=2024-12-25
+   5.02 hugging   4.0 GB comfortable andregn/Realistic_Vision_V6.0-inpainting (Realistic_Vision_V6.0_NV_B1_inpainting)  [creativeml-openrail-m] dl/mo=2305 upd=2023-12-22
+   4.99 civitai   2.0 GB comfortable Realistic Vision V6.0 B1 (V5.1-inpainting (VAE))  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=2076 upd=2023-07-31
+   4.96 civitai   2.0 GB comfortable CyberRealistic (v8.0-Inpainting)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=419 upd=2025-02-26
+   4.89 civitai   2.0 GB comfortable epiCRealism (pure Evolution V5-inpainting)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=1408 upd=2023-08-22
+   4.81 civitai   2.0 GB comfortable majicMIX realistic 麦橘写实 (v7 inpainting)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=1047 upd=2023-11-11
+   4.73 civitai   2.0 GB comfortable epiCRealism pureEvolution InPainting (v1.0)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=759 upd=2023-06-14
+   4.67 civitai   2.0 GB comfortable epiCPhotoGasm (Z - Inpainting)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=614 upd=2023-10-27
+   4.59 civitai   4.0 GB comfortable AbsoluteReality (v1.8.1-INPAINTING)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=454 upd=2023-08-05
+
+== sdxl: 14
+   7.13 hugging   6.6 GB comfortable RunDiffusion/Juggernaut-XI-v11 (Juggernaut-XI-byRunDiffusion)  [cc-by-nc-nd-4.0] dl/mo=17663 upd=2026-05-08
+   6.81 hugging   6.6 GB comfortable RunDiffusion/Juggernaut-XL-v8 (juggernautXL_v8Rundiffusion)  [creativeml-openrail-m] dl/mo=5220 upd=2026-05-08
+   6.81 civitai   6.5 GB comfortable CyberRealistic XL (v10.0)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=6248 upd=2026-04-23
+   6.79 civitai   6.5 GB comfortable epiCRealism XL (Pure_fix)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=21147 upd=2025-12-18
+   6.70 hugging   6.5 GB comfortable cagliostrolab/animagine-xl-4.0 (animagine-xl-4.0)  [openrail++] dl/mo=383899 upd=2025-02-13
+   6.66 hugging   6.5 GB comfortable RunDiffusion/Juggernaut-XL (juggernautXL_version2)  [creativeml-openrail-m] dl/mo=2918 upd=2026-05-08
+   6.62 hugging   6.5 GB comfortable MLbackup/2023_Scraped_SDXL (FP16)  [creativeml-openrail-m] dl/mo=6859 upd=2026-02-01
+   6.26 civitai   6.6 GB comfortable Juggernaut XL (Ragnarok)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=29676 upd=2025-05-07
+   5.64 civitai   6.5 GB comfortable Jib Mix Realistic XL (v18.0 Skin Supreme)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=1556 upd=2025-07-02
+   5.58 hugging   6.5 GB comfortable EnD-Diffusers/Dec2023 (FP16)  [creativeml-openrail-m] dl/mo=5088 upd=2025-02-17
+   5.51 civitai   6.5 GB comfortable Animagine XL 4.0 (v4 Opt)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=4073 upd=2025-02-13
+   5.37 civitai   6.5 GB comfortable SD XL (v1.0 VAE fix)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=9009 upd=2023-07-29
+   5.26 civitai   6.5 GB comfortable Animagine XL V3.1 (v3.1)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=5922 upd=2024-03-21
+   5.24 civitai   6.5 GB comfortable 万象熔炉 | Anything XL (XL)  [Creator's terms on Civitai (selling generated images allowed)] dl/mo=5494 upd=2024-03-10
+
+== flux-fill: 5
+   4.67 hugging  14.8 GB offload     gated cudabenchmarktest/flux1-fill-dev-fp8 (FP8)  [flux-1-dev-non-commercial-license] dl/mo=2686 upd=2026-05-20
+   4.43 hugging  14.8 GB offload     gated yichengup/flux.1-fill-dev-OneReward (FP8)  [cc-by-nc-4.0] dl/mo=3641 upd=2026-01-26
+   4.39 hugging  10.0 GB offload     gated YarvixPA/FLUX.1-Fill-dev-GGUF (Q4_K_S)  [flux-1-dev-non-commercial-license] dl/mo=33481 upd=2025-06-11
+   2.95 hugging  10.0 GB offload     gated SporkySporkness/FLUX.1-Fill-dev-GGUF (Q4_0)  [flux-1-dev-non-commercial-license] dl/mo=1118 upd=2024-11-22
+   2.82 hugging  13.1 GB offload     gated gpustack/FLUX.1-Fill-dev-GGUF (Q4_0)  [flux-1-dev-non-commercial-license] dl/mo=482 upd=2024-12-25
+
+== qwen-edit: 7
+   5.04 hugging  21.1 GB offload     QuantStack/Qwen-Image-Edit-2509-GGUF (Q4_K_M)  [apache-2.0] dl/mo=106888 upd=2025-10-18
+   5.02 hugging  19.8 GB offload     ChrisColeTech/qwen-image-edit-multiple-angles-GGUF (Q4_K_M)  [apache-2.0] dl/mo=3607 upd=2026-08-30
+   4.68 hugging  21.1 GB offload     Frederic75/Qwen-Image-Edit-2511-GGUF (Q4_K_M)  [apache-2.0] dl/mo=6475 upd=2026-03-02
+   4.59 hugging  21.1 GB offload     QuantStack/Qwen-Image-Edit-GGUF (Q4_K_M)  [apache-2.0] dl/mo=30552 upd=2025-09-01
+   4.51 hugging  21.2 GB offload     unsloth/Qwen-Image-Edit-2509-GGUF (Q4_K_M)  [apache-2.0] dl/mo=6906 upd=2025-12-22
+   4.40 hugging  21.2 GB offload     unsloth/Qwen-Image-Edit-GGUF (Q4_K_M)  [apache-2.0] dl/mo=4598 upd=2025-12-22
+   4.38 hugging  19.9 GB offload     calcuis/qwen-image-edit-plus-gguf (Q4_K_M)  [apache-2.0] dl/mo=9954 upd=2025-10-03

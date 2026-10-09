@@ -1,0 +1,100 @@
+{
+ "_id": "676a9c79b04e11a6e8471d19",
+ "id": "gpustack/stable-diffusion-v1-5-inpainting-GGUF",
+ "private": false,
+ "pipeline_tag": "text-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "gguf",
+  "stable-diffusion",
+  "stable-diffusion-diffusers",
+  "text-to-image",
+  "arxiv:2207.12598",
+  "arxiv:2112.10752",
+  "arxiv:2103.00020",
+  "arxiv:2205.11487",
+  "arxiv:1910.09700",
+  "license:creativeml-openrail-m",
+  "region:us"
+ ],
+ "downloads": 1814,
+ "likes": 0,
+ "modelId": "gpustack/stable-diffusion-v1-5-inpainting-GGUF",
+ "author": "gpustack",
+ "sha": "21491e4f6af4723f2677172327ea34656da4ef3e",
+ "lastModified": "2024-12-25T07:49:50.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "license": "creativeml-openrail-m",
+  "tags": [
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image"
+  ],
+  "inference": false,
+  "library_name": "diffusers"
+ },
+ "gguf": {
+  "total": 1066249707,
+  "totalFileSize": 2132613664
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "d399a507725a29aad23a73de76992b7b08489a56",
+   "size": 1796
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "b22924ef69c9902b5e33e0b3eca069785064dd9d",
+   "size": 15829
+  },
+  {
+   "rfilename": "stable-diffusion-v1-5-inpainting-FP16.gguf",
+   "blobId": "bc8214df5a6587a949be5fd37ca358a6d462da20",
+   "size": 2132613664,
+   "lfs": {
+    "sha256": "407968ed48ff2c9d28e4b29e65008530d9961b6515c77068a392145bcbc6a0ae",
+    "size": 2132613664,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "stable-diffusion-v1-5-inpainting-Q4_0.gguf",
+   "blobId": "e22c976820087552ba760cd703dfbfebd83c754e",
+   "size": 1747219584,
+   "lfs": {
+    "sha256": "d157ce24483f0c999062da140eacebe8f3ed015e652723e31f6d39119b800c16",
+    "size": 1747219584,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "stable-diffusion-v1-5-inpainting-Q4_1.gguf",
+   "blobId": "70337ed5a91d83392683d0133ca766fddedeb608",
+   "size": 1763975392,
+   "lfs": {
+    "sha256": "c5aec4a8e5c720ab74132ec6553504290ffe84db6c5e51f87808600b10e25e35",
+    "size": 1763975392,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "stable-diffusion-v1-5-inpainting-Q8_0.gguf",
+   "blobId": "936b53ca64db9016f79bcc6458d9f72092989b2c",
+   "size": 1881270304,
+   "lfs": {
+    "sha256": "2301f1a0712de3dc2ff16181e1023865aa837922216e439491b98b00d12eb5fc",
+    "size": 1881270304,
+    "pointerSize": 135
+   }
+  }
+ ],
+ "spaces": [],
+ "createdAt": "2024-12-24T11:35:21.000Z",
+ "usedStorage": 7525078944
+}

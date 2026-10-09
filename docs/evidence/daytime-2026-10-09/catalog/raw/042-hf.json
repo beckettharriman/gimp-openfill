@@ -1,0 +1,607 @@
+[
+ {
+  "_id": "69460a9f39496d01d0d8beea",
+  "id": "unsloth/Qwen-Image-Edit-2511-GGUF",
+  "gated": false,
+  "lastModified": "2026-01-08T21:13:12.000Z",
+  "trendingScore": 10,
+  "downloads": 477622,
+  "tags": [
+   "gguf",
+   "quantized",
+   "unsloth",
+   "qwen",
+   "image-to-image",
+   "en",
+   "zh",
+   "arxiv:2508.02324",
+   "base_model:Qwen/Qwen-Image-Edit-2511",
+   "base_model:quantized:Qwen/Qwen-Image-Edit-2511",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "695e915b1b89b0a5dd2db5d6",
+  "id": "fal/Qwen-Image-Edit-2511-Multiple-Angles-LoRA",
+  "gated": false,
+  "lastModified": "2026-01-07T17:06:01.000Z",
+  "trendingScore": 10,
+  "downloads": 61747,
+  "tags": [
+   "diffusers",
+   "qwen",
+   "qwen-image-edit",
+   "qwen-image-edit-2511",
+   "lora",
+   "multi-angle",
+   "camera-angles",
+   "camera-control",
+   "image-editing",
+   "image-to-image",
+   "gaussian-splatting",
+   "fal",
+   "en",
+   "base_model:Qwen/Qwen-Image-Edit-2511",
+   "base_model:adapter:Qwen/Qwen-Image-Edit-2511",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "694245ee81aa933d0a1237c8",
+  "id": "Qwen/Qwen-Image-Edit-2511",
+  "gated": false,
+  "lastModified": "2025-12-23T13:13:52.000Z",
+  "trendingScore": 9,
+  "downloads": 246294,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "image-to-image",
+   "en",
+   "zh",
+   "arxiv:2508.02324",
+   "license:apache-2.0",
+   "diffusers:QwenImageEditPlusPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68a19381db43c983deb63fa5",
+  "id": "Qwen/Qwen-Image-Edit",
+  "gated": false,
+  "lastModified": "2025-08-25T04:41:11.000Z",
+  "trendingScore": 5,
+  "downloads": 111486,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "image-to-image",
+   "en",
+   "zh",
+   "arxiv:2508.02324",
+   "license:apache-2.0",
+   "diffusers:QwenImageEditPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68a3deeddc7c9dccc5113f56",
+  "id": "Comfy-Org/Qwen-Image-Edit_ComfyUI",
+  "gated": false,
+  "lastModified": "2026-09-23T08:05:05.000Z",
+  "trendingScore": 5,
+  "downloads": 1616482,
+  "tags": [
+   "diffusion-single-file",
+   "comfyui",
+   "base_model:FireRedTeam/FireRed-Image-Edit-1.0",
+   "base_model:finetune:FireRedTeam/FireRed-Image-Edit-1.0",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "69647029cdaf822986596626",
+  "id": "prithivMLmods/Qwen-Image-Edit-2511-Unblur-Upscale",
+  "gated": false,
+  "lastModified": "2026-01-15T15:33:33.000Z",
+  "trendingScore": 4,
+  "downloads": 14144,
+  "tags": [
+   "diffusers",
+   "lora",
+   "art",
+   "image-to-image",
+   "en",
+   "base_model:Qwen/Qwen-Image-Edit-2511",
+   "base_model:adapter:Qwen/Qwen-Image-Edit-2511",
+   "doi:10.57967/hf/7521",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68d907edca580f3dc7df02ed",
+  "id": "DiffSynth-Studio/Qwen-Image-Edit-F2P",
+  "gated": false,
+  "lastModified": "2026-01-23T03:03:38.000Z",
+  "trendingScore": 3,
+  "downloads": 11677,
+  "tags": [
+   "diffusers",
+   "lora",
+   "image-to-image",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68a3babd9bb214075c9a7f16",
+  "id": "QuantStack/Qwen-Image-Edit-GGUF",
+  "gated": false,
+  "lastModified": "2025-09-01T19:35:52.000Z",
+  "trendingScore": 2,
+  "downloads": 30552,
+  "tags": [
+   "gguf",
+   "image-to-image",
+   "en",
+   "zh",
+   "base_model:Qwen/Qwen-Image-Edit",
+   "base_model:quantized:Qwen/Qwen-Image-Edit",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6929036625b70ba11f6ff2e0",
+  "id": "joyfox/Qwen-Image-Edit-2509-Upscale2K",
+  "gated": false,
+  "lastModified": "2025-11-28T02:05:32.000Z",
+  "trendingScore": 2,
+  "downloads": 18995,
+  "tags": [
+   "diffusers",
+   "image-generation",
+   "lora",
+   "Qwen-Image",
+   "image-to-image",
+   "en",
+   "base_model:Qwen/Qwen-Image-Edit-2509",
+   "base_model:adapter:Qwen/Qwen-Image-Edit-2509",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6a446e6d7fd08706168537f8",
+  "id": "cardamonnl/Qwen-Image-Edit-2511-int8-convrot",
+  "gated": false,
+  "lastModified": "2026-07-26T23:37:39.000Z",
+  "trendingScore": 2,
+  "downloads": 9077,
+  "tags": [
+   "diffusion-single-file",
+   "comfyui",
+   "base_model:Comfy-Org/Qwen-Image-Edit_ComfyUI",
+   "base_model:quantized:Comfy-Org/Qwen-Image-Edit_ComfyUI",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6ac169280826f32f504977a5",
+  "id": "houseofboern/realism-qwen-image-2.1-edit-lora",
+  "gated": false,
+  "lastModified": "2026-10-03T20:44:34.000Z",
+  "trendingScore": 2,
+  "downloads": 0,
+  "tags": [
+   "lora",
+   "qwen-image",
+   "image-editing",
+   "realism",
+   "comfyui",
+   "base_model:Qwen/Qwen-Image-2.1",
+   "base_model:adapter:Qwen/Qwen-Image-2.1",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "69b7b15f2418e24c9e36482a",
+  "id": "ScottzillaSystems/qwen-image-edit-plus-nsfw-lora",
+  "gated": false,
+  "lastModified": "2026-04-26T07:43:11.000Z",
+  "trendingScore": 1.1,
+  "downloads": 261194,
+  "tags": [
+   "diffusers",
+   "lora",
+   "text-to-image",
+   "nsfw",
+   "image-editing",
+   "qwen-image-edit",
+   "not-for-all-audiences",
+   "image-to-image",
+   "base_model:Qwen/Qwen-Image-Edit-2511",
+   "base_model:adapter:Qwen/Qwen-Image-Edit-2511",
+   "license:openrail++",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68a3cff39dca570ce2307f79",
+  "id": "ovedrive/qwen-image-edit-4bit",
+  "gated": false,
+  "lastModified": "2025-08-25T14:02:48.000Z",
+  "trendingScore": 1,
+  "downloads": 877,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "image-to-image",
+   "en",
+   "zh",
+   "arxiv:2508.02324",
+   "base_model:Qwen/Qwen-Image-Edit",
+   "base_model:quantized:Qwen/Qwen-Image-Edit",
+   "license:apache-2.0",
+   "diffusers:QwenImageEditPipeline",
+   "8-bit",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68b1800fde4e8ff4edcdbf8e",
+  "id": "TsienDragon/qwen-image-edit-lora-face-segmentation",
+  "gated": false,
+  "lastModified": "2025-08-29T10:27:22.000Z",
+  "trendingScore": 1,
+  "downloads": 112,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "lora",
+   "template:diffusion-lora",
+   "image-to-image",
+   "base_model:Qwen/Qwen-Image-Edit",
+   "base_model:adapter:Qwen/Qwen-Image-Edit",
+   "license:mit",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68d14a940f95459631145389",
+  "id": "Qwen/Qwen-Image-Edit-2509",
+  "gated": false,
+  "lastModified": "2025-09-22T13:37:12.000Z",
+  "trendingScore": 1,
+  "downloads": 465894,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "image-to-image",
+   "en",
+   "zh",
+   "arxiv:2508.02324",
+   "license:apache-2.0",
+   "diffusers:QwenImageEditPlusPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "690e7941a7aab0cbafebf129",
+  "id": "autoweeb/Qwen-Image-Edit-2509-Photo-to-Anime",
+  "gated": false,
+  "lastModified": "2025-11-11T23:55:01.000Z",
+  "trendingScore": 1,
+  "downloads": 49050,
+  "tags": [
+   "diffusers",
+   "anime",
+   "lora",
+   "qwen",
+   "qwen-image",
+   "qwen-image-edit",
+   "qwen-image-edit-2509",
+   "manga",
+   "image-to-image",
+   "photo2anime",
+   "en",
+   "zh",
+   "base_model:Qwen/Qwen-Image-Edit-2509",
+   "base_model:adapter:Qwen/Qwen-Image-Edit-2509",
+   "license:mit",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6948df3d2a59d6baf4a8d178",
+  "id": "lightx2v/Qwen-Image-Edit-2511-Lightning",
+  "gated": false,
+  "lastModified": "2026-01-15T10:41:12.000Z",
+  "trendingScore": 1,
+  "downloads": 345954,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "diffusion-single-file",
+   "comfyui",
+   "distillation",
+   "LoRA",
+   "lora",
+   "Qwen-Image",
+   "Qwen-Image-Edit",
+   "image-to-image",
+   "base_model:Qwen/Qwen-Image-Edit-2511",
+   "base_model:adapter:Qwen/Qwen-Image-Edit-2511",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "694b118f41db1923081dc60d",
+  "id": "drbaph/Qwen-Image-Edit-2511-FP8",
+  "gated": false,
+  "lastModified": "2025-12-23T23:32:59.000Z",
+  "trendingScore": 1,
+  "downloads": 6741,
+  "tags": [
+   "diffusers",
+   "comfyui",
+   "i2i",
+   "fp8",
+   "qwen-image-edit-2511",
+   "quantization",
+   "image-to-image",
+   "en",
+   "zh",
+   "arxiv:2508.02324",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "69521f3241db1923089b1dba",
+  "id": "joyfox/Qwen-Image-Edit-2511-Upscale2K",
+  "gated": false,
+  "lastModified": "2025-12-29T06:27:05.000Z",
+  "trendingScore": 1,
+  "downloads": 1128,
+  "tags": [
+   "diffusers",
+   "image-generation",
+   "lora",
+   "Qwen-Image",
+   "image-to-image",
+   "en",
+   "base_model:Qwen/Qwen-Image-Edit-2511",
+   "base_model:adapter:Qwen/Qwen-Image-Edit-2511",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "695a3d7da50a975be8c7b52f",
+  "id": "nappa114514/Qwen-Image-Edit-2511-torn-clothes",
+  "gated": false,
+  "lastModified": "2026-01-04T10:37:07.000Z",
+  "trendingScore": 1,
+  "downloads": 680,
+  "tags": [
+   "diffusers",
+   "lora",
+   "image-to-image",
+   "base_model:Qwen/Qwen-Image-Edit-2511",
+   "base_model:adapter:Qwen/Qwen-Image-Edit-2511",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "696b600f289e9ebd71479e09",
+  "id": "prithivMLmods/Qwen-Image-Edit-2511-Ultra-Realistic-Portrait",
+  "gated": false,
+  "lastModified": "2026-01-18T06:43:00.000Z",
+  "trendingScore": 1,
+  "downloads": 28389,
+  "tags": [
+   "diffusers",
+   "lora",
+   "art",
+   "image-to-image",
+   "en",
+   "base_model:Qwen/Qwen-Image-Edit-2511",
+   "base_model:adapter:Qwen/Qwen-Image-Edit-2511",
+   "doi:10.57967/hf/7595",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "69a15a277ad35849b135aa4c",
+  "id": "Aramon/Qwen-Image-Edit-Rapid-AIO",
+  "gated": false,
+  "lastModified": "2026-02-27T08:47:36.000Z",
+  "trendingScore": 1,
+  "downloads": 0,
+  "tags": [
+   "comfyUI",
+   "qwen",
+   "qwen-edit",
+   "t2i",
+   "i2i",
+   "text-to-image",
+   "base_model:Qwen/Qwen-Image-Edit-2511",
+   "base_model:finetune:Qwen/Qwen-Image-Edit-2511",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6ac612eb0468c62fefb505e5",
+  "id": "houseofboern/realism-qwen-image-2.1-edit-v2",
+  "gated": false,
+  "lastModified": "2026-10-07T09:37:58.000Z",
+  "trendingScore": 1,
+  "downloads": 0,
+  "tags": [
+   "lora",
+   "qwen-image",
+   "image-edit",
+   "realism",
+   "base_model:Qwen/Qwen-Image-Edit",
+   "base_model:adapter:Qwen/Qwen-Image-Edit",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6a838e67a61744a919182c13",
+  "id": "ChrisColeTech/qwen-image-edit-uncensored-GGUF",
+  "gated": false,
+  "lastModified": "2026-08-19T21:10:19.000Z",
+  "trendingScore": 0.9,
+  "downloads": 67201,
+  "tags": [
+   "gguf",
+   "not-for-all-audiences",
+   "qwen-image-edit",
+   "turbo",
+   "lora-merge",
+   "image-to-image",
+   "base_model:Phr00t/Qwen-Image-Edit-Rapid-AIO",
+   "base_model:quantized:Phr00t/Qwen-Image-Edit-Rapid-AIO",
+   "license:unknown",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68ddf4d3402703e857a2e4fb",
+  "id": "Phr00t/Qwen-Image-Edit-Rapid-AIO",
+  "gated": false,
+  "lastModified": "2026-02-03T02:10:35.000Z",
+  "trendingScore": 0.8,
+  "downloads": 0,
+  "tags": [
+   "comfyUI",
+   "qwen",
+   "qwen-edit",
+   "t2i",
+   "i2i",
+   "text-to-image",
+   "base_model:Qwen/Qwen-Image-Edit-2511",
+   "base_model:finetune:Qwen/Qwen-Image-Edit-2511",
+   "license:apache-2.0",
+   "region:us",
+   "not-for-all-audiences"
+  ]
+ },
+ {
+  "_id": "69162a1799addd6995ef686f",
+  "id": "aiunivers/qwen-image-edit-plus-nsfw-lora",
+  "gated": false,
+  "lastModified": "2025-11-14T13:47:20.000Z",
+  "trendingScore": 0.1,
+  "downloads": 0,
+  "tags": [
+   "lora",
+   "text-to-image",
+   "nsfw",
+   "base_model:Qwen/Qwen2.5-VL-7B-Instruct",
+   "base_model:adapter:Qwen/Qwen2.5-VL-7B-Instruct",
+   "license:openrail++",
+   "region:us",
+   "not-for-all-audiences"
+  ]
+ },
+ {
+  "_id": "6a70d854db096969061a4973",
+  "id": "davidpoint/qwen-image-edit-plus-nsfw-lora",
+  "gated": false,
+  "lastModified": "2026-08-03T18:05:08.000Z",
+  "trendingScore": 0.1,
+  "downloads": 1344,
+  "tags": [
+   "diffusers",
+   "lora",
+   "text-to-image",
+   "nsfw",
+   "image-editing",
+   "qwen-image-edit",
+   "not-for-all-audiences",
+   "image-to-image",
+   "base_model:Qwen/Qwen-Image-Edit-2511",
+   "base_model:adapter:Qwen/Qwen-Image-Edit-2511",
+   "license:openrail++",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6a9b29d0129b3baac44419b2",
+  "id": "ChrisColeTech/qwen-image-edit-uncensored-v1.1-GGUF",
+  "gated": false,
+  "lastModified": "2026-09-11T09:34:44.000Z",
+  "trendingScore": 0.1,
+  "downloads": 0,
+  "tags": [
+   "gguf",
+   "not-for-all-audiences",
+   "qwen-image-edit",
+   "turbo",
+   "lora-merge",
+   "image-to-image",
+   "base_model:Phr00t/Qwen-Image-Edit-Rapid-AIO",
+   "base_model:finetune:Phr00t/Qwen-Image-Edit-Rapid-AIO",
+   "license:unknown",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6ac450a8d82b8b549cdace04",
+  "id": "Sinomarsl/qwen-image-edit-plus-nsfw-lora",
+  "gated": false,
+  "lastModified": "2026-10-06T01:39:16.000Z",
+  "trendingScore": 0.1,
+  "downloads": 350,
+  "tags": [
+   "diffusers",
+   "lora",
+   "text-to-image",
+   "nsfw",
+   "image-editing",
+   "qwen-image-edit",
+   "not-for-all-audiences",
+   "image-text-to-image",
+   "base_model:Qwen/Qwen-Image-Edit-2511",
+   "base_model:adapter:Qwen/Qwen-Image-Edit-2511",
+   "license:openrail++",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6ac698acdad8cc65e088bdc3",
+  "id": "rerishilton/qwen-image-edit-plus-nsfw-lora",
+  "gated": false,
+  "lastModified": "2026-10-07T19:08:28.000Z",
+  "trendingScore": 0.1,
+  "downloads": 16,
+  "tags": [
+   "diffusers",
+   "lora",
+   "text-to-image",
+   "nsfw",
+   "image-editing",
+   "qwen-image-edit",
+   "not-for-all-audiences",
+   "image-to-image",
+   "base_model:Qwen/Qwen-Image-Edit-2511",
+   "base_model:adapter:Qwen/Qwen-Image-Edit-2511",
+   "license:openrail++",
+   "region:us"
+  ]
+ }
+]

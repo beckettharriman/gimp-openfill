@@ -1,0 +1,75 @@
+{
+ "_id": "6a0d15a5d352b9f4ce7e772d",
+ "id": "cudabenchmarktest/flux1-fill-dev-fp8",
+ "private": false,
+ "pipeline_tag": "image-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "flux",
+  "inpainting",
+  "fp8",
+  "non-commercial",
+  "image-to-image",
+  "base_model:black-forest-labs/FLUX.1-Fill-dev",
+  "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+  "license:other",
+  "region:us"
+ ],
+ "downloads": 2686,
+ "likes": 1,
+ "modelId": "cudabenchmarktest/flux1-fill-dev-fp8",
+ "author": "cudabenchmarktest",
+ "sha": "bc5ef4da6d294c45aa01aeb497cf199f28123665",
+ "lastModified": "2026-05-20T02:15:57.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "license": "other",
+  "license_name": "flux-1-dev-non-commercial-license",
+  "license_link": "LICENSE",
+  "base_model": "black-forest-labs/FLUX.1-Fill-dev",
+  "pipeline_tag": "image-to-image",
+  "library_name": "diffusers",
+  "tags": [
+   "flux",
+   "inpainting",
+   "fp8",
+   "non-commercial"
+  ]
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+   "size": 1519
+  },
+  {
+   "rfilename": "LICENSE",
+   "blobId": "d25c4fd4759b5900ec790a0e9680c8f3daaac689",
+   "size": 17026
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "475d23747298547f07f38d4ff99315173f127eb2",
+   "size": 1667
+  },
+  {
+   "rfilename": "flux1-fill-dev-fp8.safetensors",
+   "blobId": "f60a2d089383b5fe545a5db386160e58ca018350",
+   "size": 11902539328,
+   "lfs": {
+    "sha256": "0320d505ca42bca99c5bd600b1839ced2b2e980ea985917965d411d98a710729",
+    "size": 11902539328,
+    "pointerSize": 136
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse"
+ ],
+ "createdAt": "2026-05-20T02:00:05.000Z",
+ "usedStorage": 11902539328
+}

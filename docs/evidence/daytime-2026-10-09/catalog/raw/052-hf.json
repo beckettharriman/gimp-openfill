@@ -1,0 +1,244 @@
+{
+ "_id": "6a82f02062d7e8756a1a11c3",
+ "id": "ChrisColeTech/qwen-image-edit-multiple-angles-GGUF",
+ "private": false,
+ "pipeline_tag": "image-to-image",
+ "library_name": "gguf",
+ "tags": [
+  "gguf",
+  "qwen-image-edit",
+  "turbo",
+  "lora-merge",
+  "multiple-angles",
+  "image-to-image",
+  "base_model:Qwen/Qwen-Image-Edit-2509",
+  "base_model:quantized:Qwen/Qwen-Image-Edit-2509",
+  "license:apache-2.0",
+  "region:us"
+ ],
+ "downloads": 3607,
+ "likes": 3,
+ "modelId": "ChrisColeTech/qwen-image-edit-multiple-angles-GGUF",
+ "author": "ChrisColeTech",
+ "sha": "12cee536ffccb2eae97f69dd0b6f26871437f765",
+ "lastModified": "2026-08-30T05:23:39.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "license": "apache-2.0",
+  "base_model": [
+   "Qwen/Qwen-Image-Edit-2509"
+  ],
+  "library_name": "gguf",
+  "pipeline_tag": "image-to-image",
+  "tags": [
+   "qwen-image-edit",
+   "turbo",
+   "lora-merge",
+   "multiple-angles",
+   "gguf"
+  ]
+ },
+ "gguf": {
+  "total": 20430401088,
+  "architecture": "qwen_image",
+  "totalFileSize": 21723847296
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "51d293eb5272053896395af9f24b63ba6305e189",
+   "size": 3141
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "fc39bd7e774b4fc1dad3405dd64069118b0fcaf3",
+   "size": 5992
+  },
+  {
+   "rfilename": "samples/a-giant-full-body-teddy-bear-wearing-a-plain-white-t-shirt-20260817-115226.png",
+   "blobId": "5f7ada86799f2343ef544b6f3b1d80e1e81152f3",
+   "size": 1446579,
+   "lfs": {
+    "sha256": "28dacbbc412100794f69dedc692f473b360eacce313e516a31cf33d648b697ec",
+    "size": 1446579,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "samples/edit_base_turbo_q6_same_prompt.png",
+   "blobId": "f818db499c7eb07364d391b6c135f24d206640a7",
+   "size": 724789,
+   "lfs": {
+    "sha256": "7bdc6f4a22a6b58f7fc0b0ebc83292de9fdb6d6e9c921a924564a0d152d398d1",
+    "size": 724789,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "samples/edit_multi_angle_q6.png",
+   "blobId": "09a1424b11c89ed291f9debee81d7909a6caf86f",
+   "size": 573829,
+   "lfs": {
+    "sha256": "9525246571ace3dade90228f8e4716ef0ee4758b4c532cb40969718c1cf4647b",
+    "size": 573829,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "samples/edit_multi_angle_q6_english.png",
+   "blobId": "5dc04a0277154ac9654e3f1a2869542837c88233",
+   "size": 577168,
+   "lfs": {
+    "sha256": "770cc36acc551929423a366a23487d788d7cd4041fa3177adc593ae59b7cd371",
+    "size": 577168,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "samples/edit_wizard_hat.png",
+   "blobId": "4464e7f982fd0e5489b5b04cdcb064b29126f5da",
+   "size": 757947,
+   "lfs": {
+    "sha256": "e89c9b881a01030dbd0c74eba948f085360bc228514efde27e6d01685797bbc5",
+    "size": 757947,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "samples/input_penguin.png",
+   "blobId": "abffad5d78b0b33c4141adf28754951acf47a168",
+   "size": 109766,
+   "lfs": {
+    "sha256": "c6bb860691fb8243fa096904ae8b406cd414ba912f71c145ab840b9a93c48415",
+    "size": 109766,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "samples/put-a-red-wizard-hat-on-the-penguin-s-head-20260817-103700.png",
+   "blobId": "2a18b3132e0017558423f1dc12a0d0a39ee03a4a",
+   "size": 593717,
+   "lfs": {
+    "sha256": "16d761a970c59a5a1e45692a7a1d7d0cee1d335e5aee14bd45743874ac82efe5",
+    "size": 593717,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "samples/qwen-logo.png",
+   "blobId": "2c589e86270dc3551bedf79d65a44df7dfc45a2b",
+   "size": 224145,
+   "lfs": {
+    "sha256": "5ae709024b707600e6127f6e988347cc55ab0e2ae01d6fe174c5386a95323469",
+    "size": 224145,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "samples/show-this-exact-teddy-bear-in-one-image-as-three-separate-20260817-121640.png",
+   "blobId": "25a00537ab9ae05e298f410309c86c53734a5204",
+   "size": 1279255,
+   "lfs": {
+    "sha256": "27cb392f2a23159da54dba69e6b5e093a58c5def4435bdfb708b05b764792fed",
+    "size": 1279255,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "samples/show-this-exact-teddy-bear-seen-from-its-left-side-a-single-20260817-115607.png",
+   "blobId": "afe8d9f32c3aca63b55b8b2001df5f02d761dc63",
+   "size": 1165417,
+   "lfs": {
+    "sha256": "f551ee36f9b1d175c00761b2c4d80cf6faf9030243a3c027e948e3163340b658",
+    "size": 1165417,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "samples/show-this-exact-teddy-bear-seen-from-its-right-side-a-20260817-115752.png",
+   "blobId": "6c81811031544edacbf4ef30dfed5f069f5ec738",
+   "size": 1123240,
+   "lfs": {
+    "sha256": "4ff1f57313043658cdcfc05c324e54a2f1686f2f8c4450f1c3d014269b6f94df",
+    "size": 1123240,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "samples/this-exact-teddy-bear-seen-from-directly-behind-keep-the-20260817-121232.png",
+   "blobId": "b4b17f4324064bc00dabafc10071f3b2ba791d38",
+   "size": 1189540,
+   "lfs": {
+    "sha256": "6e641149f965a22c1b5b76b776af6540152915ed96240384a75dec069648fe52",
+    "size": 1189540,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "split/diffusion_models/qwen-image-edit-2509-turbo-multiple-angles-Q8_0.gguf",
+   "blobId": "6372a8137e00d46e2902779c503907b80cbd2d0f",
+   "size": 21723847296,
+   "lfs": {
+    "sha256": "f8db5c792cdb5fc4288cf9f8840fe36ec65d0e4b2cc217169f401e49fd7c8bea",
+    "size": 21723847296,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "split/diffusion_models/qwen-image-edit-multiple-angles-Q4_K_M.gguf",
+   "blobId": "f4eb9a97faf635f269c49fe296afde6f9df0fac9",
+   "size": 11657702016,
+   "lfs": {
+    "sha256": "7f75210c83f968659de786874a77fffe8d42b91e94576e6435985cf44fbb3fa5",
+    "size": 11657702016,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "split/diffusion_models/qwen-image-edit-multiple-angles-Q6_K.gguf",
+   "blobId": "38ec9c7349bf013da3419fa9da26a818bc06e55d",
+   "size": 16777443456,
+   "lfs": {
+    "sha256": "15b64ffb3a0456b2945cc4d429c3c52817046d49a0e1fda56fcd120d51b63841",
+    "size": 16777443456,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "split/text_encoders/Qwen2.5-VL-7B-Instruct-mmproj-f16.gguf",
+   "blobId": "6752418296477de55790981b94133d354d2bb00d",
+   "size": 1354162944,
+   "lfs": {
+    "sha256": "59479358f65aa972ceaaf71c5b5a3e47b3a94d78ac51ffb3398cb449b3e4ce76",
+    "size": 1354162944,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "split/text_encoders/Qwen2.5-VL-7B-Instruct-q4_0.gguf",
+   "blobId": "479998f4949e35b17b741da928888eb8e1cf397d",
+   "size": 4431389248,
+   "lfs": {
+    "sha256": "052ae2a5b537b0dbf4c7b01e39723de5abf02ed2844c646ad2561c2f9764bc2b",
+    "size": 4431389248,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "split/vae/qwen_image_vae.safetensors",
+   "blobId": "0e2c65956cb47e2be7d1def5a08ddd58a0d5beb5",
+   "size": 253806246,
+   "lfs": {
+    "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
+    "size": 253806246,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [],
+ "createdAt": "2026-08-17T11:27:28.000Z",
+ "usedStorage": 56208116598
+}

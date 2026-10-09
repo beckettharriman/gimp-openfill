@@ -454,8 +454,8 @@ class NodeInstallTests(unittest.TestCase):
             )
 
 
-class SupervisorTaskValidationTests(unittest.TestCase):
-    """The task worker re-checks queued tasks against the catalog and config.json."""
+class WorkerFixture(unittest.TestCase):
+    """A ComfyUI folder, a profile with config.json and a task worker (no tests of its own)."""
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -477,6 +477,10 @@ class SupervisorTaskValidationTests(unittest.TestCase):
 
     def tearDown(self):
         self.tmp.cleanup()
+
+
+class SupervisorTaskValidationTests(WorkerFixture):
+    """The task worker re-checks queued tasks against the catalog and config.json."""
 
     def _download_task(self, **file_overrides):
         f = catalog.by_id(self.entries, "mat-places512").files[0]
@@ -563,6 +567,89 @@ class SupervisorTaskValidationTests(unittest.TestCase):
         self.assertFalse(target.exists())
         self.assertTrue(stray.exists())
         self.assertTrue(outside.exists())
+
+
+class SupervisorLiveEntryTests(WorkerFixture):
+    """Live (hub) entries are accepted only after the Models tab remembered them,
+    and only with the strict live rules; a computed checksum is pinned afterwards."""
+
+    LIVE_URL = "https://civitai.com/api/download/models/1759168"
+    LIVE_DEST = "checkpoints/juggernautXL_ragnarok.safetensors"
+
+    def _live_raw(self, sha256=None):
+        base = catalog.by_id(self.entries, "sdxl-base")
+        main = {"role": "checkpoint", "url": self.LIVE_URL, "dest": self.LIVE_DEST, "size": len(PAYLOAD)}
+        if sha256:
+            main["sha256"] = sha256
+        return {
+            "id": "civitai-133005-1759168-1659952",
+            "name": "Juggernaut XL (Ragnarok)",
+            "tier": base.tier,
+            "capabilities": list(base.capabilities),
+            "arch": "sdxl",
+            "template": "sdxl_fooocus",
+            "page": "https://civitai.com/models/133005?modelVersionId=1759168",
+            "license": {"name": "Creator's terms on Civitai", "url": "https://civitai.com/models/133005"},
+            "gated": False,
+            "source_type": "first-party",
+            "uploader": "KandooAI",
+            "min_vram_gb": 6.8,
+            "requires_nodes": [{"repo": n.repo, "folder": n.folder, "commit": n.commit} for n in base.requires_nodes],
+            "requires_models": list(base.requires_models),
+            "files": [main],
+            "source": "civitai",
+            "family": "sdxl",
+        }
+
+    def _live_task(self):
+        return {
+            "id": "live",
+            "type": "download",
+            "model_id": "civitai-133005-1759168-1659952",
+            "models_root": str(self.models_root),
+            "files": [{"url": self.LIVE_URL, "dest": self.LIVE_DEST, "size": 1, "sha256": None}],
+        }
+
+    def test_live_entry_needs_to_be_remembered(self):
+        with self.assertRaises(catalog.CatalogError):
+            self.worker.checked_download_files(self._live_task())
+        catalog.remember_live_entry(self.profile, self._live_raw(), self.entries)
+        ((spec, dest),) = self.worker.checked_download_files(self._live_task())
+        self.assertEqual(spec.size, len(PAYLOAD))  # from the remembered entry, not the task
+        self.assertEqual(dest, self.models_root / "checkpoints" / "juggernautXL_ragnarok.safetensors")
+
+    def test_tampered_live_record_is_ignored(self):
+        catalog.remember_live_entry(self.profile, self._live_raw(), self.entries)
+        path = catalog.hub_selected_path(self.profile)
+        text = path.read_text(encoding="utf-8").replace(self.LIVE_URL, "https://evil.example/x.safetensors")
+        path.write_text(text, encoding="utf-8")
+        with self.assertRaises(catalog.CatalogError):
+            self.worker.checked_download_files(self._live_task())
+
+    def test_checksum_is_recorded_after_download(self):
+        catalog.remember_live_entry(self.profile, self._live_raw(), self.entries)
+        calls = []
+
+        def fake_download(url, dest, size, sha, token, progress, cancel):
+            calls.append((url, size, sha, token))
+            Path(dest).parent.mkdir(parents=True, exist_ok=True)
+            Path(dest).write_bytes(PAYLOAD)
+            return downloads.DownloadResult(Path(dest), len(PAYLOAD), SHA, 0)
+
+        original = supervisor.downloads.download_file
+        supervisor.downloads.download_file = fake_download
+        try:
+            self.worker._download(self._live_task())
+        finally:
+            supervisor.downloads.download_file = original
+        self.assertEqual(calls, [(self.LIVE_URL, len(PAYLOAD), None, None)])  # no token for Civitai
+        last = self.worker.status["history"][0]
+        self.assertEqual(last["state"], "done")
+        self.assertEqual(last["files"][0]["sha256"], SHA)
+        self.assertFalse(last["files"][0]["verified"])
+        self.assertTrue(last["files"][0]["sha256_recorded"])
+        (entry,) = catalog.load_selected(self.profile, self.entries)
+        self.assertEqual(entry.files[0].sha256, SHA)  # later downloads are verified against it
 
 
 class ProcessIdentityTests(unittest.TestCase):

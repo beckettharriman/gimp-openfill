@@ -1,0 +1,333 @@
+{
+ "_id": "6719a7be9665701fd68b0854",
+ "id": "genai-archive/stable-diffusion-v1-5-inpainting",
+ "private": false,
+ "pipeline_tag": "text-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "safetensors",
+  "stable-diffusion",
+  "stable-diffusion-diffusers",
+  "text-to-image",
+  "arxiv:2207.12598",
+  "arxiv:2112.10752",
+  "arxiv:2103.00020",
+  "arxiv:2205.11487",
+  "arxiv:1910.09700",
+  "license:creativeml-openrail-m",
+  "diffusers:StableDiffusionInpaintPipeline",
+  "region:us"
+ ],
+ "downloads": 2930,
+ "likes": 0,
+ "modelId": "genai-archive/stable-diffusion-v1-5-inpainting",
+ "author": "genai-archive",
+ "sha": "50450c34c8946e0d4e6d973478d7b4c48387c23a",
+ "lastModified": "2024-12-25T08:58:47.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {
+  "diffusers": {
+   "_class_name": "StableDiffusionInpaintPipeline"
+  }
+ },
+ "cardData": {
+  "license": "creativeml-openrail-m",
+  "tags": [
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image"
+  ],
+  "inference": false,
+  "library_name": "diffusers",
+  "extra_gated_prompt": "One more step before getting this model.\nThis model is open access and available to all, with a CreativeML OpenRAIL-M license further specifying rights and usage.\nThe CreativeML OpenRAIL License specifies: \n\n1. You can't use the model to deliberately produce nor share illegal or harmful outputs or content \n2. CompVis claims no rights on the outputs you generate, you are free to use them and are accountable for their use which must not go against the provisions set in the license\n3. You may re-distribute the weights and use the model commercially and/or as a service. If you do, please be aware you have to include the same use restrictions as the ones in the license and share a copy of the CreativeML OpenRAIL-M to all your users (please read the license entirely and carefully)\nPlease read the full license here: https://huggingface.co/spaces/CompVis/stable-diffusion-license\n\nBy clicking on \"Access repository\" below, you accept that your *contact information* (email address and username) can be shared with the model authors as well.\n  ",
+  "extra_gated_fields": {
+   "I have read the License and agree with its terms": "checkbox"
+  }
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+   "size": 1519
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "8b11a30386ee22cc33b9ed9e67f8c9f9c2739fed",
+   "size": 15826
+  },
+  {
+   "rfilename": "config.json",
+   "blobId": "432f2ef043de459ffb66e7e49d22131fc596a5d5",
+   "size": 748
+  },
+  {
+   "rfilename": "feature_extractor/preprocessor_config.json",
+   "blobId": "5294955ff7801083f720b34b55d0f1f51313c5c5",
+   "size": 342
+  },
+  {
+   "rfilename": "model_index.json",
+   "blobId": "1dda6689b6bed16a8b69f3df22fdc06983de68da",
+   "size": 548
+  },
+  {
+   "rfilename": "safety_checker/config.json",
+   "blobId": "9cfcfb854009626cec64993a947316d42eb255ea",
+   "size": 4777
+  },
+  {
+   "rfilename": "safety_checker/model.fp16.safetensors",
+   "blobId": "d802a3abeacaea6d76e2c6c62b20a6b59372597c",
+   "size": 608018440,
+   "lfs": {
+    "sha256": "08902f19b1cfebd7c989f152fc0507bef6898c706a91d666509383122324b511",
+    "size": 608018440,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "safety_checker/model.safetensors",
+   "blobId": "0cab1859920dbd828bfbfadd873e2ebeea5229ab",
+   "size": 1215981800,
+   "lfs": {
+    "sha256": "26bedfc237ed91ea9661957a1201f1a9dec54da7fd92f37cb2e9bff4b73ab639",
+    "size": 1215981800,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "safety_checker/pytorch_model.bin",
+   "blobId": "faa7c232cc5d9bce74eb4889572f683a773e96bf",
+   "size": 1216061799,
+   "lfs": {
+    "sha256": "193490b58ef62739077262e833bf091c66c29488058681ac25cf7df3d8190974",
+    "size": 1216061799,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "safety_checker/pytorch_model.fp16.bin",
+   "blobId": "6f73e24d32843d04f16c85b717883c62bbc45226",
+   "size": 608103564,
+   "lfs": {
+    "sha256": "22ba87205445ad5def13e54919b038dcfb7321ec1c3f4b12487d4fba6036125f",
+    "size": 608103564,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "scheduler/scheduler_config.json",
+   "blobId": "3a6a9a51b8ea8eb2b0c55e2811e608f2eca3ffd2",
+   "size": 313
+  },
+  {
+   "rfilename": "sd-v1-5-inpainting.ckpt",
+   "blobId": "477945c30dcad9c3d629470f7f52ceb86acd4cd7",
+   "size": 4265437280,
+   "lfs": {
+    "sha256": "c6bbc15e3224e6973459ba78de4998b80b50112b0ae5b5c67113d56b4e366b19",
+    "size": 4265437280,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "sd-v1-5-inpainting.fp16.ckpt",
+   "blobId": "abeaf1b30f037ad9c128f9fabfe065ac9e6d08d5",
+   "size": 4265456609,
+   "lfs": {
+    "sha256": "3384ef4638923d8cfe838d73d280dfbabc521ab751e8b74f8a0cba8a91d512fd",
+    "size": 4265456609,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "sd-v1-5-inpainting.fp16.safetensors",
+   "blobId": "69b2d30a7830080aede18ecdb97466c5d44b009a",
+   "size": 2132692100,
+   "lfs": {
+    "sha256": "1a33284f5a9be288d1d97c4b1d66d186b1eda8d3703506318e3358bf05914cee",
+    "size": 2132692100,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "sd-v1-5-inpainting.safetensors",
+   "blobId": "4035e44548cb2bf549230c9a2ef47868e04bdabb",
+   "size": 4265216468,
+   "lfs": {
+    "sha256": "ef97ac1fe87ed0406433ad8710ff1da6e07e873de9a1a107b828844336d015ec",
+    "size": 4265216468,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "text_encoder/config.json",
+   "blobId": "4d3e873ab5086ad989f407abd50fdce66db8d657",
+   "size": 617
+  },
+  {
+   "rfilename": "text_encoder/model.fp16.safetensors",
+   "blobId": "1ee9520565624366f70ff4ff21b8e79cc70cfb22",
+   "size": 246144864,
+   "lfs": {
+    "sha256": "77795e2023adcf39bc29a884661950380bd093cf0750a966d473d1718dc9ef4e",
+    "size": 246144864,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "text_encoder/model.safetensors",
+   "blobId": "8c84a9d03ec7d6ddf365ce5acca61d2bee6c1807",
+   "size": 492265848,
+   "lfs": {
+    "sha256": "7e7b5cc5d68991c50f042031c04547e49f006e468d521d064257a7f465c2910b",
+    "size": 492265848,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "text_encoder/pytorch_model.bin",
+   "blobId": "b7d12c62d43f947efeeba58b833ed8182541a73f",
+   "size": 492305335,
+   "lfs": {
+    "sha256": "770a47a9ffdcfda0b05506a7888ed714d06131d60267e6cf52765d61cf59fd67",
+    "size": 492305335,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "text_encoder/pytorch_model.fp16.bin",
+   "blobId": "cf6210a38f2e3e8930081442a3a2cf2ef77c6e4c",
+   "size": 246187076,
+   "lfs": {
+    "sha256": "05eee911f195625deeab86f0b22b115d7d8bc3adbfc1404f03557f7e4e6a8fd7",
+    "size": 246187076,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "tokenizer/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer/special_tokens_map.json",
+   "blobId": "2c2130b544c0c5a72d5d00da071ba130a9800fb2",
+   "size": 472
+  },
+  {
+   "rfilename": "tokenizer/tokenizer_config.json",
+   "blobId": "5ba7bf706515bc60487ad0e1816b4929b82542d6",
+   "size": 806
+  },
+  {
+   "rfilename": "tokenizer/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "unet/config.json",
+   "blobId": "432f2ef043de459ffb66e7e49d22131fc596a5d5",
+   "size": 748
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.bin",
+   "blobId": "17f7d6d9ab25e85ce56cb8e638af992d7e99c593",
+   "size": 3438412325,
+   "lfs": {
+    "sha256": "af4e22eecaca7a1c5dd849f51924effdccc1f765141e898c323b775cc80a43b3",
+    "size": 3438412325,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.fp16.bin",
+   "blobId": "b8985fa77725c28c29cad78ba93a5b67bb1f30df",
+   "size": 1719356693,
+   "lfs": {
+    "sha256": "a71dec5f3ee7004b84b22c26b6d8f6681aea1c038a75ee4b9dd68c6b3401d8d6",
+    "size": 1719356693,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.fp16.safetensors",
+   "blobId": "2049bec0e66d389318e2d419997b394fe6a20e5c",
+   "size": 1719154104,
+   "lfs": {
+    "sha256": "24b788b4a777748377cc20364eea4ae113c8c42f4468c16bc8c02fdae5492af9",
+    "size": 1719154104,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.safetensors",
+   "blobId": "5c8129a94be63aab8dad65b459dfa2ab1acbab9b",
+   "size": 3438225120,
+   "lfs": {
+    "sha256": "3c5e5441a3304b5fe1eb1b29279889440f0ebdbf969a078b191c6c7046a2cc7f",
+    "size": 3438225120,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "vae/config.json",
+   "blobId": "25c63fb3a9303446a3c9bae3a90afc818641984f",
+   "size": 552
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.bin",
+   "blobId": "61cd2251b94778221280a2265b093fab4b2287df",
+   "size": 334707217,
+   "lfs": {
+    "sha256": "1b134cded8eb78b184aefb8805b6b572f36fa77b255c483665dda931fa0130c5",
+    "size": 334707217,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.fp16.bin",
+   "blobId": "b89db697a0ccaceb59d634fa9ce874f36a98ffdb",
+   "size": 167405651,
+   "lfs": {
+    "sha256": "b7643b3e40b9f128eda5fe174fea73c3ef3903562651fb344a79439709c2e503",
+    "size": 167405651,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.fp16.safetensors",
+   "blobId": "6dc048fdbcb71764cbd7af4ec6eb2a0e8a7bfbb2",
+   "size": 167335342,
+   "lfs": {
+    "sha256": "4fbcf0ebe55a0984f5a5e00d8c4521d52359af7229bb4d81890039d2aa16dd7c",
+    "size": 167335342,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.safetensors",
+   "blobId": "807ad9c391d965f8e319f011a83d075f9aaf9f75",
+   "size": 334643252,
+   "lfs": {
+    "sha256": "37af64f891b66af7e83ce2dc8490e2fcaff9b4e681a725fb7a1376d8826bdeb2",
+    "size": 334643252,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse"
+ ],
+ "createdAt": "2024-10-24T01:49:50.000Z",
+ "safetensors": {
+  "parameters": {
+   "F32": 859535364
+  },
+  "total": 859535364
+ },
+ "usedStorage": 31373110887
+}

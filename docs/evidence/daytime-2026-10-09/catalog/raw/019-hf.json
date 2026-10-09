@@ -1,0 +1,279 @@
+{
+ "_id": "65d270fff2da55d0a81123b7",
+ "id": "RunDiffusion/Juggernaut-XL-v9",
+ "private": false,
+ "pipeline_tag": "text-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "stable-diffusion",
+  "stable-diffusion-xl",
+  "sdxl",
+  "text-to-image",
+  "photorealistic",
+  "photography",
+  "cinematic",
+  "portrait",
+  "juggernaut",
+  "rundiffusion",
+  "kandooai",
+  "en",
+  "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+  "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+  "license:creativeml-openrail-m",
+  "endpoints_compatible",
+  "diffusers:StableDiffusionXLPipeline",
+  "region:us"
+ ],
+ "downloads": 284237,
+ "likes": 477,
+ "modelId": "RunDiffusion/Juggernaut-XL-v9",
+ "author": "RunDiffusion",
+ "sha": "cf419233522daa0b9ea36c3aff98fa2cab1fb0fb",
+ "lastModified": "2026-05-08T17:14:44.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {
+  "diffusers": {
+   "_class_name": "StableDiffusionXLPipeline"
+  }
+ },
+ "cardData": {
+  "license": "creativeml-openrail-m",
+  "language": [
+   "en"
+  ],
+  "library_name": "diffusers",
+  "pipeline_tag": "text-to-image",
+  "base_model": "stabilityai/stable-diffusion-xl-base-1.0",
+  "tags": [
+   "stable-diffusion",
+   "stable-diffusion-xl",
+   "sdxl",
+   "text-to-image",
+   "photorealistic",
+   "photography",
+   "cinematic",
+   "portrait",
+   "juggernaut",
+   "rundiffusion",
+   "kandooai"
+  ]
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "496de417d9274a6d25a4cc6f945faefa34358859",
+   "size": 1656
+  },
+  {
+   "rfilename": "Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors",
+   "blobId": "df4aaa506dd1db0d07783c2e36bf1c2bb2ac6194",
+   "size": 7105348188,
+   "lfs": {
+    "sha256": "c9e3e68f89b8e38689e1097d4be4573cf308de4e3fd044c64ca697bdb4aa8bca",
+    "size": 7105348188,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "aa6d25ac38071e40c1ac15c432c65e284b1c48c5",
+   "size": 10536
+  },
+  {
+   "rfilename": "assets/Juggernaut_v9_banner.png",
+   "blobId": "1c9f4ef7be8b789ed9cc766e41589beccf9d2ddb",
+   "size": 2555447,
+   "lfs": {
+    "sha256": "2b6cf4ee44e4e95e4c43eabe5e8a27244be9c2fe39cceafeb604895c32bcf9c0",
+    "size": 2555447,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "assets/Juggernaut_v9_banner.webp",
+   "blobId": "a6fb8f4e007d734b85a2c12770882a0f8b1817f6",
+   "size": 379196,
+   "lfs": {
+    "sha256": "82652584d311083e1779a3f2bbbde27dec0e808ca648895186d20f30338a793f",
+    "size": 379196,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "model_index.json",
+   "blobId": "b9f3d02258e5e525ad2762cc4a7a3ff0dc68f9e7",
+   "size": 667
+  },
+  {
+   "rfilename": "scheduler/scheduler_config.json",
+   "blobId": "314728caf3bf70369105692a562b4eb0695cd4ec",
+   "size": 496
+  },
+  {
+   "rfilename": "text_encoder/config.json",
+   "blobId": "ee080c71f6e52e8c865f0ce11545603ffc96378c",
+   "size": 565
+  },
+  {
+   "rfilename": "text_encoder/model.fp16.safetensors",
+   "blobId": "956c3f72316fb26686e50c900568ed5661a3a5ee",
+   "size": 246144152,
+   "lfs": {
+    "sha256": "698656aa4f452e1f8f38287240054a9b8d339b3051ec17d77d63bdb5605db01a",
+    "size": 246144152,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "text_encoder_2/config.json",
+   "blobId": "c37f01f079566bc3fcec2f39e4ac5daa444840ab",
+   "size": 575
+  },
+  {
+   "rfilename": "text_encoder_2/model.fp16.safetensors",
+   "blobId": "a79b58475f9864adbb2e2cc75c38c35d21ff1d25",
+   "size": 1389382176,
+   "lfs": {
+    "sha256": "9962c194f50a9c580ebe573f2a4756d76dcd29abe15bffb0a5905509eb6a8dda",
+    "size": 1389382176,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "tokenizer/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer/special_tokens_map.json",
+   "blobId": "cf0682d6de72c1547f41b4f6d7c59f62deffef94",
+   "size": 588
+  },
+  {
+   "rfilename": "tokenizer/tokenizer_config.json",
+   "blobId": "180a4e1be2a7d0b38a44108d6f24f585f35147b1",
+   "size": 705
+  },
+  {
+   "rfilename": "tokenizer/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "tokenizer_2/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer_2/special_tokens_map.json",
+   "blobId": "97c049e4778fa8675a5a836ee0c6b1d808ee2edf",
+   "size": 462
+  },
+  {
+   "rfilename": "tokenizer_2/tokenizer_config.json",
+   "blobId": "f4299b251265219ef1369503c04d837bd9528f0a",
+   "size": 856
+  },
+  {
+   "rfilename": "tokenizer_2/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "unet/config.json",
+   "blobId": "cee677f4253b72ed8ac7b6380f087fd08cf733ea",
+   "size": 1778
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.fp16.safetensors",
+   "blobId": "1a1ad8e1bfeade7231de6f249c41469d4a0a09fa",
+   "size": 5135149760,
+   "lfs": {
+    "sha256": "cf1ee18eb36712683f50c1e674634875e2adf7413d7492d5f9aa7e69e1a8c17a",
+    "size": 5135149760,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "vae/config.json",
+   "blobId": "5f217e408a879cda4d71ab25f8a27d41b49c7db7",
+   "size": 607
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.fp16.safetensors",
+   "blobId": "c4663db966f401ce4f88d6b895023bf966ed6f92",
+   "size": 167335342,
+   "lfs": {
+    "sha256": "6353737672c94b96174cb590f711eac6edf2fcce5b6e91aa9d73c5adc589ee48",
+    "size": 167335342,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse",
+  "cajunman90/couple-img2img",
+  "Mayara3167/NewNSFWSpaceMultiModelGen",
+  "artificialguybr/JUGGERNAUT-XL-FREE-DEMO",
+  "SakanaAI/EvoSDXL-JP",
+  "ChenoAi/JuggernautXL-Playground",
+  "SakanaAI/Evo-Ukiyoe",
+  "SakanaAI/Evo-Nishikie",
+  "DawnC/SceneWeaver",
+  "andyaii/Images",
+  "Mccscs2/Z-Image-Turbo_with_image",
+  "smartfeed/image2image",
+  "qyoo/AID-v2",
+  "RSPMetaAdmin/WebUIwControlNetwXL_Group1",
+  "RSPMetaAdmin/WebUIwControlNetwXL_Group2",
+  "tsqn/PhotoMaker-V2",
+  "cbensimon/Evo-Ukiyoe",
+  "sukma13/RunDiffusion-Juggernaut-XL-v9",
+  "tianaco/tianacomakethedot",
+  "cheeseman182/Generative_Suite",
+  "Hello007007/RunDiffusion-Juggernaut-XL-v9",
+  "benskibenski/JingleSharkStories",
+  "charismao/RunDiffusion-Juggernaut-XL-v9",
+  "mberke11/content",
+  "mberke11/story",
+  "jasoncharles/StoryDiffusion",
+  "cocktailpeanut/EvoSDXL-JP",
+  "Adx13/v9_RDOhoto_Lightning_V1_BETA",
+  "Raviii98/RunDiffusion-Juggernaut-XL-v9",
+  "qvila/JuggernautXL-Playground",
+  "FlexTheAi/Flexstorydiff",
+  "jmartins94/RunDiffusion-Juggernaut-XL-v9",
+  "jmartins94/TestRunDiffusion-Juggernaut-XL-v9",
+  "FriedMain321/Juggernaut-XL-v9-Sandbox-V1",
+  "sanjayxm/PuLiD-Flux",
+  "henryas/storydiffusion",
+  "doublelotus/colorsteven",
+  "farah6/RunDiffusion-Juggernaut-XL-v9",
+  "iniapi/Images",
+  "TheAIBoi/ImageGen",
+  "deivissonfloriano/fyla-image-1",
+  "Desident/Dream-LongCat-Image-Edit",
+  "Nizar1983/MuseonAIBackend",
+  "lovedrones/xfinitymarketgenerator",
+  "lovedrones/xfinitymktdocker",
+  "kiracat/NSFW.Multimodel.ImageCrator",
+  "dzztheruler/new-image-test-thingy-g2313123",
+  "dzztheruler/easdawsdasdasd",
+  "dzztheruler/ef3f2r2dwedw",
+  "aitekphsoftware/NewNSFWSpaceMultiModelGen",
+  "Ygolohcysp81/NewNSFWSpaceMultiModelGen",
+  "JaxonsAngels/ImageEditor",
+  "rtrifonov/NewNSFWSpaceMultiModelGen",
+  "Kenaru/EvoSDXL-JP",
+  "Bkmrtn/Dream-LongCat-Image-Edit",
+  "jatmak/NewNSFWSpaceMultiModelGen",
+  "lilcats/pixelpaw",
+  "ozbell/robo-ipadapter-controlnet",
+  "AnLee-ai/my-story-diffusion"
+ ],
+ "createdAt": "2024-02-18T21:05:03.000Z",
+ "usedStorage": 27921982697
+}

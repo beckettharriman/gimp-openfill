@@ -1,0 +1,334 @@
+{
+ "_id": "67815e116550f5a48bfde7ae",
+ "id": "cagliostrolab/animagine-xl-4.0",
+ "private": false,
+ "pipeline_tag": "text-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "safetensors",
+  "text-to-image",
+  "stable-diffusion",
+  "stable-diffusion-xl",
+  "en",
+  "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+  "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+  "license:openrail++",
+  "endpoints_compatible",
+  "diffusers:StableDiffusionXLPipeline",
+  "region:us"
+ ],
+ "downloads": 383899,
+ "likes": 544,
+ "modelId": "cagliostrolab/animagine-xl-4.0",
+ "author": "cagliostrolab",
+ "sha": "2b7c1b397761bf5bd3cc42e5b39ec99314a75a96",
+ "lastModified": "2025-02-13T16:16:46.000Z",
+ "gated": false,
+ "disabled": false,
+ "widgetData": [
+  {
+   "text": "1girl, green hair, sweater, looking at viewer, upper body, beanie, outdoors, night, turtleneck, masterpiece, high score, great score, absurdres",
+   "parameter": {
+    "negative_prompt": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, low score, bad score, average score, signature, watermark, username, blurry"
+   },
+   "example_title": "1girl"
+  },
+  {
+   "text": "1boy, male focus, green hair, sweater, looking at viewer, upper body, beanie, outdoors, night, turtleneck, masterpiece, high score, great score, absurdres",
+   "parameter": {
+    "negative_prompt": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, low score, bad score, average score, signature, watermark, username, blurry"
+   },
+   "example_title": "1boy"
+  }
+ ],
+ "model-index": null,
+ "config": {
+  "diffusers": {
+   "_class_name": "StableDiffusionXLPipeline"
+  }
+ },
+ "cardData": {
+  "language": [
+   "en"
+  ],
+  "tags": [
+   "text-to-image",
+   "stable-diffusion",
+   "safetensors",
+   "stable-diffusion-xl"
+  ],
+  "widget": [
+   {
+    "text": "1girl, green hair, sweater, looking at viewer, upper body, beanie, outdoors, night, turtleneck, masterpiece, high score, great score, absurdres",
+    "parameter": {
+     "negative_prompt": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, low score, bad score, average score, signature, watermark, username, blurry"
+    },
+    "example_title": "1girl"
+   },
+   {
+    "text": "1boy, male focus, green hair, sweater, looking at viewer, upper body, beanie, outdoors, night, turtleneck, masterpiece, high score, great score, absurdres",
+    "parameter": {
+     "negative_prompt": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, low score, bad score, average score, signature, watermark, username, blurry"
+    },
+    "example_title": "1boy"
+   }
+  ],
+  "license": "openrail++",
+  "base_model": [
+   "stabilityai/stable-diffusion-xl-base-1.0"
+  ]
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+   "size": 1519
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "73203f8714e9a0255e7ac1f7caf58599609bc0fe",
+   "size": 15494
+  },
+  {
+   "rfilename": "animagine-xl-4.0-opt.safetensors",
+   "blobId": "712da5255f961c3e0c10894af0c042fbacb7ea98",
+   "size": 6938350040,
+   "lfs": {
+    "sha256": "6327eca98bfb6538dd7a4edce22484a1bbc57a8cff6b11d075d40da1afb847ac",
+    "size": 6938350040,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "animagine-xl-4.0.safetensors",
+   "blobId": "c44afefb4a06f35ab8fbe8de16803325a7fe0cfd",
+   "size": 6938434056,
+   "lfs": {
+    "sha256": "1d5b43ff75b6ab598502d4c779d2fbfa3dceca51c60c3b609640a60772333916",
+    "size": 6938434056,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "model_index.json",
+   "blobId": "a4f4fcfd9b843682d7ddfc4343c05e03f7821724",
+   "size": 671
+  },
+  {
+   "rfilename": "scheduler/scheduler_config.json",
+   "blobId": "5cdb3f729667a636be05f0ed1566fb93c7916211",
+   "size": 613
+  },
+  {
+   "rfilename": "text_encoder/config.json",
+   "blobId": "4528972958abddd1be51370343935f2bbfde7b12",
+   "size": 560
+  },
+  {
+   "rfilename": "text_encoder/model.safetensors",
+   "blobId": "ae04b15ab34cd8eec7f041f4d0320a3aab0a3609",
+   "size": 246144152,
+   "lfs": {
+    "sha256": "73528dedc471ea62c5d24bab6621e2ef6890aa136ca080c53f2d205c39ab18df",
+    "size": 246144152,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "text_encoder_2/config.json",
+   "blobId": "35886d089e214b9e35db394d4d3d122a19baf231",
+   "size": 570
+  },
+  {
+   "rfilename": "text_encoder_2/model.safetensors",
+   "blobId": "95e7540a813ae8419af9b44dc5e9ea7f66ea718e",
+   "size": 1389382176,
+   "lfs": {
+    "sha256": "1669a15b906d7a8cc7e919fa44769750e612fe580e3d8ceed60acbc212aea1ca",
+    "size": 1389382176,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "tokenizer/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer/special_tokens_map.json",
+   "blobId": "2c2130b544c0c5a72d5d00da071ba130a9800fb2",
+   "size": 472
+  },
+  {
+   "rfilename": "tokenizer/tokenizer_config.json",
+   "blobId": "1bf819b6621086dc92428e2c9c8bbab39211fd55",
+   "size": 704
+  },
+  {
+   "rfilename": "tokenizer/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "tokenizer_2/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer_2/special_tokens_map.json",
+   "blobId": "ae0c5be6f35217e51c4c000fd325d8de0294e99c",
+   "size": 460
+  },
+  {
+   "rfilename": "tokenizer_2/tokenizer_config.json",
+   "blobId": "bd2abe19377557ff5771584921f9b65fa041fef0",
+   "size": 855
+  },
+  {
+   "rfilename": "tokenizer_2/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "unet/config.json",
+   "blobId": "238f42abc6dc2dbcf54407fa9d71cc88bd66a380",
+   "size": 1772
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.safetensors",
+   "blobId": "535e224c5a4ea60b3662d9fcabeaa3eb970e7ec8",
+   "size": 5135149760,
+   "lfs": {
+    "sha256": "3e16857a3a195315e01b47d8b76b7e932856cc71e9b5812c03f891de98551743",
+    "size": 5135149760,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "vae/config.json",
+   "blobId": "04b608f048602be512e378f4ed55bb0f4e3aa66d",
+   "size": 782
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.safetensors",
+   "blobId": "c4663db966f401ce4f88d6b895023bf966ed6f92",
+   "size": 167335342,
+   "lfs": {
+    "sha256": "6353737672c94b96174cb590f711eac6edf2fcce5b6e91aa9d73c5adc589ee48",
+    "size": 167335342,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse",
+  "embedl/hfviewer",
+  "RioShiina/ImageGen",
+  "24yearsold/see-through-demo",
+  "aquanode/gpu-vram-calculator",
+  "alxander84/ImageGen-32",
+  "Asahina2K/animagine-xl-4.0",
+  "John6666/DiffuseCraftMod",
+  "Nymbo/Serverless-ImgGen-Hub",
+  "r3gm/DiffuseCraft",
+  "John6666/votepurchase-multiple-model",
+  "gokaygokay/NoobAI-Animagine-T-ponynai3",
+  "frogleo/anime-ai-generator",
+  "p1atdev/danbooru-tags-translator-preview",
+  "Parmist/strangerzonehf-Flux-Super-Realism-LoRA",
+  "John6666/character_tag_search",
+  "qyoo/Conceptrol",
+  "lehehroi/ani4",
+  "Xeroize/3.11",
+  "Manjushri/Animagine-xl-4.0",
+  "Rianofc/cagliostrolab-animagine-xl-4.0",
+  "doevent/animagine-xl-3.11",
+  "vynxev/DiffuseCraftMod",
+  "yuyuanan/see-through-nf4",
+  "Tinchote/ImageGen",
+  "BoobyBoobs/DiffuseCraft",
+  "Moebius-pizza/Serverless-ImgGen-Hub",
+  "samsammysammy/Serverless-ImgGen-Hub",
+  "rikunarita/animagine-xl-4.0-opt",
+  "lehehroi/ani4_2",
+  "runebloodstone/img_test",
+  "cvdvfdg/DiffuseCraftMod",
+  "Dekonstruktio/Fluxus",
+  "soiz1/Serverless-ImgGen-Hub",
+  "sh1ndo/animagine-xl-4.0",
+  "alexeyGod/Test_new_mod",
+  "rafaelkamp/black-forest-labs-FLUX.1-dev",
+  "svjack/Enhance-This-HiDiffusion-SDXL",
+  "Andika011/animagine-xl-4.0",
+  "alyxsis/img",
+  "abcpaint/MyImageGenerator",
+  "p1atdev/TKG-Chroma-Key-AnimagineXL-4.0",
+  "johnpoe/NoobAI-Animagine-T-ponynai3",
+  "rynekoo/animagine-xl-4.0",
+  "SrKayo/Animagine",
+  "dnkjckjnc/DiffuseCraftMod",
+  "Bruhn/DiffuseCraft",
+  "Enfrosty/animagine-xl-4.0",
+  "elhmimdib/Enhance-This-HiDiffusion-SDXL",
+  "Speedodude/Serverless-ImgGen-Hub",
+  "matscrg/Serverless-ImgGen-Hub",
+  "Kevin583/animagine-xl-4",
+  "hubrisDolphin/DiffuseCraft",
+  "JasonOost/anime-generator",
+  "MercuryNex/DiffuseCraftModWORKINGonZERO",
+  "Beatrixin/animagine-xl-4.0",
+  "0-0-3/Serverless-ImgGen-Hub",
+  "Iaxyes/see-through-demo",
+  "AiLamda/see-through-demo",
+  "annajosef6162/DiffuseCraft_new",
+  "reapea13/Serverless-ImgGen-Hub",
+  "pan2jay/see-through-demo",
+  "muraenesox/see-through-demo",
+  "tuan2308/text-to-image",
+  "sr7mods/SR7-ANIMAGINE-SPACE",
+  "cre8max/Serverless-ImgGen-Hub",
+  "Cthuunghiacity/nc-ai-money-worker",
+  "Azuki-san/see-through-demo",
+  "11Brandon/NoobAI-Animagine-T-ponynai3",
+  "shulng/see-through-demo",
+  "aasassada/Serverless-ImgGen-Hub",
+  "ISAAC1982/ImageGen",
+  "raghava0450/SumakaClone",
+  "caesarniseko/cel-anima-sdxl",
+  "flowerytiger/DiffuseCraft",
+  "b2kinnocent/anime-xl",
+  "tayrushing2023/Serverless-ImgGen-Hub",
+  "CREATORJD/alpecca-zerogpu",
+  "lilcats/pixelpaw",
+  "mrhangetsbetter/ImageGen",
+  "ryu/see-through-demo",
+  "DirtyBird1577/DiffuseCraftMod",
+  "R1000/ImageGen",
+  "Afredzhou/see-through-demo",
+  "davidstarrk17/see-through-demo",
+  "museart/animagine-xl-4.0",
+  "John08541/DiffuseCraft",
+  "cvdvfdg/DiffuseCraftMod2",
+  "desirel/ImageGen",
+  "Rabger666/ImageGen",
+  "tuan2308/DiffuseCraft",
+  "BlueSkyXN/ImageGen-Studio",
+  "nocoireel/see-through-demo",
+  "Magen02/anime-image-01",
+  "wank3r/DiffuseCraftMod",
+  "Shubabeef/see-through-shuba",
+  "shinkinokishin/ImageGenClone",
+  "nvinacur/anime-image-maker",
+  "Nklin261/ImageGen",
+  "lifevon1/see-through-nf4"
+ ],
+ "createdAt": "2025-01-10T17:51:13.000Z",
+ "safetensors": {
+  "parameters": {
+   "F16": 2567463684
+  },
+  "total": 2567463684
+ },
+ "usedStorage": 25949945286
+}

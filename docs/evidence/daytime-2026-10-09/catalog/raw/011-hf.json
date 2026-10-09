@@ -1,0 +1,206 @@
+{
+ "_id": "68b8539d944ffcd68fcd58ba",
+ "id": "ostris/qwen_image_edit_inpainting",
+ "private": false,
+ "pipeline_tag": "text-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "text-to-image",
+  "lora",
+  "template:diffusion-lora",
+  "base_model:Qwen/Qwen-Image-Edit",
+  "base_model:adapter:Qwen/Qwen-Image-Edit",
+  "license:apache-2.0",
+  "region:us"
+ ],
+ "downloads": 1696,
+ "likes": 90,
+ "modelId": "ostris/qwen_image_edit_inpainting",
+ "author": "ostris",
+ "sha": "b01f12fa47ee422a81be9850c6571b0daea11ee2",
+ "lastModified": "2025-09-03T15:52:09.000Z",
+ "gated": false,
+ "disabled": false,
+ "widgetData": [
+  {
+   "output": {
+    "url": "https://huggingface.co/ostris/qwen_image_edit_inpainting/resolve/main/images/1756899881673__000005000_3.jpg"
+   },
+   "text": "a man wearing a rainbow colored beanie"
+  },
+  {
+   "output": {
+    "url": "https://huggingface.co/ostris/qwen_image_edit_inpainting/resolve/main/images/1756900631338__000005000_9.jpg"
+   },
+   "text": "a cat wearing sunglasses"
+  },
+  {
+   "output": {
+    "url": "https://huggingface.co/ostris/qwen_image_edit_inpainting/resolve/main/images/qwen_inpainting_00003_.png"
+   },
+   "text": "a man with a big white beard"
+  },
+  {
+   "output": {
+    "url": "https://huggingface.co/ostris/qwen_image_edit_inpainting/resolve/main/images/qwen_inpainting_00001_.png"
+   },
+   "text": "painting of a woman wearing sunglasses"
+  },
+  {
+   "output": {
+    "url": "https://huggingface.co/ostris/qwen_image_edit_inpainting/resolve/main/images/qwen_inpainting_00006_.png"
+   },
+   "text": "painting of a man with a yellow lightsaber"
+  },
+  {
+   "output": {
+    "url": "https://huggingface.co/ostris/qwen_image_edit_inpainting/resolve/main/images/qwen_inpainting_00010_.png"
+   },
+   "text": "painting of a woman with a beard and horns"
+  }
+ ],
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "tags": [
+   "text-to-image",
+   "lora",
+   "diffusers",
+   "template:diffusion-lora"
+  ],
+  "widget": [
+   {
+    "output": {
+     "url": "https://huggingface.co/ostris/qwen_image_edit_inpainting/resolve/main/images/1756899881673__000005000_3.jpg"
+    },
+    "text": "a man wearing a rainbow colored beanie"
+   },
+   {
+    "output": {
+     "url": "https://huggingface.co/ostris/qwen_image_edit_inpainting/resolve/main/images/1756900631338__000005000_9.jpg"
+    },
+    "text": "a cat wearing sunglasses"
+   },
+   {
+    "output": {
+     "url": "https://huggingface.co/ostris/qwen_image_edit_inpainting/resolve/main/images/qwen_inpainting_00003_.png"
+    },
+    "text": "a man with a big white beard"
+   },
+   {
+    "output": {
+     "url": "https://huggingface.co/ostris/qwen_image_edit_inpainting/resolve/main/images/qwen_inpainting_00001_.png"
+    },
+    "text": "painting of a woman wearing sunglasses"
+   },
+   {
+    "output": {
+     "url": "https://huggingface.co/ostris/qwen_image_edit_inpainting/resolve/main/images/qwen_inpainting_00006_.png"
+    },
+    "text": "painting of a man with a yellow lightsaber"
+   },
+   {
+    "output": {
+     "url": "https://huggingface.co/ostris/qwen_image_edit_inpainting/resolve/main/images/qwen_inpainting_00010_.png"
+    },
+    "text": "painting of a woman with a beard and horns"
+   }
+  ],
+  "base_model": "Qwen/Qwen-Image-Edit",
+  "instance_prompt": null,
+  "license": "apache-2.0"
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "28df5f900b358436f0267334b3e3e9af33f917ba",
+   "size": 2307
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "15c67ddfef046e2abd8168f4fdd71d42dc207da7",
+   "size": 1468
+  },
+  {
+   "rfilename": "images/1756899881673__000005000_3.jpg",
+   "blobId": "0bc185cda43a1173883e6f4384e0bb687fb661b3",
+   "size": 87824,
+   "lfs": {
+    "sha256": "d02ef0011e9a5ea04be53308ae38d01f27718a078028847abff80fc1a9225afe",
+    "size": 87824,
+    "pointerSize": 130
+   }
+  },
+  {
+   "rfilename": "images/1756900631338__000005000_9.jpg",
+   "blobId": "b656a37c905f00030140bd14375a8c0cfc4a22f0",
+   "size": 144256,
+   "lfs": {
+    "sha256": "4c21d4ac09c12703970d0d107c71aea409ee537b03c51c75a54de3fe4e9901bc",
+    "size": 144256,
+    "pointerSize": 131
+   }
+  },
+  {
+   "rfilename": "images/qwen_inpainting_00001_.png",
+   "blobId": "7810c936106a37a027646aa447df21cbc57cefe5",
+   "size": 1924786,
+   "lfs": {
+    "sha256": "ca8e157ce9b858b412cd20d4978aae5437776bab2a75301d0409c26de03f3afb",
+    "size": 1924786,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "images/qwen_inpainting_00003_.png",
+   "blobId": "e4abf230b242b28a1b40f9ccba4ff4c41cc2881e",
+   "size": 1555686,
+   "lfs": {
+    "sha256": "37429212085ad7764d7f33952a45a6b1243ef81f2e22f077d0916fd5e478f2db",
+    "size": 1555686,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "images/qwen_inpainting_00006_.png",
+   "blobId": "dabeac9591e80a909f4401a0b2f189492fc703cf",
+   "size": 1506657,
+   "lfs": {
+    "sha256": "38ebdd9ba2f7cb801ecc64c8c2ab4bc5151354770dd1c07879f0a273e46eabfd",
+    "size": 1506657,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "images/qwen_inpainting_00010_.png",
+   "blobId": "560a75bd502f647f207acfc46e0990e309e929a4",
+   "size": 1712430,
+   "lfs": {
+    "sha256": "3bc3c85609268e158fa23a21049b9563c8364ffe4a70ae815a5626f672b9e94a",
+    "size": 1712430,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "qwen_image_edit_inpainting.safetensors",
+   "blobId": "e1a4672b8d95fb7b1bd8bae4707fbf593ba50d5b",
+   "size": 590058840,
+   "lfs": {
+    "sha256": "4928d4d93d5a9fa197121ff04e07529e1b93893ed6014a16f7bdea18af430e08",
+    "size": 590058840,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [
+  "prithivMLmods/Qwen-Image-Edit-2509-LoRAs-Fast-Fusion",
+  "MySafeCode/Qwen-Image-Edit-2509-LoRAs-Fast-Fusion",
+  "adowu/Qwen-Image-Edit-2509-LoRAs-Fast-Fusion_2",
+  "MrJasper1987/Multiimage",
+  "alejandrarr/Qwen-Image-Edit-2509-LoRAs-Fast-Fusion",
+  "cicilia11081959/Qwen-Image-Edit-2509-LoRAs-Fast-Fusion"
+ ],
+ "createdAt": "2025-09-03T14:41:33.000Z",
+ "usedStorage": 596990479
+}

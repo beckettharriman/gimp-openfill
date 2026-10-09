@@ -1,0 +1,584 @@
+{
+ "_id": "68d19e1d115e117076f22d4a",
+ "id": "calcuis/qwen-image-edit-plus-gguf",
+ "private": false,
+ "pipeline_tag": "image-to-image",
+ "tags": [
+  "gguf",
+  "gguf-connector",
+  "gguf-node",
+  "image-to-image",
+  "base_model:Qwen/Qwen-Image-Edit-2509",
+  "base_model:quantized:Qwen/Qwen-Image-Edit-2509",
+  "license:apache-2.0",
+  "region:us"
+ ],
+ "downloads": 9954,
+ "likes": 43,
+ "modelId": "calcuis/qwen-image-edit-plus-gguf",
+ "author": "calcuis",
+ "sha": "dd731a343489d142358abaace12f983818f892ac",
+ "lastModified": "2025-10-03T08:11:56.000Z",
+ "gated": false,
+ "disabled": false,
+ "widgetData": [
+  {
+   "text": "apply the image 2 full costume to image 1 singing girl",
+   "output": {
+    "url": "https://huggingface.co/calcuis/qwen-image-edit-plus-gguf/resolve/main/workflow-demo2.png"
+   }
+  },
+  {
+   "text": "use image 2 city night view as background for image 1",
+   "output": {
+    "url": "https://huggingface.co/calcuis/qwen-image-edit-plus-gguf/resolve/main/workflow-demo.png"
+   }
+  },
+  {
+   "text": "use image 2 as background for image 1 fairy",
+   "output": {
+    "url": "https://huggingface.co/calcuis/qwen-image-edit-plus-gguf/resolve/main/workflow-demo3.png"
+   }
+  }
+ ],
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "license": "apache-2.0",
+  "base_model": [
+   "Qwen/Qwen-Image-Edit-2509"
+  ],
+  "pipeline_tag": "image-to-image",
+  "widget": [
+   {
+    "text": "apply the image 2 full costume to image 1 singing girl",
+    "output": {
+     "url": "https://huggingface.co/calcuis/qwen-image-edit-plus-gguf/resolve/main/workflow-demo2.png"
+    }
+   },
+   {
+    "text": "use image 2 city night view as background for image 1",
+    "output": {
+     "url": "https://huggingface.co/calcuis/qwen-image-edit-plus-gguf/resolve/main/workflow-demo.png"
+    }
+   },
+   {
+    "text": "use image 2 as background for image 1 fairy",
+    "output": {
+     "url": "https://huggingface.co/calcuis/qwen-image-edit-plus-gguf/resolve/main/workflow-demo3.png"
+    }
+   }
+  ],
+  "tags": [
+   "gguf-connector",
+   "gguf-node"
+  ]
+ },
+ "gguf": {
+  "total": 14313437760,
+  "architecture": "pig",
+  "totalFileSize": 8123088320
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "c0b9658867f1e53fa7aab538486b927686815fca",
+   "size": 4898
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "f16ab1284d4fd3280f0d96d1e4e5be3c5a3c925e",
+   "size": 7269
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-blackwell-fp4.safetensors",
+   "blobId": "4025df7df5ba2edb4457c0243feadf2b461f841c",
+   "size": 13081386792,
+   "lfs": {
+    "sha256": "7a7ba3276845828638eb55530dc1d376b728565c9356fb3ccc32a39f25ffb19f",
+    "size": 13081386792,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-fast-int4.safetensors",
+   "blobId": "438261d5cbfd2bf560188a654dcbe605b940cb5a",
+   "size": 11521979880,
+   "lfs": {
+    "sha256": "cec64c4f4108968301077476def9d12a218dc2db79e283c63b21b15b949efa56",
+    "size": 11521979880,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-int4.safetensors",
+   "blobId": "91d4b6e2cd40c5c914f9b6fe4469c158c1087303",
+   "size": 12654443080,
+   "lfs": {
+    "sha256": "fafd897f490b346c6efd707fc245321c918d8af6d4dc0bf58313fd3d683348bf",
+    "size": 12654443080,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-iq4_nl.gguf",
+   "blobId": "91e31fbbcd810117af8da4df3f2bb8b472b57b52",
+   "size": 8123088320,
+   "lfs": {
+    "sha256": "86671de9c54f140b3102273a775886228da200643bc1e253bac676a254f853bf",
+    "size": 8123088320,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-iq4_xs.gguf",
+   "blobId": "3d16db7d6acb05c479a4e15abae21fdfe5645c37",
+   "size": 7677181376,
+   "lfs": {
+    "sha256": "fe2376f657d009d60c141302f88f46c467df56572ceea710c004d92e683325e7",
+    "size": 7677181376,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-q4_0.gguf",
+   "blobId": "b8a6b8f8e2a85da2043dd07c8090e4f722a170c9",
+   "size": 8123088320,
+   "lfs": {
+    "sha256": "5b84f62791d59226f0424f43c339f2b03f937e803332afdb6f8c27c1afe14776",
+    "size": 8123088320,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-q4_1.gguf",
+   "blobId": "a2d2cd46a49fd8247195e1f4bac762921222a38f",
+   "size": 9014902208,
+   "lfs": {
+    "sha256": "19c472ef53723fad699cca1e518fc9b5b0a465e1f3ace47f6532025305b282b8",
+    "size": 9014902208,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-q4_k_s.gguf",
+   "blobId": "7f04ed08fbb3e64e326ac98d87ff2b7b9e038ebb",
+   "size": 8127806912,
+   "lfs": {
+    "sha256": "d62020f1ef43940cd1b3c1e23bf2a17ee8c98ba33f8e39d2f34ed6e8ffa0c714",
+    "size": 8127806912,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-q8_0.gguf",
+   "blobId": "11b6a20fd375c610b0d82505ae2751e21f1c82d2",
+   "size": 15257599424,
+   "lfs": {
+    "sha256": "faeb3ed8b2e8cbd3011f7f838e8268a098ec6ac386630e456b4623aa13a3b5a6",
+    "size": 15257599424,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-v2.0-iq2_s.gguf",
+   "blobId": "b53392fc423f2fb3c3a467f662316b547dedd865",
+   "size": 4743302688,
+   "lfs": {
+    "sha256": "80e734e0c9d2b336c075cb73cddbcac4ee44e12c01644df9a1626ad7dd53a0a3",
+    "size": 4743302688,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-v2.0-iq3_s.gguf",
+   "blobId": "b6d9aa6a08615ddb2ac8d530347c1ff367a3c839",
+   "size": 6018059808,
+   "lfs": {
+    "sha256": "ada7c2ab760afe5005775c84593069087b41a779cc8af1e0f8a94fe114e94c0b",
+    "size": 6018059808,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-v2.0-iq4_nl.gguf",
+   "blobId": "defebba26884f84554884210428a3ad3828f9a74",
+   "size": 7732678176,
+   "lfs": {
+    "sha256": "2512b4a64693748aab3cb730860e633abc16cf667428dca775d95ab61a940f9d",
+    "size": 7732678176,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-v2.0-iq4_xs.gguf",
+   "blobId": "bb1289610df9c782ac0d33da5d3a88f963e0ad09",
+   "size": 7308004896,
+   "lfs": {
+    "sha256": "385cc650ae71604030681d8a067a70016f6a43cfbe0f503f3cb4f7ed2d31770e",
+    "size": 7308004896,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-v2.0-q4_k_s.gguf",
+   "blobId": "b6f0fc9e1e3929be26119594a6abb30b8a2509b9",
+   "size": 7737396768,
+   "lfs": {
+    "sha256": "9baebc5f705870ea945d1f46cc1e2506bbbfac32cf0413f8d74d600db2ed4813",
+    "size": 7737396768,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-v2.0-q8_0.gguf",
+   "blobId": "bb7878c3242e0c44e3c08ed6285c7f45559eb551",
+   "size": 14527450656,
+   "lfs": {
+    "sha256": "1f6a2ec9aa36711be31047bbd5a49f0b86406bad1478ea85a5a010f2ebf6ad1c",
+    "size": 14527450656,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-v2.1-mxfp4_moe.gguf",
+   "blobId": "ceb575b1472a770319ef4a53d9011ffc7a854748",
+   "size": 15832027776,
+   "lfs": {
+    "sha256": "a476b66679b42bc3d6a80e5b941d60348b77731cda5db170863fea4e10fdabb9",
+    "size": 15832027776,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-lite-v2.1-q4_0.gguf",
+   "blobId": "a97ff4813c3ce149d71ae243cc798b9f700c5766",
+   "size": 8697516672,
+   "lfs": {
+    "sha256": "e43a2d0cdea42d6cd474a23210011b533b36eff5593bb7c91f5e2e1407585306",
+    "size": 8697516672,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-iq2_s.gguf",
+   "blobId": "785e8f306c85702d7ddaaa3ed96d55c70e02a3ec",
+   "size": 7029340704,
+   "lfs": {
+    "sha256": "fd3a701053af1e55a4579d43cc93441e8d760bae22524ad078dc3516ea09426b",
+    "size": 7029340704,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-iq3_s.gguf",
+   "blobId": "fe03393977591ce85c6bed1ec3832790cd147780",
+   "size": 9048898080,
+   "lfs": {
+    "sha256": "5c205256455c5f87c30d4826a0d9296e5ff8c666f9d51113b38f4e7557c80796",
+    "size": 9048898080,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-iq3_xxs.gguf",
+   "blobId": "def728b941fb9b39b8aefadb659c1f060252aad4",
+   "size": 8953788960,
+   "lfs": {
+    "sha256": "31557189d2f371d01b21a925a3f71c36706aa9429d6abf295a5669ca8a750785",
+    "size": 8953788960,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-iq4_nl.gguf",
+   "blobId": "cd9d16df40c44c5615442c2a9b3c8b6c79a31da6",
+   "size": 11592071712,
+   "lfs": {
+    "sha256": "61da8b270d23c8f5e9b1b940aa9b10a2d48d5bb8a1c3cb054d7562461a87622e",
+    "size": 11592071712,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-iq4_xs.gguf",
+   "blobId": "7fd83629f1644610ae83f22f805469e4d161527f",
+   "size": 10955061792,
+   "lfs": {
+    "sha256": "a40a70bb540772d5b70cf3aaf98dbbd172fd3c4a81285c84cb40e5e5b26a9b68",
+    "size": 10955061792,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q2_k.gguf",
+   "blobId": "5ecb567c1fc34d65144564a4d8849cba7ddfff55",
+   "size": 7071808032,
+   "lfs": {
+    "sha256": "4c84e1766dff66c55e5cea90e20e7b44c22653b471b61104b9ecd54ce1607786",
+    "size": 7071808032,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q2_k_s.gguf",
+   "blobId": "b8472db1de88beefc86a3809dbb7fa2502bd15c6",
+   "size": 7029340704,
+   "lfs": {
+    "sha256": "5a10511c428b83458a876b71251d2d8cd0495aca251d3fca8294fa4d892b9240",
+    "size": 7029340704,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q3_k_l.gguf",
+   "blobId": "64aaaaa23e37b25407cc57a6a6d62ee1b965d38e",
+   "size": 9158605344,
+   "lfs": {
+    "sha256": "52c6e3596adcc071b8bd03aeef81d11f4226e4ced1716030b3d45128ece64285",
+    "size": 9158605344,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q3_k_m.gguf",
+   "blobId": "d9155996bd2f7de13fcd230978d5e377adbff8c2",
+   "size": 9091365408,
+   "lfs": {
+    "sha256": "dc4169b611894f207bcbd90e09b763a6bdcebaf8d63c1a24500d83eaa42e4e76",
+    "size": 9091365408,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q3_k_s.gguf",
+   "blobId": "ab8a3cc31cbe0487052b4781e9abd0f40ad81c49",
+   "size": 9017489952,
+   "lfs": {
+    "sha256": "5d69afb2711e722b2b5d9986c8e3860d2c50f1dcad48d25744ba3daaaecf7360",
+    "size": 9017489952,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q4_0.gguf",
+   "blobId": "bdc9e8a5e7956366e166a802d4d3d3dd57e2d6a4",
+   "size": 11592071712,
+   "lfs": {
+    "sha256": "4cd1400da362a7367f76648d2ee5cce79eb7fd937003fed52be6ea3b4d68d70a",
+    "size": 11592071712,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q4_1.gguf",
+   "blobId": "b711c2ea19def6f0a5f1c7e466d05bccb5c24145",
+   "size": 12866091552,
+   "lfs": {
+    "sha256": "e450b32464d1a8f1b616b1a13c8c5243aecd8cf82d3458dc1682db419898a752",
+    "size": 12866091552,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q4_k_m.gguf",
+   "blobId": "7a77645f3c53290ef58fca0c1d2324b2f99648cd",
+   "size": 11738053152,
+   "lfs": {
+    "sha256": "bd93360c4c6b164805e66d63eeacfd6c986ec04b4ca55e9e33dae1958dd43ae4",
+    "size": 11738053152,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q4_k_s.gguf",
+   "blobId": "df07f0d622a4401866dbc4315c2f349df9f54db6",
+   "size": 11596790304,
+   "lfs": {
+    "sha256": "2f2c5760cff20274098729476942ee6cd0cb2f0b9fb437aaedefdbcb1deeb8ee",
+    "size": 11596790304,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q5_0.gguf",
+   "blobId": "c39af9cd6f12656a67deea1b6df69c3c3ca3ac39",
+   "size": 14140111392,
+   "lfs": {
+    "sha256": "aaed5cf1e353ff1e930191eac6d6118ca21fc4890986cd420a6647c301abe416",
+    "size": 14140111392,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q5_1.gguf",
+   "blobId": "cb0dd55cf08fb5370cc2d8df30bfbf6ff8f73e06",
+   "size": 15414131232,
+   "lfs": {
+    "sha256": "bf83ddc594fdd13c457fcaa457e1dfff71d60da8ccb10198425782852bf9a493",
+    "size": 15414131232,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q5_k_m.gguf",
+   "blobId": "00595d1dbc30471651eaefec14e00c4ddb12395f",
+   "size": 14215313952,
+   "lfs": {
+    "sha256": "f6866817c3c1c01101539387ea91ffcb43b91001ee550e27a2a68283a3e4a644",
+    "size": 14215313952,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q5_k_s.gguf",
+   "blobId": "6f2a689ab77f79ba8b66cef4b091a89014ca55ea",
+   "size": 14140111392,
+   "lfs": {
+    "sha256": "80fb0733aaea6501551038f92ca65735e9a037db707224312d96817ebeb9cc74",
+    "size": 14140111392,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q6_k.gguf",
+   "blobId": "0e92025c2b43bf6991b494a0f63b9e9ab7fe6605",
+   "size": 16847403552,
+   "lfs": {
+    "sha256": "7aaac77a9c806baa7ec309e21e566b6d95cdfeb6ae76869545ebc0f2879cc5be",
+    "size": 16847403552,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-q8_0.gguf",
+   "blobId": "e09bdabddb04da3aa802ff55e1088952fd204ba2",
+   "size": 21784230432,
+   "lfs": {
+    "sha256": "786e832da4db87106c899f96b6d8d6149d753a36f04403d531ae30ffbd91867a",
+    "size": 21784230432,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-v2-iq3_s.gguf",
+   "blobId": "dee19e9b34f273d17cc16174530b0b5924fb540f",
+   "size": 9015319968,
+   "lfs": {
+    "sha256": "bc4aa5a43dd3eba1850d1c76ab4d9e19a0d0e36ba170edda238b287d276ab159",
+    "size": 9015319968,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-v2-iq3_xxs.gguf",
+   "blobId": "4ba675745cbdefc2b0ad3300ffcea44ba264572e",
+   "size": 8920210848,
+   "lfs": {
+    "sha256": "3abdf2d4283fd15a87dc4cf57f71a137928a532c2a75c2bc404ac0dabc59f414",
+    "size": 8920210848,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-v2-iq4_nl.gguf",
+   "blobId": "3952c51de0b308c9c21059651edc364f7a019f21",
+   "size": 11558493600,
+   "lfs": {
+    "sha256": "e97ddfeff69f96d6a199fe1347c617b4162882e8cdc42148bae047b91cc814e6",
+    "size": 11558493600,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-v2-iq4_xs.gguf",
+   "blobId": "60658de318f4d34358f6103d02c8971a40b0c080",
+   "size": 10921483680,
+   "lfs": {
+    "sha256": "7a15ffa4adc249dd3a938dc3e423f32ee5e2dbd6e7fc1d634d5422856ad3bdff",
+    "size": 10921483680,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-v2-mxfp4_moe.gguf",
+   "blobId": "174862577644e30a58653e7e2e6a5b955d84b313",
+   "size": 15635357088,
+   "lfs": {
+    "sha256": "16671006d094eafa1f9ac46e7f9c8d0eb949fab7b0be192dc72c8066a25b770b",
+    "size": 15635357088,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-v2-tq1_0.gguf",
+   "blobId": "340841d843f8ad6c8cba19456e779aabbf672c53",
+   "size": 6974528928,
+   "lfs": {
+    "sha256": "658462de97744b0b5391e7314467497669bad40f708ee97e771dc5f842c9692f",
+    "size": 6974528928,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-plus-v2-tq2_0.gguf",
+   "blobId": "d0bdc7fd715346b1073bd3c63a443bc04701f85f",
+   "size": 6995762592,
+   "lfs": {
+    "sha256": "7d3a7fb98a329ada4dd6fd25eea38bd0389497b1b72fa0f810431f2e8daf9238",
+    "size": 6995762592,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen2.5-vl-7b-test-q4_0.gguf",
+   "blobId": "3f2543363eea511e9b7539b54a96decd0df9f429",
+   "size": 5034814240,
+   "lfs": {
+    "sha256": "7c6c439dd1f353839a12681099467dd667769bef87ff4c1989b49a35573c0ded",
+    "size": 5034814240,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "workflow-demo.png",
+   "blobId": "de8b9c0075d0a08f0cb77472dfd810484671acb6",
+   "size": 1129163,
+   "lfs": {
+    "sha256": "f30bddda06d6c1c2074696fb29b7e242610a8109a553f30f30f036206241a012",
+    "size": 1129163,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "workflow-demo2.png",
+   "blobId": "9b83851741d1b6b8664752054f955ef1fb5a2364",
+   "size": 1315336,
+   "lfs": {
+    "sha256": "10359f71dd57c452e89889069bd95b7b6cc7175f013220489f4342838cef52b4",
+    "size": 1315336,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "workflow-demo3.png",
+   "blobId": "8295e579593e9372218fb59b694de4dff5070d2d",
+   "size": 1250420,
+   "lfs": {
+    "sha256": "7dec377a2144ffcc6eaf80eb2cb2771a4635c4b861106b57b4359870a4996ffa",
+    "size": 1250420,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "workflow-qwen-image-edit-plus.json",
+   "blobId": "eb5de72214ce35f3f3b8e4a36d5de91b3fd32056",
+   "size": 12745
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse"
+ ],
+ "createdAt": "2025-09-22T19:06:05.000Z",
+ "usedStorage": 507801863583
+}

@@ -1,0 +1,394 @@
+{
+ "_id": "68a4789a8784d76f8928dd1c",
+ "id": "calcuis/qwen-image-edit-gguf",
+ "private": false,
+ "pipeline_tag": "image-to-image",
+ "tags": [
+  "gguf",
+  "gguf-connector",
+  "gguf-node",
+  "image-to-image",
+  "base_model:Qwen/Qwen-Image-Edit",
+  "base_model:quantized:Qwen/Qwen-Image-Edit",
+  "license:apache-2.0",
+  "region:us"
+ ],
+ "downloads": 6588,
+ "likes": 26,
+ "modelId": "calcuis/qwen-image-edit-gguf",
+ "author": "calcuis",
+ "sha": "21e8c2eebaaa54fba9d017dfb295b3a545e8e01b",
+ "lastModified": "2025-09-15T00:42:19.000Z",
+ "gated": false,
+ "disabled": false,
+ "widgetData": [
+  {
+   "text": "remove all UI text elements from the image. Keep the feeling that the characters and scene are in water. Also, remove the green UI elements at the bottom",
+   "output": {
+    "url": "https://huggingface.co/calcuis/qwen-image-edit-gguf/resolve/main/workflow-demo1.png"
+   }
+  },
+  {
+   "text": "the anime girl with massive fennec ears is wearing cargo pants while sitting on a log in the woods biting into a sandwitch beside a beautiful alpine lake",
+   "output": {
+    "url": "https://huggingface.co/calcuis/qwen-image-edit-gguf/resolve/main/workflow-demo2.png"
+   }
+  },
+  {
+   "text": "the anime girl with massive fennec ears is wearing a maid outfit with a long black gold leaf pattern dress and a white apron mouth open holding a fancy black forest cake with candles on top in the kitchen of an old dark Victorian mansion lit by candlelight with a bright window to the foggy forest and very expensive stuff everywhere",
+   "output": {
+    "url": "https://huggingface.co/calcuis/qwen-image-edit-gguf/resolve/main/workflow-demo3.png"
+   }
+  }
+ ],
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "license": "apache-2.0",
+  "base_model": [
+   "Qwen/Qwen-Image-Edit"
+  ],
+  "pipeline_tag": "image-to-image",
+  "tags": [
+   "gguf-connector",
+   "gguf-node"
+  ],
+  "widget": [
+   {
+    "text": "remove all UI text elements from the image. Keep the feeling that the characters and scene are in water. Also, remove the green UI elements at the bottom",
+    "output": {
+     "url": "https://huggingface.co/calcuis/qwen-image-edit-gguf/resolve/main/workflow-demo1.png"
+    }
+   },
+   {
+    "text": "the anime girl with massive fennec ears is wearing cargo pants while sitting on a log in the woods biting into a sandwitch beside a beautiful alpine lake",
+    "output": {
+     "url": "https://huggingface.co/calcuis/qwen-image-edit-gguf/resolve/main/workflow-demo2.png"
+    }
+   },
+   {
+    "text": "the anime girl with massive fennec ears is wearing a maid outfit with a long black gold leaf pattern dress and a white apron mouth open holding a fancy black forest cake with candles on top in the kitchen of an old dark Victorian mansion lit by candlelight with a bright window to the foggy forest and very expensive stuff everywhere",
+    "output": {
+     "url": "https://huggingface.co/calcuis/qwen-image-edit-gguf/resolve/main/workflow-demo3.png"
+    }
+   }
+  ]
+ },
+ "gguf": {
+  "total": 20430401088,
+  "architecture": "pig",
+  "totalFileSize": 40894528032
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "47f7cea48a0562cba27bb8a97dae40bd99b6e5b4",
+   "size": 3321
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "0bc789953d3ac1a1435b537cbba36617c714500b",
+   "size": 5088
+  },
+  {
+   "rfilename": "image_edit.webp",
+   "blobId": "86cb37083e21a8951d63fe9bb36723beb9a011d2",
+   "size": 31474
+  },
+  {
+   "rfilename": "qwen-image-edit-bf16.gguf",
+   "blobId": "047083b495e5147b494873da3cf51cb77d1e5097",
+   "size": 40894528032,
+   "lfs": {
+    "sha256": "dfc579b4ee8ad85d38d72eca60e622b84174833eb2b7c65c413800b6f1fa55fe",
+    "size": 40894528032,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-f16.gguf",
+   "blobId": "4fa805fbe80157b6cb9546ca014377743feb4aa7",
+   "size": 40860949920,
+   "lfs": {
+    "sha256": "bb0cbf75ba01396a7df619fd7e255abe6f91ca8d2aa529c695fad10ea3fd9c37",
+    "size": 40860949920,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-iq2_s.gguf",
+   "blobId": "9fa168d5f996e38a2bf01b0706dfeed178c51244",
+   "size": 7034206752,
+   "lfs": {
+    "sha256": "1774d2f2ae747fa91cfc3d4cbd2e8577999e45ebb59a85dbc97bf23efd8553cd",
+    "size": 7034206752,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-iq3_s.gguf",
+   "blobId": "beaf04605d5421e4476a9d20bbb486eb62fbc32a",
+   "size": 8979888672,
+   "lfs": {
+    "sha256": "4811af577fb998d13c61a7d3472d1e2a4c9ad3771a3eb01da8bb79b76c44ab74",
+    "size": 8979888672,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-iq3_xxs.gguf",
+   "blobId": "1d63f1908c0deef94a2bfa95e43b4e8a21c9e55d",
+   "size": 8975022624,
+   "lfs": {
+    "sha256": "da6b4fb29da8d5ed53089fd03170965a6ed2890c6b1c38d9df7b94c3072a44da",
+    "size": 8975022624,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-iq4_nl.gguf",
+   "blobId": "0f31d421bb3be23ef6b11a1f1ac736b440aebf91",
+   "size": 11592071712,
+   "lfs": {
+    "sha256": "0ec1be9defd396090294cdaddccea1464fe0d7db4a5eee35d508fe8a5e338ae6",
+    "size": 11592071712,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-iq4_xs.gguf",
+   "blobId": "2ce0cbc428ebbc565359b3d35e618c6b6c78b189",
+   "size": 10955061792,
+   "lfs": {
+    "sha256": "79c08b059f4b78874ef7e7375774aad797492950ab075d72c1d9c26826216bf2",
+    "size": 10955061792,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-mxfp4_moe.gguf",
+   "blobId": "13ba2147b44e017a7e311f9eb7c663ef6354c7cd",
+   "size": 21750652320,
+   "lfs": {
+    "sha256": "d486a4815b171b236949e318a33e1731f8cd1be7500608ee1781a8cc12aaeea1",
+    "size": 21750652320,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q2_k.gguf",
+   "blobId": "fea2f71c545b6427241034f4c3e041d5c854f811",
+   "size": 7071808032,
+   "lfs": {
+    "sha256": "f9a19b3453bf44416530da9ace69ff0202c32b534cf95624d48749e4581c9a73",
+    "size": 7071808032,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q2_k_s.gguf",
+   "blobId": "4f2fa9a4a38a16ba102574b1ccc7cbf0c793c2de",
+   "size": 7029340704,
+   "lfs": {
+    "sha256": "9d95bde2a33fbd5da978b2e0fb891b460286906a2602d25182318e865eb83a68",
+    "size": 7029340704,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q3_k_l.gguf",
+   "blobId": "3d97ea7c6f9e93531e7bfd9b2b30d9029a1530e1",
+   "size": 9158605344,
+   "lfs": {
+    "sha256": "9f257cde53232eac3ec291125bb8ea6ab1aebf416ee5a8cf53301ad38c1806e8",
+    "size": 9158605344,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q3_k_m.gguf",
+   "blobId": "1891b99fed945648d53c6014074288b7696e1de1",
+   "size": 9092545056,
+   "lfs": {
+    "sha256": "ff7c5d2a832848321c21d3656d3fba4a24d65b7f04ce5c08600a973d5f09e1b6",
+    "size": 9092545056,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q3_k_s.gguf",
+   "blobId": "05faf15912b7b9fb400a76bdb35108ac343e0d13",
+   "size": 9017489952,
+   "lfs": {
+    "sha256": "3781fb6366c08a04a498f51b67f91f52b621d29537e794c73292ae4128023640",
+    "size": 9017489952,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q4_0.gguf",
+   "blobId": "96016e51d90ed000c56a70e22b2d4757f1025388",
+   "size": 11852773920,
+   "lfs": {
+    "sha256": "1365c44d95ec385ebf8824e46bd5cfadf60cba9c61264cffffbe13ce85b36f5d",
+    "size": 11852773920,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q4_1.gguf",
+   "blobId": "305a9f653211010b589e554ea4ff2e2cca393343",
+   "size": 12866091552,
+   "lfs": {
+    "sha256": "978126a0f80b11de99ce0043a24f8ae51f08b2d68cffcd46624ca9cdca1ef691",
+    "size": 12866091552,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q4_k_m.gguf",
+   "blobId": "450ebb6580f28ee57102507a0116732969c0deca",
+   "size": 11738053152,
+   "lfs": {
+    "sha256": "b1d5ac85df18a23e7908d4199fb68432603cebfc066f5d24ab29385104163af5",
+    "size": 11738053152,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q4_k_s.gguf",
+   "blobId": "e9d7fada5b0b9b227fa15fe17c6ec1c7cec2a738",
+   "size": 11596790304,
+   "lfs": {
+    "sha256": "e89558022d7446e9047c8bf450dcd39c39fbbbd997a3e3cf1631936b431ef5eb",
+    "size": 11596790304,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q5_0.gguf",
+   "blobId": "2fe0146be0a1f1f780cb260863c8b00d0711b292",
+   "size": 14140111392,
+   "lfs": {
+    "sha256": "3d6085f8b891fd5a096dab95eed4d51eb713d47af56895867b81d3f6fe83813c",
+    "size": 14140111392,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q5_1.gguf",
+   "blobId": "1d8ddaeb1dc353360ebc67801e75a17245317212",
+   "size": 15414131232,
+   "lfs": {
+    "sha256": "d75d519230263dec7ef3c62343b0d67b53f58ebe680159baaf455609c7b8ca6d",
+    "size": 15414131232,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q5_k_m.gguf",
+   "blobId": "71749ad01680d6fed1e31442cbf4994c7b04331e",
+   "size": 14215313952,
+   "lfs": {
+    "sha256": "1eccf693e0dd43430eec0e3d64d5184a5155922e32d9db9cbf0242c8f9a48836",
+    "size": 14215313952,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q5_k_s.gguf",
+   "blobId": "67856f6117a630d4f60c82e6e86ba13c1e80ece8",
+   "size": 14140111392,
+   "lfs": {
+    "sha256": "85a7a986097e707e2b0fa3d50008fff831bb7ab1ac9b472f046c62d96c3a5ba4",
+    "size": 14140111392,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q6_k.gguf",
+   "blobId": "87bc76a23dcedf0cc324eb2909593378a8fec1fb",
+   "size": 16847403552,
+   "lfs": {
+    "sha256": "9c5d96f4693c9e54451c6da0dbfb671d7c6dda5c80e243cbcff6d6b258b79c4d",
+    "size": 16847403552,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-q8_0.gguf",
+   "blobId": "5491807cd734fbbe7dcac5a05a5597acab16c9d5",
+   "size": 21761817120,
+   "lfs": {
+    "sha256": "c072189cd7389ec32f83998245d784cf1535da8cb13f69ffa839fea8591c5519",
+    "size": 21761817120,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "qwen-image-edit-tq2_0.gguf",
+   "blobId": "4045037585addbb2eae4fdbe53acda09138d16da",
+   "size": 7031700000,
+   "lfs": {
+    "sha256": "45d5af190850e517e7604120ab81fbcf3b5ebab21f006944429dd50eeb2f4788",
+    "size": 7031700000,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "qwen2.5-vl-7b-test-q4_0.gguf",
+   "blobId": "3f2543363eea511e9b7539b54a96decd0df9f429",
+   "size": 5034814240,
+   "lfs": {
+    "sha256": "7c6c439dd1f353839a12681099467dd667769bef87ff4c1989b49a35573c0ded",
+    "size": 5034814240,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "workflow-demo1.png",
+   "blobId": "6ce337866fd9c3312938678bf093fb5ffd4055bd",
+   "size": 1117159,
+   "lfs": {
+    "sha256": "a05602c7d3f10ccf34d7bb1704990ae2ce4d06d77e4ed3fc8c2dcd6a882e6c5b",
+    "size": 1117159,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "workflow-demo2.png",
+   "blobId": "0a3bdac2289ed6836bcf06203792aebe7786086f",
+   "size": 1336438,
+   "lfs": {
+    "sha256": "babdf2563f0a487a76de870a1a758696ef5e6f53fe1ddef70ec76b462c2a3ee3",
+    "size": 1336438,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "workflow-demo3.png",
+   "blobId": "c12c36d79e185eb2101ad39ef121996ce9cf843d",
+   "size": 1271568,
+   "lfs": {
+    "sha256": "deeabdc49e535858538e06d08a6c32f5b0cdada90392eb39025a4869671a8a8e",
+    "size": 1271568,
+    "pointerSize": 132
+   }
+  },
+  {
+   "rfilename": "workflow-qwen-image-edit-lite.json",
+   "blobId": "c6c8867c1685ea10b1302c952a6e0c5a004c222d",
+   "size": 11610
+  },
+  {
+   "rfilename": "workflow-qwen-image-edit.json",
+   "blobId": "3125d42f98a0bac249ba07bcc8fbdaf97401988d",
+   "size": 10869
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse"
+ ],
+ "createdAt": "2025-08-19T13:14:02.000Z",
+ "usedStorage": 380968822998
+}

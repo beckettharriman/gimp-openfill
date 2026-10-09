@@ -1,0 +1,559 @@
+[
+ {
+  "_id": "65d270fff2da55d0a81123b7",
+  "id": "RunDiffusion/Juggernaut-XL-v9",
+  "gated": false,
+  "lastModified": "2026-05-08T17:14:44.000Z",
+  "trendingScore": 8,
+  "downloads": 284237,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "stable-diffusion-xl",
+   "sdxl",
+   "text-to-image",
+   "photorealistic",
+   "photography",
+   "cinematic",
+   "portrait",
+   "juggernaut",
+   "rundiffusion",
+   "kandooai",
+   "en",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "license:creativeml-openrail-m",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionXLPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67815e116550f5a48bfde7ae",
+  "id": "cagliostrolab/animagine-xl-4.0",
+  "gated": false,
+  "lastModified": "2025-02-13T16:16:46.000Z",
+  "trendingScore": 6,
+  "downloads": 383899,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "text-to-image",
+   "stable-diffusion",
+   "stable-diffusion-xl",
+   "en",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "license:openrail++",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionXLPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d2ba3bbd61fedadf3babe4",
+  "id": "pixelparty/pixel-party-xl",
+  "gated": false,
+  "lastModified": "2023-08-09T00:35:28.000Z",
+  "trendingScore": 3,
+  "downloads": 453,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "text-to-image",
+   "stable-diffusion",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "license:creativeml-openrail-m",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64f1f00e5e0cf1f797040eaa",
+  "id": "diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
+  "gated": false,
+  "lastModified": "2023-09-03T16:36:39.000Z",
+  "trendingScore": 1,
+  "downloads": 104113,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "stable-diffusion-xl",
+   "stable-diffusion-xl-diffusers",
+   "text-to-image",
+   "inpainting",
+   "arxiv:2112.10752",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "license:openrail++",
+   "diffusers:StableDiffusionXLInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "65d68c2819e2ce41de59b41c",
+  "id": "RunDiffusion/Juggernaut-XL-v7",
+  "gated": false,
+  "lastModified": "2026-05-08T17:26:56.000Z",
+  "trendingScore": 1,
+  "downloads": 1241,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "stable-diffusion-xl",
+   "sdxl",
+   "text-to-image",
+   "photorealistic",
+   "juggernaut",
+   "rundiffusion",
+   "kandooai",
+   "en",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "license:creativeml-openrail-m",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionXLPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6622e2861e129fc4cc20f77e",
+  "id": "RunDiffusion/Juggernaut-X-v10",
+  "gated": false,
+  "lastModified": "2026-05-08T17:21:18.000Z",
+  "trendingScore": 1,
+  "downloads": 26700,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "stable-diffusion-xl",
+   "sdxl",
+   "text-to-image",
+   "photorealistic",
+   "photography",
+   "cinematic",
+   "portrait",
+   "juggernaut",
+   "rundiffusion",
+   "kandooai",
+   "en",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "license:creativeml-openrail-m",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionXLPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6a86017680c213c840f7cf73",
+  "id": "Sexyevatender/pornworks-real-porn-photo-realistic-nsfw-sdxl-and-pony-chekpoint",
+  "gated": false,
+  "lastModified": "2026-08-19T19:18:14.000Z",
+  "trendingScore": 0.1,
+  "downloads": 1424,
+  "tags": [
+   "diffusers",
+   "nsfw",
+   "sdxl",
+   "art",
+   "image",
+   "safetensors",
+   "stable-diffusion-xl",
+   "text-to-image",
+   "en",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "license:openrail++",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionXLPipeline",
+   "region:us",
+   "not-for-all-audiences"
+  ]
+ },
+ {
+  "_id": "64bb122ae38420aaba98039a",
+  "id": "MLbackup/2023_Scraped_SDXL",
+  "gated": false,
+  "lastModified": "2026-02-01T01:03:39.000Z",
+  "trendingScore": 0,
+  "downloads": 6859,
+  "tags": [
+   "diffusers",
+   "sdxl",
+   "stable diffusion",
+   "anime",
+   "earth and dusk",
+   "duskfallcrew",
+   "safetensors",
+   "sdxl-anikme",
+   "sdxl anime",
+   "text-to-image",
+   "en",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "license:creativeml-openrail-m",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64c2b682dce9f5d6a8fe1e44",
+  "id": "Brainclub5000/moviemagic",
+  "gated": false,
+  "lastModified": "2023-07-27T18:25:07.000Z",
+  "trendingScore": 0,
+  "downloads": 19,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64c7df374515835c4d7542ff",
+  "id": "egerdm/sdlx_dreambooth",
+  "gated": false,
+  "lastModified": "2023-07-31T16:20:08.000Z",
+  "trendingScore": 0,
+  "downloads": 10,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64c81d29c864d962ede51a60",
+  "id": "egerdm/sdlx_dreambooth_ute",
+  "gated": false,
+  "lastModified": "2023-07-31T20:44:32.000Z",
+  "trendingScore": 0,
+  "downloads": 5,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64c93d3a6a26cddbecc1a34a",
+  "id": "anzorq/6hdk-il4r-1l1i",
+  "gated": false,
+  "lastModified": "2023-08-01T17:13:31.000Z",
+  "trendingScore": 0,
+  "downloads": 8,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64ca024f3cfe45b07182725c",
+  "id": "anzorq/photo_of_jhnny5793_dog",
+  "gated": false,
+  "lastModified": "2023-08-02T07:14:24.000Z",
+  "trendingScore": 0,
+  "downloads": 16,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64ca9169e5a1e97e76c9ea26",
+  "id": "SargeZT/t2i-adapter-sdxl-segmentation",
+  "gated": false,
+  "lastModified": "2023-08-12T16:24:16.000Z",
+  "trendingScore": 0,
+  "downloads": 53,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "stable-diffusion-xl",
+   "stable-diffusion-xl-diffusers",
+   "text-to-image",
+   "t2i_adapter",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "license:creativeml-openrail-m",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64cc114b0bf3949c691f76cf",
+  "id": "SargeZT/t2i-adapter-sdxl-multi",
+  "gated": false,
+  "lastModified": "2023-08-04T11:13:14.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "diffusers",
+   "stable-diffusion-xl",
+   "stable-diffusion-xl-diffusers",
+   "text-to-image",
+   "t2i_adapter",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "license:creativeml-openrail-m",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64cd79f7bc6c9c8bc0edee66",
+  "id": "egerdm/sdlx_dreambooth_man",
+  "gated": false,
+  "lastModified": "2023-08-04T22:21:46.000Z",
+  "trendingScore": 0,
+  "downloads": 7,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64cd8e992f1f9578a0db0d01",
+  "id": "egerdm/sdlx_dreambooth_egerdm",
+  "gated": false,
+  "lastModified": "2023-08-04T23:49:50.000Z",
+  "trendingScore": 0,
+  "downloads": 8,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d396346345a50baded7c05",
+  "id": "Ripo-2007/dreambooth_alfonso",
+  "gated": false,
+  "lastModified": "2023-08-09T15:32:17.000Z",
+  "trendingScore": 0,
+  "downloads": 11,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d3dd2117fea7f4e7561c58",
+  "id": "PsyEyes/Gravur",
+  "gated": false,
+  "lastModified": "2023-08-09T18:38:26.000Z",
+  "trendingScore": 0,
+  "downloads": 9,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d3f64b5ceebf9c304200d7",
+  "id": "osca/rubiusxl",
+  "gated": false,
+  "lastModified": "2023-08-09T20:25:50.000Z",
+  "trendingScore": 0,
+  "downloads": 7,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d3fccd6345a50badfc7780",
+  "id": "Bb8271/s",
+  "gated": false,
+  "lastModified": "2023-08-09T20:53:35.000Z",
+  "trendingScore": 0,
+  "downloads": 17,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d40f05c34a346181a7f2f8",
+  "id": "sergeindamix/anciano_pendejo",
+  "gated": false,
+  "lastModified": "2023-08-09T22:11:22.000Z",
+  "trendingScore": 0,
+  "downloads": 7,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d4810017fea7f4e76a4e0d",
+  "id": "AshutoshShrivastava/sdxl-db-lionelmessi",
+  "gated": false,
+  "lastModified": "2023-08-10T06:17:43.000Z",
+  "trendingScore": 0,
+  "downloads": 6,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d4d2747cfef99e30fbc6bf",
+  "id": "skramd/db-sdxl-whitebg-product-photography",
+  "gated": false,
+  "lastModified": "2023-08-10T12:05:10.000Z",
+  "trendingScore": 0,
+  "downloads": 22,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d4e62f446ad1c7c7811f8f",
+  "id": "osca/oscaxl",
+  "gated": false,
+  "lastModified": "2023-08-10T13:29:21.000Z",
+  "trendingScore": 0,
+  "downloads": 5,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d4fb5c505306fcd288174b",
+  "id": "alkalinevk/testrep",
+  "gated": false,
+  "lastModified": "2023-08-10T14:59:42.000Z",
+  "trendingScore": 0,
+  "downloads": 7,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d50a1bdd57652c1a3034fc",
+  "id": "ivanzidov/izidov_dreambooth",
+  "gated": false,
+  "lastModified": "2023-08-10T16:02:37.000Z",
+  "trendingScore": 0,
+  "downloads": 12,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d51890dd57652c1a3201a8",
+  "id": "kg-09/animesdxl",
+  "gated": false,
+  "lastModified": "2023-08-24T17:13:23.000Z",
+  "trendingScore": 0,
+  "downloads": 24,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d55564aa89fb548a7e2358",
+  "id": "dminhk/dog-example-sdxl-dreambooth",
+  "gated": false,
+  "lastModified": "2023-08-10T21:52:56.000Z",
+  "trendingScore": 0,
+  "downloads": 14,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64d616525e5f05485cc85d60",
+  "id": "tolgadev/sdxl_tk",
+  "gated": false,
+  "lastModified": "2023-08-12T20:46:08.000Z",
+  "trendingScore": 0,
+  "downloads": 13,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "autotrain",
+   "sdxl",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "region:us"
+  ]
+ }
+]

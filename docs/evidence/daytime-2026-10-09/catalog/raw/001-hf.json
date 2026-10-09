@@ -1,0 +1,450 @@
+[
+ {
+  "_id": "6a8608c725dc31475ac9dc98",
+  "id": "diffusers-modular/minimax-h3-inpainting",
+  "gated": false,
+  "lastModified": "2026-10-07T10:08:44.000Z",
+  "trendingScore": 2,
+  "downloads": 0,
+  "tags": [
+   "diffusers",
+   "modular-diffusers",
+   "minimax-h3",
+   "inpainting",
+   "video-to-video",
+   "audio-video",
+   "base_model:MiniMaxAI/MiniMax-H3",
+   "base_model:adapter:MiniMaxAI/MiniMax-H3",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "64f1f00e5e0cf1f797040eaa",
+  "id": "diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
+  "gated": false,
+  "lastModified": "2023-09-03T16:36:39.000Z",
+  "trendingScore": 1,
+  "downloads": 104113,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "stable-diffusion-xl",
+   "stable-diffusion-xl-diffusers",
+   "text-to-image",
+   "inpainting",
+   "arxiv:2112.10752",
+   "base_model:stabilityai/stable-diffusion-xl-base-1.0",
+   "base_model:finetune:stabilityai/stable-diffusion-xl-base-1.0",
+   "license:openrail++",
+   "diffusers:StableDiffusionXLInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "66d11fa05ab9ab8cb4d6934e",
+  "id": "benjamin-paine/stable-diffusion-v1-5-inpainting",
+  "gated": "auto",
+  "lastModified": "2024-09-04T18:16:15.000Z",
+  "trendingScore": 1,
+  "downloads": 2454,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image",
+   "arxiv:2207.12598",
+   "arxiv:2112.10752",
+   "arxiv:2103.00020",
+   "arxiv:2205.11487",
+   "arxiv:1910.09700",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67bdd10e2a3b870483aec91d",
+  "id": "andro-flock/LUSTIFY-SDXL-NSFW-checkpoint-v2-0-INPAINTING",
+  "gated": false,
+  "lastModified": "2025-03-01T14:05:15.000Z",
+  "trendingScore": 0.1,
+  "downloads": 10681,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "Safetensors",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionXLInpaintPipeline",
+   "region:us",
+   "not-for-all-audiences"
+  ]
+ },
+ {
+  "_id": "632c222216faa31b24d80b31",
+  "id": "prakashkmr48/Prompt-image-inpainting",
+  "gated": false,
+  "lastModified": "2022-09-22T08:58:57.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "region:us"
+  ]
+ },
+ {
+  "_id": "636bf202d963c5679359ef85",
+  "id": "julienacquaviva/inpainting",
+  "gated": false,
+  "lastModified": "2022-11-12T23:19:41.000Z",
+  "trendingScore": 0,
+  "downloads": 6,
+  "tags": [
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6372272b785dc489da575d15",
+  "id": "ljh838/inpainting",
+  "gated": false,
+  "lastModified": "2022-11-15T00:14:38.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63885957c9a44f05de444b34",
+  "id": "naumanminhas91/tin3d-inpainting-fork",
+  "gated": false,
+  "lastModified": "2022-12-01T07:35:51.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6391866d0cf6b11c4883548c",
+  "id": "Abhilashvj/stable-diffusion-inpainting-copy",
+  "gated": false,
+  "lastModified": "2023-05-16T09:35:48.000Z",
+  "trendingScore": 0,
+  "downloads": 85,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image",
+   "arxiv:2207.12598",
+   "arxiv:2112.10752",
+   "arxiv:2103.00020",
+   "arxiv:2205.11487",
+   "arxiv:1910.09700",
+   "license:creativeml-openrail-m",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63997ea1d1b2ddc12d7c4077",
+  "id": "philschmid/stable-diffusion-2-inpainting-endpoint",
+  "gated": false,
+  "lastModified": "2023-09-29T07:26:29.000Z",
+  "trendingScore": 0,
+  "downloads": 47,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-guided-to-image-inpainting",
+   "endpoints-template",
+   "license:openrail++",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63b6e280a473cd7f8e88bc48",
+  "id": "Eloimoliner/audio-inpainting-diffusion",
+  "gated": false,
+  "lastModified": "2023-01-05T20:06:11.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "license:mit",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63b79774ec5c995fded63d05",
+  "id": "lantianai/Stable_Diffusion_Inpainting_Mask_EulerA",
+  "gated": false,
+  "lastModified": "2023-01-06T03:50:46.000Z",
+  "trendingScore": 0,
+  "downloads": 4,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image",
+   "arxiv:2207.12598",
+   "arxiv:2112.10752",
+   "arxiv:2103.00020",
+   "arxiv:2205.11487",
+   "arxiv:1910.09700",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63c16c9c3bb1857eeac38640",
+  "id": "xvjiarui/stable-diffusion-2-inpainting",
+  "gated": false,
+  "lastModified": "2023-01-13T14:52:08.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63c6946f7b72f89d803938fd",
+  "id": "memberdoe/sd-nf-inpainting",
+  "gated": false,
+  "lastModified": "2023-01-17T12:30:13.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "license:openrail",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63c6dcba8ddc3b62b7056800",
+  "id": "parlance/dreamlike-diffusion-1.0-inpainting",
+  "gated": false,
+  "lastModified": "2023-01-17T17:54:08.000Z",
+  "trendingScore": 0,
+  "downloads": 49,
+  "tags": [
+   "diffusers",
+   "license:other",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63cb95e128e49dcd9f5d056a",
+  "id": "booksforcharlie/stable-diffusion-inpainting",
+  "gated": false,
+  "lastModified": "2023-01-22T01:14:32.000Z",
+  "trendingScore": 0,
+  "downloads": 650,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-to-image",
+   "arxiv:2207.12598",
+   "arxiv:2112.10752",
+   "arxiv:2103.00020",
+   "arxiv:2205.11487",
+   "arxiv:1910.09700",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63cfab306aaa4ec95a08e9c4",
+  "id": "Ekkel-AI-Pvt-ltd/stable-diffusion-inpainting2",
+  "gated": false,
+  "lastModified": "2023-02-08T05:51:25.000Z",
+  "trendingScore": 0,
+  "downloads": 13,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "text-to-image",
+   "arxiv:2112.10752",
+   "arxiv:2202.00512",
+   "arxiv:1910.09700",
+   "license:openrail++",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63d1cd00244709c85d460515",
+  "id": "gigo101/inpainting",
+  "gated": false,
+  "lastModified": "2023-01-26T00:44:48.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63d1e000119416cdbe21e7c5",
+  "id": "ayoo/stable-diffusion-anything3-inpainting",
+  "gated": false,
+  "lastModified": "2023-01-26T02:05:52.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "license:openrail",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63d203dd119416cdbe24d02c",
+  "id": "webui/stable-diffusion-2-inpainting",
+  "gated": false,
+  "lastModified": "2023-01-26T05:06:14.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63d2050b244709c85d4ab313",
+  "id": "webui/stable-diffusion-inpainting",
+  "gated": false,
+  "lastModified": "2023-01-26T04:44:24.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63d24de9aa0afab5e878e1f0",
+  "id": "ckpt/stable-diffusion-2-inpainting",
+  "gated": false,
+  "lastModified": "2023-01-26T13:26:04.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63d2865c71e96fcfcdf381ee",
+  "id": "callmezombie/InpaintingConversions",
+  "gated": false,
+  "lastModified": "2023-01-26T14:31:49.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63db60af8616f0acd36bab99",
+  "id": "redfoo/stable-diffusion-2-inpainting-endpoint-foo",
+  "gated": false,
+  "lastModified": "2023-02-02T07:05:20.000Z",
+  "trendingScore": 0,
+  "downloads": 8,
+  "tags": [
+   "diffusers",
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "text-guided-to-image-inpainting",
+   "endpoints-template",
+   "license:openrail++",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63f68a81bd4f5ad9bc685390",
+  "id": "saik0s/realistic_vision_inpainting",
+  "gated": false,
+  "lastModified": "2023-06-10T18:09:57.000Z",
+  "trendingScore": 0,
+  "downloads": 74,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "license:openrail",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63f7976dc9095c7b5afa3c02",
+  "id": "NickKolok/openjourney-v2-inpainting",
+  "gated": false,
+  "lastModified": "2023-02-23T22:41:29.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63f7e20aa6db61fe73647aa8",
+  "id": "saik0s/SS_0.15_x_protogen-inpainting",
+  "gated": false,
+  "lastModified": "2023-02-23T22:10:29.000Z",
+  "trendingScore": 0,
+  "downloads": 2,
+  "tags": [
+   "diffusers",
+   "endpoints_compatible",
+   "diffusers:StableDiffusionPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63f8a09c4ada8f12115b5fa2",
+  "id": "jschoormans/rv-inpainting",
+  "gated": false,
+  "lastModified": "2023-02-24T12:12:28.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63fcb926550fcf9204c0c9bc",
+  "id": "Sanster/anything-4.0-inpainting",
+  "gated": false,
+  "lastModified": "2023-03-01T13:08:41.000Z",
+  "trendingScore": 0,
+  "downloads": 1295,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "license:creativeml-openrail-m",
+   "diffusers:StableDiffusionInpaintPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "63fea5260b9bcde2f00b036f",
+  "id": "Nerternal/InpaintingMixes",
+  "gated": false,
+  "lastModified": "2023-03-02T04:21:19.000Z",
+  "trendingScore": 0,
+  "downloads": 0,
+  "tags": [
+   "license:openrail",
+   "region:us"
+  ]
+ }
+]

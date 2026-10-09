@@ -1,0 +1,239 @@
+{
+ "_id": "64ea2c994a2e1742116b974a",
+ "id": "Lykon/dreamshaper-8-inpainting",
+ "private": false,
+ "pipeline_tag": "image-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "safetensors",
+  "stable-diffusion",
+  "stable-diffusion-diffusers",
+  "inpainting",
+  "art",
+  "artistic",
+  "anime",
+  "dreamshaper",
+  "en",
+  "license:creativeml-openrail-m",
+  "diffusers:StableDiffusionInpaintPipeline",
+  "region:us"
+ ],
+ "downloads": 6898,
+ "likes": 36,
+ "modelId": "Lykon/dreamshaper-8-inpainting",
+ "author": "Lykon",
+ "sha": "a09e9d0bb9849aaf46c8fc59dfa604796da15a39",
+ "lastModified": "2024-09-17T18:23:38.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {
+  "diffusers": {
+   "_class_name": "StableDiffusionInpaintPipeline"
+  }
+ },
+ "cardData": {
+  "language": [
+   "en"
+  ],
+  "license": "creativeml-openrail-m",
+  "tags": [
+   "stable-diffusion",
+   "stable-diffusion-diffusers",
+   "inpainting",
+   "art",
+   "artistic",
+   "diffusers",
+   "anime",
+   "dreamshaper"
+  ],
+  "duplicated_from": "lykon-models/dreamshaper-8-inpainting"
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+   "size": 1519
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "7163129da5d33b007c4b35fa7c05106de66133bd",
+   "size": 2758
+  },
+  {
+   "rfilename": "feature_extractor/preprocessor_config.json",
+   "blobId": "e0675735fd0052745f2f7b7291e4aa7859389998",
+   "size": 520
+  },
+  {
+   "rfilename": "image.png",
+   "blobId": "9ac17c82db514f4f0cdd63308887a866b97b1ef4",
+   "size": 397414
+  },
+  {
+   "rfilename": "model_index.json",
+   "blobId": "e4e983f7ba6b5952a21bafd6bd708c8659538bd6",
+   "size": 660
+  },
+  {
+   "rfilename": "safety_checker/config.json",
+   "blobId": "03d2c4f1345da126ddccce91edd6cbe3ffa638e3",
+   "size": 807
+  },
+  {
+   "rfilename": "safety_checker/model.fp16.safetensors",
+   "blobId": "bfbbf684b4a9f55fcd69672a74736f095e4084ed",
+   "size": 608016280,
+   "lfs": {
+    "sha256": "57ecdfa243b170f9b4cb3eefaf0f64552ef78fc0bf0eb1c5b9675308447184f6",
+    "size": 608016280,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "safety_checker/model.safetensors",
+   "blobId": "3664190c342ff99f7f7ab5bda9648e375ef361e0",
+   "size": 1215979664,
+   "lfs": {
+    "sha256": "fb351a5ded815c3ff744968ad9c6b218d071b9d313d04f35e813b84b4c0ffde8",
+    "size": 1215979664,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "scheduler/scheduler_config.json",
+   "blobId": "a63f334bd6446e1cd3d49f32dac82fd45d0fff53",
+   "size": 614
+  },
+  {
+   "rfilename": "text_encoder/config.json",
+   "blobId": "a2be3c54baa1741b1b28a96144a13a5900f2a246",
+   "size": 735
+  },
+  {
+   "rfilename": "text_encoder/model.fp16.safetensors",
+   "blobId": "32ed78a308ea8078124ceb10740c5e46f3ac3c69",
+   "size": 246144152,
+   "lfs": {
+    "sha256": "3ece5df6035867a0f018ae4a7df2bf1219c58c11d55d5b60f7bea56d280b93a8",
+    "size": 246144152,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "text_encoder/model.safetensors",
+   "blobId": "6d0fc0391e5ddc29b08f58273128c23b05f76c2d",
+   "size": 492265168,
+   "lfs": {
+    "sha256": "a882608ff3053e798fae45bfcf2dcac77553eccfb8988acf087569ce23c88ef1",
+    "size": 492265168,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "tokenizer/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer/special_tokens_map.json",
+   "blobId": "2c2130b544c0c5a72d5d00da071ba130a9800fb2",
+   "size": 472
+  },
+  {
+   "rfilename": "tokenizer/tokenizer_config.json",
+   "blobId": "2e8612a429492973fe60635b3f44a28b065cfac0",
+   "size": 737
+  },
+  {
+   "rfilename": "tokenizer/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "unet/config.json",
+   "blobId": "d9f3b21d92edd6c5247338496684c2630252eb01",
+   "size": 1879
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.fp16.safetensors",
+   "blobId": "2e141ade315cdb5e097f5392dcd3555488821fbe",
+   "size": 1719154104,
+   "lfs": {
+    "sha256": "d56db133108398dcbb3886b0744f3b5c9965574a9ec3983e34ecb875fefde286",
+    "size": 1719154104,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.safetensors",
+   "blobId": "841a9d1717d6a37527325d09b0a3e4c95d76f608",
+   "size": 3438225152,
+   "lfs": {
+    "sha256": "2821cffb3d38c82edda5196c8d3a4d858c0419933897745e1053e52dc44a7acf",
+    "size": 3438225152,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "vae/config.json",
+   "blobId": "dbb2aa694d13eaec44a3b37aebd8c9423c57ab85",
+   "size": 767
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.fp16.safetensors",
+   "blobId": "6c6fc496c451cb22e7b2908b252cd4ddebef677b",
+   "size": 167335342,
+   "lfs": {
+    "sha256": "9e614d1d936ceffff2f80b9ca4db9d72ecc30f4e576b338c8d20cac4c05d6679",
+    "size": 167335342,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.safetensors",
+   "blobId": "fd99846b5284c55cbd220694c27674fdd4035c3a",
+   "size": 334643268,
+   "lfs": {
+    "sha256": "378595b8ec40d387d360ed68021d9a34c25d1109286b05d348b2c2956d226df3",
+    "size": 334643268,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse",
+  "PAIR/HD-Painter",
+  "PAIR/StreamingSVD",
+  "akameswa/DiffusionDemo",
+  "iocalangiu/genvis-face-rotation",
+  "LightningDrag/LightningDrag",
+  "openmen-gif/reroom-ai",
+  "JOHANhuynhhhhh/Test1",
+  "elontusk404/HD-Painter-6",
+  "korp123/HD-Painter",
+  "Deadmon/HD-Painter",
+  "Omerta420/HD-Painter",
+  "kheloo/HD-Painter",
+  "FreeverseAI/freeverse-ai-image",
+  "stable-diffusion-ai/HD-Painter",
+  "soye/FEAT",
+  "MetricMogul/stable-diffusion-1.5-inpaint",
+  "Newno1978/HD-Painter",
+  "skye6/room_remix-demo",
+  "2immoi/HD-Painter",
+  "eduardo4547/hyperfit-4d",
+  "MetricMogul/SD15-Light-Inpaint-CPU",
+  "harry0310/star-star-backend",
+  "PepeDIY1984/ai-canvas-sd15-lcm"
+ ],
+ "createdAt": "2023-08-26T16:47:21.000Z",
+ "safetensors": {
+  "parameters": {
+   "F32": 859535364
+  },
+  "total": 859535364
+ },
+ "usedStorage": 8221763130
+}

@@ -1,0 +1,9 @@
+{
+  "gpu_name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+  "vram_bytes": 8585740288,
+  "ram_bytes": 33598619648,
+  "disk_free_bytes": 414179643392,
+  "os_name": "Windows 11",
+  "gpu_source": "nvidia-smi"
+}
+NVIDIA GeForce RTX 4070 Laptop GPU, 8 GB graphics memory, 31 GB memory, 386 GB free disk space

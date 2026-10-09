@@ -1,0 +1,516 @@
+[
+ {
+  "_id": "673e3c5da3eda9a8c99bda8a",
+  "id": "black-forest-labs/FLUX.1-Fill-dev",
+  "gated": "auto",
+  "lastModified": "2025-06-27T16:23:07.000Z",
+  "downloads": 70510,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "image-generation",
+   "flux",
+   "diffusion-single-file",
+   "en",
+   "license:other",
+   "diffusers:FluxFillPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "673fe95090613d5e14785593",
+  "id": "YarvixPA/FLUX.1-Fill-dev-GGUF",
+  "gated": false,
+  "lastModified": "2025-06-11T14:04:52.000Z",
+  "downloads": 33481,
+  "tags": [
+   "gguf",
+   "flux",
+   "image-generation",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68c1a5fb8a705779c9bf588c",
+  "id": "yichengup/flux.1-fill-dev-OneReward",
+  "gated": false,
+  "lastModified": "2026-01-26T10:31:38.000Z",
+  "downloads": 3641,
+  "tags": [
+   "diffusers",
+   "image-to-image",
+   "en",
+   "arxiv:2508.21066",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:cc-by-nc-4.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6a0d15a5d352b9f4ce7e772d",
+  "id": "cudabenchmarktest/flux1-fill-dev-fp8",
+  "gated": false,
+  "lastModified": "2026-05-20T02:15:57.000Z",
+  "downloads": 2686,
+  "tags": [
+   "diffusers",
+   "flux",
+   "inpainting",
+   "fp8",
+   "non-commercial",
+   "image-to-image",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67453a5a8eebd2eaf7e4c697",
+  "id": "second-state/FLUX.1-Fill-dev-GGUF",
+  "gated": false,
+  "lastModified": "2024-11-27T13:45:48.000Z",
+  "downloads": 1753,
+  "tags": [
+   "gguf",
+   "text-to-image",
+   "image-generation",
+   "flux",
+   "en",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67a19aabf79b3b8da55394ef",
+  "id": "mit-han-lab/svdq-int4-flux.1-fill-dev",
+  "gated": false,
+  "lastModified": "2025-07-21T05:33:03.000Z",
+  "downloads": 1543,
+  "tags": [
+   "diffusers",
+   "image-to-image",
+   "SVDQuant",
+   "FLUX.1-Fill-dev",
+   "FLUX.1",
+   "Diffusion",
+   "Quantization",
+   "ICLR2025",
+   "en",
+   "dataset:mit-han-lab/svdquant-datasets",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "687847304be53e1430eff8e7",
+  "id": "nunchaku-ai/nunchaku-flux.1-fill-dev",
+  "gated": false,
+  "lastModified": "2025-11-16T02:24:18.000Z",
+  "downloads": 1360,
+  "tags": [
+   "diffusers",
+   "image-to-image",
+   "SVDQuant",
+   "FLUX.1-Fill-dev",
+   "FLUX.1",
+   "Diffusion",
+   "Quantization",
+   "ICLR2025",
+   "en",
+   "dataset:mit-han-lab/svdquant-datasets",
+   "arxiv:2411.05007",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "681d16b53c1428878135674f",
+  "id": "DFloat11/FLUX.1-Fill-dev-DF11",
+  "gated": false,
+  "lastModified": "2025-05-08T20:41:29.000Z",
+  "downloads": 1346,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "llama",
+   "dfloat11",
+   "df11",
+   "lossless compression",
+   "70% size, 100% accuracy",
+   "text-to-image",
+   "arxiv:2504.11651",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6a545c85b731f4f55c4c3668",
+  "id": "wjndd/flux1-fill-dev-fp8",
+  "gated": false,
+  "lastModified": "2026-07-13T03:33:25.000Z",
+  "downloads": 1274,
+  "tags": [
+   "diffusers",
+   "flux",
+   "inpainting",
+   "fp8",
+   "non-commercial",
+   "image-to-image",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "673ff47529018d929aeaa213",
+  "id": "SporkySporkness/FLUX.1-Fill-dev-GGUF",
+  "gated": false,
+  "lastModified": "2024-11-22T03:38:03.000Z",
+  "downloads": 1118,
+  "tags": [
+   "gguf",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6894aa00b9e1d3b7379cb88c",
+  "id": "camenduru/FLUX.1-Fill-dev-ungated",
+  "gated": false,
+  "lastModified": "2025-08-07T13:57:31.000Z",
+  "downloads": 544,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "image-generation",
+   "flux",
+   "diffusion-single-file",
+   "en",
+   "license:other",
+   "diffusers:FluxFillPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "676ad7a0ac3c4cc6f39eedfb",
+  "id": "gpustack/FLUX.1-Fill-dev-GGUF",
+  "gated": false,
+  "lastModified": "2024-12-25T10:02:39.000Z",
+  "downloads": 482,
+  "tags": [
+   "diffusion-single-file",
+   "gguf",
+   "image-generation",
+   "flux",
+   "en",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67453a6786ca007057393a18",
+  "id": "gaianet/FLUX.1-Fill-dev-GGUF",
+  "gated": false,
+  "lastModified": "2024-11-27T13:47:37.000Z",
+  "downloads": 476,
+  "tags": [
+   "gguf",
+   "text-to-image",
+   "image-generation",
+   "flux",
+   "en",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6837fc612ae6ccdb0c221e2a",
+  "id": "mit-han-lab/nunchaku-flux.1-fill-dev",
+  "gated": false,
+  "lastModified": "2025-07-21T05:31:26.000Z",
+  "downloads": 362,
+  "tags": [
+   "diffusers",
+   "image-to-image",
+   "SVDQuant",
+   "FLUX.1-Fill-dev",
+   "FLUX.1",
+   "Diffusion",
+   "Quantization",
+   "ICLR2025",
+   "en",
+   "dataset:mit-han-lab/svdquant-datasets",
+   "arxiv:2411.05007",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67429fd506f2e52e35ba2d6b",
+  "id": "t8star/FLUX.1-Fill-dev-GGUF-Aix",
+  "gated": false,
+  "lastModified": "2024-11-26T12:43:51.000Z",
+  "downloads": 331,
+  "tags": [
+   "gguf",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6749720f05ff2c728a59c8fc",
+  "id": "fuliucansheng/FLUX.1-Fill-dev-diffusers",
+  "gated": false,
+  "lastModified": "2024-11-30T01:52:07.000Z",
+  "downloads": 318,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "image-generation",
+   "flux",
+   "diffusion-single-file",
+   "en",
+   "license:other",
+   "diffusers:FluxFillPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "69f2c2edec5f93ce1b009751",
+  "id": "akikuli/FLUX.1-Fill-dev-GGUF",
+  "gated": false,
+  "lastModified": "2026-04-30T02:48:13.000Z",
+  "downloads": 209,
+  "tags": [
+   "gguf",
+   "flux",
+   "image-generation",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67d6efe0a23a10ded4b6d6c2",
+  "id": "mit-han-lab/svdq-fp4-flux.1-fill-dev",
+  "gated": false,
+  "lastModified": "2025-07-21T05:33:19.000Z",
+  "downloads": 204,
+  "tags": [
+   "diffusers",
+   "image-to-image",
+   "SVDQuant",
+   "FLUX.1-Fill-dev",
+   "FLUX.1",
+   "Diffusion",
+   "Quantization",
+   "ICLR2025",
+   "en",
+   "dataset:mit-han-lab/svdquant-datasets",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6881da9b06fc80ce7a98dea2",
+  "id": "tt98/flux1-fill-dev-mmgp",
+  "gated": false,
+  "lastModified": "2025-07-24T08:02:31.000Z",
+  "downloads": 56,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "diffusers:FluxFillPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6740112a9ba5d8c33b0efaef",
+  "id": "xiaozaa/flux1-fill-dev-diffusers",
+  "gated": false,
+  "lastModified": "2024-11-22T05:10:27.000Z",
+  "downloads": 51,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "arxiv:1910.09700",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "69a1d24c92dbdec8ac33abd8",
+  "id": "models123/FLUX.1-Fill",
+  "gated": false,
+  "lastModified": "2026-02-27T17:20:13.000Z",
+  "downloads": 46,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "image-generation",
+   "flux",
+   "diffusion-single-file",
+   "en",
+   "license:other",
+   "diffusers:FluxFillPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6746c3b2fdef147c6a658d27",
+  "id": "windecay/flux1-fill-dev-hyp8.gguf",
+  "gated": false,
+  "lastModified": "2024-11-27T07:45:49.000Z",
+  "downloads": 45,
+  "tags": [
+   "gguf",
+   "license:apache-2.0",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "6a91b194a72e0b7a20f48d72",
+  "id": "Wesley1234/FLUX.1-Fill-dev-GGUF-Aix",
+  "gated": false,
+  "lastModified": "2026-09-03T16:41:07.000Z",
+  "downloads": 45,
+  "tags": [
+   "gguf",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "680737dcc17c9d900d18a72e",
+  "id": "shangguanyanyan/flux1-fill-dev-custom",
+  "gated": false,
+  "lastModified": "2025-04-26T04:40:09.000Z",
+  "downloads": 35,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "endpoints_compatible",
+   "diffusers:FluxFillPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68bd668fa20cb495d8837b23",
+  "id": "HelloTestUser/FLUX.1-Fill-dev",
+  "gated": false,
+  "lastModified": "2025-09-07T11:12:41.000Z",
+  "downloads": 23,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "image-generation",
+   "flux",
+   "diffusion-single-file",
+   "en",
+   "license:other",
+   "diffusers:FluxFillPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "67455dba15b64e65424a9d80",
+  "id": "7iFiNalBoSS/fill-flux.1-dev-nf4",
+  "gated": false,
+  "lastModified": "2024-11-26T05:38:48.000Z",
+  "downloads": 19,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "arxiv:1910.09700",
+   "8-bit",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68c140a866b268600b966b16",
+  "id": "CutePickle/FLUX.1-Fill-dev-nf4",
+  "gated": false,
+  "lastModified": "2025-09-10T09:13:58.000Z",
+  "downloads": 19,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "art",
+   "en",
+   "base_model:black-forest-labs/FLUX.1-dev",
+   "base_model:finetune:black-forest-labs/FLUX.1-dev",
+   "diffusers:FluxFillPipeline",
+   "8-bit",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68d0f468b0767a20e7f14a25",
+  "id": "kp-forks/FLUX.1-Fill-dev",
+  "gated": false,
+  "lastModified": "2025-06-27T16:23:07.000Z",
+  "downloads": 17,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "image-generation",
+   "flux",
+   "diffusion-single-file",
+   "en",
+   "license:other",
+   "diffusers:FluxFillPipeline",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68be98f31ad56d2b8f5917f9",
+  "id": "hjh3927/flux-fill-chart1-2-data-lora",
+  "gated": false,
+  "lastModified": "2025-09-08T12:29:56.000Z",
+  "downloads": 15,
+  "tags": [
+   "diffusers",
+   "text-to-image",
+   "diffusers-training",
+   "lora",
+   "flux",
+   "flux-diffusers",
+   "template:sd-lora",
+   "base_model:black-forest-labs/FLUX.1-Fill-dev",
+   "base_model:adapter:black-forest-labs/FLUX.1-Fill-dev",
+   "license:other",
+   "region:us"
+  ]
+ },
+ {
+  "_id": "68d9bb2208f6f9a8ac24df15",
+  "id": "Meatfucker/Flux.1-Fill-dev-bnb-nf4",
+  "gated": false,
+  "lastModified": "2025-09-28T22:49:53.000Z",
+  "downloads": 13,
+  "tags": [
+   "diffusers",
+   "safetensors",
+   "diffusers:FluxFillPipeline",
+   "8-bit",
+   "region:us"
+  ]
+ }
+]

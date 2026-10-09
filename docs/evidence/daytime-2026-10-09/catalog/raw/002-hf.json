@@ -1,0 +1,162 @@
+{
+ "_id": "63ff51b15caf40b74186f0c0",
+ "id": "Sanster/Realistic_Vision_V1.4-inpainting",
+ "private": false,
+ "pipeline_tag": "image-to-image",
+ "library_name": "diffusers",
+ "tags": [
+  "diffusers",
+  "safetensors",
+  "license:openrail",
+  "diffusers:StableDiffusionInpaintPipeline",
+  "region:us"
+ ],
+ "downloads": 3604,
+ "likes": 3,
+ "modelId": "Sanster/Realistic_Vision_V1.4-inpainting",
+ "author": "Sanster",
+ "sha": "4d6c9b2ace98141f2c3908b01c2ec23991e67f1a",
+ "lastModified": "2023-03-01T13:35:30.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {
+  "diffusers": {
+   "_class_name": "StableDiffusionInpaintPipeline"
+  }
+ },
+ "cardData": {
+  "license": "openrail"
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "c7d9f3332a950355d5a77d85000f05e6f45435ea",
+   "size": 1477
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "09f57832c8954e8c173e36a80408c72d9b921525",
+   "size": 26
+  },
+  {
+   "rfilename": "feature_extractor/preprocessor_config.json",
+   "blobId": "e0675735fd0052745f2f7b7291e4aa7859389998",
+   "size": 520
+  },
+  {
+   "rfilename": "model_index.json",
+   "blobId": "5d67bf1aed05a02c722300a4a35b607d2a5c379b",
+   "size": 586
+  },
+  {
+   "rfilename": "safety_checker/config.json",
+   "blobId": "397c9b2a5da16a700e5a499a29ec7a16a6e6ce34",
+   "size": 5007
+  },
+  {
+   "rfilename": "safety_checker/model.safetensors",
+   "blobId": "f5ef2f1c9f2ef024b62404e68abd0d0560c4ce87",
+   "size": 608018446,
+   "lfs": {
+    "sha256": "91858fc249ffd9ae354c413eda885c883fc62c97609af0eab686409760202c1f",
+    "size": 608018446,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "scheduler/scheduler_config.json",
+   "blobId": "0e4b49e8b39fd013b35e110d8e3b1794fffc8c21",
+   "size": 341
+  },
+  {
+   "rfilename": "text_encoder/config.json",
+   "blobId": "31a7b70c3d483fdb1a44aab08824b7b5e468c73a",
+   "size": 732
+  },
+  {
+   "rfilename": "text_encoder/model.safetensors",
+   "blobId": "c42a5e1e6c79d7258301d79193f3818926aeb8d2",
+   "size": 246144867,
+   "lfs": {
+    "sha256": "16f15db2f961e486cb1afa160375de7f5a4debb10ca2ea7d704a662b7c566fa2",
+    "size": 246144867,
+    "pointerSize": 134
+   }
+  },
+  {
+   "rfilename": "tokenizer/merges.txt",
+   "blobId": "76e821f1b6f0a9709293c3b6b51ed90980b3166b",
+   "size": 524619
+  },
+  {
+   "rfilename": "tokenizer/special_tokens_map.json",
+   "blobId": "2c2130b544c0c5a72d5d00da071ba130a9800fb2",
+   "size": 472
+  },
+  {
+   "rfilename": "tokenizer/tokenizer_config.json",
+   "blobId": "12c8f1769fca19eef5008e45502d026081785d05",
+   "size": 923
+  },
+  {
+   "rfilename": "tokenizer/vocab.json",
+   "blobId": "469be27c5c010538f845f518c4f5e8574c78f7c8",
+   "size": 1059962
+  },
+  {
+   "rfilename": "unet/config.json",
+   "blobId": "9a74009ec4ab4865e278d3940459d254728ce8a9",
+   "size": 1180
+  },
+  {
+   "rfilename": "unet/diffusion_pytorch_model.safetensors",
+   "blobId": "2e3e829789c4dfcc42ce1c76ab2c37894f8bf749",
+   "size": 1719154071,
+   "lfs": {
+    "sha256": "ca44aa6807cf718988f77ef31f73731840c333f26ab93608d5dcbc1e5e618d79",
+    "size": 1719154071,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "vae/config.json",
+   "blobId": "9625771dc84e9130461f3f393a7d6ee4c14b6bab",
+   "size": 711
+  },
+  {
+   "rfilename": "vae/diffusion_pytorch_model.safetensors",
+   "blobId": "e2807f6b0e6bb76e7c259fe83d3da4431f0605a7",
+   "size": 167335315,
+   "lfs": {
+    "sha256": "7c5725e922c195eaef8001d2f307a38452f94bd7d22e69875872201e4ab90a8e",
+    "size": 167335315,
+    "pointerSize": 134
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse",
+  "kikiriki/ReLama",
+  "egg22314/object-to-object-replace",
+  "sichaolong/lama-cleaner-demo",
+  "LinHanjiang/lama",
+  "Zafaflahfksdf/_",
+  "a7md2del/inpaintingv1",
+  "hello10000/startagain",
+  "krustl/object-to-object-replace",
+  "freevpn/FastestImageGen",
+  "builden/ez-clean",
+  "TarasKasKas/ReLama",
+  "Glassic/Glassic",
+  "arvind4632/iopaint-bulk"
+ ],
+ "createdAt": "2023-03-01T13:22:57.000Z",
+ "safetensors": {
+  "parameters": {
+   "F16": 859535364
+  },
+  "total": 859535364
+ },
+ "usedStorage": 2740652699
+}

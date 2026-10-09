@@ -1,0 +1,92 @@
+{
+ "_id": "673ff47529018d929aeaa213",
+ "id": "SporkySporkness/FLUX.1-Fill-dev-GGUF",
+ "private": false,
+ "tags": [
+  "gguf",
+  "license:other",
+  "region:us"
+ ],
+ "downloads": 1118,
+ "likes": 61,
+ "modelId": "SporkySporkness/FLUX.1-Fill-dev-GGUF",
+ "author": "SporkySporkness",
+ "sha": "c6443442323fee58a8fd7d990422f00395c871dd",
+ "lastModified": "2024-11-22T03:38:03.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "license": "other",
+  "license_name": "flux-1-dev-non-commercial-license",
+  "license_link": "LICENSE"
+ },
+ "gguf": {
+  "total": 11902391360,
+  "architecture": "flux",
+  "totalFileSize": 23811007776
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "5d035e129c34e26c9d89b5eb3631ba13192ecd69",
+   "size": 1871
+  },
+  {
+   "rfilename": "LICENSE.md",
+   "blobId": "2e071518f6b079b9b571f56e51d6732bda5e1500",
+   "size": 17091
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "e22f95f43ae24d3b1bec16bb0966c71b19c69ebd",
+   "size": 510
+  },
+  {
+   "rfilename": "flux1-fill-dev-fp16-F16-GGUF.gguf",
+   "blobId": "52f2f664c28697005ccd65b2b9fad3bc3fb763a8",
+   "size": 23811007776,
+   "lfs": {
+    "sha256": "4ecaa8f2be5c5456c8aaafab51330a24bc38b992e80e1d75fe3ec3056ce1dab9",
+    "size": 23811007776,
+    "pointerSize": 136
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-fp16-Q4_0-GGUF.gguf",
+   "blobId": "17305eedd8c9505883acf2305d43a6d916b369b5",
+   "size": 6799303968,
+   "lfs": {
+    "sha256": "a8da3a4e20c32851f13d3619dcf4d16991d22d6703281e98b63ab03b5252b5df",
+    "size": 6799303968,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-fp16-Q5_0-GGUF.gguf",
+   "blobId": "f01f342a5e9b4090fa223bfacb18394db8a929d7",
+   "size": 8278582560,
+   "lfs": {
+    "sha256": "70e0ccd05f30407311a7511c0138910fa0e757fcfb72d37d5e3cda81fc2ba128",
+    "size": 8278582560,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-fp16-Q8_0-GGUF.gguf",
+   "blobId": "eed544e9280dfeef0ebcf4dd2bd36f404ff0721b",
+   "size": 12716418336,
+   "lfs": {
+    "sha256": "4aceb79acfc68207c34e46f8b8fa8022b0b1efd8d92dc7a60e46c566cb8532d1",
+    "size": 12716418336,
+    "pointerSize": 136
+   }
+  }
+ ],
+ "spaces": [
+  "Ashoka74/RefurnishAI"
+ ],
+ "createdAt": "2024-11-22T03:03:17.000Z",
+ "usedStorage": 51605312640
+}

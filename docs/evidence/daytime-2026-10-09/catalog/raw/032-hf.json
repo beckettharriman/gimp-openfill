@@ -1,0 +1,156 @@
+{
+ "_id": "673fe95090613d5e14785593",
+ "id": "YarvixPA/FLUX.1-Fill-dev-GGUF",
+ "private": false,
+ "library_name": "gguf",
+ "tags": [
+  "gguf",
+  "flux",
+  "image-generation",
+  "base_model:black-forest-labs/FLUX.1-Fill-dev",
+  "base_model:quantized:black-forest-labs/FLUX.1-Fill-dev",
+  "license:other",
+  "region:us"
+ ],
+ "downloads": 33481,
+ "likes": 153,
+ "modelId": "YarvixPA/FLUX.1-Fill-dev-GGUF",
+ "author": "YarvixPA",
+ "sha": "78b83f1da140a4dcd6466580516544e1f6effe3e",
+ "lastModified": "2025-06-11T14:04:52.000Z",
+ "gated": false,
+ "disabled": false,
+ "model-index": null,
+ "config": {},
+ "cardData": {
+  "license": "other",
+  "license_name": "flux-1-dev-non-commercial-license",
+  "license_link": "LICENSE.md",
+  "base_model": [
+   "black-forest-labs/FLUX.1-Fill-dev"
+  ],
+  "library_name": "gguf",
+  "tags": [
+   "flux",
+   "image-generation"
+  ]
+ },
+ "gguf": {
+  "total": 11902391360,
+  "architecture": "flux",
+  "totalFileSize": 5238187296
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "blobId": "5be6739c1e2fa2e871012fd1e72cf050d976db3b",
+   "size": 2574
+  },
+  {
+   "rfilename": "LICENSE.md",
+   "blobId": "2e071518f6b079b9b571f56e51d6732bda5e1500",
+   "size": 17091
+  },
+  {
+   "rfilename": "README.md",
+   "blobId": "911301aba501c8c3eae48bdd2f4b1c7cf7283478",
+   "size": 876
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q3_K_S.gguf",
+   "blobId": "0f17eea452b760516a08ee53acd913fb4636f5e5",
+   "size": 5238187296,
+   "lfs": {
+    "sha256": "acc2a48ebfd3f7b983ff044f7be8cc7e3cfdd3013bf4187828ddda94315f3998",
+    "size": 5238187296,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q4_0.gguf",
+   "blobId": "6ac4ec47a5a46d83eb75811b2a93fa8e80c18d6e",
+   "size": 6809920800,
+   "lfs": {
+    "sha256": "fc9c8398f7ba88d1fe670b5011330c1b08c70838828a0d8f876fe5402653321b",
+    "size": 6809920800,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q4_1.gguf",
+   "blobId": "60e4ce81dcf8090afb226fc1b740440f89e69fbe",
+   "size": 7549560096,
+   "lfs": {
+    "sha256": "2f94a1f8343895ce53b49f5f5eecb6f432673ad4eaf449504f38e217d5a1990d",
+    "size": 7549560096,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q4_K_S.gguf",
+   "blobId": "53b1ecad5951e418ecadb22baa433c8283512053",
+   "size": 6809920800,
+   "lfs": {
+    "sha256": "3782c22eda0622d50eb8683d2aa664e8534a8c1e29ce9e91df491cc400944dc8",
+    "size": 6809920800,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q5_0.gguf",
+   "blobId": "bce28f40fb2401e8d9acf640e0900f8ce002d0d1",
+   "size": 8289199392,
+   "lfs": {
+    "sha256": "1172081e79ff5b8f8dcfe5f145c9e62df20c9527589af17fe9e7bfefc44cffc4",
+    "size": 8289199392,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q5_1.gguf",
+   "blobId": "e4decf1bc3777d6a868fd1c90eddc721c86f4218",
+   "size": 9028838688,
+   "lfs": {
+    "sha256": "51d1869c1d7c316a25a6d6cf8371d933ca6e09dfe330da40554e20aab1c53516",
+    "size": 9028838688,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q5_K_S.gguf",
+   "blobId": "9b55057d20d1da56bbb450085ecb034c8d6b1659",
+   "size": 8289199392,
+   "lfs": {
+    "sha256": "555e1cc1d84d5d27b394cdcb6e8f3be9bea9111649fd0c466e77b3747e708115",
+    "size": 8289199392,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q6_K.gguf",
+   "blobId": "b83ebae1e82e36db640eb4e801ee2a51fc2956f4",
+   "size": 9860932896,
+   "lfs": {
+    "sha256": "d538635d81ed5eca59fa2f5a7b68709f0b5584d936570a8695e4d1ae4d518a72",
+    "size": 9860932896,
+    "pointerSize": 135
+   }
+  },
+  {
+   "rfilename": "flux1-fill-dev-Q8_0.gguf",
+   "blobId": "2030fdb01f506ce4d4b96ce78e0eed13480b0d9c",
+   "size": 12727035168,
+   "lfs": {
+    "sha256": "345ffd7acf39148e391133ae2a2fa7cc3f85e8dd0dbdb4636e760c3e7fe7952d",
+    "size": 12727035168,
+    "pointerSize": 136
+   }
+  }
+ ],
+ "spaces": [
+  "tardellirs/model-pulse",
+  "Ashoka74/RefurnishAI"
+ ],
+ "createdAt": "2024-11-22T02:15:44.000Z",
+ "usedStorage": 78851082048
+}

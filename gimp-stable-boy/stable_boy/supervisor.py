@@ -30,7 +30,11 @@ Trust: task files are re-validated here against the shipped catalog and the
 ComfyUI folder named in ``config.json`` (download URL, destination, size and
 sha256; node repo, folder and commit; the interpreter that runs pip), so a
 tampered task file cannot make the worker fetch or run anything the catalog
-does not list. Pids read from state files are checked against the process
+does not list. Live (hub) entries the user picked are read from
+``hub-selected.json`` and pass ``catalog.parse_live_entries`` first: one
+safetensors/GGUF file from a Hugging Face or Civitai download URL into
+``checkpoints``/``unet``/``diffusion_models``, everything else (companion
+files, custom nodes) only as listed in the shipped catalog. Pids read from state files are checked against the process
 image name before they are trusted, which guards against pid reuse.
 """
 
@@ -455,9 +459,14 @@ class TaskWorker:
     def _comfy_dir(self) -> str:
         return Settings.load(self.config_path, backup=False).comfy_dir
 
+    def _catalog(self) -> list[catalog.ModelEntry]:
+        """The shipped catalog plus the live (hub) entries the user chose in the
+        Models tab (``hub-selected.json``), each re-validated by the strict live rules."""
+        return catalog.load_merged(base=self.base)
+
     def _catalog_files(self, task: dict[str, Any]) -> dict[str, catalog.FileSpec]:
         """Files of the task's catalog entry, keyed by normalised ``dest``."""
-        entry = catalog.by_id(catalog.load_catalog(), str(task.get("model_id") or ""))
+        entry = catalog.by_id(self._catalog(), str(task.get("model_id") or ""))
         return {downloads.safe_relative_path(f.dest): f for f in entry.files}
 
     def _checked_models_root(self, task: dict[str, Any]) -> Path:
@@ -501,7 +510,7 @@ class TaskWorker:
         python = Path(task["python"])
         if layout is None or not same_path(python, layout["python"]):
             raise ValueError(f"task interpreter {python} is not the ComfyUI interpreter of {comfy_dir}")
-        known = {(n.repo, n.folder, n.commit): n for e in catalog.load_catalog() for n in e.requires_nodes}
+        known = {(n.repo, n.folder, n.commit): n for e in self._catalog() for n in e.requires_nodes}
         nodes = []
         for n in task["nodes"]:
             spec = known.get((n.get("repo"), n.get("folder"), n.get("commit")))
@@ -546,10 +555,22 @@ class TaskWorker:
             result = downloads.download_file(
                 spec.url, dest, spec.size, spec.sha256, token or None, progress, self.cancel_requested
             )
+            recorded = False
+            if not spec.sha256 and result.sha256:
+                # a live file without a published checksum: pin what was downloaded
+                try:
+                    recorded = catalog.record_live_checksum(
+                        self.base, str(task.get("model_id") or ""), spec.dest, result.sha256
+                    )
+                except OSError as err:
+                    self.log(f"could not record the checksum of {spec.dest}: {err}", "WARNING")
+                self.log(f"{spec.dest}: no published checksum; downloaded sha256 {result.sha256}")
             results.append(
                 {
                     "dest": spec.dest,
                     "sha256": result.sha256,
+                    "verified": bool(spec.sha256),
+                    "sha256_recorded": recorded,
                     "skipped": result.skipped,
                     "resumed_from": result.resumed_from,
                 }
