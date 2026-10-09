@@ -159,7 +159,7 @@ class ProgressWindow(Gtk.Window):
         show_preview: bool = True,
         quit_main_on_close: bool = True,
     ) -> None:
-        super().__init__(title=f"Stable Boy - {title}")
+        super().__init__(title=ui_text.PROGRESS_TITLE.format(title=title))
         self._quit_main_on_close = quit_main_on_close
         self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
         self.set_keep_above(True)
@@ -187,7 +187,7 @@ class ProgressWindow(Gtk.Window):
         model_text = f"  <small>with {GLib.markup_escape_text(model_name)}</small>" if model_name else ""
         self.title_label.set_markup(f"<b>{GLib.markup_escape_text(title)}</b>{model_text}")
         box.pack_start(self.title_label, False, False, 0)
-        self.step_label = Gtk.Label(label="Getting ready...", xalign=0)
+        self.step_label = Gtk.Label(label=ui_text.PROGRESS_READY, xalign=0)
         self.step_label.set_line_wrap(True)
         self.step_label.set_width_chars(36)
         self.step_label.set_max_width_chars(36)
@@ -203,7 +203,7 @@ class ProgressWindow(Gtk.Window):
         self.preview.set_size_request(PREVIEW_LONG_SIDE, 160)
         preview_box = Gtk.Overlay()
         preview_box.add(self.preview)
-        self.preview_hint = Gtk.Label(label="A preview appears here once the picture starts to form.")
+        self.preview_hint = Gtk.Label(label=ui_text.PROGRESS_PREVIEW_HINT)
         self.preview_hint.set_line_wrap(True)
         self.preview_hint.set_max_width_chars(30)
         self.preview_hint.set_justify(Gtk.Justification.CENTER)
@@ -226,7 +226,7 @@ class ProgressWindow(Gtk.Window):
         self.cancel_button = Gtk.Button(label="Cancel")
         style(self.cancel_button, "danger")
         self.cancel_button.set_size_request(120, 32)
-        self.cancel_button.set_tooltip_text("Stop now. The image is left unchanged.")
+        self.cancel_button.set_tooltip_text(ui_text.PROGRESS_CANCEL_TIP)
         self.cancel_button.connect("clicked", self._cancel_clicked)
         buttons.pack_end(self.cancel_button, False, False, 0)
         self.close_button = Gtk.Button(label="Close")
@@ -359,11 +359,11 @@ class ProgressWindow(Gtk.Window):
             return
         lines = []
         if current and current.get("type") == "download":
-            lines.append("Download: " + download_row(current))
+            lines.append(ui_text.PROGRESS_DOWNLOAD.format(row=download_row(current)))
         elif current:
             lines.append(f"{current.get('type')}: {current.get('file', '')} {current.get('state', '')}")
         for p in pending:
-            lines.append(f"Queued: {p}")
+            lines.append(ui_text.PROGRESS_QUEUED.format(name=p))
         if lines:
             self.downloads_label.set_text("\n".join(lines))
             self.downloads_label.show()
@@ -378,11 +378,12 @@ class ProgressWindow(Gtk.Window):
         if success:
             self.bar.set_fraction(1.0)
             self.bar.set_text("100%")
-            self.step_label.set_text(message or "Done")
+            self.step_label.set_text(message or ui_text.PROGRESS_DONE)
             self._close_timer = GLib.timeout_add(max(0, close_after_ms), self._close_timeout)
         else:
             cancelled = self._cancel_requested or message.lower().startswith("cancel")
-            self.step_label.set_markup("<b>Cancelled</b>" if cancelled else "<b>Something went wrong</b>")
+            heading = ui_text.PROGRESS_CANCELLED if cancelled else ui_text.PROGRESS_FAILED
+            self.step_label.set_markup(f"<b>{GLib.markup_escape_text(heading)}</b>")
             if not cancelled:
                 message = ui_text.with_next_step(message)
             self.message.set_markup(f"<span foreground='#e0a040'>{GLib.markup_escape_text(message)}</span>")
@@ -412,7 +413,7 @@ class ProgressWindow(Gtk.Window):
     def _cancel_clicked(self, *_: object) -> None:
         self._cancel_requested = True
         self.cancel_button.set_sensitive(False)
-        self.step_label.set_text("Cancelling, the image stays unchanged...")
+        self.step_label.set_text(ui_text.PROGRESS_CANCELLING)
         if self._on_cancel:
             self._on_cancel()
 

@@ -22,6 +22,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("GdkPixbuf", "2.0")
 from gi.repository import Gdk, GdkPixbuf, GLib, Gtk  # noqa: E402
 
+from . import ui_text  # noqa: E402
 from .dialogs import style  # noqa: E402
 
 THUMB = 160
@@ -45,7 +46,7 @@ class VariationPicker(Gtk.Window):
         on_discard: Callable[[], None],
         on_closed: Callable[[], None] | None = None,
     ) -> None:
-        super().__init__(title=f"Choose a variation - {title}")
+        super().__init__(title=ui_text.PICKER_TITLE.format(title=title))
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.set_keep_above(True)
         self.set_resizable(False)
@@ -62,7 +63,7 @@ class VariationPicker(Gtk.Window):
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         self.add(box)
         head = Gtk.Label(xalign=0)
-        head.set_markup(f"<b>{len(thumbnails)} variations are ready.</b> Click one to see it in the image.")
+        head.set_markup(f"<b>{GLib.markup_escape_text(ui_text.picker_heading(len(thumbnails)))}</b>")
         box.pack_start(head, False, False, 0)
 
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
@@ -79,7 +80,7 @@ class VariationPicker(Gtk.Window):
             else:
                 image.set_size_request(THUMB, THUMB)
             inner.pack_start(image, False, False, 0)
-            inner.pack_start(Gtk.Label(label=f"Variation {index + 1}"), False, False, 0)
+            inner.pack_start(Gtk.Label(label=ui_text.VARIATION_LABEL.format(number=index + 1)), False, False, 0)
             button.add(inner)
             button.set_tooltip_text(name)
             button.connect("toggled", self._toggled, index)
@@ -88,10 +89,7 @@ class VariationPicker(Gtk.Window):
         box.pack_start(row, False, False, 0)
 
         hint = Gtk.Label(xalign=0)
-        hint.set_markup(
-            "<small>Keep selected hides the other variations (they stay in the layer group, "
-            "so you can change your mind later). Discard removes all of them.</small>"
-        )
+        hint.set_markup(f"<small>{GLib.markup_escape_text(ui_text.PICKER_HINT)}</small>")
         hint.set_line_wrap(True)
         hint.set_max_width_chars(60)
         hint.get_style_context().add_class("dim-label")

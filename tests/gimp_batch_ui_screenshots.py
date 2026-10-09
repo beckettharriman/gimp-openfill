@@ -18,6 +18,10 @@ hooks differ per dialog: ``autoclose`` answers Cancel after N seconds,
 ``settings_tab``, ``advanced`` (expanders open), ``mode`` ("remove"),
 ``fake_variations`` (picker with tinted copies of the selection) and
 ``progress_demo`` (the real progress window fed with scripted steps),
+``expand`` (Generative Expand editor: ``margins``, ``preset``, ``anchor``,
+``drag`` [handle, dx, dy] in screen pixels, ``hover``), ``advanced_steps``
+([seconds, open] pairs), ``dialog_dump`` / ``dialog_out`` (window size,
+prompt box rectangle, status texts and editor state as JSON lines),
 ``type`` / ``press`` (scripted typing and a key press) and ``dry_run``
 (record the procedure config instead of generating). Further hooks used by
 the GUI end-to-end driver (docs/evidence/overnight-2026-10-09/gui-e2e):
@@ -425,6 +429,110 @@ try:
         "fill-remove", fill, "Generative Fill", "fill-dialog-remove.png", {"autoclose": 7, "mode": "remove"}, image
     )
     run_case("expand", expand, "Generative Expand", "expand-dialog.png", {"autoclose": 7}, image, setup=set_prompt(""))
+
+    # Layout checks without pixels: every dialog below also appends its window
+    # size, prompt box rectangle, status texts and (Expand) editor state to
+    # dialog-state.jsonl; dry_run guarantees that nothing is generated even if
+    # Generate were answered.
+    state_out = os.path.join(WORK, "dialog-state.jsonl")
+    if os.path.exists(state_out):
+        os.remove(state_out)
+
+    def dumped(dump, **hooks):
+        return {"dialog_dump": dump, "dialog_out": state_out, "dry_run": True, **hooks}
+
+    # Fill: Advanced closed, opened, closed again in one window. The prompt box
+    # height and the window width must be the same in all three; the window
+    # top must not move; the height grows only while Advanced is open.
+    run_case(
+        "fill-advanced-toggle",
+        fill,
+        "Generative Fill",
+        "fill-dialog-toggle.png",
+        dumped([1.2, 2.7, 4.2], autoclose=5, advanced_steps=[[1.6, True], [3.1, False]]),
+        image,
+        delays_ms="1300,2800,4300",
+        names=("fill-dialog-toggle-advanced.png", "fill-dialog-toggle-closed.png"),
+    )
+    run_case(
+        "fill-removal-note",
+        fill,
+        "Generative Fill",
+        "fill-dialog-removal-model-note.png",
+        dumped([1.5], autoclose=4, values={"model": "active"}, prompt_free="MAT - prompt-free removal"),
+        image,
+    )
+    Gimp.Selection.none(image)
+    run_case(
+        "fill-no-selection",
+        fill,
+        "Generative Fill",
+        "fill-dialog-no-selection.png",
+        dumped([1.5], autoclose=4),
+        image,
+    )
+    run_case(
+        "fill-empty-prompt",
+        fill,
+        "Generative Fill",
+        "fill-dialog-empty-prompt.png",
+        dumped([3.0], autoclose=5, click="generate", values={"prompt": ""}),
+        image,
+        delays_ms="3200",
+    )
+    image.select_rectangle(Gimp.ChannelOps.REPLACE, 420, 300, 260, 200)
+
+    expand_cases = (
+        # (case, screenshot, expand hooks, start margins)
+        ("expand-default", "expand-editor.png", {}, None),
+        ("expand-zero", "expand-editor-zero.png", {}, {"left": 0, "top": 0, "right": 0, "bottom": 0}),
+        ("expand-16-9-left", "expand-editor-16-9-left.png", {"preset": "16:9", "anchor": "left"}, None),
+        ("expand-9-16-center", "expand-editor-9-16.png", {"preset": "9:16", "anchor": "center"}, None),
+        ("expand-1-1-bottom-right", "expand-editor-1-1-corner.png", {"preset": "1:1", "anchor": "bottom-right"}, None),
+        ("expand-original", "expand-editor-original.png", {"preset": "original"}, None),
+        (
+            "expand-drag",
+            "expand-editor-drag.png",
+            {
+                "margins": {"left": 0, "top": 0, "right": 0, "bottom": 0},
+                "drag": [["right", 60, 0], ["bottom-left", -40, 30]],
+            },
+            None,
+        ),
+        ("expand-hover", "expand-editor-hover.png", {"hover": "top-right"}, None),
+        ("expand-huge", "expand-editor-huge.png", {"margins": {"left": 4096, "right": 4096}}, None),
+    )
+    for case, shot, editor_hooks, start in expand_cases:
+        hooks = dumped([2.0], autoclose=4, expand=editor_hooks)
+        if start is not None:
+            hooks["values"] = start
+        run_case(case, expand, "Generative Expand", shot, hooks, image, setup=set_prompt(""))
+    run_case(
+        "expand-advanced-toggle",
+        expand,
+        "Generative Expand",
+        "expand-editor-toggle.png",
+        dumped([1.2, 2.7, 4.2], autoclose=5, advanced_steps=[[1.6, True], [3.1, False]]),
+        image,
+        delays_ms="1300,2800,4300",
+        names=("expand-editor-toggle-advanced.png", "expand-editor-toggle-closed.png"),
+        setup=set_prompt(""),
+    )
+    run_case(
+        "expand-generate-zero",
+        expand,
+        "Generative Expand",
+        "expand-editor-generate-zero.png",
+        dumped([3.0], autoclose=5, click="generate", values={"left": 0, "top": 0, "right": 0, "bottom": 0}),
+        image,
+        delays_ms="3200",
+        setup=set_prompt(""),
+    )
+    try:
+        with open(state_out, encoding="utf-8") as fh:
+            report["dialog_state"] = [json.loads(line) for line in fh if line.strip()]
+    except OSError as err:
+        report["dialog_state"] = f"missing: {err}"
     run_case(
         "txt2img",
         txt,

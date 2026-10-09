@@ -19,6 +19,7 @@ from collections.abc import Callable
 import gi
 
 gi.require_version("Gtk", "3.0")
+gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
 from . import ui_text  # noqa: E402
@@ -42,7 +43,8 @@ button.sb-danger:hover { background-color: #c44a4a; }
 button.sb-danger:disabled, button.sb-danger:disabled label { background-color: rgba(177, 60, 60, 0.35);
     color: rgba(255, 255, 255, 0.6); }
 label.sb-warning { color: #e8a33c; }
-.sb-canvas { border: 1px dashed rgba(160, 160, 160, 0.8); background-color: rgba(255, 255, 255, 0.04); }
+button.sb-anchor { min-width: 18px; min-height: 18px; padding: 0; }
+button.sb-anchor:checked { background-image: none; background-color: #2d6fc4; border-color: #2a62ad; }
 notebook tab { padding: 6px 14px; }
 """
 _css_installed = False
@@ -207,11 +209,26 @@ def scripted_input(
     timeout_while_alive(dialog, int(delay * 1000), act)
 
 
+def _line_height(widget: Gtk.Widget) -> float:
+    """Height of one text line in ``widget``'s font, in pixels."""
+    try:
+        context = widget.get_pango_context()
+        metrics = context.get_metrics(context.get_font_description(), None)
+        height = metrics.get_height() if hasattr(metrics, "get_height") else 0
+        if height <= 0:
+            height = metrics.get_ascent() + metrics.get_descent()
+        return max(12.0, height / Pango.SCALE)
+    except Exception:  # noqa: BLE001 - fall back to a typical line
+        return 20.0
+
+
 class PromptBox(Gtk.Box):
-    """Large multi-line prompt with a placeholder and a Recent prompts menu.
+    """Prompt box of a fixed height (``lines`` text lines) with a placeholder
+    and a Recent prompts menu below it.
 
     Enter generates (the dialog's default response); Shift+Enter inserts a
-    new line.
+    new line. ``alternate`` (optional) is shown in the same space instead of
+    the text (Remove object mode), so switching never changes the height.
     """
 
     def __init__(
@@ -221,10 +238,13 @@ class PromptBox(Gtk.Box):
         history: list[str],
         on_activate: Callable[[], None],
         on_changed: Callable[[], None] | None = None,
+        lines: int = 4,
+        alternate: Gtk.Widget | None = None,
     ) -> None:
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=4)
         self._on_activate = on_activate
         self._on_changed = on_changed
+        self._has_history = bool(history)
         self.view = Gtk.TextView()
         self.view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
         self.view.set_accepts_tab(False)
@@ -235,10 +255,14 @@ class PromptBox(Gtk.Box):
         self.view.connect("key-press-event", self._key)
         self.buffer.connect("changed", self._changed)
 
+        height = int(_line_height(self.view) * lines + 16 + 4)  # text lines + view margins + frame
         scroller = Gtk.ScrolledWindow()
         scroller.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         scroller.set_shadow_type(Gtk.ShadowType.IN)
-        scroller.set_min_content_height(112)
+        scroller.set_min_content_height(height)
+        scroller.set_max_content_height(height)
+        scroller.set_propagate_natural_height(False)
+        scroller.set_vexpand(False)
         scroller.set_hexpand(True)
         scroller.add(self.view)
         overlay = Gtk.Overlay()
@@ -249,13 +273,22 @@ class PromptBox(Gtk.Box):
         self.placeholder.set_valign(Gtk.Align.START)
         self.placeholder.set_margin_start(10)
         self.placeholder.set_margin_top(9)
+        self.placeholder.set_ellipsize(Pango.EllipsizeMode.END)
         self.placeholder.set_no_show_all(True)  # visibility follows the buffer, not show_all()
         overlay.add_overlay(self.placeholder)
         overlay.set_overlay_pass_through(self.placeholder, True)
-        self.pack_start(overlay, True, True, 0)
+
+        self.stack = Gtk.Stack()
+        self.stack.set_vhomogeneous(True)
+        self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+        self.stack.add_named(overlay, "prompt")
+        if alternate is not None:
+            self.stack.add_named(alternate, "alternate")
+        self.stack.set_vexpand(False)
+        self.pack_start(self.stack, False, False, 0)
 
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-        self.recent = Gtk.MenuButton(label="Recent prompts")
+        self.recent = Gtk.MenuButton(label=ui_text.RECENT_PROMPTS)
         menu = Gtk.Menu()
         for prompt in history:
             item = Gtk.MenuItem(label=ui_text.history_label(prompt))
@@ -264,15 +297,22 @@ class PromptBox(Gtk.Box):
             menu.append(item)
         menu.show_all()
         self.recent.set_popup(menu)
-        self.recent.set_sensitive(bool(history))
+        self.recent.set_sensitive(self._has_history)
         if not history:
-            self.recent.set_tooltip_text(
-                f"Prompts you generate with are remembered here (last {ui_text.HISTORY_LIMIT})."
-            )
+            self.recent.set_tooltip_text(ui_text.RECENT_EMPTY_TIP)
         row.pack_start(self.recent, False, False, 0)
-        row.pack_end(_dim("Enter generates, Shift+Enter starts a new line", wrap=False), False, False, 0)
+        hint = _dim(ui_text.KEY_HINT, wrap=False)
+        hint.set_ellipsize(Pango.EllipsizeMode.END)
+        row.pack_end(hint, False, False, 0)
         self.pack_start(row, False, False, 0)
         self._changed()
+
+    def show_alternate(self, on: bool) -> None:
+        """Show the ``alternate`` widget instead of the text (same size)."""
+        self.stack.set_visible_child_name("alternate" if on else "prompt")
+        self.recent.set_sensitive(self._has_history and not on)
+        if not on:
+            self.view.grab_focus()
 
     def _key(self, _view: Gtk.TextView, event: Gdk.EventKey) -> bool:
         enter = event.keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter, Gdk.KEY_ISO_Enter)
@@ -303,18 +343,33 @@ class PromptBox(Gtk.Box):
         self.buffer.select_range(start, end)
 
 
+def _one_line(text: str = "", dim: bool = True) -> Gtk.Label:
+    """A single-line label that never widens the dialog (long text is cut with ...)."""
+    label = Gtk.Label(label=text, xalign=0)
+    label.set_ellipsize(Pango.EllipsizeMode.END)
+    if dim:
+        label.get_style_context().add_class("dim-label")
+    return label
+
+
 # --------------------------------------------------- generation dialogs ---
 
 
 class GenerationDialog(Gtk.Dialog):
     """One dialog class for Fill, Expand and Text to Image.
 
+    Always visible: (Fill) the mode switch, the prompt with Recent prompts,
+    Avoid, Model and Variations; (Expand) the canvas editor; (Text to Image)
+    size and target. Advanced holds only Change amount (Fill) and Seed. The
+    width is fixed; opening Advanced only adds height below.
+
     ``values`` holds the procedure arguments (prompt, negative, variations,
     seed, model and the per-kind ones); :meth:`collect` returns the same
     keys with the user's choices.
     """
 
-    TITLES = {"fill": "Generative Fill", "expand": "Generative Expand", "txt2img": "Text to Image"}
+    TITLES = ui_text.DIALOG_TITLES
+    WIDTH = 640
 
     def __init__(
         self,
@@ -328,6 +383,7 @@ class GenerationDialog(Gtk.Dialog):
         active_prompt_free: bool = False,
         active_name: str = "",
         show_advanced: bool = False,
+        thumbnail: object | None = None,
     ) -> None:
         super().__init__(title=self.TITLES[kind], modal=True)
         self.kind = kind
@@ -337,10 +393,11 @@ class GenerationDialog(Gtk.Dialog):
         self.default_size = default_size
         self.active_prompt_free = active_prompt_free
         self.active_name = active_name
-        self.set_default_size(640, -1)
+        self._syncing = False
+        self.set_default_size(self.WIDTH, -1)
         self.set_border_width(6)
-        self.add_button("_Cancel", CANCEL)
-        self.generate = self.add_button("_Generate", OK)
+        self.add_button(ui_text.CANCEL, CANCEL)
+        self.generate = self.add_button(ui_text.GENERATE, OK)
         style(self.generate, "primary")
         self.generate.set_size_request(120, -1)
         self.generate.set_can_default(True)
@@ -348,10 +405,10 @@ class GenerationDialog(Gtk.Dialog):
         self.generate.grab_default()
 
         area = self.get_content_area()
-        area.set_spacing(10)
-        body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        area.set_spacing(8)
+        body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         body.set_border_width(8)
-        area.pack_start(body, True, True, 0)
+        area.pack_start(body, False, False, 0)
 
         self.remove_radio: Gtk.RadioButton | None = None
         if kind == "fill":
@@ -368,39 +425,17 @@ class GenerationDialog(Gtk.Dialog):
             history,
             on_activate=lambda: self.response(OK),
             on_changed=self._update_status,
+            alternate=self._removal_page() if kind == "fill" else None,
         )
-        self.stack = Gtk.Stack()
-        self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
-        self.stack.add_named(self.prompt, "prompt")
-        removal = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        removal.set_valign(Gtk.Align.CENTER)
-        big = Gtk.Label(xalign=0)
-        big.set_markup(f"<big>{GLib.markup_escape_text(ui_text.REMOVE_EXPLANATION)}</big>")
-        big.set_line_wrap(True)
-        big.set_max_width_chars(60)
-        removal.pack_start(big, False, False, 0)
-        removal.pack_start(
-            _dim(
-                "Works best when the selection covers the whole object with a little margin. "
-                "An installed LaMa or MAT removal model is used automatically when there is one."
-            ),
-            False,
-            False,
-            0,
-        )
-        self.stack.add_named(removal, "remove")
-        body.pack_start(self.stack, True, True, 0)
+        body.pack_start(self.prompt, False, False, 0)
+        body.pack_start(self._form(models), False, False, 0)
 
         if kind == "expand":
-            body.pack_start(self._margins(), False, False, 0)
+            body.pack_start(self._expand_section(thumbnail), False, False, 0)
         elif kind == "txt2img":
             body.pack_start(self._size_and_target(), False, False, 0)
 
-        self.advanced = self._advanced(models)
-        self.advanced.set_expanded(show_advanced)
-        body.pack_start(self.advanced, False, False, 0)
-
-        self.status = _dim("", small=False)
+        self.status = _one_line()
         body.pack_start(self.status, False, False, 0)
         self.warning = Gtk.Label(xalign=0)
         self.warning.set_line_wrap(True)
@@ -408,14 +443,18 @@ class GenerationDialog(Gtk.Dialog):
         self.warning.get_style_context().add_class("sb-warning")
         self.warning.set_no_show_all(True)
         body.pack_start(self.warning, False, False, 0)
+
+        self.advanced = self._advanced()
+        self.advanced.set_expanded(show_advanced)
+        self.advanced.connect("notify::expanded", self._advanced_toggled)
+        body.pack_start(self.advanced, False, False, 0)
         if kind == "fill":
-            body.pack_start(_dim(ui_text.SHORTCUT_HINT), False, False, 0)
+            hint = _one_line()
+            hint.set_markup(f"<small>{GLib.markup_escape_text(ui_text.SHORTCUT_HINT)}</small>")
+            body.pack_start(hint, False, False, 0)
 
         area.show_all()  # the window itself is shown by run(), after placement
-        if self.remove_radio is not None and self.remove_radio.get_active():
-            self.stack.set_visible_child_name("remove")
-        else:
-            self.stack.set_visible_child_name("prompt")
+        self.prompt.show_alternate(self.removing)
         self._update_status()
         self.prompt.view.grab_focus()
         self.prompt.select_all()
@@ -426,8 +465,8 @@ class GenerationDialog(Gtk.Dialog):
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
         box.get_style_context().add_class("linked")
         box.set_halign(Gtk.Align.START)
-        fill = Gtk.RadioButton.new_with_mnemonic(None, "_Fill with a prompt")
-        rem = Gtk.RadioButton.new_with_mnemonic_from_widget(fill, "_Remove object")
+        fill = Gtk.RadioButton.new_with_mnemonic(None, ui_text.MODE_FILL)
+        rem = Gtk.RadioButton.new_with_mnemonic_from_widget(fill, ui_text.MODE_REMOVE)
         for button in (fill, rem):
             button.set_mode(False)  # draw as toggle buttons
             button.set_size_request(170, 34)
@@ -438,65 +477,128 @@ class GenerationDialog(Gtk.Dialog):
         self.remove_radio = rem
         return box
 
+    def _removal_page(self) -> Gtk.Widget:
+        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        page.set_valign(Gtk.Align.CENTER)
+        page.set_margin_start(10)
+        big = Gtk.Label(xalign=0)
+        big.set_markup(f"<big>{GLib.markup_escape_text(ui_text.REMOVE_EXPLANATION)}</big>")
+        big.set_line_wrap(True)
+        big.set_max_width_chars(60)
+        page.pack_start(big, False, False, 0)
+        page.pack_start(_one_line(ui_text.REMOVE_MODEL_NOTE), False, False, 0)
+        return page
+
     def _mode_changed(self, button: Gtk.RadioButton) -> None:
-        self.stack.set_visible_child_name("remove" if button.get_active() else "prompt")
-        if not button.get_active():
-            self.prompt.view.grab_focus()
+        self.prompt.show_alternate(button.get_active())
         self._update_status()
 
-    def _margins(self) -> Gtk.Widget:
-        frame = Gtk.Frame(label="Add to the canvas (pixels)")
-        grid = Gtk.Grid(column_spacing=8, row_spacing=6)
-        grid.set_border_width(8)
-        grid.set_halign(Gtk.Align.CENTER)
-        self.margin_spins = {}
-        positions = {"top": (2, 0), "left": (0, 1), "right": (4, 1), "bottom": (2, 2)}
-        for side, (col, row) in positions.items():
-            spin = _spin(0, 4096, int(self.values.get(side, 0)), 32)
-            spin.set_width_chars(6)
-            spin.connect("value-changed", lambda *_: self._update_status())
+    def _form(self, models: list[tuple[str, str]]) -> Gtk.Widget:
+        """Avoid, Model and Variations: always visible."""
+        grid = Gtk.Grid(column_spacing=10, row_spacing=6)
+        self.negative = Gtk.Entry()
+        self.negative.set_text(self.values.get("negative", ""))
+        self.negative.set_placeholder_text(ui_text.AVOID_PLACEHOLDER)
+        self.negative.set_activates_default(True)
+        self.negative.set_hexpand(True)
+        grid.attach(_right(ui_text.LABEL_AVOID), 0, 0, 1, 1)
+        grid.attach(self.negative, 1, 0, 3, 1)
+
+        self.model_combo = Gtk.ComboBoxText()
+        for cell in self.model_combo.get_cells():
+            cell.set_property("ellipsize", Pango.EllipsizeMode.END)
+        self.model_combo.set_size_request(300, -1)
+        self.model_combo.set_hexpand(True)
+        self.model_combo.set_tooltip_text(ui_text.TIP_MODEL)
+        for nick, label in models:
+            self.model_combo.append(nick, label)
+        current = self.values.get("model") or "active"
+        if not self.model_combo.set_active_id(current):
+            self.model_combo.append(current, current)
+            self.model_combo.set_active_id(current)
+        self.model_combo.connect("changed", lambda *_: self._update_status())
+        grid.attach(_right(ui_text.LABEL_MODEL), 0, 1, 1, 1)
+        grid.attach(self.model_combo, 1, 1, 1, 1)
+
+        self.variations = _spin(1, 8, int(self.values.get("variations", 1)))
+        self.variations.set_activates_default(True)
+        self.variations.set_tooltip_text(ui_text.TIP_VARIATIONS)
+        grid.attach(_right(ui_text.LABEL_VARIATIONS), 2, 1, 1, 1)
+        grid.attach(self.variations, 3, 1, 1, 1)
+        return grid
+
+    def _expand_section(self, thumbnail: object | None) -> Gtk.Widget:
+        """Canvas editor, ratio presets, anchor grid and the four pixel boxes."""
+        from . import ui_expand
+
+        width, height = self.image_size or (512, 512)
+        self.expand_state = ui_expand.ExpandState(
+            width, height, ui_expand.Margins.from_dict(self.values), listener=self._expand_changed
+        )
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        frame = Gtk.Frame()
+        frame.set_shadow_type(Gtk.ShadowType.IN)
+        self.editor = ui_expand.ExpandEditor(self.expand_state, thumbnail)
+        frame.add(self.editor)
+        box.pack_start(frame, False, False, 0)
+
+        ratio_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        ratio_row.pack_start(_right(ui_text.LABEL_RATIO), False, False, 0)
+        linked = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+        linked.get_style_context().add_class("linked")
+        self.preset_buttons: dict[str, Gtk.RadioButton] = {}
+        group = None
+        for pid, label, _ratio in ui_expand.PRESETS:
+            button = Gtk.RadioButton.new_with_label_from_widget(group, label)
+            group = group or button
+            button.set_mode(False)
+            button.connect("toggled", self._preset_toggled, pid)
+            linked.pack_start(button, False, False, 0)
+            self.preset_buttons[pid] = button
+        ratio_row.pack_start(linked, False, False, 0)
+        box.pack_start(ratio_row, False, False, 0)
+
+        lower = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18)
+        anchor_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        anchor_box.pack_start(_right(ui_text.LABEL_ANCHOR), False, False, 0)
+        anchor_grid = Gtk.Grid(column_spacing=2, row_spacing=2)
+        self.anchor_buttons: dict[str, Gtk.RadioButton] = {}
+        group = None
+        for name, (col, row) in ui_expand.ANCHORS.items():
+            button = Gtk.RadioButton.new_from_widget(group)
+            group = group or button
+            button.set_mode(False)
+            button.set_size_request(22, 22)
+            button.set_tooltip_text(ui_text.anchor_tip(name))
+            button.get_style_context().add_class("sb-anchor")
+            button.connect("toggled", self._anchor_toggled, name)
+            anchor_grid.attach(button, col, row, 1, 1)
+            self.anchor_buttons[name] = button
+        anchor_box.pack_start(anchor_grid, False, False, 0)
+        lower.pack_start(anchor_box, False, False, 0)
+
+        spins = Gtk.Grid(column_spacing=8, row_spacing=6)
+        self.margin_spins: dict[str, Gtk.SpinButton] = {}
+        for index, side in enumerate(("left", "right", "top", "bottom")):
+            spin = _spin(0, ui_expand.MAX_MARGIN, getattr(self.expand_state.margins, side), ui_expand.SNAP)
+            spin.set_width_chars(5)
+            spin.set_activates_default(True)
+            spin.connect("value-changed", self._spin_changed, side)
             self.margin_spins[side] = spin
-            label = Gtk.Label(label=side.capitalize())
-            if side in ("left", "right"):
-                box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-                box.pack_start(label, False, False, 0)
-                box.pack_start(spin, False, False, 0)
-                grid.attach(box, col, row, 1, 1)
-            else:
-                box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-                box.pack_start(label, False, False, 0)
-                box.pack_start(spin, False, False, 0)
-                box.set_halign(Gtk.Align.CENTER)
-                grid.attach(box, col, row, 1, 1)
-        canvas = Gtk.Label(label="your image")
-        canvas.get_style_context().add_class("sb-canvas")
-        canvas.get_style_context().add_class("dim-label")
-        canvas.set_size_request(170, 70)
-        grid.attach(canvas, 1, 1, 3, 1)
-        presets = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-        presets.set_halign(Gtk.Align.CENTER)
-        presets.pack_start(_dim("Quick:", wrap=False), False, False, 0)
-        for label, sides in (
-            ("Wider", {"left": 256, "right": 256, "top": 0, "bottom": 0}),
-            ("Taller", {"left": 0, "right": 0, "top": 256, "bottom": 256}),
-            ("All sides", {"left": 128, "right": 128, "top": 128, "bottom": 128}),
-        ):
-            button = Gtk.Button(label=label)
-            button.connect("clicked", lambda _b, s=sides: [self.margin_spins[k].set_value(v) for k, v in s.items()])
-            presets.pack_start(button, False, False, 0)
-        outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        outer.set_border_width(4)
-        outer.pack_start(grid, False, False, 0)
-        outer.pack_start(presets, False, False, 0)
-        frame.add(outer)
-        return frame
+            col, row = (index % 2) * 2, index // 2
+            spins.attach(_right(ui_text.SIDE_LABELS[side]), col, row, 1, 1)
+            spins.attach(spin, col + 1, row, 1, 1)
+        lower.pack_start(spins, False, False, 0)
+        box.pack_start(lower, False, False, 0)
+        self._expand_changed()
+        return box
 
     def _size_and_target(self) -> Gtk.Widget:
         grid = Gtk.Grid(column_spacing=10, row_spacing=6)
         width, height = int(self.values.get("width", 0)), int(self.values.get("height", 0))
-        self.auto_size = Gtk.CheckButton(label="Automatic size (the selection, or the default from Settings)")
+        self.auto_size = Gtk.CheckButton(label=ui_text.SIZE_AUTO)
         self.auto_size.set_active(width <= 0 or height <= 0)
-        grid.attach(_right("Size"), 0, 0, 1, 1)
+        grid.attach(_right(ui_text.LABEL_SIZE), 0, 0, 1, 1)
         grid.attach(self.auto_size, 1, 0, 3, 1)
         self.width_spin = _spin(64, 4096, width if width > 0 else self.default_size[0], 64)
         self.height_spin = _spin(64, 4096, height if height > 0 else self.default_size[1], 64)
@@ -510,9 +612,9 @@ class GenerationDialog(Gtk.Dialog):
             w.connect(
                 "toggled" if isinstance(w, Gtk.CheckButton) else "value-changed", lambda *_: self._update_status()
             )
-        grid.attach(_right("Result as"), 0, 2, 1, 1)
-        self.target_layer = Gtk.RadioButton.new_with_label(None, "New layer in this image")
-        self.target_image = Gtk.RadioButton.new_with_label_from_widget(self.target_layer, "New image")
+        grid.attach(_right(ui_text.LABEL_RESULT), 0, 2, 1, 1)
+        self.target_layer = Gtk.RadioButton.new_with_label(None, ui_text.RESULT_LAYER)
+        self.target_image = Gtk.RadioButton.new_with_label_from_widget(self.target_layer, ui_text.RESULT_IMAGE)
         target = self.values.get("target", "layer")
         if self.image_size is None:
             target = "image"
@@ -524,66 +626,27 @@ class GenerationDialog(Gtk.Dialog):
         grid.attach(self.target_image, 2, 2, 1, 1)
         return grid
 
-    def _advanced(self, models: list[tuple[str, str]]) -> Gtk.Widget:
-        expander = Gtk.Expander(label="Advanced")
+    def _advanced(self) -> Gtk.Expander:
+        """Change amount (Fill) and Seed only."""
+        expander = Gtk.Expander(label=ui_text.ADVANCED)
         expander.set_expanded(False)
         grid = Gtk.Grid(column_spacing=10, row_spacing=6)
         grid.set_border_width(8)
         row = 0
-
-        def add(label: str, widget: Gtk.Widget, hint: str = "", expand: bool = True) -> None:
-            nonlocal row
-            grid.attach(_right(label), 0, row, 1, 1)
-            widget.set_hexpand(expand)
-            if not expand:
-                widget.set_halign(Gtk.Align.START)
-            grid.attach(widget, 1, row, 1, 1)
-            row += 1
-            if hint:
-                grid.attach(_dim(hint), 1, row, 1, 1)
-                row += 1
-
-        self.model_combo = Gtk.ComboBoxText()
-        for cell in self.model_combo.get_cells():
-            cell.set_property("ellipsize", Pango.EllipsizeMode.END)
-        self.model_combo.set_size_request(360, -1)
-        for nick, label in models:
-            self.model_combo.append(nick, label)
-        current = self.values.get("model") or "active"
-        if not self.model_combo.set_active_id(current):
-            self.model_combo.append(current, current)
-            self.model_combo.set_active_id(current)
-        self.model_combo.connect("changed", lambda *_: self._update_status())
-        add("Model", self.model_combo, "The first entry is the active model from Settings > Models.")
-
-        self.negative = Gtk.Entry()
-        self.negative.set_text(self.values.get("negative", ""))
-        self.negative.set_activates_default(True)
-        add("Avoid", self.negative, "Things that should not appear, separated by commas.")
-
-        self.variations = _spin(1, 8, int(self.values.get("variations", 1)))
-        self.variations.set_activates_default(True)
-        hint = (
-            "Each result becomes a layer; with more than one you pick your favourite afterwards."
-            if self.kind != "txt2img"
-            else "Each result becomes a layer."
-        )
-        add("Variations", self.variations, hint, expand=False)
-
         if self.kind == "fill":
             self.strength = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0.1, 1.0, 0.05)
             self.strength.set_value(float(self.values.get("strength", 1.0)))
             self.strength.set_digits(2)
             self.strength.set_value_pos(Gtk.PositionType.RIGHT)
-            add(
-                "Change amount",
-                self.strength,
-                "1.0 replaces the selection completely; lower values keep more of what is there now.",
-            )
+            self.strength.set_hexpand(True)
+            self.strength.set_tooltip_text(ui_text.TIP_CHANGE)
+            grid.attach(_right(ui_text.LABEL_CHANGE), 0, row, 1, 1)
+            grid.attach(self.strength, 1, row, 1, 1)
+            row += 1
 
         seed_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         seed = int(self.values.get("seed", -1))
-        self.random_seed = Gtk.CheckButton(label="Random")
+        self.random_seed = Gtk.CheckButton(label=ui_text.SEED_RANDOM)
         self.random_seed.set_active(seed < 0)
         self.seed = _spin(0, 2**31 - 1, max(0, seed))
         self.seed.set_activates_default(True)
@@ -591,9 +654,49 @@ class GenerationDialog(Gtk.Dialog):
         self.random_seed.connect("toggled", lambda b: self.seed.set_sensitive(not b.get_active()))
         seed_box.pack_start(self.random_seed, False, False, 0)
         seed_box.pack_start(self.seed, False, False, 0)
-        add("Seed", seed_box, "Use the same number again to repeat a result.", expand=False)
+        seed_box.set_tooltip_text(ui_text.TIP_SEED)
+        seed_box.set_halign(Gtk.Align.START)
+        grid.attach(_right(ui_text.LABEL_SEED), 0, row, 1, 1)
+        grid.attach(seed_box, 1, row, 1, 1)
         expander.add(grid)
         return expander
+
+    def _advanced_toggled(self, expander: Gtk.Expander, _pspec: object) -> None:
+        """Closing Advanced gives the space back: the window shrinks to its
+        content height and keeps its width (and its top edge)."""
+        if not expander.get_expanded():
+            GLib.idle_add(lambda: (self.resize(self.get_size()[0], 1), False)[1])
+
+    # expand editor bindings ---------------------------------------------
+
+    def _expand_changed(self) -> None:
+        """Show the editor state in the preset buttons, anchor grid and spins."""
+        if not hasattr(self, "margin_spins"):
+            return
+        state = self.expand_state
+        self._syncing = True
+        try:
+            for side, spin in self.margin_spins.items():
+                if int(spin.get_value()) != getattr(state.margins, side):
+                    spin.set_value(getattr(state.margins, side))
+            self.preset_buttons[state.preset].set_active(True)
+            self.anchor_buttons[state.anchor].set_active(True)
+        finally:
+            self._syncing = False
+        self.editor.queue_draw()
+        self._update_status()
+
+    def _preset_toggled(self, button: Gtk.RadioButton, preset: str) -> None:
+        if button.get_active() and not self._syncing:
+            self.expand_state.apply_preset(preset)
+
+    def _anchor_toggled(self, button: Gtk.RadioButton, anchor: str) -> None:
+        if button.get_active() and not self._syncing:
+            self.expand_state.set_anchor(anchor)
+
+    def _spin_changed(self, spin: Gtk.SpinButton, side: str) -> None:
+        if not self._syncing:
+            self.expand_state.set_side(side, spin.get_value())
 
     # state ---------------------------------------------------------------
 
@@ -603,18 +706,21 @@ class GenerationDialog(Gtk.Dialog):
         return bool(self.remove_radio and self.remove_radio.get_active())
 
     def _update_status(self) -> None:
-        if not hasattr(self, "status"):
+        if not hasattr(self, "warning"):
             return
-        parts = []
-        warning = ""
+        status, warnings = "", []
         if self.kind == "fill":
-            parts.append(ui_text.selection_status(self.selection_size, self.image_size))
+            text = ui_text.selection_status(self.selection_size, self.image_size)
+            if self.selection_size is None and text:
+                warnings.append(text)
+            else:
+                status = text
             model = self.model_combo.get_active_id() if hasattr(self, "model_combo") else "active"
             if not self.removing and model == "active" and self.active_prompt_free:
-                warning = ui_text.prompt_free_warning(self.active_name)
-        elif self.kind == "expand" and hasattr(self, "margin_spins"):
-            s = {k: int(v.get_value()) for k, v in self.margin_spins.items()}
-            parts.append(ui_text.expand_status(self.image_size, s["left"], s["top"], s["right"], s["bottom"]))
+                warnings.append(ui_text.prompt_free_warning(self.active_name))
+        elif self.kind == "expand" and hasattr(self, "expand_state"):
+            m, st = self.expand_state.margins, self.expand_state
+            status = ui_text.expand_status((st.image_w, st.image_h), m.left, m.top, m.right, m.bottom)
         elif self.kind == "txt2img" and hasattr(self, "auto_size"):
             auto = self.auto_size.get_active()
             self.width_spin.set_sensitive(not auto)
@@ -622,14 +728,19 @@ class GenerationDialog(Gtk.Dialog):
             w = 0 if auto else int(self.width_spin.get_value())
             h = 0 if auto else int(self.height_spin.get_value())
             target = "image" if self.target_image.get_active() else "layer"
-            parts.append(ui_text.txt2img_status(w, h, self.selection_size, self.default_size, target))
-        self.status.set_text(" ".join(p for p in parts if p))
-        if hasattr(self, "warning"):
-            self.warning.set_text(warning)
-            self.warning.set_visible(bool(warning))
+            status = ui_text.txt2img_status(w, h, self.selection_size, self.default_size, target)
+        self.status.set_text(status)
+        self.status.set_visible(bool(status))
+        self.show_warning("\n".join(warnings))
+
+    def show_warning(self, text: str) -> None:
+        self.warning.set_text(text)
+        self.warning.set_visible(bool(text))
 
     def collect(self) -> dict:
         """The procedure arguments as chosen, typed exactly as the ProcedureConfig expects."""
+        for spin in (self.variations, self.seed, *getattr(self, "margin_spins", {}).values()):
+            spin.update()  # commit a number that was typed but not confirmed
         out = {
             "prompt": self.prompt.get_text().strip(),
             "negative": self.negative.get_text().strip(),
@@ -641,13 +752,75 @@ class GenerationDialog(Gtk.Dialog):
             out["strength"] = round(float(self.strength.get_value()), 2)
             out["remove"] = self.removing
         elif self.kind == "expand":
-            out.update({k: int(v.get_value()) for k, v in self.margin_spins.items()})
+            out.update(self.expand_state.margins.as_dict())
         elif self.kind == "txt2img":
             auto = self.auto_size.get_active()
             out["width"] = 0 if auto else int(self.width_spin.get_value())
             out["height"] = 0 if auto else int(self.height_spin.get_value())
             out["target"] = "image" if self.target_image.get_active() else "layer"
         return out
+
+
+def apply_expand_hooks(dialog: GenerationDialog, hooks: dict) -> None:
+    """Test hook for the Expand editor, played in this order: ``margins``
+    (dict of left/top/right/bottom), ``preset`` (an id of
+    ``ui_expand.PRESET_IDS``), ``anchor`` (e.g. "top-left"), ``drag`` (one
+    ``[handle, dx, dy]`` or a list of them, in screen pixels, through the same
+    code as a mouse drag) and ``hover`` (a handle drawn highlighted)."""
+    if not hooks or not hasattr(dialog, "expand_state"):
+        return
+    from . import ui_expand
+
+    state = dialog.expand_state
+    if isinstance(hooks.get("margins"), dict):
+        state.set_margins(ui_expand.Margins.from_dict({**state.margins.as_dict(), **hooks["margins"]}))
+    if hooks.get("preset"):
+        state.apply_preset(str(hooks["preset"]))
+    if hooks.get("anchor"):
+        state.set_anchor(str(hooks["anchor"]))
+    drags = hooks.get("drag") or []
+    if drags and not isinstance(drags[0], (list, tuple)):
+        drags = [drags]
+    for handle, dx, dy in drags:
+        dialog.editor.drag_handle_by(str(handle), float(dx), float(dy))
+    if hooks.get("hover"):
+        dialog.editor.hover = str(hooks["hover"])
+        dialog.editor.queue_draw()
+
+
+def dump_dialog_state(dialog: GenerationDialog, out: str, tag: str = "") -> None:
+    """Test hook: append the window size and position, the prompt box
+    rectangle, Advanced, the status texts and (Expand) the editor state to
+    the JSON lines file ``out``, so sizes can be compared without pixels."""
+    import json
+    import time
+
+    box = dialog.prompt.stack.get_allocation()
+    record = {
+        "t": time.strftime("%H:%M:%S"),
+        "tag": tag,
+        "kind": dialog.kind,
+        "window": list(dialog.get_size()),
+        "position": list(dialog.get_position()),
+        "prompt_box": [box.x, box.y, box.width, box.height],
+        "advanced": dialog.advanced.get_expanded(),
+        "status": dialog.status.get_text() if dialog.status.get_visible() else "",
+        "warning": dialog.warning.get_text() if dialog.warning.get_visible() else "",
+    }
+    if hasattr(dialog, "expand_state"):
+        state = dialog.expand_state
+        record.update(
+            {
+                "margins": state.margins.as_dict(),
+                "preset": state.preset,
+                "anchor": state.anchor,
+                "canvas": list(state.canvas),
+                "spins": {k: int(v.get_value()) for k, v in dialog.margin_spins.items()},
+                "editor": [dialog.editor.get_allocated_width(), dialog.editor.get_allocated_height()],
+            }
+        )
+    with open(out, "a", encoding="utf-8") as fh:
+        fh.write(json.dumps(record) + "\n")
 
 
 def run_generation_dialog(
@@ -660,16 +833,35 @@ def run_generation_dialog(
     test_key: str | None = None,
     test_open_recent: bool = False,
     test_click: str | None = None,
+    test_expand: dict | None = None,
+    test_advanced_steps: list | None = None,
+    test_dump: list | None = None,
+    test_out: str = "",
     **kwargs: object,
 ) -> dict | None:
     """Show the dialog; the collected values, or None when cancelled.
 
     ``test_click`` (test hook): "generate" clicks the Generate button 2 s after opening.
+    ``test_expand`` (test hook): see :func:`apply_expand_hooks` (played after 0.5 s).
+    ``test_advanced_steps`` (test hook): ``[seconds, expanded]`` pairs that open
+    or close Advanced, to check that the prompt keeps its size and the window
+    its width. ``test_dump`` (test hook): seconds at which
+    :func:`dump_dialog_state` appends to ``test_out``.
     """
     dialog = GenerationDialog(kind, values, history, models, **kwargs)
     set_transient(dialog)
     autoclose(dialog, autoclose_seconds)
     scripted_input(dialog, dialog.prompt, test_text, test_key)
+    if test_expand:
+        timeout_while_alive(dialog, 500, lambda: apply_expand_hooks(dialog, test_expand))
+    for seconds, expanded in test_advanced_steps or []:
+        timeout_while_alive(
+            dialog, int(float(seconds) * 1000), lambda e=bool(expanded): dialog.advanced.set_expanded(e)
+        )
+    for seconds in (test_dump or []) if test_out else []:
+        timeout_while_alive(
+            dialog, int(float(seconds) * 1000), lambda t=seconds: dump_dialog_state(dialog, test_out, f"{t}s")
+        )
     if test_click == "generate":
         timeout_while_alive(dialog, 2000, dialog.generate.clicked)
     if test_open_recent:
@@ -681,10 +873,11 @@ def run_generation_dialog(
                 return None
             result = dialog.collect()
             if kind == "fill" and not result.get("remove") and not result["prompt"]:
-                dialog.status.set_markup(
-                    "<b>Type what should appear, or switch to Remove object to erase the selection.</b>"
-                )
+                dialog.show_warning(ui_text.EMPTY_PROMPT)
                 dialog.prompt.view.grab_focus()
+                continue
+            if kind == "expand" and not any(result.get(side) for side in ("left", "top", "right", "bottom")):
+                dialog.show_warning(ui_text.EXPAND_NOTHING)
                 continue
             return result
     finally:
@@ -693,65 +886,10 @@ def run_generation_dialog(
 
 # --------------------------------------------------------- settings -------
 
-GENERAL_FIELDS = (
-    ("comfy_dir", "AI backend folder", "Where ComfyUI (portable build) is installed."),
-    (
-        "autostart",
-        "Start backend automatically",
-        "Starts ComfyUI hidden in the background when you generate. Nothing else to open.",
-    ),
-    (
-        "idle_timeout_minutes",
-        "Idle timeout (minutes)",
-        "Stops the backend after this many minutes without "
-        "use, to free the graphics card memory. 0 keeps it running until GIMP closes.",
-    ),
-    (
-        "progress_window",
-        "Show the floating progress window",
-        "Progress, a live preview and a Cancel button while generating.",
-    ),
-)
-ADVANCED_FIELDS = (
-    ("steps", "Steps", "More steps add detail but take longer. 20 to 30 is typical."),
-    ("cfg", "Prompt strictness (CFG)", "How closely the result follows the prompt. 5 to 8 is typical."),
-    (
-        "sampler",
-        "Sampler",
-        "The method that turns noise into a picture. Keep the default unless a model page says otherwise.",
-    ),
-    ("scheduler", "Scheduler", 'How the noise is removed step by step. "karras" suits most models.'),
-    (
-        "grow_percent",
-        "Repaint margin (% of selection)",
-        "Lets the AI repaint a little around the selection so object edges disappear.",
-    ),
-    ("grow", "Repaint margin limit (px)", "Upper limit for that margin."),
-    ("feather_percent", "Edge softness (% of selection)", "How softly the new layer blends into the image."),
-    ("feather", "Edge softness limit (px)", "Upper limit for the soft edge."),
-    (
-        "prefill",
-        "Hide old content before generating",
-        "Helps the AI replace an object instead of copying it (needs the inpaint nodes).",
-    ),
-    ("max_side_sd15", "Working size for SD 1.5 (px)", "Larger is sharper but slower and needs more memory."),
-    ("max_side_sdxl", "Working size for SDXL (px)", "Larger is sharper but slower and needs more memory."),
-    ("txt2img_width", "Text to Image default width (px)", ""),
-    ("txt2img_height", "Text to Image default height (px)", ""),
-)
-CONNECTION_FIELDS = (
-    ("backend", "Backend", "ComfyUI is started and stopped for you. AUTOMATIC1111 must be started by you with --api."),
-    ("url", "ComfyUI address", ""),
-    ("a1111_url", "AUTOMATIC1111 address", ""),
-    ("startup_timeout", "Startup time limit (s)", "How long to wait for the backend to start."),
-    ("request_timeout", "Generation time limit (s)", "0 estimates a limit for each request."),
-    ("extra_server_args", "Extra ComfyUI options", "For example --lowvram on cards with little memory."),
-    ("quality", "Model for scripts asking 'fast' or 'quality'", "Only used by older scripts."),
-    ("checkpoint", "SD 1.5 model file", "Used by the 'fast' choice of older scripts."),
-    ("sdxl_checkpoint", "SDXL model file", "Used by the 'quality' choice of older scripts."),
-    ("fooocus_patch", "Fooocus patch file", "Used by the 'quality' choice of older scripts."),
-    ("debug", "Verbose log", "Writes more detail to stable-boy.log for bug reports."),
-)
+# The field tables live in ui_text (unit tested); kept here under their old names.
+GENERAL_FIELDS = ui_text.GENERAL_FIELDS
+ADVANCED_FIELDS = ui_text.ADVANCED_FIELDS
+CONNECTION_FIELDS = ui_text.CONNECTION_FIELDS
 
 
 class SettingsDialog(Gtk.Dialog):
@@ -771,7 +909,7 @@ class SettingsDialog(Gtk.Dialog):
         models_panel_factory: Callable[[], Gtk.Widget] | None = None,
         test_backend: Callable[[dict, Callable[[str], None]], str] | None = None,
     ) -> None:
-        super().__init__(title="Generative Fill Settings", modal=True)
+        super().__init__(title=ui_text.SETTINGS_TITLE, modal=True)
         self.values = dict(values)
         self.choices = choices
         self.ranges = ranges
@@ -781,7 +919,7 @@ class SettingsDialog(Gtk.Dialog):
         self._alive = True
         self.connect("destroy", self._on_destroy)
         self.set_default_size(900, 760)
-        self.add_button("_Cancel", CANCEL)
+        self.add_button(ui_text.CANCEL, CANCEL)
         save = self.add_button("_Save", OK)
         style(save, "primary")
         save.set_size_request(110, -1)
@@ -790,16 +928,16 @@ class SettingsDialog(Gtk.Dialog):
 
         self.notebook = Gtk.Notebook()
         self.get_content_area().pack_start(self.notebook, True, True, 0)
-        self.notebook.append_page(self._general_page(), Gtk.Label(label="General"))
+        self.notebook.append_page(self._general_page(), Gtk.Label(label=ui_text.SETTINGS_GENERAL))
         self.panel = None
         if models_panel_factory is not None:
             try:
                 self.panel = models_panel_factory()
-                self.notebook.append_page(self.panel, Gtk.Label(label="Models"))
+                self.notebook.append_page(self.panel, Gtk.Label(label=ui_text.SETTINGS_MODELS))
             except Exception as err:  # noqa: BLE001 - the General page must still work
                 self.notebook.append_page(
                     _dim(ui_text.with_next_step(f"The Models tab could not be opened: {err}"), small=False),
-                    Gtk.Label(label="Models"),
+                    Gtk.Label(label=ui_text.SETTINGS_MODELS),
                 )
         self.get_content_area().show_all()  # shown by run(), after placement
 
@@ -812,8 +950,8 @@ class SettingsDialog(Gtk.Dialog):
         box.pack_start(grid, False, False, 0)
 
         test_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
-        self.test_button = Gtk.Button(label="Check backend")
-        self.test_button.set_tooltip_text("Starts the backend if needed and checks that it answers.")
+        self.test_button = Gtk.Button(label=ui_text.CHECK_BACKEND)
+        self.test_button.set_tooltip_text(ui_text.CHECK_BACKEND_TIP)
         self.test_button.connect("clicked", self._on_test)
         test_row.pack_start(self.test_button, False, False, 0)
         self.test_spinner = Gtk.Spinner()
@@ -822,16 +960,13 @@ class SettingsDialog(Gtk.Dialog):
         self.test_label.set_line_wrap(True)
         self.test_label.set_max_width_chars(80)
         self.test_label.set_selectable(True)
-        self.test_label.set_text(
-            "Press Check backend to see that the AI backend starts and answers. "
-            "The first start can take about a minute."
-        )
+        self.test_label.set_text(ui_text.CHECK_BACKEND_IDLE)
         test_row.pack_start(self.test_label, True, True, 0)
         box.pack_start(test_row, False, False, 0)
 
         for title, fields in (
-            ("Advanced generation", ADVANCED_FIELDS),
-            ("Connection and troubleshooting", CONNECTION_FIELDS),
+            (ui_text.SETTINGS_ADVANCED, ADVANCED_FIELDS),
+            (ui_text.SETTINGS_CONNECTION, CONNECTION_FIELDS),
         ):
             expander = Gtk.Expander(label=title)
             self.expanders.append(expander)
@@ -898,7 +1033,7 @@ class SettingsDialog(Gtk.Dialog):
         if key == "comfy_dir":
             box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
             box.pack_start(entry, True, True, 0)
-            browse = Gtk.Button(label="Browse...")
+            browse = Gtk.Button(label=ui_text.BROWSE)
             browse.connect("clicked", self._browse, entry)
             box.pack_start(browse, False, False, 0)
             return box
@@ -906,7 +1041,7 @@ class SettingsDialog(Gtk.Dialog):
 
     def _browse(self, _button: Gtk.Button, entry: Gtk.Entry) -> None:
         chooser = Gtk.FileChooserDialog(
-            title="Choose the ComfyUI folder", transient_for=self, action=Gtk.FileChooserAction.SELECT_FOLDER
+            title=ui_text.CHOOSE_FOLDER, transient_for=self, action=Gtk.FileChooserAction.SELECT_FOLDER
         )
         chooser.add_buttons("_Cancel", CANCEL, "_Select", OK)
         if entry.get_text():
@@ -941,7 +1076,7 @@ class SettingsDialog(Gtk.Dialog):
         values = self.collect()
         self.test_button.set_sensitive(False)
         self.test_spinner.start()
-        self.test_label.set_text("Testing... this may start the backend, which takes about a minute the first time.")
+        self.test_label.set_text(ui_text.CHECK_BACKEND_RUNNING)
 
         def report(text: str) -> None:
             GLib.idle_add(lambda: (self._alive and self.test_label.set_text(text), False)[1])

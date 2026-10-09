@@ -87,13 +87,67 @@ class StatusTextTests(unittest.TestCase):
     def test_dialog_status_lines(self):
         self.assertIn("No selection", ut.selection_status(None, (100, 50)))
         self.assertIn("260 x 200", ut.selection_status((260, 200), (1024, 768)))
-        self.assertIn("1536 x 768", ut.expand_status((1024, 768), 256, 0, 256, 0))
-        self.assertIn("at least one side", ut.expand_status((1024, 768), 0, 0, 0, 0))
+        self.assertEqual(ut.selection_status((260, 200), (1024, 768)), "Selection: 260 x 200 px")
+        self.assertEqual(
+            ut.expand_status((1024, 768), 256, 0, 256, 0), "New size: 1536 x 768 px (+256 left, +256 right)"
+        )
+        self.assertEqual(ut.expand_status((2176, 1440), 0, 0, 256, 0), "New size: 2432 x 1440 px (+256 right)")
+        self.assertEqual(ut.expand_status((100, 100), 8, 8, 8, 8), "New size: 116 x 116 px (+8 each side)")
+        self.assertIn(ut.EXPAND_NOTHING, ut.expand_status((1024, 768), 0, 0, 0, 0))
+        self.assertEqual(ut.expand_status(None, 1, 1, 1, 1), "")
         self.assertIn("the selection", ut.txt2img_status(0, 0, (300, 200), (768, 512), "layer"))
         self.assertIn("768 x 512", ut.txt2img_status(0, 0, None, (768, 512), "image"))
         self.assertIn("new image", ut.txt2img_status(512, 512, None, (768, 512), "image"))
         self.assertEqual(ut.elapsed_text("0:12", "0:08"), "Elapsed 0:12, about 0:08 left")
         self.assertEqual(ut.elapsed_text("0:12", "--:--"), "Elapsed 0:12")
+
+    def test_dialog_texts_are_short_single_lines(self):
+        texts = [v for k, v in vars(ut).items() if k.isupper() and isinstance(v, str) and k != "INTERRUPTED_OUTSIDE"]
+        texts += list(ut.DIALOG_TITLES.values()) + list(ut.SIDE_LABELS.values())
+        texts += [ut.anchor_tip(a) for a in ("center", "top-left", "bottom")]
+        texts += [
+            ut.picker_heading(3),
+            ut.prompt_free_warning("MAT - prompt-free removal"),
+            ut.selection_status(None, (4000, 3000)),
+            ut.expand_status((4000, 3000), 4096, 4096, 4096, 4000),
+            ut.txt2img_status(0, 0, (300, 200), (768, 512), "layer"),
+        ]
+        for fields in (ut.GENERAL_FIELDS, ut.ADVANCED_FIELDS, ut.CONNECTION_FIELDS):
+            texts += [t for _key, label, hint in fields for t in (label, hint) if t]
+        for text in texts:
+            self.assertNotIn("\n", text, text)
+            self.assertLessEqual(len(text), 100, text)
+            self.assertFalse(text.lower().startswith(("tip", "note:")), text)
+            self.assertNotIn("  ", text, text)
+
+    def test_no_jargon_in_generation_dialogs(self):
+        generation = [
+            ut.FILL_PLACEHOLDER,
+            ut.EXPAND_PLACEHOLDER,
+            ut.TXT2IMG_PLACEHOLDER,
+            ut.REMOVE_EXPLANATION,
+            ut.REMOVE_MODEL_NOTE,
+            ut.KEY_HINT,
+            ut.SHORTCUT_HINT,
+            ut.EMPTY_PROMPT,
+            ut.EXPAND_NOTHING,
+            ut.TIP_MODEL,
+            ut.TIP_VARIATIONS,
+            ut.TIP_CHANGE,
+            ut.TIP_SEED,
+            ut.AVOID_PLACEHOLDER,
+            ut.SIZE_AUTO,
+            ut.PICKER_HINT,
+            ut.PROGRESS_PREVIEW_HINT,
+            ut.prompt_free_warning("LaMa"),
+        ]
+        jargon = ("cfg", "sampler", "scheduler", "denoise", "node", "workflow", "checkpoint", "latent", "vae", "comfy")
+        for text in generation:
+            for word in jargon:
+                self.assertNotIn(word, text.lower(), text)
+
+    def test_expand_placeholder_says_prompt_is_optional(self):
+        self.assertEqual(ut.EXPAND_PLACEHOLDER, "Leave empty to continue the scene")
 
     def test_shortcut_hint(self):
         self.assertIn("Edit > Keyboard Shortcuts", ut.SHORTCUT_HINT)

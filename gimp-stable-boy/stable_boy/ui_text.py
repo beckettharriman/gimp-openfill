@@ -14,14 +14,137 @@ import re
 
 HISTORY_LIMIT = 20
 SUGGESTED_SHORTCUT = "Shift+Ctrl+G"
-SHORTCUT_HINT = (
-    f'Tip: give it a key in Edit > Keyboard Shortcuts (search "Generative Fill"), for example {SUGGESTED_SHORTCUT}.'
-)
 
-FILL_PLACEHOLDER = "Describe what should appear here..."
-EXPAND_PLACEHOLDER = "Describe what the new area should show (optional)..."
-TXT2IMG_PLACEHOLDER = "Describe the image you want..."
-REMOVE_EXPLANATION = "Erases the selection and continues the background. No prompt needed: just press Generate."
+# Style for every text below: one short line, plain words, no tips or
+# paragraphs. Longer explanations go into tooltips (also one line).
+
+# ------------------------------------------------- generation dialogs ----
+
+DIALOG_TITLES = {"fill": "Generative Fill", "expand": "Generative Expand", "txt2img": "Text to Image"}
+MODE_FILL = "_Fill with a prompt"
+MODE_REMOVE = "_Remove object"
+FILL_PLACEHOLDER = "Describe what should appear in the selection"
+EXPAND_PLACEHOLDER = "Leave empty to continue the scene"
+TXT2IMG_PLACEHOLDER = "Describe the image"
+REMOVE_EXPLANATION = "Erases the selection and continues the background. No prompt needed."
+REMOVE_MODEL_NOTE = "An installed LaMa or MAT model is used when there is one."
+RECENT_PROMPTS = "Recent prompts"
+RECENT_EMPTY_TIP = f"Your last {HISTORY_LIMIT} prompts appear here."
+KEY_HINT = "Enter generates, Shift+Enter adds a line"
+SHORTCUT_HINT = f'Shortcut: Edit > Keyboard Shortcuts, search "Generative Fill" (e.g. {SUGGESTED_SHORTCUT})'
+GENERATE = "_Generate"
+CANCEL = "_Cancel"
+ADVANCED = "Advanced"
+
+LABEL_AVOID = "Avoid"
+AVOID_PLACEHOLDER = "What should not appear"
+LABEL_MODEL = "Model"
+LABEL_VARIATIONS = "Variations"
+LABEL_CHANGE = "Change amount"
+LABEL_SEED = "Seed"
+SEED_RANDOM = "Random"
+TIP_MODEL = "The first entry is the active model from Settings > Models."
+TIP_VARIATIONS = "Each result is a layer; you pick one afterwards."
+TIP_CHANGE = "1.0 replaces the selection; lower keeps more of it."
+TIP_SEED = "The same number repeats a result."
+
+EMPTY_PROMPT = "Type a prompt, or choose Remove object."
+EXPAND_NOTHING = "Drag an edge outward to add space."
+
+LABEL_RATIO = "Ratio"
+LABEL_ANCHOR = "Image at"
+SIDE_LABELS = {"left": "Left", "top": "Top", "right": "Right", "bottom": "Bottom"}
+
+LABEL_SIZE = "Size"
+SIZE_AUTO = "Automatic (the selection, or the default size)"
+LABEL_RESULT = "Result as"
+RESULT_LAYER = "New layer"
+RESULT_IMAGE = "New image"
+
+
+def anchor_tip(anchor: str) -> str:
+    """Tooltip of an anchor button: where the image stays in the new canvas."""
+    if anchor == "center":
+        return "Image in the centre"
+    return f"Image at the {anchor.replace('-', ' ')}"
+
+
+# ------------------------------------------------- picker and progress ----
+
+PICKER_TITLE = "Choose a variation - {title}"
+PICKER_HINT = "Keep selected hides the others in the layer group. Discard removes all."
+VARIATION_LABEL = "Variation {number}"
+
+PROGRESS_TITLE = "Stable Boy - {title}"
+PROGRESS_READY = "Getting ready..."
+PROGRESS_PREVIEW_HINT = "The preview appears here."
+PROGRESS_CANCEL_TIP = "Stop now. The image stays unchanged."
+PROGRESS_CANCELLING = "Cancelling. The image stays unchanged..."
+PROGRESS_CANCELLED = "Cancelled"
+PROGRESS_FAILED = "Something went wrong"
+PROGRESS_DONE = "Done"
+PROGRESS_DOWNLOAD = "Download: {row}"
+PROGRESS_QUEUED = "Queued: {name}"
+
+
+def picker_heading(count: int) -> str:
+    """First line of the variations picker."""
+    return f"{count} variations ready. Click one to see it in the image."
+
+
+# ------------------------------------------------------------ settings ----
+
+SETTINGS_TITLE = "Generative Fill Settings"
+SETTINGS_GENERAL = "General"
+SETTINGS_MODELS = "Models"
+SETTINGS_ADVANCED = "Advanced generation"
+SETTINGS_CONNECTION = "Connection and troubleshooting"
+CHOOSE_FOLDER = "Choose the ComfyUI folder"
+BROWSE = "Browse..."
+CHECK_BACKEND = "Check backend"
+CHECK_BACKEND_TIP = "Starts the backend if needed and checks that it answers."
+CHECK_BACKEND_IDLE = "Press Check backend to test the AI backend. The first start takes about a minute."
+CHECK_BACKEND_RUNNING = "Checking. The first start takes about a minute..."
+
+# (key, label, one-line hint)
+GENERAL_FIELDS = (
+    ("comfy_dir", "AI backend folder", "Where ComfyUI (portable build) is installed."),
+    ("autostart", "Start backend automatically", "Starts ComfyUI hidden when you generate."),
+    (
+        "idle_timeout_minutes",
+        "Idle timeout (minutes)",
+        "Stops the backend after this many idle minutes to free graphics memory. 0 keeps it running.",
+    ),
+    ("progress_window", "Show the floating progress window", "Progress, a live preview and Cancel."),
+)
+ADVANCED_FIELDS = (
+    ("steps", "Steps", "More steps add detail but take longer. 20 to 30 is typical."),
+    ("cfg", "Prompt strictness (CFG)", "How closely the result follows the prompt. 5 to 8 is typical."),
+    ("sampler", "Sampler", "Keep the default unless a model page says otherwise."),
+    ("scheduler", "Scheduler", '"karras" suits most models.'),
+    ("grow_percent", "Repaint margin (% of selection)", "Repaints a little around the selection so edges blend."),
+    ("grow", "Repaint margin limit (px)", "Upper limit for that margin."),
+    ("feather_percent", "Edge softness (% of selection)", "How softly the new layer blends in."),
+    ("feather", "Edge softness limit (px)", "Upper limit for the soft edge."),
+    ("prefill", "Hide old content before generating", "Helps replace an object instead of copying it."),
+    ("max_side_sd15", "Working size for SD 1.5 (px)", "Larger is sharper but slower and needs more memory."),
+    ("max_side_sdxl", "Working size for SDXL (px)", "Larger is sharper but slower and needs more memory."),
+    ("txt2img_width", "Text to Image default width (px)", ""),
+    ("txt2img_height", "Text to Image default height (px)", ""),
+)
+CONNECTION_FIELDS = (
+    ("backend", "Backend", "ComfyUI is managed for you. AUTOMATIC1111 must be started by you with --api."),
+    ("url", "ComfyUI address", ""),
+    ("a1111_url", "AUTOMATIC1111 address", ""),
+    ("startup_timeout", "Startup time limit (s)", "How long to wait for the backend to start."),
+    ("request_timeout", "Generation time limit (s)", "0 estimates a limit for each request."),
+    ("extra_server_args", "Extra ComfyUI options", "For example --lowvram on cards with little memory."),
+    ("quality", "Model for scripts asking 'fast' or 'quality'", "Only used by older scripts."),
+    ("checkpoint", "SD 1.5 model file", "Used by the 'fast' choice of older scripts."),
+    ("sdxl_checkpoint", "SDXL model file", "Used by the 'quality' choice of older scripts."),
+    ("fooocus_patch", "Fooocus patch file", "Used by the 'quality' choice of older scripts."),
+    ("debug", "Verbose log", "Writes more detail to stable-boy.log for bug reports."),
+)
 
 
 # ------------------------------------------------------------ history ----
@@ -110,34 +233,35 @@ def elapsed_text(elapsed: str, remaining: str | None = None) -> str:
 
 
 def prompt_free_warning(model_name: str) -> str:
-    """Fill dialog warning when the active model ignores prompts (removal models)."""
+    """Fill dialog note when the active model ignores prompts (removal models)."""
     short = (model_name or "The active model").split(" - ")[0]
-    return (
-        f"Note: the active model ({short}) only removes objects and ignores the prompt. "
-        "Choose another model under Advanced to fill with a prompt."
-    )
+    return f"{short} only removes objects and ignores the prompt. Pick another model to fill."
 
 
 def selection_status(selection: tuple[int, int] | None, image: tuple[int, int] | None) -> str:
-    """Status line of the Generative Fill dialog."""
+    """Status line of the Generative Fill dialog (shown as a warning without a selection)."""
     if image is None:
         return ""
     if selection is None:
-        return (
-            f"No selection: the whole image ({image[0]} x {image[1]} px) will be regenerated. "
-            "Select an area first for a normal fill."
-        )
-    return f"Selection: {selection[0]} x {selection[1]} px in a {image[0]} x {image[1]} px image."
+        return f"No selection: the whole image ({image[0]} x {image[1]} px) will be regenerated."
+    return f"Selection: {selection[0]} x {selection[1]} px"
 
 
 def expand_status(image: tuple[int, int] | None, left: int, top: int, right: int, bottom: int) -> str:
-    """Status line of the Generative Expand dialog."""
+    """Readout under the Generative Expand editor, e.g.
+    "New size: 2432 x 1440 px (+256 right)"."""
     if image is None:
         return ""
-    width, height = image[0] + max(0, left) + max(0, right), image[1] + max(0, top) + max(0, bottom)
-    if (width, height) == tuple(image):
-        return "Add pixels on at least one side, otherwise nothing changes."
-    return f"Canvas: {image[0]} x {image[1]} px, after expanding {width} x {height} px."
+    sides = {"left": max(0, left), "top": max(0, top), "right": max(0, right), "bottom": max(0, bottom)}
+    width, height = image[0] + sides["left"] + sides["right"], image[1] + sides["top"] + sides["bottom"]
+    added = [(name, value) for name, value in sides.items() if value]
+    if not added:
+        return f"New size: {width} x {height} px. {EXPAND_NOTHING}"
+    if len(added) == 4 and len(set(sides.values())) == 1:
+        detail = f"+{added[0][1]} each side"
+    else:
+        detail = ", ".join(f"+{value} {name}" for name, value in added)
+    return f"New size: {width} x {height} px ({detail})"
 
 
 def txt2img_status(
@@ -149,8 +273,8 @@ def txt2img_status(
     elif selection is not None and target == "layer":
         size = f"{selection[0]} x {selection[1]} px (the selection)"
     else:
-        size = f"{default[0]} x {default[1]} px (the default from Settings)"
-    where = "a new image" if target == "image" else "a new layer in this image"
+        size = f"{default[0]} x {default[1]} px (the default size)"
+    where = "a new image" if target == "image" else "a new layer"
     return f"Result: {size}, as {where}."
 
 

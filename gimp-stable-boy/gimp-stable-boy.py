@@ -172,7 +172,12 @@ def _test_hooks() -> dict:
     SB_TEST_UI_FILE (re-read on every call, so one GIMP session can open
     several dialogs with different hooks) or the older SB_TEST_AUTOCLOSE /
     SB_SETTINGS_TAB variables. Keys: autoclose (seconds, answers Cancel),
-    settings_tab ("models"), fake_variations (count), progress_demo (seconds)."""
+    settings_tab ("models"), fake_variations (count), progress_demo (seconds),
+    expand (Generative Expand editor: margins, preset, anchor, drag, hover;
+    see ``dialogs.apply_expand_hooks``), advanced_steps ([seconds, open] pairs),
+    prompt_free (active model name shown as removal-only), dialog_dump
+    (seconds) and dialog_out (JSON lines file the generation dialog
+    writes its sizes and state to)."""
     import json
 
     hooks: dict = {}
@@ -274,14 +279,23 @@ def _generation_dialog(
     settings = Settings.load(paths.config)
     history = ui_text.parse_history(settings.prompt_history)
     values = {key: config.get_property(key) for key in KIND_ARGS[kind]}
-    values["prompt"] = ui_text.initial_prompt(values.get("prompt"), history)
+    # Expand starts empty unless its own last prompt is remembered (the placeholder says empty is fine).
+    values["prompt"] = ui_text.initial_prompt(values.get("prompt"), [] if kind == "expand" else history)
     if values.get("model") in LEGACY_NICKS:
         values["model"] = "active"
     if hooks.get("mode") == "remove":
         values["remove"] = True
     values.update(hooks.get("values") or {})  # test hook: start values as if picked under Advanced
     models, active_name, prompt_free = _model_options(config, kind, settings)
+    if hooks.get("prompt_free"):  # test hook: as if the active model only removed objects
+        active_name, prompt_free = str(hooks["prompt_free"]), True
     image_size, selection_size = _image_sizes(image)
+    thumbnail = None
+    if kind == "expand" and image is not None:
+        try:
+            thumbnail = image.get_thumbnail(360, 360, Gimp.PixbufTransparency.SMALL_CHECKS)
+        except Exception:  # noqa: BLE001 - the editor draws a grey box instead
+            thumbnail = None
     result = dialogs.run_generation_dialog(
         kind,
         values,
@@ -298,6 +312,11 @@ def _generation_dialog(
         test_key=hooks.get("press"),
         test_open_recent=bool(hooks.get("open_recent")),
         test_click=hooks.get("click"),
+        test_expand=hooks.get("expand"),
+        test_advanced_steps=hooks.get("advanced_steps"),
+        test_dump=hooks.get("dialog_dump"),
+        test_out=str(hooks.get("dialog_out") or ""),
+        thumbnail=thumbnail,
     )
     if result is None:
         return False
