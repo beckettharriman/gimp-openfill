@@ -1,0 +1,332 @@
+{
+  "id": "landscape-all-640-rounds",
+  "pass": false,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": false,
+      "value": [
+        "Generative Expand #1",
+        "Generative Expand"
+      ]
+    },
+    "canvas_grew": {
+      "ok": true,
+      "value": [
+        3200,
+        2720
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "new_area_opaque": {
+      "ok": true,
+      "value": 255.0
+    },
+    "no_hard_seam_at_old_edge": {
+      "ok": true,
+      "value": 6.81
+    },
+    "new_area_not_empty": {
+      "ok": true,
+      "value": 74.7
+    },
+    "old_pixels_outside_mask_unchanged": {
+      "ok": false,
+      "value": 245
+    },
+    "selection_state_after": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 70.58,
+    "layer_size": [
+      3200,
+      2720
+    ],
+    "layer_offset": [
+      0,
+      0
+    ],
+    "laplacian_var_new_area": 3.88,
+    "laplacian_var_old_area": 2461.82,
+    "seam_mean_abs_diff_max": 6.81,
+    "new_area_mean_rgb": [
+      76.1,
+      93.6,
+      54.3
+    ],
+    "old_pixels_outside_mask_max_abs_diff": 245,
+    "old_pixels_outside_mask_count": 2764800
+  },
+  "memory": {
+    "samples": 63,
+    "peak_gimp_tree_mb": 752,
+    "peak_comfyui_mb": 6901,
+    "peak_gpu_mib": 7293
+  },
+  "evidence_files": {
+    "before.jpg scale": 0.5333,
+    "after.jpg scale": 0.32,
+    "composite.jpg": 0.3184,
+    "join-1to1.jpg box": [
+      2048,
+      976,
+      3200,
+      1744
+    ]
+  },
+  "spec": {
+    "id": "landscape-all-640-rounds",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+      "w": 1920,
+      "h": 1440,
+      "scale": false
+    },
+    "selection": {
+      "kind": "none"
+    },
+    "proc": "expand",
+    "args": {
+      "prompt": "",
+      "negative": "",
+      "variations": 1,
+      "seed": 1234,
+      "model": "juggernaut-xl-v9",
+      "left": 640,
+      "top": 640,
+      "right": 640,
+      "bottom": 640
+    }
+  },
+  "gimp": {
+    "id": "landscape-all-640-rounds",
+    "spec": {
+      "id": "landscape-all-640-rounds",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+        "w": 1920,
+        "h": 1440,
+        "scale": false
+      },
+      "selection": {
+        "kind": "none"
+      },
+      "proc": "expand",
+      "args": {
+        "prompt": "",
+        "negative": "",
+        "variations": 1,
+        "seed": 1234,
+        "model": "juggernaut-xl-v9",
+        "left": 640,
+        "top": 640,
+        "right": 640,
+        "bottom": 640
+      }
+    },
+    "started": "2026-10-09 14:30:55",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+          "size": [
+            1920,
+            1440
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "none",
+          "empty": true,
+          "bounds": null
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 1920,
+          "height": 1440,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "d2202c93a99502df0bb9d9a3cfccda91"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 1920,
+          "height": 1440,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "23312e5bbe15055edf37c94555328e56"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 70.58,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 52,
+            "name": "Background",
+            "size": [
+              1920,
+              1440
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 63,
+            "name": "Generative Expand #1",
+            "size": [
+              3200,
+              2720
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 57,
+            "name": "Generative Expand",
+            "size": [
+              2560,
+              2080
+            ],
+            "offset": [
+              320,
+              320
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 52,
+            "name": "Background",
+            "size": [
+              1920,
+              1440
+            ],
+            "offset": [
+              640,
+              640
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 3,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          3200,
+          2720
+        ],
+        "selection_restored": null,
+        "selection_after_empty": true,
+        "new_top_level": [
+          {
+            "id": 63,
+            "name": "Generative Expand #1",
+            "size": [
+              3200,
+              2720
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 57,
+            "name": "Generative Expand",
+            "size": [
+              2560,
+              2080
+            ],
+            "offset": [
+              320,
+              320
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 3200,
+          "height": 2720,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "c9373d937e9d0eca1a127e446dfaea09"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 3200,
+          "height": 2720,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "381417c5f2be8fe3cbac5913106e62f0"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 3200,
+          "height": 2720,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "ddadf75307089b08240e7c85ae2f78f6"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 71.59
+  },
+  "analysis_error": null
+}

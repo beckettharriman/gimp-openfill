@@ -166,20 +166,46 @@ class ExpandTests(unittest.TestCase):
             g.plan_expand(100, 100, -1, 0, 0, 0, g.SD15)
 
 
-class ExpandStepsTests(unittest.TestCase):
-    def test_one_pass_for_one_side_or_sd15(self):
-        self.assertEqual(g.expand_steps(0, 0, 256, 0, "sdxl"), [(0, 0, 256, 0)])
-        self.assertEqual(g.expand_steps(256, 256, 256, 256, "sd15"), [(256, 256, 256, 256)])
-        self.assertEqual(g.expand_steps(64, 0, 0, 32, "flux"), [(64, 0, 0, 32)])
+class ExpandRoundsTests(unittest.TestCase):
+    def test_moderate_expansion_is_one_round_with_all_sides(self):
+        self.assertEqual(g.expand_rounds(1920, 1440, 192, 192, 192, 192), [(192, 192, 192, 192)])
+        self.assertEqual(g.expand_rounds(1280, 853, 0, 192, 0, 192), [(0, 192, 0, 192)])
+        self.assertEqual(g.expand_rounds(2400, 3000, 0, 0, 256, 0), [(0, 0, 256, 0)])
 
-    def test_sdxl_all_sides_one_at_a_time_horizontal_first(self):
-        self.assertEqual(
-            g.expand_steps(256, 128, 64, 32, "sdxl"),
-            [(256, 0, 0, 0), (0, 0, 64, 0), (0, 128, 0, 0), (0, 0, 0, 32)],
-        )
+    def test_large_expansion_runs_in_rounds_each_with_every_side(self):
+        rounds = g.expand_rounds(1000, 800, 400, 400, 400, 400)
+        self.assertGreater(len(rounds), 1)
+        for step in rounds:
+            self.assertTrue(all(m > 0 for m in step))
+        # the rounds add up to the request
+        self.assertEqual(tuple(sum(r[i] for r in rounds) for i in range(4)), (400, 400, 400, 400))
 
-    def test_sdxl_two_sides_skips_zero_margins(self):
-        self.assertEqual(g.expand_steps(0, 100, 0, 200, "sdxl"), [(0, 100, 0, 0), (0, 0, 0, 200)])
+    def test_every_round_respects_the_fraction_of_the_current_canvas(self):
+        width, height = 640, 480
+        rounds = g.expand_rounds(width, height, 700, 50, 0, 900)
+        for left, top, right, bottom in rounds:
+            self.assertLessEqual(max(left, right), int(width * g.EXPAND_ROUND_FRACTION))
+            self.assertLessEqual(max(top, bottom), int(height * g.EXPAND_ROUND_FRACTION))
+            width, height = width + left + right, height + top + bottom
+        self.assertEqual((width, height), (640 + 700, 480 + 50 + 900))
+
+    def test_larger_parts_first_and_zero_margins_stay_zero(self):
+        rounds = g.expand_rounds(400, 400, 0, 0, 301, 0)
+        self.assertTrue(all(r[0] == r[1] == r[3] == 0 for r in rounds))
+        rights = [r[2] for r in rounds]
+        self.assertEqual(rights, sorted(rights, reverse=True))
+        self.assertLessEqual(max(rights) - min(rights), 1)
+
+    def test_round_limit(self):
+        rounds = g.expand_rounds(10, 10, 10000, 0, 0, 0, max_rounds=3)
+        self.assertEqual(len(rounds), 3)
+        self.assertEqual(sum(r[0] for r in rounds), 10000)
+
+    def test_rejects_bad_margins(self):
+        with self.assertRaises(ValueError):
+            g.expand_rounds(100, 100, 0, 0, 0, 0)
+        with self.assertRaises(ValueError):
+            g.expand_rounds(100, 100, -5, 10, 0, 0)
 
 
 class FillProfileTests(unittest.TestCase):

@@ -1,0 +1,11 @@
+2026-10-09 14:30:56,869 INFO  [13272 stable-boy] expand: margins=(640, 640, 640, 640) in 2 rounds: [(320, 320, 320, 320), (320, 320, 320, 320)]
+2026-10-09 14:30:56,870 INFO  [13272 stable-boy] expand: margins=(320, 320, 320, 320) canvas=2560x2080 context=Rect(x=0, y=0, width=2560, height=2080) working=1024x832 model=juggernaut-xl-v9 prompt=continue the scene cfg=4.0
+2026-10-09 14:31:01,345 INFO  [13272 stable-boy] timing: upload image=6271067 mask=38686 bytes in 0.078 s
+2026-10-09 14:31:01,368 INFO  [13272 stable-boy] queued prompt d0aea6d0-4e4b-477f-85bd-66f861b6b02b (timeout 154s, 25 steps x 1)
+2026-10-09 14:31:31,967 INFO  [13272 stable-boy] timing: queue->first step 14.219 s, sampling 16.351 s, download 4630284 bytes in 0.029 s
+2026-10-09 14:31:32,967 INFO  [13272 stable-boy] expand: done, seed=1234, 1 layer(s)
+2026-10-09 14:31:32,969 INFO  [13272 stable-boy] expand: margins=(320, 320, 320, 320) canvas=3200x2720 context=Rect(x=0, y=0, width=3200, height=2720) working=1024x872 model=juggernaut-xl-v9 prompt=continue the scene cfg=4.0
+2026-10-09 14:31:40,691 INFO  [13272 stable-boy] timing: upload image=10297374 mask=58900 bytes in 0.091 s
+2026-10-09 14:31:40,724 INFO  [13272 stable-boy] queued prompt c30f187e-191a-443c-a085-5d75c4a45883 (timeout 157s, 25 steps x 1)
+2026-10-09 14:32:05,657 INFO  [13272 stable-boy] timing: queue->first step 7.798 s, sampling 17.113 s, download 5652678 bytes in 0.022 s
+2026-10-09 14:32:06,743 INFO  [13272 stable-boy] expand: done, seed=1234, 1 layer(s)

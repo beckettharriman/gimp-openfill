@@ -1,0 +1,148 @@
+{
+ "cases": [
+  {
+   "id": "landscape-all-192",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "",
+    "negative": "",
+    "variations": 1,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "left": 192,
+    "top": 192,
+    "right": 192,
+    "bottom": 192
+   }
+  },
+  {
+   "id": "face-right-256",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+    "w": 2400,
+    "h": 3000,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "",
+    "negative": "",
+    "variations": 1,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "left": 0,
+    "top": 0,
+    "right": 256,
+    "bottom": 0
+   }
+  },
+  {
+   "id": "architecture-all-128",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\architecture.jpg",
+    "w": 2000,
+    "h": 1273,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "",
+    "negative": "",
+    "variations": 1,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "left": 128,
+    "top": 128,
+    "right": 128,
+    "bottom": 128
+   }
+  },
+  {
+   "id": "product-top-bottom-192",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\product.jpg",
+    "w": 1280,
+    "h": 853,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "",
+    "negative": "",
+    "variations": 1,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "left": 0,
+    "top": 192,
+    "right": 0,
+    "bottom": 192
+   }
+  },
+  {
+   "id": "landscape-all-192-sd15",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "",
+    "negative": "",
+    "variations": 1,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "left": 192,
+    "top": 192,
+    "right": 192,
+    "bottom": 192
+   }
+  },
+  {
+   "id": "landscape-all-640-rounds",
+   "image": {
+    "source": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+    "w": 1920,
+    "h": 1440,
+    "scale": false
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "",
+    "negative": "",
+    "variations": 1,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "left": 640,
+    "top": 640,
+    "right": 640,
+    "bottom": 640
+   }
+  }
+ ]
+}

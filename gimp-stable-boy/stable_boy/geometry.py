@@ -255,30 +255,60 @@ def _strip_context(
     return Rect(0, y, canvas.width, height)
 
 
-# Tiers that expand several sides one side at a time. With the whole canvas as
-# context, the SDXL tier (Fooocus patch) reads the old image inside a pre-filled
-# ring as a picture in a frame and returns the blurred pre-fill unchanged (a
-# vignette); one-sided strips work. SD 1.5 handles the ring and keeps one pass.
-SEQUENTIAL_EXPAND_ARCHS = ("sdxl",)
+# Largest margin of one expand round, as a fraction of the current canvas
+# side it grows from (left and right against the width, top and bottom against
+# the height). Every round renders all growing sides at once with the whole
+# canvas as context; a margin this size keeps the old image at least two thirds
+# of the canvas along each axis, so the model still reads the new area as more
+# of the same scene. Larger expansions run in several such rounds.
+EXPAND_ROUND_FRACTION = 0.25
+EXPAND_MAX_ROUNDS = 8
 
 
-def expand_steps(left: int, top: int, right: int, bottom: int, arch: str) -> list[tuple[int, int, int, int]]:
-    """Margins (left, top, right, bottom) of each expand pass.
+def expand_rounds(
+    image_w: int,
+    image_h: int,
+    left: int,
+    top: int,
+    right: int,
+    bottom: int,
+    max_fraction: float = EXPAND_ROUND_FRACTION,
+    max_rounds: int = EXPAND_MAX_ROUNDS,
+) -> list[tuple[int, int, int, int]]:
+    """Margins (left, top, right, bottom) of each expand round.
 
-    One pass with all margins, except for ``SEQUENTIAL_EXPAND_ARCHS`` with two or
-    more growing sides: one pass per side, left and right first so the top and
-    bottom passes span the widened canvas and also fill the corners.
+    The fewest rounds in which no margin exceeds ``max_fraction`` of the canvas
+    side it grows from (the canvas grows after each round). Each margin is
+    split evenly over the rounds, larger parts first, so every round grows all
+    requested sides at once. At most ``max_rounds`` rounds; when even that is
+    not enough the margins are split over ``max_rounds``.
     """
     margins = (left, top, right, bottom)
-    if arch not in SEQUENTIAL_EXPAND_ARCHS or sum(1 for m in margins if m > 0) < 2:
-        return [margins]
-    steps = []
-    for index in (0, 2, 1, 3):
-        if margins[index] > 0:
-            step = [0, 0, 0, 0]
-            step[index] = margins[index]
-            steps.append((step[0], step[1], step[2], step[3]))
-    return steps
+    if min(margins) < 0:
+        raise ValueError("margins must be non-negative")
+    if not any(margins):
+        raise ValueError("at least one margin must be positive")
+    rounds: list[tuple[int, int, int, int]] = []
+    for count in range(1, max(1, max_rounds) + 1):
+        rounds = _split_margins(margins, count)
+        if _rounds_fit(image_w, image_h, rounds, max_fraction):
+            return rounds
+    return rounds
+
+
+def _split_margins(margins: tuple[int, int, int, int], count: int) -> list[tuple[int, int, int, int]]:
+    parts = [[m // count + (1 if i < m % count else 0) for i in range(count)] for m in margins]
+    return [(parts[0][i], parts[1][i], parts[2][i], parts[3][i]) for i in range(count)]
+
+
+def _rounds_fit(width: int, height: int, rounds: list[tuple[int, int, int, int]], max_fraction: float) -> bool:
+    for left, top, right, bottom in rounds:
+        if max(left, right) > max(1, int(width * max_fraction)) or max(top, bottom) > max(
+            1, int(height * max_fraction)
+        ):
+            return False
+        width, height = width + left + right, height + top + bottom
+    return True
 
 
 def mask_for_expand(plan: ExpandPlan) -> bytes:

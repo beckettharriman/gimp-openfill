@@ -1,0 +1,301 @@
+{
+  "id": "face-right-256",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Generative Expand"
+      ]
+    },
+    "canvas_grew": {
+      "ok": true,
+      "value": [
+        2656,
+        3000
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "new_area_opaque": {
+      "ok": true,
+      "value": 255.0
+    },
+    "no_hard_seam_at_old_edge": {
+      "ok": true,
+      "value": 1.53
+    },
+    "new_area_not_empty": {
+      "ok": true,
+      "value": 43.7
+    },
+    "old_pixels_outside_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "selection_state_after": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 23.64,
+    "layer_size": [
+      1500,
+      3000
+    ],
+    "layer_offset": [
+      1156,
+      0
+    ],
+    "laplacian_var_new_area": 0.74,
+    "laplacian_var_old_area": 184.24,
+    "seam_mean_abs_diff_max": 1.53,
+    "new_area_mean_rgb": [
+      36.5,
+      49.5,
+      45.0
+    ],
+    "old_pixels_outside_mask_max_abs_diff": 0,
+    "old_pixels_outside_mask_count": 7032000
+  },
+  "memory": {
+    "samples": 23,
+    "peak_gimp_tree_mb": 582,
+    "peak_comfyui_mb": 4167,
+    "peak_gpu_mib": 6169
+  },
+  "evidence_files": {
+    "before.jpg scale": 0.3413,
+    "after.jpg scale": 0.3413,
+    "composite.jpg": 0.3837,
+    "join-1to1.jpg box": [
+      1888,
+      1116,
+      2656,
+      1884
+    ]
+  },
+  "spec": {
+    "id": "face-right-256",
+    "image": {
+      "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+      "w": 2400,
+      "h": 3000,
+      "scale": false
+    },
+    "selection": {
+      "kind": "none"
+    },
+    "proc": "expand",
+    "args": {
+      "prompt": "",
+      "negative": "",
+      "variations": 1,
+      "seed": 1234,
+      "model": "juggernaut-xl-v9",
+      "left": 0,
+      "top": 0,
+      "right": 256,
+      "bottom": 0
+    }
+  },
+  "gimp": {
+    "id": "face-right-256",
+    "spec": {
+      "id": "face-right-256",
+      "image": {
+        "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+        "w": 2400,
+        "h": 3000,
+        "scale": false
+      },
+      "selection": {
+        "kind": "none"
+      },
+      "proc": "expand",
+      "args": {
+        "prompt": "",
+        "negative": "",
+        "variations": 1,
+        "seed": 1234,
+        "model": "juggernaut-xl-v9",
+        "left": 0,
+        "top": 0,
+        "right": 256,
+        "bottom": 0
+      }
+    },
+    "started": "2026-10-09 14:29:15",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "C:\\AI\\overnight-scratch\\photos\\face.jpg",
+          "size": [
+            2400,
+            3000
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "none",
+          "empty": true,
+          "bounds": null
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 2400,
+          "height": 3000,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "f1e3282effe37f8fbce94fdf8403e695"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 2400,
+          "height": 3000,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "035af90b3c2c94911d1d7a0555f29e00"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 23.64,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 12,
+            "name": "Background",
+            "size": [
+              2400,
+              3000
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 17,
+            "name": "Generative Expand",
+            "size": [
+              1500,
+              3000
+            ],
+            "offset": [
+              1156,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 12,
+            "name": "Background",
+            "size": [
+              2400,
+              3000
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          2656,
+          3000
+        ],
+        "selection_restored": null,
+        "selection_after_empty": true,
+        "new_top_level": [
+          {
+            "id": 17,
+            "name": "Generative Expand",
+            "size": [
+              1500,
+              3000
+            ],
+            "offset": [
+              1156,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 1500,
+          "height": 3000,
+          "channels": 4,
+          "offset": [
+            1156,
+            0
+          ],
+          "md5": "3457be2bb92e48936bd5e0a3a8cc3e2b"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 1500,
+          "height": 3000,
+          "channels": 1,
+          "offset": [
+            1156,
+            0
+          ],
+          "md5": "24e39db2514318fd77b2fdcacee59790"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 2656,
+          "height": 3000,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "c806aeea3b10cc378d2f7b7c58be7a18"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 25.14
+  },
+  "analysis_error": null
+}

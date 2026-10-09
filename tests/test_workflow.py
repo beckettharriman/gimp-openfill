@@ -282,6 +282,35 @@ class ModelDisplayNameTests(unittest.TestCase):
         self.assertEqual(w.model_display_name(""), "")
 
 
+class ExpandPromptTests(unittest.TestCase):
+    def test_empty_prompt_continues_the_scene(self):
+        positive, negative = w.expand_prompts("", "")
+        self.assertEqual(positive, "")
+        self.assertEqual(negative, w.EXPAND_NEGATIVE)
+        for word in ("frame", "border", "vignette", "new objects", "people", "text"):
+            self.assertIn(word, negative)
+
+    def test_whitespace_prompt_counts_as_empty_and_user_negative_is_kept(self):
+        positive, negative = w.expand_prompts("   ", " lowres ")
+        self.assertEqual(positive, "")
+        self.assertEqual(negative, "lowres, " + w.EXPAND_NEGATIVE)
+
+    def test_user_prompt_kept_and_only_frame_terms_added(self):
+        positive, negative = w.expand_prompts("people walking on a beach", "blurry")
+        self.assertEqual(positive, "people walking on a beach")
+        self.assertEqual(negative, "blurry, " + w.EXPAND_FRAME_NEGATIVE)
+        self.assertNotIn("people", w.EXPAND_FRAME_NEGATIVE)
+        self.assertIn("frame", negative)
+
+
+class ExpandCfgTests(unittest.TestCase):
+    def test_sdxl_capped_others_unchanged(self):
+        self.assertEqual(w.expand_cfg("sdxl", 7.0), w.EXPAND_SDXL_CFG)
+        self.assertEqual(w.expand_cfg("sdxl", 3.0), 3.0)
+        self.assertEqual(w.expand_cfg("sd15", 7.0), 7.0)
+        self.assertEqual(w.expand_cfg("flux", 30.0), 30.0)
+
+
 class ProbeSafePngTests(unittest.TestCase):
     def _strip_mask(self):
         # the outpaint mask that PyAV's format probe took for MPEG-TS

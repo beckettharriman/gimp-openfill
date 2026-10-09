@@ -19,7 +19,7 @@ from dataclasses import replace
 from pathlib import Path
 
 from . import catalog as cat
-from . import geometry, gimp_io
+from . import geometry, gimp_io, workflow
 from .backend import (
     SETTINGS_MENU,
     Backend,
@@ -530,28 +530,42 @@ class App:
         seed: int,
         model_choice: str,
     ) -> list:
+        """Grow the canvas by the given margins and generate the new area.
+
+        Every growing side is rendered in the same pass, with the whole canvas
+        as context. Large expansions run in rounds (``geometry.expand_rounds``),
+        each again all sides at once; each round reads the visible result of
+        the previous one and only the last makes the requested variations.
+        """
         self._check_image(image)
         entry, model = self.resolve_model(model_choice)
-        steps = geometry.expand_steps(left, top, right, bottom, model.arch)
-        if len(steps) > 1:
-            self.log.info(
-                "expand: margins=%s on %s, one side at a time (%d passes)",
-                (left, top, right, bottom),
-                model.arch,
-                len(steps),
-            )
-            # Each pass reads the visible result of the previous one. Only the last
-            # pass makes the requested number of variations; its layers are the
-            # ones returned (and offered by the variations picker).
-            layers: list = []
-            image.undo_group_start()
-            try:
-                for index, margins in enumerate(steps):
-                    count = variations if index == len(steps) - 1 else 1
-                    layers = self.generative_expand(image, prompt, negative, *margins, count, seed, model_choice)
-            finally:
-                image.undo_group_end()
-            return layers
+        rounds = geometry.expand_rounds(image.get_width(), image.get_height(), left, top, right, bottom)
+        if len(rounds) == 1:
+            return self._expand_round(image, prompt, negative, rounds[0], variations, seed, entry, model)
+        self.log.info("expand: margins=%s in %d rounds: %s", (left, top, right, bottom), len(rounds), rounds)
+        layers: list = []
+        image.undo_group_start()
+        try:
+            for index, margins in enumerate(rounds):
+                count = variations if index == len(rounds) - 1 else 1
+                layers = self._expand_round(image, prompt, negative, margins, count, seed, entry, model)
+        finally:
+            image.undo_group_end()
+        return layers
+
+    def _expand_round(
+        self,
+        image,
+        prompt: str,
+        negative: str,
+        margins: tuple[int, int, int, int],
+        variations: int,
+        seed: int,
+        entry: cat.ModelEntry | None,
+        model: ModelSpec,
+    ) -> list:
+        """One expand pass: all margins at once."""
+        left, top, right, bottom = margins
         profile = self.profile_for(model)
         plan = geometry.plan_expand(image.get_width(), image.get_height(), left, top, right, bottom, profile)
         ws = geometry.working_size(plan.context.width, plan.context.height, profile)
@@ -565,10 +579,12 @@ class App:
         )
         if model.prompt_free:
             prompt, negative = "", ""
-        elif not prompt.strip():
-            prompt = self.REMOVAL_PROMPT.replace("nothing added", "continuing the scene naturally")
+        else:
+            prompt, negative = workflow.expand_prompts(prompt, negative)
+        sampling = self.sampling(model, variations, seed, 1.0)
+        sampling = replace(sampling, cfg=workflow.expand_cfg(model.arch, sampling.cfg))
         self.log.info(
-            "expand: margins=%s canvas=%dx%d context=%s working=%dx%d model=%s",
+            "expand: margins=%s canvas=%dx%d context=%s working=%dx%d model=%s prompt=%s cfg=%.1f",
             (left, top, right, bottom),
             plan.new_width,
             plan.new_height,
@@ -576,6 +592,8 @@ class App:
             ws.width,
             ws.height,
             entry.id if entry else model.checkpoint,
+            "user" if prompt else "continue the scene",
+            sampling.cfg,
         )
         # Read the context from the unresized image (new-canvas coordinates shifted
         # back by the offset; pixels outside the image come back transparent) so a
@@ -594,7 +612,7 @@ class App:
             prompt=prompt,
             negative=negative,
             model=model,
-            sampling=self.sampling(model, variations, seed, 1.0),
+            sampling=sampling,
             mode="expand",
             grow=mp.grow_work,
             feather=mp.blur_work,

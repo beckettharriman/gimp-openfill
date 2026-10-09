@@ -214,6 +214,43 @@ def build_inpaint(
     return g.to_dict()
 
 
+# Generative Expand prompts. With an empty prompt the positive stays empty and
+# the negative steers away from what the model otherwise invents around a
+# finished-looking picture: a frame, a border, a vignette or new subjects.
+# The old default (a "seamless continuation of the surrounding background"
+# positive and no frame terms) made the SDXL tier paint a matted picture frame
+# around the old image (docs/evidence/daytime-2026-10-09/expand/README.md).
+EXPAND_NEGATIVE = "new objects, people, text, frame, border, vignette, watermark, blurry"
+# Appended to a user's own negative: only the frame terms, so a prompt that asks
+# for people or text is not contradicted.
+EXPAND_FRAME_NEGATIVE = "frame, border, vignette, picture in picture, watermark"
+
+
+def expand_prompts(prompt: str, negative: str) -> tuple[str, str]:
+    """Positive and negative prompt of a Generative Expand.
+
+    Empty prompt ("continue the scene"): empty positive, ``EXPAND_NEGATIVE``
+    plus the user's negative. A user prompt is kept and ``EXPAND_FRAME_NEGATIVE``
+    is appended to the user's negative.
+    """
+    prompt, negative = (prompt or "").strip(), (negative or "").strip()
+    extra = EXPAND_FRAME_NEGATIVE if prompt else EXPAND_NEGATIVE
+    return prompt, f"{negative}, {extra}" if negative else extra
+
+
+# Guidance of a Generative Expand on the SDXL tier (Fooocus inpaint patch). With
+# the empty "continue the scene" positive the guidance only pushes away from the
+# negative; at the general default 7 the new border came back over-saturated
+# with hard bands (a bright turf strip, grey backdrop bands on a white product
+# shot), at 4 (the Fooocus default) it blends. SD 1.5 keeps the setting.
+EXPAND_SDXL_CFG = 4.0
+
+
+def expand_cfg(arch: str, cfg: float) -> float:
+    """Sampler guidance for an expand: at most ``EXPAND_SDXL_CFG`` on the SDXL tier."""
+    return min(float(cfg), EXPAND_SDXL_CFG) if arch == "sdxl" else float(cfg)
+
+
 def _is_gguf(name: str) -> bool:
     return name.lower().endswith(".gguf")
 

@@ -1,0 +1,114 @@
+{
+ "base": {
+  "prefill": "ns",
+  "pre_blur": 65,
+  "overlap": 32,
+  "grow": null,
+  "mask_blur": null,
+  "steps": 25,
+  "cfg": 7.0,
+  "denoise": 1.0,
+  "prompt_mode": null,
+  "max_side": null
+ },
+ "cur": {},
+ "neutral": {
+  "prefill": "neutral"
+ },
+ "noblur": {
+  "pre_blur": 0
+ },
+ "nodd": {
+  "diffdiff": false
+ },
+ "edge": {
+  "prefill": "edge",
+  "pre_blur": 33
+ },
+ "edgesoft": {
+  "prefill": "edge",
+  "pre_blur": 65
+ },
+ "mirror": {
+  "prefill": "mirror",
+  "pre_blur": 33
+ },
+ "edgeraw": {
+  "prefill": "edge",
+  "pre_blur": 0
+ },
+ "d95": {
+  "denoise": 0.95,
+  "steps": 35
+ },
+ "d90": {
+  "denoise": 0.9,
+  "steps": 35
+ },
+ "two": {
+  "two_stage": true,
+  "stage1_scale": 0.5,
+  "stage2_denoise": 0.6
+ },
+ "cont": {
+  "prompt_mode": "continue",
+  "cont_prompt": ""
+ },
+ "cont2": {
+  "prompt_mode": "continue",
+  "cont_prompt": "same scene, continuous"
+ },
+ "ms768": {
+  "max_side": 768
+ },
+ "inset8": {
+  "overlap": 8,
+  "grow": 8
+ },
+ "inset16": {
+  "overlap": 16,
+  "grow": 0
+ },
+ "inset0": {
+  "overlap": 0,
+  "grow": 0
+ },
+ "ov64": {
+  "overlap": 64
+ },
+ "ov96": {
+  "overlap": 96
+ },
+ "cfg4": {
+  "cfg": 4.0
+ },
+ "cfg5": {
+  "cfg": 5.0
+ },
+ "grow32": {
+  "grow": 32,
+  "mask_blur": 24
+ },
+ "app": {
+  "prompt_mode": "append"
+ },
+ "ms1280": {
+  "max_side": 1280
+ },
+ "ms1152": {
+  "max_side": 1152
+ },
+ "st35": {
+  "steps": 35
+ },
+ "seam": {
+  "overlap": 64,
+  "layer_feather": 48
+ },
+ "frame": {
+  "prompt_mode": "frame"
+ },
+ "remcont": {
+  "prompt_mode": "remcont"
+ }
+}

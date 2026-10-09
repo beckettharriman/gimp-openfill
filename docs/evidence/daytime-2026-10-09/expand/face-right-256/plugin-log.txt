@@ -1,0 +1,5 @@
+2026-10-09 14:29:17,901 INFO  [22416 stable-boy] expand: margins=(0, 0, 256, 0) canvas=2656x3000 context=Rect(x=1156, y=0, width=1500, height=3000) working=512x1024 model=juggernaut-xl-v9 prompt=continue the scene cfg=4.0
+2026-10-09 14:29:22,019 INFO  [22416 stable-boy] timing: upload image=8178070 mask=32320 bytes in 0.078 s
+2026-10-09 14:29:22,029 INFO  [22416 stable-boy] queued prompt 40302594-e7a1-4b3b-9d43-3a1715f444ec (timeout 129s, 25 steps x 1)
+2026-10-09 14:29:39,895 INFO  [22416 stable-boy] timing: queue->first step 6.643 s, sampling 11.206 s, download 3235585 bytes in 0.017 s
+2026-10-09 14:29:40,755 INFO  [22416 stable-boy] expand: done, seed=1234, 1 layer(s)
