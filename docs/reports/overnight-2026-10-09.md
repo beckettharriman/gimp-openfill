@@ -34,9 +34,9 @@ checkpoint) or the dialog steers prompted fills to the Quality tier.
    `cmd.exe`) belong to another user account** (owner and command line not
    readable from this session). They are not from any lane and were left
    alone.
-3. **Evidence size.** `docs/evidence/overnight-2026-10-09` is about 72 MB
+3. **Evidence size.** `docs/evidence/overnight-2026-10-09` is about 62 MB
    (photographic JPEGs, 64 synthetic cases, GUI run captures). The `.git`
-   directory is about 85 MB. If you want a lighter public repo, squash or drop the evidence
+   directory is about 80 MB. If you want a lighter public repo, squash or drop the evidence
    folders before the first push; the quality ledger and the READMEs are the
    part worth keeping. Nothing is pushed yet, so history can still be
    rewritten.
