@@ -172,6 +172,10 @@ downloader, and fixes from an end-to-end test matrix run in a real GIMP 3.2.6
 - A GLib "Source ID was not found" warning when the progress window closed,
   and picker timers that fired after the picker had closed.
 - HTTP error responses were not closed (ResourceWarning).
+- Discard in the variations picker after Generative Expand left the canvas
+  enlarged; it now restores the original size in the same undo step.
+- The variations picker window could stay invisible inside GIMP on Windows
+  (same cause as the progress window); it is now shown explicitly.
 - The floating progress window was created but never marked visible by
   Windows inside a GUI GIMP session (screenshots taken with PrintWindow did
   not reveal it); it is now shown without taking focus.
