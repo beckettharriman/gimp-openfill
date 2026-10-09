@@ -548,6 +548,27 @@ MAX_GEN_TILES = {"sd15": 4, "sdxl": 2}
 # Margin (image px) of the refine region around the selection: covers the mask
 # growth and blur of the main pass.
 REFINE_MARGIN = 48
+# Layout pass of a tiled fill: before the tiles, the whole context is generated
+# in one pass so every tile starts from the same picture (without it each tile
+# painted its own scene: a white backdrop and a heel instead of a suede shoe, a
+# flat slab instead of a roof). Its scale is the single-pass scale, raised to
+# at least LAYOUT_MIN_SCALE, with the working long side capped at
+# LAYOUT_MAX_SIDE_FACTOR times the model's max side.
+LAYOUT_MIN_SCALE = 0.45
+LAYOUT_MAX_SIDE_FACTOR = 1.5
+# Which tiled fills get the layout pass, by how much of a tile the selection
+# fills across (its shorter side at the tile scale over the tiles' shorter
+# working side). Under LAYOUT_STRIP_FRACTION the tiles are mostly context and
+# each painted its own scene (SDXL roof strip: a flat slab): every architecture
+# gets the layout pass. For LAYOUT_ARCHS a selection filling at least
+# LAYOUT_AREA_FRACTION of a tile gets it too (the suede shoe split into four
+# tiles became four separate shoes). Not for SDXL areas: there the layout pass
+# brought back the low-scale failures the tiles fixed (bricks twice their size,
+# a grey sleeve instead of red leather), and not for SD 1.5 strips in between,
+# whose tiles already drew the roof tiles (realistic-vision-v6).
+LAYOUT_ARCHS = ("sd15",)
+LAYOUT_STRIP_FRACTION = 0.2
+LAYOUT_AREA_FRACTION = 0.5
 
 
 @dataclass(frozen=True)
@@ -570,6 +591,9 @@ class FillPlan:
     tiles: tuple[Tile, ...] = ()  # tiled main pass (empty: one pass at ``work``)
     tile_scale: float = 1.0  # working scale of the tiled main pass
     refine_tiles: tuple[Tile, ...] = ()  # full-resolution refine pass (empty: none)
+    # True: ``work`` is the layout pass over the whole context, and the tiles
+    # only add detail to it at a reduced denoise.
+    layout: bool = False
 
     @property
     def main_scale(self) -> float:
@@ -635,6 +659,34 @@ def _tile_layout(sel: Rect, bounds: Rect, side: int, min_short: int, margin: int
     return _grid(region, min(side, region.width), min(side, region.height), overlap)
 
 
+def layout_work(
+    context: Rect, profile: ModelProfile, single: WorkingSize, min_scale: float = LAYOUT_MIN_SCALE
+) -> WorkingSize:
+    """Working size of the layout pass of a tiled fill: the single-pass scale
+    ``single.scale`` raised to ``LAYOUT_MIN_SCALE``, but never with a working
+    long side above ``LAYOUT_MAX_SIDE_FACTOR * profile.max_side`` nor above 1:1."""
+    long_side = max(context.width, context.height)
+    scale = max(single.scale, min_scale)
+    scale = min(scale, LAYOUT_MAX_SIDE_FACTOR * profile.max_side / long_side, 1.0)
+    scale = max(scale, single.scale)
+    m = profile.multiple
+    return WorkingSize(
+        round_to_multiple(round(context.width * scale), m), round_to_multiple(round(context.height * scale), m), scale
+    )
+
+
+def wants_layout(arch: str, selection: Rect, tiles: tuple[Tile, ...], tile_scale: float) -> bool:
+    """Whether a tiled fill gets the layout pass (see ``LAYOUT_STRIP_FRACTION``
+    and ``LAYOUT_AREA_FRACTION``)."""
+    if not tiles:
+        return False
+    across = min(selection.width, selection.height) * tile_scale
+    fraction = across / min(min(t.work_width, t.work_height) for t in tiles)
+    if fraction < LAYOUT_STRIP_FRACTION:
+        return True
+    return arch in LAYOUT_ARCHS and fraction >= LAYOUT_AREA_FRACTION
+
+
 def plan_fill(
     selection: Rect,
     image: Rect,
@@ -646,6 +698,8 @@ def plan_fill(
     min_scale: float | None = None,
     max_tiles: int | None = None,
     overlap: int = TILE_OVERLAP,
+    layout: bool = False,
+    layout_min_scale: float = LAYOUT_MIN_SCALE,
 ) -> FillPlan:
     """Plan a Generative Fill.
 
@@ -660,6 +714,9 @@ def plan_fill(
     than the minimum scale needs. Every tile is at least
     ``MIN_TILE_CONTENT`` (or three quarters of the model's ``min_side``)
     working pixels across.
+
+    With ``layout`` and tiles (``wants_layout``), ``work`` becomes the layout
+    pass over the whole context (``layout_work``) and the tiles refine it.
 
     With ``refine`` and a main scale below 1.0, a second pass at full
     resolution covers the selection plus ``REFINE_MARGIN``, tiled at the
@@ -707,6 +764,8 @@ def plan_fill(
             ]
             tiles = _with_done(rects, sizes, overlap)
     plan = FillPlan(ctx, work, tiles, tile_scale if tiles else 1.0)
+    if layout and wants_layout(arch, selection, tiles, tile_scale):
+        plan = replace(plan, work=layout_work(ctx, prof, work, layout_min_scale), layout=True)
     if refine and plan.main_scale < 0.999:
         plan = replace(plan, refine_tiles=refine_layout(selection, ctx, profile, overlap=overlap))
     return plan
@@ -735,3 +794,45 @@ def refine_layout(
     th = min(side, region.height // m * m) or region.height
     rects = _grid(region, tw, th, overlap)
     return _with_done(rects, [(r.width, r.height) for r in rects], overlap)
+
+
+# Tiled removal: the LaMa/MAT node pads its input to a square and resizes it to
+# 256 px (LaMa) or 512 px (MAT), so a large context came back smeared. Windows
+# of REMOVAL_TILE image px keep the node's scale near 256 / REMOVAL_TILE.
+REMOVAL_TILE = 512
+REMOVAL_TILE_OVERLAP = 128
+REMOVAL_TILE_MARGIN = 64
+# Only a band is tiled: a hole whose shorter side exceeds this fraction of the
+# tile leaves windows that are nearly all hole, and the node fills those with a
+# flat grey (a dark blob in place of the tea cup on a white background).
+REMOVAL_BAND = 0.75
+
+
+def plan_removal(
+    selection: Rect,
+    image: Rect,
+    tile: int = REMOVAL_TILE,
+    overlap: int = REMOVAL_TILE_OVERLAP,
+    margin: int = REMOVAL_TILE_MARGIN,
+) -> FillPlan | None:
+    """Tiled plan for a prompt-free removal, or None when the classic context
+    (``REMOVAL_MODEL_PADDING``) already fits in one ``tile``.
+
+    Windows of ``tile`` px (or less where the image is smaller) are centred on
+    the selection, cover it plus ``margin`` and overlap by at least
+    ``overlap``; they run at 1:1 and later ones mark the parts of earlier ones
+    they overlap as done. The context is the union of the windows. Only a
+    band (shorter side at most ``REMOVAL_BAND * tile``) is tiled, so every
+    window keeps known pixels across the hole."""
+    if tile <= 0 or min(selection.width, selection.height) > REMOVAL_BAND * tile:
+        return None
+    ctx = context_rect(selection, image, INPAINT_MODEL, padding_ratio=REMOVAL_MODEL_PADDING)
+    if max(ctx.width, ctx.height) <= tile:
+        return None
+    rects = _tile_layout(selection, image, tile, tile - 1, margin, overlap)
+    x1, y1 = min(r.x for r in rects), min(r.y for r in rects)
+    x2, y2 = max(r.right for r in rects), max(r.bottom for r in rects)
+    union = Rect(x1, y1, x2 - x1, y2 - y1)
+    local = [r.relative_to(union) for r in rects]
+    tiles = _with_done(local, [(r.width, r.height) for r in local], overlap)
+    return FillPlan(union, WorkingSize(union.width, union.height, 1.0), tiles, 1.0)

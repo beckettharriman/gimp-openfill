@@ -484,6 +484,39 @@ class TiledGraphTests(unittest.TestCase):
         self.assertEqual(graph["r0_venc"]["class_type"], "VAEEncode")
         self.assertEqual(graph["r0_sampler"]["inputs"]["model"], ["tdiff", 0])  # no Fooocus patch
 
+    def test_layout_pass_then_detail_tiles(self):
+        plan = g.plan_fill(
+            g.Rect(96, 289, 1690, 866), g.Rect(0, 0, 1920, 1443), g.SD15, "sd15", False, 0.5, layout=True
+        )
+        graph = w.build_inpaint(_planned(plan, tile_denoise=0.5), "i", "m", 9, w.Capabilities(True))
+        self.assertIn("sampler", graph)  # one pass over the whole context first
+        self.assertEqual(graph["sampler"]["inputs"]["denoise"], 1.0)
+        self.assertEqual(graph["t0_crop"]["inputs"]["image"], ["main_paste", 0])
+        n = len(plan.tiles)
+        for i in range(n):
+            self.assertEqual(graph[f"t{i}_sampler"]["inputs"]["denoise"], 0.5)
+            self.assertNotIn(f"t{i}_prefill", graph)  # tiles start from the layout
+            self.assertNotIn(f"t{i}_preblur", graph)
+        self.assertEqual(graph[w.OUTPUT_NODE]["inputs"]["images"], [f"t{n - 1}_paste", 0])
+        no_layout = w.build_inpaint(_planned(plan), "i", "m", 9, w.Capabilities(True))
+        self.assertNotIn("sampler", no_layout)
+
+    def test_removal_tiles_chain_with_hard_masks(self):
+        lama = ModelSpec(arch="inpaint_model", inpaint_model="big-lama.pt")
+        plan = g.plan_removal(g.Rect(192, 913, 806, 355), g.Rect(0, 0, 1920, 1268))
+        req = _planned(plan, model=lama, prompt="", negative="")
+        graph = w.build_fill(req, "i", "m", 3, w.Capabilities(True))
+        n = len(plan.tiles)
+        self.assertEqual(sum(1 for v in graph.values() if v["class_type"] == "INPAINT_InpaintWithModel"), n)
+        self.assertEqual(graph["fmask_grow"]["inputs"]["blur"], 0)
+        self.assertEqual(graph["rm0_remove"]["inputs"]["mask"], ["rm0_mcrop", 0])
+        for i in range(1, n):
+            self.assertEqual(graph[f"rm{i}_crop"]["inputs"]["image"], [f"rm{i - 1}_paste", 0])
+            self.assertEqual(graph[f"rm{i}_remove"]["inputs"]["mask"], [f"rm{i}_hole", 0])  # hard
+            self.assertEqual(graph[f"rm{i}_paste"]["inputs"]["mask"], [f"rm{i}_blend", 0])  # ramp
+        self.assertEqual(graph[w.OUTPUT_NODE]["inputs"]["images"], [f"rm{n - 1}_paste", 0])
+        self.assertNotIn("image_scale", graph)
+
     def test_without_inpaint_nodes_falls_back_to_one_pass(self):
         graph = w.build_inpaint(_planned(ROOF), "i", "m", 9, w.Capabilities(False))
         self.assertIn("sampler", graph)

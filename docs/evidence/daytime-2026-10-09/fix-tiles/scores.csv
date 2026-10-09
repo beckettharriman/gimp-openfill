@@ -1,0 +1,20 @@
+problem,role,model,case,variant,pairwise_vs_current,reason
+1,regression,sd15-inpainting,product2-material-suede,layout+tiles 0.65,better,one coherent shoe instead of separate shoe fragments; a black heel on a white card, not the old brown oxford
+1,regression,dreamshaper-8-inpainting,product2-material-suede,layout+tiles 0.65,better,one brown suede oxford (a stray heel at left) instead of fragments with a sock
+1,regression,realistic-vision-v6-inpainting,product2-material-suede,layout+tiles 0.65,better,one brown suede heel instead of four shoes and a leg
+1,regression,juggernaut-xl-v9,architecture-material-roof-tiles,layout+tiles 0.65,better,red clay tiles along the whole ridge instead of a yellow slab with two stray tile patches
+1,regression,realvisxl-v5,architecture-material-roof-tiles,layout+tiles 0.65,better,red clay tile ridge instead of a yellow slab with a black gap
+1,regression,sdxl-base,architecture-material-roof-tiles,layout+tiles 0.65,better,partial red tile ridge and a neutral slab instead of a yellow-green slab; dark blocks at the left end
+1,guard,sd15-inpainting,texture-damaged-huge,layout+tiles 0.65,same,no niche, brick scale kept (still better than the old niche)
+1,guard,juggernaut-xl-v9,texture-damaged-huge,tiles only (rule),same,pixel-identical to current; with the layout pass the bricks doubled in size (worse) so SDXL areas skip it
+1,guard,juggernaut-xl-v9,face-material-red-leather,tiles only (rule),same,pixel-identical to current; with the layout pass the sleeve came back grey (worse)
+1,extra,realistic-vision-v6-inpainting,architecture-material-roof-tiles,tiles only (rule),same,pixel-identical to current; with the layout pass the clay tiles turned grey-white (worse) so SD 1.5 strips skip it
+2,regression,juggernaut-xl-v9 / realvisxl-v5 (run as lama-big),handwriting-remove-large-lines,tiles 512/128,same,sharper pseudo-script instead of a blurred smear; both still read as leftover writing (counts for both routes)
+2,regression,sd15-inpainting (run as lama-big),night-street-remove-large-car,tiles 512/128,better,plain plausible road instead of a ghost-car glare smear
+2,regression,realistic-vision-v6 (run as lama-big),illustration-remove-large-baby,single pass (band rule),same,identical; tiling gave a dark grey blob instead of the ghost chair (no better)
+2,regression,realistic-vision-v6 (run as lama-big),interior-remove-small-portrait,single pass,same,identical; the context fits one 512 px window
+2,old-worst,lama-big,face-remove-large-shuttle,single pass (band rule),same,identical; tiling gave a smoother fill but the deep-hole windows are the cup failure mode
+2,guard,lama-big,text-remove-small-logo,tiles 512/128,same,clean in both
+2,guard,lama-big,text-remove-large-signs,tiles 512/128,same,cleaner bottom-left, faint tone steps at tile joins
+2,guard,lama-big,product-remove-small-handle,single pass,same,identical
+2,guard,lama-big,product-remove-large-cup,single pass (band rule),same,identical; tiling gave a dark grey blob (worse) which is why deep holes are not tiled

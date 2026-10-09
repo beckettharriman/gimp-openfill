@@ -74,6 +74,14 @@ class Settings:
     # the A/B it made fills softer (SD 1.5) or changed their content (SDXL).
     refine: bool = False
     refine_denoise: float = 0.4
+    # Tiled fills: below 1.0 the whole context is generated first in one pass
+    # (layout) and the tiles add detail to it at this denoise.
+    tile_denoise: float = 0.65
+    layout_min_scale: float = 0.45
+    # Prompt-free removal (LaMa/MAT) of a context larger than this many px runs
+    # in overlapping windows of this size at 1:1 (0 = one downscaled pass).
+    removal_tile: int = 512
+    removal_tile_overlap: int = 128
     # Add a scene description of the context (light, colour, grain) to prompted fills.
     scene_caption: bool = False
     # Add noise to a fill that is cleaner than the grain around it.

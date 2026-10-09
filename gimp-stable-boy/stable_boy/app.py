@@ -484,7 +484,14 @@ class App:
             removal_intent,
             geometry.fill_padding(removal_intent, model.prompt_free),
             refine=refine,
+            layout=float(self.settings.tile_denoise) < 1.0,
+            layout_min_scale=float(self.settings.layout_min_scale),
         )
+        if model.prompt_free and int(self.settings.removal_tile) > 0:
+            tiled = geometry.plan_removal(
+                target, full, int(self.settings.removal_tile), int(self.settings.removal_tile_overlap)
+            )
+            plan = tiled or plan
         ctx, ws = plan.context, plan.work
         mp = geometry.mask_params(
             target,
@@ -525,9 +532,10 @@ class App:
         )
         if plan.tiles:
             self.log.info(
-                "fill: tiles=%d at scale %.2f: %s",
+                "fill: tiles=%d at scale %.2f%s: %s",
                 len(plan.tiles),
                 plan.tile_scale,
+                f" after a layout pass, denoise {float(self.settings.tile_denoise):.2f}" if plan.layout else "",
                 [(t.rect.x, t.rect.y, t.rect.width, t.rect.height, t.work_width, t.work_height) for t in plan.tiles],
             )
         if plan.refine_tiles:
@@ -567,6 +575,7 @@ class App:
             tiles=plan.tiles,
             refine_tiles=plan.refine_tiles,
             refine_denoise=float(self.settings.refine_denoise),
+            tile_denoise=float(self.settings.tile_denoise) if plan.layout else 1.0,
             full_grow=mp.grow_image,
             full_blur=min(mp.grow_image, mp.feather_image),
         )
