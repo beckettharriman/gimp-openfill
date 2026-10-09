@@ -453,7 +453,7 @@ class TaskWorker:
     # task validation ---------------------------------------------------
 
     def _comfy_dir(self) -> str:
-        return Settings.load(self.config_path).comfy_dir
+        return Settings.load(self.config_path, backup=False).comfy_dir
 
     def _catalog_files(self, task: dict[str, Any]) -> dict[str, catalog.FileSpec]:
         """Files of the task's catalog entry, keyed by normalised ``dest``."""
@@ -600,8 +600,9 @@ class TaskWorker:
 # ------------------------------------------------------------------- main ----
 
 
-def main(argv: list[str] | None = None) -> int:
-    """Command-line entry point (see the module docstring for the modes)."""
+def build_parser() -> argparse.ArgumentParser:
+    """The supervisor's command line. ``server.py`` passes ``--extra-args=<value>`` as one
+    item so a value that starts with ``-`` (``--cpu``) is not read as an option."""
     parser = argparse.ArgumentParser(description="Stable Boy backend supervisor")
     parser.add_argument("--mode", choices=("backend", "tasks"), default="backend")
     parser.add_argument("--python", default="", help="interpreter that runs ComfyUI")
@@ -613,8 +614,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--config", default="", help="config.json (for the Hugging Face token)")
     parser.add_argument("--watch-pid", type=int, default=0, help="exit when this pid ends")
     parser.add_argument("--idle-minutes", type=float, default=20.0, help="0 disables")
-    parser.add_argument("--extra-args", default="", help="extra ComfyUI arguments")
-    args = parser.parse_args(argv)
+    parser.add_argument("--extra-args", default="", help="extra ComfyUI arguments (pass as --extra-args=VALUE)")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Command-line entry point (see the module docstring for the modes)."""
+    args = build_parser().parse_args(argv)
 
     base = Path(args.base)
     base.mkdir(parents=True, exist_ok=True)

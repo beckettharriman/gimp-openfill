@@ -221,20 +221,76 @@ class Backend(ABC):
         """Interrupt the running job."""
 
 
+SETTINGS_MENU = "Filters > AI > Generative Fill Settings"
+
+# Words that show a message already tells the user what to do next.
+NEXT_STEP_WORDS = (
+    "settings",
+    "download",
+    "select",
+    "try",
+    "close",
+    "install",
+    "start",
+    "press",
+    "run ",
+    "convert",
+    "open ",
+    "check",
+)
+
+
+def has_next_step(text: str) -> bool:
+    """True when ``text`` names something the user can do (see :data:`NEXT_STEP_WORDS`)."""
+    lowered = text.lower()
+    return any(word in lowered for word in NEXT_STEP_WORDS)
+
+
+def _with_next_step(text: str, step: str) -> str:
+    """``text`` plus ``step`` unless the text already says what to do."""
+    text = text.strip()
+    if has_next_step(text):
+        return text
+    if text and text[-1] not in ".!?":
+        text += "."
+    return f"{text} {step}".strip()
+
+
 def describe_error(error: BaseException) -> str:
-    """Short, user-facing description for a backend failure."""
+    """Short, user-facing description for a backend failure: plain words plus a next step.
+
+    Errors raised with a complete user message (``NothingSelected``, ``UnsupportedImage``
+    and other :class:`BackendError` subclasses without a branch here) are shown as they are.
+    """
+    text = str(error).strip()
     if isinstance(error, BackendUnavailable):
-        return f"The AI backend is not available: {error}"
+        return _with_next_step(
+            f"The AI backend is not available: {text}",
+            f"Start ComfyUI, or check the ComfyUI folder and URL in {SETTINGS_MENU}, then try again.",
+        )
     if isinstance(error, ModelMissing):
-        return f"A model file is missing on the backend: {error}"
+        return _with_next_step(
+            f"A model file is missing on the backend: {text}",
+            f"Open {SETTINGS_MENU} > Models and press Download for the model you use, then try again.",
+        )
     if isinstance(error, OutOfMemory):
         return (
-            "The GPU ran out of memory. Try a smaller selection, fewer variations, or the SD 1.5 model instead of SDXL."
+            "The GPU ran out of memory. Try a smaller selection, fewer variations, or the SD 1.5 model "
+            "instead of SDXL, and close other programs that use the graphics card."
         )
     if isinstance(error, GenerationTimeout):
-        return f"The request timed out: {error}"
+        return _with_next_step(
+            f"The request timed out ({text})." if text else "The request timed out.",
+            "Try a smaller selection or fewer steps, or raise the request timeout in "
+            f"{SETTINGS_MENU} (0 means it is estimated per request).",
+        )
     if isinstance(error, GenerationCancelled):
-        return "Generation was cancelled."
+        return "Generation was cancelled. Run the command again to try once more."
     if isinstance(error, WorkflowRejected):
-        return f"The backend rejected the workflow: {error}"
-    return f"{type(error).__name__}: {error}"
+        return _with_next_step(
+            f"ComfyUI rejected the request: {text}",
+            f"Make sure the model and its custom nodes are installed ({SETTINGS_MENU} > Models), then try again.",
+        )
+    if isinstance(error, BackendError):
+        return _with_next_step(text or "The AI backend reported an error.", f"Check {SETTINGS_MENU} and try again.")
+    return _with_next_step(f"{type(error).__name__}: {error}", "Try again; if it keeps failing, see stable-boy.log.")

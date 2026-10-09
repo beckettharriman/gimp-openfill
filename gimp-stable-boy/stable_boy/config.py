@@ -11,7 +11,8 @@ from __future__ import annotations
 import json
 import os
 import sys
-from dataclasses import asdict, dataclass, field, fields
+import time
+from dataclasses import dataclass, field, fields
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -76,20 +77,47 @@ class Settings:
     progress_window: bool = True  # floating progress/preview window
     progress_window_x: int = -1  # last position; -1 = top-right of the image window
     progress_window_y: int = -1
+    # Not persisted: why the last :meth:`load` fell back to defaults (None when it did not).
+    load_problem: str | None = field(default=None, repr=False, compare=False, metadata={"persist": False})
+    # Not persisted: a damaged settings file that could not be moved aside; :meth:`save` refuses to overwrite it.
+    _protected_path: str | None = field(default=None, repr=False, compare=False, metadata={"persist": False})
 
     # ------------------------------------------------------------------
 
     @classmethod
-    def load(cls, path: Path) -> Settings:
-        """Read ``path``; a missing or broken file, unknown keys and mistyped values fall back to defaults."""
+    def load(cls, path: Path, backup: bool = True) -> Settings:
+        """Read ``path``; a missing file, unknown keys and mistyped values fall back to defaults.
+
+        A file that exists but is not a JSON object (damaged, half written, edited
+        by hand) is moved aside to ``config.json.corrupt-<YYYYmmdd-HHMMSS>`` so a
+        later :meth:`save` cannot destroy the user's settings and token, and
+        :attr:`load_problem` says so in plain words. ``backup=False`` (for
+        processes other than the plug-in) only reads and never moves anything.
+        """
         settings = cls()
+        path = Path(path)
         try:  # utf-8-sig: tolerate the BOM that PowerShell's Set-Content adds
-            data = json.loads(Path(path).read_text(encoding="utf-8-sig"))
-        except (OSError, ValueError):
+            text = path.read_text(encoding="utf-8-sig")
+        except FileNotFoundError:
             return settings
+        except OSError as err:
+            settings.load_problem = (
+                f"Your settings file '{path}' could not be opened ({err.strerror or err}); defaults are in use "
+                "for now and will not be saved over it. Check the file's permissions, then restart GIMP."
+            )
+            settings._protected_path = str(path)
+            return settings
+        try:
+            data = json.loads(text)
+        except ValueError:
+            data = None
         if not isinstance(data, dict):
+            if backup:
+                settings._move_aside(path)
+            else:
+                settings._protected_path = str(path)
             return settings
-        known = {f.name for f in fields(cls)}
+        known = {f.name for f in fields(cls) if f.metadata.get("persist", True)}
         for key, value in data.items():
             if key in known:
                 try:
@@ -98,12 +126,33 @@ class Settings:
                     pass
         return settings
 
+    def _move_aside(self, path: Path) -> None:
+        """Rename an unreadable settings file to a fresh ``.corrupt-<timestamp>`` name and record why."""
+        target = corrupt_backup_path(path)
+        try:
+            os.rename(path, target)  # never replaces: the name was checked free, and rename fails on Windows if taken
+        except OSError as err:
+            self._protected_path = str(path)
+            self.load_problem = (
+                f"Your settings file '{path}' could not be read, and moving it aside failed "
+                f"({err.strerror or err}); defaults are in use and the file was left untouched. "
+                "Fix or delete the file, then open Filters > AI > Generative Fill Settings again."
+            )
+            return
+        self.load_problem = (
+            f"Your settings file could not be read and was moved aside to '{target}'; defaults are in use. "
+            "Open Filters > AI > Generative Fill Settings to set the ComfyUI folder and your options again."
+        )
+
     def save(self, path: Path) -> None:
         """Write atomically (temporary file, then rename); owner-only permissions on POSIX."""
         path = Path(path)
+        if self._protected_path and os.path.abspath(path) == os.path.abspath(self._protected_path):
+            raise OSError(f"not saving: '{path}' could not be read and was not backed up, so it is kept as it is")
         path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(".tmp")
-        tmp.write_text(json.dumps(asdict(self), indent=2) + "\n", encoding="utf-8")
+        data = {f.name: getattr(self, f.name) for f in fields(self) if f.metadata.get("persist", True)}
+        tmp.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
         if os.name == "posix":
             os.chmod(tmp, 0o600)  # the file holds the Hugging Face token
         os.replace(tmp, path)
@@ -123,6 +172,18 @@ class Settings:
         if tier == "quality" and self.sdxl_checkpoint:
             return ModelSpec(self.sdxl_checkpoint, "sdxl", self.fooocus_head or None, self.fooocus_patch or None)
         return ModelSpec(self.checkpoint, "sd15")
+
+
+def corrupt_backup_path(path: Path, now: float | None = None) -> Path:
+    """A name next to ``path`` that does not exist yet: ``<name>.corrupt-<YYYYmmdd-HHMMSS>[-N]``."""
+    path = Path(path)
+    stamp = time.strftime("%Y%m%d-%H%M%S", time.localtime(now))
+    candidate = path.with_name(f"{path.name}.corrupt-{stamp}")
+    n = 1
+    while candidate.exists():
+        n += 1
+        candidate = path.with_name(f"{path.name}.corrupt-{stamp}-{n}")
+    return candidate
 
 
 def _coerce(current: Any, value: Any) -> Any:

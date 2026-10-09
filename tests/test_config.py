@@ -3,11 +3,14 @@ import io
 import json
 import logging
 import os
+import re
 import tempfile
+import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
-from stable_boy.config import Paths, Settings, comfy_layout
+from stable_boy.config import Paths, Settings, comfy_layout, corrupt_backup_path
 from stable_boy.log import RedactingFilter, get_logger, redact
 
 TOKEN = "hf_abcdefghijklmnopqrstuvwxyz0123456789"
@@ -53,6 +56,106 @@ class SettingsTests(unittest.TestCase):
     def test_active_url(self):
         s = Settings(backend="a1111", a1111_url="http://x:1")
         self.assertEqual(s.active_url, "http://x:1")
+
+
+class DamagedConfigTests(unittest.TestCase):
+    def _backups(self, folder: Path) -> list[Path]:
+        return sorted(folder.glob("config.json.corrupt-*"))
+
+    def test_corrupt_json_is_moved_aside_and_defaults_load(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "config.json"
+            path.write_text('{ not json "hf_token": "' + TOKEN + '"', encoding="utf-8")
+            s = Settings.load(path)
+            self.assertEqual(s.steps, Settings().steps)
+            self.assertFalse(path.exists())
+            backups = self._backups(Path(tmp))
+            self.assertEqual(len(backups), 1)
+            self.assertIn(TOKEN, backups[0].read_text(encoding="utf-8"))  # the user's data is kept, not lost
+            self.assertIn("could not be read and was moved aside to", s.load_problem)
+            self.assertIn(str(backups[0]), s.load_problem)
+            self.assertIn("defaults are in use", s.load_problem)
+            self.assertNotIn(TOKEN, s.load_problem)
+            s.save(path)  # the backup succeeded, so saving defaults is safe
+            self.assertTrue(path.exists())
+            self.assertEqual(len(self._backups(Path(tmp))), 1)
+
+    def test_json_list_is_treated_as_damaged(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "config.json"
+            path.write_text("[1, 2, 3]", encoding="utf-8")
+            s = Settings.load(path)
+            self.assertIsNotNone(s.load_problem)
+            self.assertEqual(len(self._backups(Path(tmp))), 1)
+            self.assertEqual(s.backend, "comfyui")
+
+    def test_good_file_has_no_problem_and_unknown_keys_are_ignored(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "config.json"
+            path.write_text(json.dumps({"steps": 12, "future_option": True, "load_problem": "x"}), encoding="utf-8")
+            s = Settings.load(path)
+            self.assertIsNone(s.load_problem)
+            self.assertEqual(s.steps, 12)
+            self.assertTrue(path.exists())
+            self.assertEqual(self._backups(Path(tmp)), [])
+
+    def test_missing_file_is_not_a_problem(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertIsNone(Settings.load(Path(tmp) / "config.json").load_problem)
+
+    def test_load_problem_is_not_persisted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "config.json"
+            s = Settings()
+            s.load_problem = "something"
+            s.save(path)
+            data = json.loads(path.read_text(encoding="utf-8"))
+            self.assertNotIn("load_problem", data)
+            self.assertNotIn("_protected_path", data)
+            self.assertNotIn("something", repr(s))
+
+    def test_backup_name_uses_timestamp_and_never_overwrites(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "config.json"
+            when = time.mktime((2026, 10, 9, 1, 2, 3, 0, 0, -1))
+            first = corrupt_backup_path(path, when)
+            self.assertEqual(first.name, "config.json.corrupt-20261009-010203")
+            self.assertEqual(first.parent, path.parent)
+            first.write_text("old backup", encoding="utf-8")
+            second = corrupt_backup_path(path, when)
+            self.assertEqual(second.name, "config.json.corrupt-20261009-010203-2")
+            self.assertTrue(re.fullmatch(r"config\.json\.corrupt-\d{8}-\d{6}", corrupt_backup_path(path).name))
+
+    def test_existing_backup_is_kept_when_another_corrupt_file_is_found(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "config.json"
+            for content in ("{ first", "{ second"):
+                path.write_text(content, encoding="utf-8")
+                Settings.load(path)
+            contents = sorted(p.read_text(encoding="utf-8") for p in self._backups(Path(tmp)))
+            self.assertEqual(contents, ["{ first", "{ second"])
+
+    def test_failed_backup_leaves_file_and_blocks_save(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "config.json"
+            path.write_text("{ not json", encoding="utf-8")
+            with mock.patch("stable_boy.config.os.rename", side_effect=PermissionError(13, "Access is denied")):
+                s = Settings.load(path)
+            self.assertIn("left untouched", s.load_problem)
+            self.assertEqual(path.read_text(encoding="utf-8"), "{ not json")
+            with self.assertRaises(OSError):
+                s.save(path)
+            self.assertEqual(path.read_text(encoding="utf-8"), "{ not json")
+            s.save(Path(tmp) / "other.json")  # other paths are fine
+
+    def test_backup_false_only_reads(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "config.json"
+            path.write_text("{ not json", encoding="utf-8")
+            s = Settings.load(path, backup=False)
+            self.assertEqual(s.steps, Settings().steps)
+            self.assertTrue(path.exists())
+            self.assertEqual(self._backups(Path(tmp)), [])
 
 
 class TokenStorageTests(unittest.TestCase):

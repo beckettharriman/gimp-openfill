@@ -13,6 +13,8 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
+import socket
 import subprocess
 import sys
 import time
@@ -28,6 +30,31 @@ from .supervisor import pid_is_python
 
 ProgressCallback = Callable[[float, str], None]
 IS_WINDOWS = sys.platform == "win32"
+SUPERVISOR_STDERR_FILENAME = "supervisor-stderr.log"
+_ANSI_RE = re.compile(r"\x1b(?:\[[0-?]*[ -/]*[@-~]|\][^\x07\x1b]*(?:\x07|\x1b\\)|[@-Z\\-_])")
+
+
+def strip_ansi(text: str) -> str:
+    """``text`` without ANSI escape sequences (colors, cursor moves) as ComfyUI writes them to its log."""
+    return _ANSI_RE.sub("", text)
+
+
+def port_in_use_message(host: str, port: int) -> str:
+    """Plain-words error for a port that another program already holds."""
+    free = 8190 if port != 8190 else 8191
+    return (
+        f"Port {port} is used by another program (it is not ComfyUI). Close that program, or set a free "
+        f"port in the ComfyUI URL in Settings (for example http://{host}:{free})."
+    )
+
+
+def port_answers(host: str, port: int, timeout: float = 1.0) -> bool:
+    """True when something accepts a TCP connection on ``host:port``."""
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
 
 
 def _hidden_python() -> str:
@@ -116,7 +143,10 @@ class ServerManager:
                 "Start it with --api, or switch the backend to ComfyUI in the settings."
             )
         if not self.settings.autostart:
-            raise BackendUnavailable(f"ComfyUI is not answering at {url} and auto-start is disabled in the settings.")
+            raise BackendUnavailable(
+                f"ComfyUI is not running at {url}. Start ComfyUI yourself, or turn on 'Start backend "
+                "automatically' in Filters > AI > Generative Fill Settings, then press Check backend."
+            )
         return self.start(progress)
 
     def start(self, progress: ProgressCallback | None = None) -> str:
@@ -130,6 +160,15 @@ class ServerManager:
         self.paths.ensure()
         url = self.settings.url
         host, port = _split_host_port(url)
+        # Something already listening here is not a healthy ComfyUI (ensure_running checked), so launching
+        # would only make ComfyUI load for half a minute and then fail to bind the port.
+        if port_answers(host, port, timeout=1.0):
+            if ComfyClient(url).is_alive(timeout=10.0):  # a busy ComfyUI that was slow to answer the first check
+                self.touch()
+                return url
+            if self.log:
+                self.log.warning("port %s on %s is taken by a program that is not ComfyUI", port, host)
+            raise BackendUnavailable(port_in_use_message(host, port))
         gimp_pid = os.getppid()
         cmd = [
             _hidden_python(),
@@ -156,7 +195,8 @@ class ServerManager:
             str(self.settings.idle_timeout_minutes),
         ]
         if self.settings.extra_server_args.strip():
-            cmd += ["--extra-args", self.settings.extra_server_args.strip()]
+            # one argv item: a separate value starting with "-" (--cpu) would be read as an option
+            cmd.append(f"--extra-args={self.settings.extra_server_args.strip()}")
         if self.log:
             self.log.info("launching supervisor (gimp pid %s): %s", gimp_pid, " ".join(cmd))
         self._spawn_detached(cmd)
@@ -243,11 +283,29 @@ class ServerManager:
                 pass
         return out
 
+    @property
+    def supervisor_stderr_log(self) -> Path:
+        """Where the supervisor's stderr goes (argument errors, crashes before its own log is open)."""
+        return self.paths.base / SUPERVISOR_STDERR_FILENAME
+
     def _spawn_detached(self, cmd: list[str]) -> None:
+        """Start ``cmd`` detached and hidden; its stderr is appended to :attr:`supervisor_stderr_log`."""
+        try:
+            self.paths.base.mkdir(parents=True, exist_ok=True)
+            stderr: Any = open(self.supervisor_stderr_log, "ab")  # noqa: SIM115 - the child gets its own handle
+        except OSError:
+            stderr = subprocess.DEVNULL
+        try:
+            self._popen_detached(cmd, stderr)
+        finally:
+            if stderr is not subprocess.DEVNULL:
+                stderr.close()
+
+    def _popen_detached(self, cmd: list[str], stderr: Any) -> None:
         kwargs: dict[str, Any] = {
             "stdin": subprocess.DEVNULL,
             "stdout": subprocess.DEVNULL,
-            "stderr": subprocess.DEVNULL,
+            "stderr": stderr,
             "close_fds": True,
         }
         env = dict(os.environ)
@@ -282,8 +340,17 @@ class ServerManager:
             if state.get("status") == "failed" or (elapsed > 15 and not state):
                 break
             time.sleep(1.5)
+        elapsed = time.monotonic() - started
+        tail = self.server_log_tail()
+        if "already in use" in tail.lower():
+            host, port = _split_host_port(url)
+            raise BackendUnavailable(port_in_use_message(host, port))
+        if self.log:
+            self.log.warning("backend did not come up at %s after %.0f s; log tail:\n%s", url, elapsed, tail)
         raise BackendUnavailable(
-            f"ComfyUI did not come up at {url} within {timeout} s. Last log lines:\n{self.server_log_tail()}"
+            f"ComfyUI did not start at {url} (gave up after {elapsed:.0f} s). Check the ComfyUI folder and "
+            "the extra server arguments in Filters > AI > Generative Fill Settings, then try again. "
+            f"Last lines of the ComfyUI log ({self.paths.server_log}):\n{tail}"
         )
 
     def server_log_tail(self, lines: int = 8) -> str:
@@ -292,7 +359,7 @@ class ServerManager:
             text = self.paths.server_log.read_text(encoding="utf-8", errors="replace")
         except OSError:
             return "(no backend log yet)"
-        return "\n".join(text.strip().splitlines()[-lines:])
+        return "\n".join(strip_ansi(text).strip().splitlines()[-lines:])
 
 
 def _split_host_port(url: str) -> tuple[str, int]:
