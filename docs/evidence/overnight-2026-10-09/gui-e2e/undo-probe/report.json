@@ -1,0 +1,54 @@
+{
+  "run": {
+    "status": "3",
+    "seconds": 39.7
+  },
+  "gimp": "3.2.6 GUI (gimp-3.2.exe --new-instance), isolated test profile",
+  "model_requested": "juggernaut-xl-v9",
+  "started": "2026-10-09 05:15:28",
+  "finished": "2026-10-09 05:18:55",
+  "before": {
+    "size": [
+      1920,
+      1440
+    ],
+    "layers": [
+      {
+        "name": "Background",
+        "visible": true
+      }
+    ],
+    "undo_enabled": true
+  },
+  "after_fill": {
+    "size": [
+      1920,
+      1440
+    ],
+    "layers": [
+      {
+        "name": "Generative Fill: a small bird",
+        "visible": true
+      },
+      {
+        "name": "Background",
+        "visible": true
+      }
+    ],
+    "undo_enabled": true
+  },
+  "undo_keys": "closed the Welcome dialog\nwindow: *[landscape] (imported)-1.0 (RGB color 8-bit non-linear integer, c2, 2 layers) 1920x1440 - GIMP\nsent %e u\nsaved C:\\AI\\overnight-scratch\\gui-e2e\\run5\\undo-probe\\gimp-window-edit-menu-after-undo.png",
+  "after_one_undo": {
+    "size": [
+      1920,
+      1440
+    ],
+    "layers": [
+      {
+        "name": "Background",
+        "visible": true
+      }
+    ],
+    "undo_enabled": true
+  }
+}

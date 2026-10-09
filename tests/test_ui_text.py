@@ -227,5 +227,36 @@ class PrimaryButtonTests(unittest.TestCase):
         self.assertEqual(ut.model_option_label("MAT - prompt-free removal", True, True), "MAT (active model)")
 
 
+class ExpandDiscardRestoreTests(unittest.TestCase):
+    """``_canvas_restore`` in the plug-in entry file (it imports GIMP, so the
+    pure function is compiled on its own from the file's syntax tree)."""
+
+    @classmethod
+    def setUpClass(cls):
+        import ast
+
+        src = Path(__file__).resolve().parents[1] / "gimp-stable-boy" / "gimp-stable-boy.py"
+        tree = ast.parse(src.read_text(encoding="utf-8"))
+        node = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "_canvas_restore")
+        namespace: dict = {}
+        exec(compile(ast.Module(body=[node], type_ignores=[]), str(src), "exec"), namespace)
+        cls.restore = staticmethod(namespace["_canvas_restore"])
+
+    def test_right_margin_only(self):
+        # 256 px added on the right: the old content did not move
+        self.assertEqual(self.restore((1920, 1440, (0, 0), None), (2176, 1440, (0, 0), None)), (1920, 1440, 0, 0))
+
+    def test_left_and_top_margins_shift_back(self):
+        # 128 px left and 64 px top: the old layer moved by (128, 64), resizing back shifts by (-128, -64)
+        before = (800, 600, (10, 20), None)
+        after = (1056, 728, (138, 84), None)
+        self.assertEqual(self.restore(before, after), (800, 600, -128, -64))
+
+    def test_unchanged_or_unknown_canvas_needs_nothing(self):
+        self.assertIsNone(self.restore((800, 600, (0, 0), None), (800, 600, (0, 0), None)))
+        self.assertIsNone(self.restore(None, (800, 600, (0, 0), None)))
+        self.assertIsNone(self.restore((800, 600, (0, 0), None), None))
+
+
 if __name__ == "__main__":
     unittest.main()

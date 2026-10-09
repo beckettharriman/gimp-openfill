@@ -1,0 +1,6 @@
+2026-10-09 05:16:38,279 INFO  [16012 stable-boy] fill: selection=Rect(x=420, y=90, width=480, height=300) context=Rect(x=180, y=0, width=960, height=780) working=960x784 scale=1.00 mask(grow=16/16px feather=24/16px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=juggernaut-xl-v9 template=sdxl_fooocus
+2026-10-09 05:16:38,539 INFO  [16012 stable-boy] timing: upload image=1056917 mask=6791 bytes in 0.023 s
+2026-10-09 05:16:38,546 INFO  [16012 stable-boy] queued prompt 3cc51c47-eb11-4c4b-91ce-e671756bfbfb (timeout 316s, 25 steps x 4)
+2026-10-09 05:17:25,780 INFO  [16012 stable-boy] timing: queue->first step 10.091 s, sampling 37.024 s, download 3971990 bytes in 0.118 s
+2026-10-09 05:17:28,572 INFO  [16012 stable-boy] progress window: 25 preview frame(s) shown, closing after success (native window had to be shown explicitly)
+2026-10-09 05:17:29,586 INFO  [16012 stable-boy] fill: done, seed=1234, 4 layer(s)

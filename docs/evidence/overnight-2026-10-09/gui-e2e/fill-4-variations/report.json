@@ -1,0 +1,91 @@
+{
+  "run": {
+    "status": "3",
+    "seconds": 64.4
+  },
+  "gimp": "3.2.6 GUI (gimp-3.2.exe --new-instance), isolated test profile",
+  "model_requested": "juggernaut-xl-v9",
+  "started": "2026-10-09 05:15:28",
+  "finished": "2026-10-09 05:18:55",
+  "before": {
+    "size": [
+      1920,
+      1440
+    ],
+    "layers": [
+      {
+        "name": "Background",
+        "visible": true
+      }
+    ],
+    "undo_enabled": true
+  },
+  "selection": [
+    420,
+    90,
+    480,
+    300
+  ],
+  "undo_procedures_in_pdb": [
+    "gimp-image-undo-group-end",
+    "gimp-image-undo-thaw",
+    "gimp-image-undo-enable",
+    "gimp-image-undo-group-start",
+    "gimp-image-undo-is-enabled",
+    "gimp-image-undo-freeze",
+    "gimp-image-undo-disable"
+  ],
+  "gimp_window_before": "window: *[landscape] (imported)-3.0 (RGB color 8-bit non-linear integer, c2, 1 layer) 1920x1440 - GIMP\nsaved C:\\AI\\overnight-scratch\\gui-e2e\\run5\\fill-4-variations\\gimp-window-before.png",
+  "capture_dialog": "saved C:\\AI\\overnight-scratch\\gui-e2e\\run5\\fill-4-variations\\fill-dialog.png 644x877 printwindow=True rect=446,151,662,886 foreground=True",
+  "capture_picker": "saved C:\\AI\\overnight-scratch\\gui-e2e\\run5\\fill-4-variations\\picker.png 804x380 printwindow=True rect=152,152,822,389 foreground=True\nsaved C:\\AI\\overnight-scratch\\gui-e2e\\run5\\fill-4-variations\\picker-1.png 804x380 printwindow=True rect=152,152,822,389 foreground=True",
+  "after_pick": {
+    "size": [
+      1920,
+      1440
+    ],
+    "layers": [
+      {
+        "name": "Generative Fill: hot air balloon",
+        "visible": true,
+        "children": [
+          {
+            "name": "Generative Fill: hot air balloon (1)",
+            "visible": false
+          },
+          {
+            "name": "Generative Fill: hot air balloon (2)",
+            "visible": true
+          },
+          {
+            "name": "Generative Fill: hot air balloon (3)",
+            "visible": false
+          },
+          {
+            "name": "Generative Fill: hot air balloon (4)",
+            "visible": false
+          }
+        ]
+      },
+      {
+        "name": "Background",
+        "visible": true
+      }
+    ],
+    "undo_enabled": true
+  },
+  "gimp_window_after_pick": "window: *[landscape] (imported)-3.0 (RGB color 8-bit non-linear integer, c2, 6 layers) 1920x1440 - GIMP\nsaved C:\\AI\\overnight-scratch\\gui-e2e\\run5\\fill-4-variations\\gimp-window-after-pick-2.png",
+  "undo_keys": "window: *[landscape] (imported)-3.0 (RGB color 8-bit non-linear integer, c2, 6 layers) 1920x1440 - GIMP\nsent %e u\nsaved C:\\AI\\overnight-scratch\\gui-e2e\\run5\\fill-4-variations\\gimp-window-after-one-undo.png",
+  "after_one_undo": {
+    "size": [
+      1920,
+      1440
+    ],
+    "layers": [
+      {
+        "name": "Background",
+        "visible": true
+      }
+    ],
+    "undo_enabled": true
+  }
+}

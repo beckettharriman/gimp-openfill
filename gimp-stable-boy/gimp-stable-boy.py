@@ -279,6 +279,7 @@ def _generation_dialog(
         values["model"] = "active"
     if hooks.get("mode") == "remove":
         values["remove"] = True
+    values.update(hooks.get("values") or {})  # test hook: start values as if picked under Advanced
     models, active_name, prompt_free = _model_options(config, kind, settings)
     image_size, selection_size = _image_sizes(image)
     result = dialogs.run_generation_dialog(
@@ -296,6 +297,7 @@ def _generation_dialog(
         test_text=hooks.get("type"),
         test_key=hooks.get("press"),
         test_open_recent=bool(hooks.get("open_recent")),
+        test_click=hooks.get("click"),
     )
     if result is None:
         return False
@@ -353,6 +355,7 @@ def _pick_variation(
     title: str,
     autoclose: float = 0,
     test_steps: list[str] | None = None,
+    restore_canvas: tuple[int, int, int, int] | None = None,
 ) -> str:
     """After several variations were inserted (in a layer group): let the
     user keep one, keep all, or discard them. Returns the outcome.
@@ -361,6 +364,10 @@ def _pick_variation(
     frozen meanwhile, so browsing the thumbnails does not bury the
     generation's own undo step under one visibility step per click; Discard
     thaws it first and is a single undo step of its own.
+
+    ``restore_canvas`` (width, height, offset x, offset y), given after
+    Generative Expand: Discard also resizes the canvas back to the size it had
+    before the expand, in the same undo step, so the image is left as it was.
     """
     if image is None or not layers or len(layers) < 2:
         return "keep"
@@ -403,6 +410,8 @@ def _pick_variation(
             else:
                 for layer in layers:
                     image.remove_layer(layer)
+            if restore_canvas is not None:
+                image.resize(*restore_canvas)
         finally:
             image.undo_group_end()
         Gimp.displays_flush()
@@ -419,6 +428,27 @@ def _pick_variation(
         thaw()
 
 
+def _canvas_state(image: Gimp.Image | None, layer: Gimp.Layer | None = None) -> tuple | None:
+    """(width, height, offsets of ``layer``, layer): the canvas size and where a
+    pre-existing layer sits, so the shift an expand applied can be undone."""
+    try:
+        layer = layer or image.get_layers()[0]
+        offsets = layer.get_offsets()  # (ok, x, y)
+        x, y = int(offsets[-2]), int(offsets[-1])
+        return (image.get_width(), image.get_height(), (x, y), layer)
+    except Exception:  # noqa: BLE001 - no image or no layer: nothing to restore
+        return None
+
+
+def _canvas_restore(before: tuple | None, after: tuple | None) -> tuple[int, int, int, int] | None:
+    """The ``image.resize`` arguments that take the canvas from ``after`` back
+    to ``before`` (None when the canvas did not change)."""
+    if before is None or after is None or before[:2] == after[:2]:
+        return None
+    dx, dy = after[2][0] - before[2][0], after[2][1] - before[2][1]
+    return (before[0], before[1], -dx, -dy)
+
+
 def _after_insert(
     run_mode: Gimp.RunMode,
     image: Gimp.Image | None,
@@ -426,12 +456,20 @@ def _after_insert(
     title: str,
     hooks: dict,
     log: logging.Logger | None = None,
+    restore_canvas: tuple[int, int, int, int] | None = None,
 ) -> None:
     """INTERACTIVE only: the variations picker. Never fails the procedure."""
     if run_mode != Gimp.RunMode.INTERACTIVE:
         return
     try:
-        _pick_variation(image, layers, title, float(hooks.get("autoclose") or 0))
+        _pick_variation(
+            image,
+            layers,
+            title,
+            float(hooks.get("autoclose") or 0),
+            test_steps=hooks.get("picker_steps"),
+            restore_canvas=restore_canvas,
+        )
     except Exception:  # noqa: BLE001
         if log is not None:
             log.warning("variations picker failed:\n%s", traceback.format_exc())
@@ -577,6 +615,7 @@ def run_expand(
     from stable_boy.app import App
 
     app = None
+    before = _canvas_state(image)
     try:
         app = App(interactive=run_mode == Gimp.RunMode.INTERACTIVE)
         layers = app.generative_expand(
@@ -593,7 +632,8 @@ def run_expand(
         )
     except Exception as err:  # noqa: BLE001
         return _fail(procedure, err, app.log if app else None)
-    _after_insert(run_mode, image, layers, "Generative Expand", hooks, app.log)
+    restore = _canvas_restore(before, _canvas_state(image, before[3] if before else None))
+    _after_insert(run_mode, image, layers, "Generative Expand", hooks, app.log, restore_canvas=restore)
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
 
 
@@ -717,6 +757,8 @@ def _settings_dialog(procedure: Gimp.Procedure, config: Gimp.ProcedureConfig) ->
         tab=str(hooks.get("settings_tab") or ""),
         show_advanced=bool(hooks.get("advanced")),
         select_model=str(hooks.get("select_model") or ""),
+        test_steps=hooks.get("settings_steps"),
+        test_out=str(hooks.get("settings_out") or ""),
     )
     if result is None:
         return False

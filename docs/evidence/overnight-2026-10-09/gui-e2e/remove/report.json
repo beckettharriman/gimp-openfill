@@ -1,0 +1,47 @@
+{
+  "run": {
+    "status": "3",
+    "seconds": 9.3
+  },
+  "gimp": "3.2.6 GUI (gimp-3.2.exe --new-instance), isolated test profile",
+  "model_requested": "juggernaut-xl-v9",
+  "started": "2026-10-09 05:00:01",
+  "finished": "2026-10-09 05:04:25",
+  "selection": [
+    155,
+    335,
+    215,
+    185
+  ],
+  "active_model": "mat-places512",
+  "before": {
+    "size": [
+      1280,
+      853
+    ],
+    "layers": [
+      {
+        "name": "Background",
+        "visible": true
+      }
+    ]
+  },
+  "capture_dialog": "saved C:\\AI\\overnight-scratch\\gui-e2e\\run2\\remove\\remove-dialog.png 644x470 printwindow=True rect=613,268,662,479 foreground=True",
+  "after": {
+    "size": [
+      1280,
+      853
+    ],
+    "layers": [
+      {
+        "name": "Object Removal",
+        "visible": true
+      },
+      {
+        "name": "Background",
+        "visible": true
+      }
+    ]
+  },
+  "gimp_window_after": "window: *[product] (imported)-18.0 (RGB color 8-bit non-linear integer, GIMP built-in sRGB, 2 layers) 1280x853 - GIMP\nsaved C:\\AI\\overnight-scratch\\gui-e2e\\run2\\remove\\gimp-window-after.png"
+}

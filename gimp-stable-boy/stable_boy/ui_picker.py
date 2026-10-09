@@ -13,6 +13,7 @@ GIMP calls and is driven entirely by the result layers.
 
 from __future__ import annotations
 
+import sys
 from collections.abc import Callable
 
 import gi
@@ -117,6 +118,8 @@ class VariationPicker(Gtk.Window):
         keep.grab_default()
         if self.buttons:
             self.buttons[0].grab_focus()
+        self.forced_show = _ensure_visible(self.get_title() or "")
+        GLib.timeout_add(200, self._recheck_visible)
 
     def _toggled(self, button: Gtk.ToggleButton, index: int) -> None:
         if button.get_active() and not self._done:
@@ -157,6 +160,11 @@ class VariationPicker(Gtk.Window):
         source = GLib.timeout_add(ms, fire)
         self._sources.append(source)
 
+    def _recheck_visible(self) -> bool:
+        if not self._done and _ensure_visible(self.get_title() or ""):
+            self.forced_show = True
+        return False
+
     def finish(self, outcome: str) -> None:
         """Close the picker with ``outcome`` (keep, keep_all, discard); later calls do nothing."""
         if self._done:
@@ -169,6 +177,46 @@ class VariationPicker(Gtk.Window):
         self.destroy()
         if self._on_closed:
             self._on_closed()
+
+
+def _ensure_visible(title: str) -> bool:
+    """Windows: show the picker's native window when GTK showed the widget but
+    the window is not WS_VISIBLE (seen in plug-in processes started by GIMP
+    3.2.6 on Windows, as with the progress window) and bring it to the front.
+    Returns True when it had to be shown here. Best effort, never raises."""
+    if sys.platform != "win32" or not title:
+        return False
+    try:
+        import ctypes
+        import os
+
+        user32 = ctypes.windll.user32  # type: ignore[attr-defined]
+        found: list[int] = []
+        proto = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)
+
+        def cb(hwnd: int, _: object) -> bool:
+            pid = ctypes.c_ulong()
+            user32.GetWindowThreadProcessId(ctypes.c_void_p(hwnd), ctypes.byref(pid))
+            if pid.value != os.getpid():
+                return True
+            buf = ctypes.create_unicode_buffer(512)
+            user32.GetWindowTextW(ctypes.c_void_p(hwnd), buf, 512)
+            if buf.value == title:
+                found.append(hwnd)
+                return False
+            return True
+
+        user32.EnumWindows(proto(cb), None)
+        if not found:
+            return False
+        hwnd = ctypes.c_void_p(found[0])
+        if user32.IsWindowVisible(hwnd):
+            return False
+        user32.ShowWindow(hwnd, 5)  # SW_SHOW
+        user32.SetForegroundWindow(hwnd)
+        return True
+    except Exception:  # noqa: BLE001 - best effort
+        return False
 
 
 def _play_step(picker: VariationPicker, step: str) -> bool:

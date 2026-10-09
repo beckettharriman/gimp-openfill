@@ -19,7 +19,10 @@ hooks differ per dialog: ``autoclose`` answers Cancel after N seconds,
 ``fake_variations`` (picker with tinted copies of the selection) and
 ``progress_demo`` (the real progress window fed with scripted steps),
 ``type`` / ``press`` (scripted typing and a key press) and ``dry_run``
-(record the procedure config instead of generating). SB_TEST_MENU=1 also
+(record the procedure config instead of generating). Further hooks used by
+the GUI end-to-end driver (docs/evidence/overnight-2026-10-09/gui-e2e):
+``values`` (dialog start values), ``click`` ("generate"), ``picker_steps``
+(also after a real generation) and ``settings_steps`` / ``settings_out``. SB_TEST_MENU=1 also
 captures the Filters > AI menu (sends keys to this GIMP window only).
 SB_REPO is the checkout to use, SB_TEST_OUT the screenshot folder.
 

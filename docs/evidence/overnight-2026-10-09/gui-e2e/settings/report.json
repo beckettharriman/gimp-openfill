@@ -1,0 +1,14 @@
+{
+  "run": {
+    "status": "4",
+    "seconds": 56.5
+  },
+  "gimp": "3.2.6 GUI (gimp-3.2.exe --new-instance), isolated test profile",
+  "model_requested": "juggernaut-xl-v9",
+  "started": "2026-10-09 05:00:01",
+  "finished": "2026-10-09 05:04:25",
+  "active_model_before": "mat-places512",
+  "capture": "saved C:\\AI\\overnight-scratch\\gui-e2e\\run2\\settings\\settings.png 904x807 printwindow=True rect=406,146,922,816 foreground=True\nsaved C:\\AI\\overnight-scratch\\gui-e2e\\run2\\settings\\settings-1.png 904x807 printwindow=True rect=406,146,922,816 foreground=True\nsaved C:\\AI\\overnight-scratch\\gui-e2e\\run2\\settings\\settings-2.png 904x807 printwindow=True rect=406,146,922,816 foreground=True\nsaved C:\\AI\\overnight-scratch\\gui-e2e\\run2\\settings\\settings-3.png 904x807 printwindow=True rect=406,146,922,816 foreground=True\nsaved C:\\AI\\overnight-scratch\\gui-e2e\\run2\\settings\\settings-4.png 904x807 printwindow=True rect=406,146,922,816 foreground=True",
+  "config_watch": "05:02:58.757 active_model=mat-places512\n05:03:41.051 active_model=sd15-inpainting\n05:03:46.080 active_model=mat-places512",
+  "active_model_after": "mat-places512"
+}

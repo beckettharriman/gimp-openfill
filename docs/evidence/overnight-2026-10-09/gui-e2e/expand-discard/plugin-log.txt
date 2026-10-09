@@ -1,0 +1,6 @@
+2026-10-09 05:18:07,617 INFO  [30504 stable-boy] expand: margins=(0, 0, 256, 0) canvas=2176x1440 context=Rect(x=1312, y=0, width=864, height=1440) working=616x1024 model=juggernaut-xl-v9
+2026-10-09 05:18:08,771 INFO  [30504 stable-boy] timing: upload image=2170665 mask=12324 bytes in 0.030 s
+2026-10-09 05:18:08,779 INFO  [30504 stable-boy] queued prompt 781c641e-21c3-4e8f-9203-9f944d0def68 (timeout 185s, 25 steps x 2)
+2026-10-09 05:18:33,264 INFO  [30504 stable-boy] timing: queue->first step 7.290 s, sampling 17.159 s, download 3658926 bytes in 0.036 s
+2026-10-09 05:18:35,345 INFO  [30504 stable-boy] progress window: 25 preview frame(s) shown, closing after success (native window had to be shown explicitly)
+2026-10-09 05:18:36,354 INFO  [30504 stable-boy] expand: done, seed=1234, 2 layer(s)

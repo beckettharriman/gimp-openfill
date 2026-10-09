@@ -659,13 +659,19 @@ def run_generation_dialog(
     test_text: str | None = None,
     test_key: str | None = None,
     test_open_recent: bool = False,
+    test_click: str | None = None,
     **kwargs: object,
 ) -> dict | None:
-    """Show the dialog; the collected values, or None when cancelled."""
+    """Show the dialog; the collected values, or None when cancelled.
+
+    ``test_click`` (test hook): "generate" clicks the Generate button 2 s after opening.
+    """
     dialog = GenerationDialog(kind, values, history, models, **kwargs)
     set_transient(dialog)
     autoclose(dialog, autoclose_seconds)
     scripted_input(dialog, dialog.prompt, test_text, test_key)
+    if test_click == "generate":
+        timeout_while_alive(dialog, 2000, dialog.generate.clicked)
     if test_open_recent:
         timeout_while_alive(dialog, 1200, lambda: dialog.prompt.recent.set_active(True))
     try:
@@ -962,6 +968,46 @@ class SettingsDialog(Gtk.Dialog):
             self.panel.stop()
 
 
+def _play_settings_step(dialog: SettingsDialog, action: str, arg: object, out: str) -> None:
+    """One Settings test step (see ``run_settings_dialog``)."""
+    import json
+    import time
+
+    panel = dialog.panel
+    if action == "check":
+        dialog.test_button.clicked()
+    elif action == "tab":
+        dialog.notebook.set_current_page(int(arg))
+    elif action == "activate" and panel is not None:
+        widget = getattr(panel, "_widgets", {}).get(str(arg))
+        if widget is not None:
+            widget.primary.clicked()
+    elif action == "dump" and out:
+        rows = []
+        index = 0
+        while panel is not None and hasattr(panel, "list"):
+            row = panel.list.get_row_at_index(index)
+            if row is None:
+                break
+            index += 1
+            data = getattr(row, "data", None) or {}
+            rows.append(
+                {
+                    "id": data.get("id"),
+                    "installed": data.get("installed"),
+                    "active": data.get("active"),
+                    "button": row.primary.get_label() if hasattr(row, "primary") else None,
+                    "button_sensitive": row.primary.get_sensitive() if hasattr(row, "primary") else None,
+                    "state": row.state.get_text() if hasattr(row, "state") else None,
+                }
+            )
+        record = {"t": time.strftime("%H:%M:%S"), "tag": str(arg or ""), "test_label": dialog.test_label.get_text()}
+        record["page"] = dialog.notebook.get_current_page()
+        record["rows"] = rows
+        with open(out, "a", encoding="utf-8") as fh:
+            fh.write(json.dumps(record) + "\n")
+
+
 def run_settings_dialog(
     values: dict,
     choices: dict,
@@ -972,8 +1018,17 @@ def run_settings_dialog(
     tab: str = "",
     show_advanced: bool = False,
     select_model: str = "",
+    test_steps: list | None = None,
+    test_out: str = "",
 ) -> dict | None:
-    """Show the Settings dialog; the collected values, or None when cancelled."""
+    """Show the Settings dialog; the collected values, or None when cancelled.
+
+    ``test_steps`` (test hook): ``[seconds, action, arg]`` entries played on
+    timers: "check" presses Check backend, "tab" switches to page ``arg``,
+    "activate" presses the primary button of model row ``arg`` and "dump"
+    appends the backend label and the model rows (in list order) to the JSON
+    lines file ``test_out``.
+    """
     dialog = SettingsDialog(values, choices, ranges, models_panel_factory, test_backend)
     set_transient(dialog)
     for expander in dialog.expanders[:1] if show_advanced else []:
@@ -982,6 +1037,10 @@ def run_settings_dialog(
         dialog.notebook.set_current_page(1)
         if select_model and hasattr(dialog.panel, "select"):
             timeout_while_alive(dialog, 300, lambda: dialog.panel.select(select_model))
+    for seconds, action, arg in test_steps or []:
+        timeout_while_alive(
+            dialog, int(float(seconds) * 1000), lambda a=action, v=arg: _play_settings_step(dialog, a, v, test_out)
+        )
     autoclose(dialog, autoclose_seconds)
     try:
         response = dialog.run()

@@ -1,0 +1,68 @@
+{
+  "run": {
+    "status": "3",
+    "seconds": 36.1
+  },
+  "gimp": "3.2.6 GUI (gimp-3.2.exe --new-instance), isolated test profile",
+  "model_requested": "juggernaut-xl-v9",
+  "started": "2026-10-09 05:15:28",
+  "finished": "2026-10-09 05:18:55",
+  "before": {
+    "size": [
+      1920,
+      1440
+    ],
+    "layers": [
+      {
+        "name": "Background",
+        "visible": true
+      }
+    ],
+    "undo_enabled": true
+  },
+  "capture_dialog": "saved C:\\AI\\overnight-scratch\\gui-e2e\\run5\\expand-discard\\expand-dialog.png 644x921 printwindow=False rect=471,115,662,930 foreground=False",
+  "capture_picker": "saved C:\\AI\\overnight-scratch\\gui-e2e\\run5\\expand-discard\\picker.png 609x410 printwindow=True rect=304,304,627,419 foreground=True",
+  "after_discard": {
+    "size": [
+      1920,
+      1440
+    ],
+    "layers": [
+      {
+        "name": "Background",
+        "visible": true
+      }
+    ],
+    "undo_enabled": true
+  },
+  "restored": true,
+  "gimp_window_after_discard": "window: *[landscape] (imported)-3.0 (RGB color 8-bit non-linear integer, c2, 1 layer) 1920x1440 - GIMP\nsaved C:\\AI\\overnight-scratch\\gui-e2e\\run5\\expand-discard\\gimp-window-after-discard.png",
+  "undo_keys": "window: *[landscape] (imported)-3.0 (RGB color 8-bit non-linear integer, c2, 1 layer) 1920x1440 - GIMP\nsent %e u\nsaved C:\\AI\\overnight-scratch\\gui-e2e\\run5\\expand-discard\\gimp-window-after-undo-of-discard.png",
+  "after_undo_of_discard": {
+    "size": [
+      2176,
+      1440
+    ],
+    "layers": [
+      {
+        "name": "Generative Expand: meadow",
+        "visible": true,
+        "children": [
+          {
+            "name": "Generative Expand: meadow (1)",
+            "visible": true
+          },
+          {
+            "name": "Generative Expand: meadow (2)",
+            "visible": false
+          }
+        ]
+      },
+      {
+        "name": "Background",
+        "visible": true
+      }
+    ],
+    "undo_enabled": true
+  }
+}
