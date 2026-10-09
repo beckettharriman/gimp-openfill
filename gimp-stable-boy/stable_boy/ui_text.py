@@ -143,6 +143,29 @@ def txt2img_status(width: int, height: int, selection: tuple[int, int] | None,
     return f"Result: {size}, as {where}."
 
 
+# ------------------------------------------------------------ windows ----
+
+def clamp_position(x: int, y: int, width: int, height: int,
+                   areas: list[tuple[int, int, int, int]], margin: int = 8) -> tuple[int, int]:
+    """Keep a window of ``width`` x ``height`` at (x, y) fully inside one of
+    the monitor work ``areas`` (x, y, w, h). A position on no monitor (for
+    example remembered from a monitor that is gone) moves to the nearest
+    area; a window larger than the area sticks to its top left corner."""
+    if not areas:
+        return x, y
+
+    def distance(area):
+        ax, ay, aw, ah = area
+        dx = max(ax - x, 0, x - (ax + aw))
+        dy = max(ay - y, 0, y - (ay + ah))
+        return dx * dx + dy * dy
+
+    ax, ay, aw, ah = min(areas, key=distance)
+    nx = min(max(x, ax + margin), ax + aw - width - margin)
+    ny = min(max(y, ay + margin), ay + ah - height - margin)
+    return max(nx, ax), max(ny, ay)
+
+
 # ------------------------------------------------------------ errors -----
 
 _NEXT_STEPS = (

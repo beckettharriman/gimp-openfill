@@ -412,7 +412,8 @@ class ModelsPanel(Gtk.Box):
         try:
             self.app.open_models_folder()
         except OSError as err:
-            self._say(f"Could not open the folder: {err}")
+            self._say(f"Could not open the folder: {err}. Next step: open {self.app.models_root} in the "
+                      "file manager yourself.")
 
     def _on_save_token(self, *_):
         self.app.save_token(self.token.get_text())
@@ -436,7 +437,8 @@ class ModelsPanel(Gtk.Box):
             self._dl_timer = GLib.timeout_add(1000, self._tick_downloads)
         except Exception as err:  # noqa: BLE001 - the window is optional
             self._dl_window = None
-            self._say(f"(The progress window could not be opened: {err})")
+            self._say(f"The download continues, but the progress window could not be opened: {err}. "
+                      "Next step: watch the row's progress here.")
 
     def _tick_downloads(self) -> bool:
         win = self._dl_window

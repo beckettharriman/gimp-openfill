@@ -121,6 +121,30 @@ KIND_CAPABILITY = {"fill": ("fill", "remove"), "expand": ("expand",), "txt2img":
 LEGACY_NICKS = ("fast", "quality")
 
 
+def _bind_runner(interactive: bool) -> None:
+    """Make App build its Runner with ``interactive=...``: a failed
+    non-interactive run must not wait in the progress window for Close.
+    App creates the Runner itself (app.py), so the factory it looks up is
+    replaced for this plug-in process. Works whether or not runner.Runner
+    already accepts the keyword (it is only passed when it does)."""
+    import inspect
+    from stable_boy import app as app_module
+    from stable_boy import runner as runner_module
+    base = runner_module.Runner
+    try:
+        accepts = "interactive" in inspect.signature(base.__init__).parameters
+    except (TypeError, ValueError):
+        accepts = False
+    if not accepts:
+        return
+
+    def make_runner(*args, **kwargs):
+        kwargs.setdefault("interactive", interactive)
+        return base(*args, **kwargs)
+
+    app_module.Runner = make_runner
+
+
 def _test_hooks() -> dict:
     """Test hooks for GUI runs (screenshots): a JSON file named by
     SB_TEST_UI_FILE (re-read on every call, so one GIMP session can open
@@ -355,8 +379,9 @@ def _test_progress_demo(image, seconds: float) -> None:
         handle = data.get_data() if data is not None else None
     except Exception:  # noqa: BLE001
         handle = None
-    win = ProgressWindow("Generative Fill", "SD 1.5 Inpainting", on_cancel=None, position=(-1, -1),
-                         anchor_handle=handle)
+    settings = Settings.load(Paths.for_profile(Gimp.directory()).config)
+    win = ProgressWindow("Generative Fill", "SD 1.5 Inpainting", on_cancel=None,
+                         position=(settings.progress_window_x, settings.progress_window_y), anchor_handle=handle)
     pixbuf = None
     if image is not None:
         try:
@@ -396,6 +421,7 @@ def run_fill(procedure, run_mode, image, drawables, config, data):
     from stable_boy.app import App
     app = None
     try:
+        _bind_runner(run_mode == Gimp.RunMode.INTERACTIVE)
         app = App()
         layers = app.generative_fill(image, config.get_property("prompt"), config.get_property("negative"),
                                      config.get_property("variations"), config.get_property("strength"),
@@ -417,6 +443,7 @@ def run_expand(procedure, run_mode, image, drawables, config, data):
     from stable_boy.app import App
     app = None
     try:
+        _bind_runner(run_mode == Gimp.RunMode.INTERACTIVE)
         app = App()
         layers = app.generative_expand(image, config.get_property("prompt"), config.get_property("negative"),
                                        config.get_property("left"), config.get_property("top"),
@@ -439,6 +466,7 @@ def run_txt2img(procedure, run_mode, image, drawables, config, data):
     from stable_boy.app import App
     app = None
     try:
+        _bind_runner(run_mode == Gimp.RunMode.INTERACTIVE)
         app = App()
         app.text_to_image(image, config.get_property("prompt"), config.get_property("negative"),
                           config.get_property("width"), config.get_property("height"),
@@ -537,7 +565,7 @@ def run_settings(procedure, config, data):
                          f"Checkpoints: {', '.join(health.checkpoints) or 'none'}\n"
                          f"Inpaint nodes: {'yes' if health.inpaint_nodes else 'no'}")
         else:
-            Gimp.message(f"Backend check failed: {health.detail}")
+            Gimp.message(ui_text.with_next_step(f"Backend check failed: {health.detail}"))
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
 
 

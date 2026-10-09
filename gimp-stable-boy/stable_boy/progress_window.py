@@ -208,26 +208,49 @@ class ProgressWindow(Gtk.Window):
         self._no_activate = _NoActivate(self.get_title())
         self.realize()  # native window exists now, not yet shown
         self._no_activate.before_show()
-        self.show_all()
-        self._place(position, anchor_handle)
+        self.get_child().show_all()
+        self._place(position, anchor_handle)  # before showing: no jump, never off screen
+        self.show()
         GLib.timeout_add(150, self._no_activate.after_show)
         self._timer = GLib.timeout_add(500, self._tick)
 
     # placement -----------------------------------------------------------
 
-    def _place(self, position, anchor_handle) -> None:
-        if position and position[0] >= 0 and position[1] >= 0:
-            self.move(int(position[0]), int(position[1]))
-            return
-        width = self.get_allocated_width() or 360
-        rect = _window_rect_from_handle(anchor_handle)
-        if rect is None:
+    @staticmethod
+    def _work_areas() -> list[tuple[int, int, int, int]]:
+        areas = []
+        try:
             display = Gdk.Display.get_default()
-            monitor = display.get_primary_monitor() or display.get_monitor(0)
-            work = monitor.get_workarea()
-            rect = (work.x, work.y, work.width, work.height)
-        x, y, w, _ = rect
-        self.move(max(0, x + w - width - 24), max(0, y + 48))
+            for i in range(display.get_n_monitors()):
+                work = display.get_monitor(i).get_workarea()
+                areas.append((work.x, work.y, work.width, work.height))
+        except Exception:  # noqa: BLE001 - placement is best effort
+            pass
+        return areas
+
+    def _place(self, position, anchor_handle) -> None:
+        """Remembered position (clamped onto a current monitor, so a position
+        saved on a monitor that is gone cannot hide the window), else the top
+        right of the image window, else of the primary monitor."""
+        _min, natural = self.get_preferred_size()
+        # the preview grows the window once frames arrive: reserve that room
+        width, height = max(natural.width, 360), natural.height + (PREVIEW_LONG_SIDE - 160)
+        areas = self._work_areas()
+        if position and position[0] >= 0 and position[1] >= 0:
+            x, y = int(position[0]), int(position[1])
+        else:
+            rect = _window_rect_from_handle(anchor_handle)
+            if rect is not None:
+                scale = max(1, self.get_scale_factor())
+                rect = tuple(v // scale for v in rect)
+            if rect is None:
+                display = Gdk.Display.get_default()
+                monitor = display.get_primary_monitor() or display.get_monitor(0)
+                work = monitor.get_workarea()
+                rect = (work.x, work.y, work.width, work.height)
+            rx, ry, rw, _ = rect
+            x, y = rx + rw - width - 24, ry + 48
+        self.move(*ui_text.clamp_position(x, y, width, height, areas))
 
     def _configure(self, _widget, event) -> bool:
         self._last_pos = (event.x, event.y)

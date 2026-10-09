@@ -683,7 +683,7 @@ class SettingsDialog(Gtk.Dialog):
                 self.panel = models_panel_factory()
                 self.notebook.append_page(self.panel, Gtk.Label(label="Models"))
             except Exception as err:  # noqa: BLE001 - the General page must still work
-                self.notebook.append_page(_dim(f"The Models tab could not be opened: {err}", small=False),
+                self.notebook.append_page(_dim(ui_text.with_next_step(f"The Models tab could not be opened: {err}"), small=False),
                                           Gtk.Label(label="Models"))
         self.get_content_area().show_all()  # shown by run(), after placement
 

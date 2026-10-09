@@ -84,6 +84,24 @@ class StatusTextTests(unittest.TestCase):
         self.assertIn(ut.SUGGESTED_SHORTCUT, ut.SHORTCUT_HINT)
 
 
+class ClampTests(unittest.TestCase):
+    def test_off_screen_position_comes_back(self):
+        areas = [(0, 0, 1920, 1040)]
+        x, y = ut.clamp_position(1694, 2328, 380, 500, areas)  # remembered on a monitor that is gone
+        self.assertTrue(0 <= x <= 1920 - 380 and 0 <= y <= 1040 - 500, (x, y))
+
+    def test_inside_is_kept_and_second_monitor_used(self):
+        areas = [(0, 0, 1920, 1040), (1920, 0, 2560, 1400)]
+        self.assertEqual(ut.clamp_position(100, 100, 380, 500, areas), (100, 100))
+        self.assertEqual(ut.clamp_position(2500, 300, 380, 500, areas), (2500, 300))
+        x, y = ut.clamp_position(5000, -300, 380, 500, areas)
+        self.assertEqual((x, y), (1920 + 2560 - 380 - 8, 8))
+
+    def test_too_big_and_no_monitors(self):
+        self.assertEqual(ut.clamp_position(50, 50, 4000, 3000, [(0, 0, 1920, 1040)]), (0, 0))
+        self.assertEqual(ut.clamp_position(-5, 7, 10, 10, []), (-5, 7))
+
+
 class ErrorWordingTests(unittest.TestCase):
     def test_every_backend_error_gets_a_next_step_or_advice(self):
         errors = [
