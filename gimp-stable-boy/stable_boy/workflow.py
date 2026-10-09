@@ -59,8 +59,7 @@ def _prompts(g: Graph, clip: list, prompt: str, negative: str) -> tuple[list, li
 
 
 def _scale_image(g: Graph, node_id: str, image: list, width: int, height: int) -> list:
-    g.add(node_id, "ImageScale", image=image, upscale_method="lanczos",
-          width=width, height=height, crop="disabled")
+    g.add(node_id, "ImageScale", image=image, upscale_method="lanczos", width=width, height=height, crop="disabled")
     return g.out(node_id)
 
 
@@ -78,8 +77,7 @@ def _prepare_mask(g: Graph, mask_image: list, req: InpaintRequest, caps: Capabil
     blur = 0 if hard else max(0, min(int(req.feather), grow))
     if caps.inpaint_nodes:
         if grow or blur:
-            g.add("mask_grow", "INPAINT_ExpandMask", mask=mask, grow=grow, blur=blur,
-                  blur_type="gaussian")
+            g.add("mask_grow", "INPAINT_ExpandMask", mask=mask, grow=grow, blur=blur, blur_type="gaussian")
             mask = g.out("mask_grow")
         g.add("mask_stable", "INPAINT_StabilizeMask", mask=mask, epsilon=0.01)
         return g.out("mask_stable")
@@ -89,8 +87,7 @@ def _prepare_mask(g: Graph, mask_image: list, req: InpaintRequest, caps: Capabil
     if blur:
         g.add("mask_img", "MaskToImage", mask=mask)
         radius = max(1, min(31, blur // 2))
-        g.add("mask_blur", "ImageBlur", image=g.out("mask_img"), blur_radius=radius,
-              sigma=max(1.0, blur / 3.0))
+        g.add("mask_blur", "ImageBlur", image=g.out("mask_img"), blur_radius=radius, sigma=max(1.0, blur / 3.0))
         g.add("mask_soft", "ImageToMask", image=g.out("mask_blur"), channel="red")
         mask = g.out("mask_soft")
     return mask
@@ -107,15 +104,20 @@ def _prefill(g: Graph, image: list, mask: list, req: InpaintRequest, caps: Capab
         # colour, its blurred shape) survives into the sampler's starting image.
         mode = req.prefill_mode if req.prefill_mode in ("navier-stokes", "telea", "neutral") else "navier-stokes"
         g.add("prefill", "INPAINT_MaskedFill", image=image, mask=mask, fill=mode, falloff=0)
-        g.add("preblur", "INPAINT_MaskedBlur", image=g.out("prefill"), mask=mask, blur=65,
-              falloff=0)
+        g.add("preblur", "INPAINT_MaskedBlur", image=g.out("prefill"), mask=mask, blur=65, falloff=0)
         return g.out("preblur")
     g.add("preblur", "INPAINT_MaskedBlur", image=image, mask=mask, blur=65, falloff=9)
     return g.out("preblur")
 
 
-def build_inpaint(req: InpaintRequest, image_ref: str, mask_ref: str, seed: int,
-                  caps: Capabilities, filename_prefix: str = "stable-boy/fill") -> dict:
+def build_inpaint(
+    req: InpaintRequest,
+    image_ref: str,
+    mask_ref: str,
+    seed: int,
+    caps: Capabilities,
+    filename_prefix: str = "stable-boy/fill",
+) -> dict:
     """Build the inpaint / outpaint graph.
 
     ``image_ref`` and ``mask_ref`` are the names returned by ``/upload/image``
@@ -138,17 +140,36 @@ def build_inpaint(req: InpaintRequest, image_ref: str, mask_ref: str, seed: int,
 
     use_fooocus = req.model.uses_fooocus and caps.inpaint_nodes
     if use_fooocus:
-        g.add("encode", "INPAINT_VAEEncodeInpaintConditioning", positive=positive,
-              negative=negative, vae=vae, pixels=image, mask=mask)
-        g.add("fooocus_patch", "INPAINT_LoadFooocusInpaint", head=req.model.fooocus_head,
-              patch=req.model.fooocus_patch)
-        g.add("fooocus", "INPAINT_ApplyFooocusInpaint", model=model,
-              patch=g.out("fooocus_patch"), latent=g.out("encode", 2))
+        g.add(
+            "encode",
+            "INPAINT_VAEEncodeInpaintConditioning",
+            positive=positive,
+            negative=negative,
+            vae=vae,
+            pixels=image,
+            mask=mask,
+        )
+        g.add("fooocus_patch", "INPAINT_LoadFooocusInpaint", head=req.model.fooocus_head, patch=req.model.fooocus_patch)
+        g.add(
+            "fooocus",
+            "INPAINT_ApplyFooocusInpaint",
+            model=model,
+            patch=g.out("fooocus_patch"),
+            latent=g.out("encode", 2),
+        )
         model = g.out("fooocus")
         latent = g.out("encode", 3)
     else:
-        g.add("encode", "InpaintModelConditioning", positive=positive, negative=negative,
-              vae=vae, pixels=image, mask=mask, noise_mask=True)
+        g.add(
+            "encode",
+            "InpaintModelConditioning",
+            positive=positive,
+            negative=negative,
+            vae=vae,
+            pixels=image,
+            mask=mask,
+            noise_mask=True,
+        )
         latent = g.out("encode", 2)
     positive, negative = g.out("encode", 0), g.out("encode", 1)
 
@@ -157,18 +178,34 @@ def build_inpaint(req: InpaintRequest, image_ref: str, mask_ref: str, seed: int,
         g.add("batch", "RepeatLatentBatch", samples=latent, amount=batch)
         latent = g.out("batch")
 
-    g.add("sampler", "KSampler", model=model, positive=positive, negative=negative,
-          latent_image=latent, seed=int(seed), steps=int(req.sampling.steps),
-          cfg=float(req.sampling.cfg), sampler_name=req.sampling.sampler,
-          scheduler=req.sampling.scheduler, denoise=float(req.sampling.denoise))
+    g.add(
+        "sampler",
+        "KSampler",
+        model=model,
+        positive=positive,
+        negative=negative,
+        latent_image=latent,
+        seed=int(seed),
+        steps=int(req.sampling.steps),
+        cfg=float(req.sampling.cfg),
+        sampler_name=req.sampling.sampler,
+        scheduler=req.sampling.scheduler,
+        denoise=float(req.sampling.denoise),
+    )
     g.add("decode", "VAEDecode", samples=g.out("sampler"), vae=vae)
     out = g.out("decode")
     if caps.inpaint_nodes and req.color_match > 0:
         # Correct the global brightness/color drift of the decoded image using
         # the untouched pixels outside the mask as the reference.
         reference = g.out("image_scale") if req.needs_scaling else g.out("load_image", 0)
-        g.add("color_match", "INPAINT_ColorMatch", target=out, reference=reference,
-              exclude_mask=mask, strength=float(req.color_match))
+        g.add(
+            "color_match",
+            "INPAINT_ColorMatch",
+            target=out,
+            reference=reference,
+            exclude_mask=mask,
+            strength=float(req.color_match),
+        )
         out = g.out("color_match")
     if req.needs_scaling:
         out = _scale_image(g, "out_scale", out, req.width, req.height)
@@ -204,12 +241,17 @@ def _load_inputs(g: Graph, req: InpaintRequest, image_ref: str, mask_ref: str, c
     return image, mask
 
 
-def _finish(g: Graph, req: InpaintRequest, out: list, mask: list, caps: Capabilities,
-            filename_prefix: str) -> dict:
+def _finish(g: Graph, req: InpaintRequest, out: list, mask: list, caps: Capabilities, filename_prefix: str) -> dict:
     if caps.inpaint_nodes and req.color_match > 0:
         reference = g.out("image_scale") if req.needs_scaling else g.out("load_image", 0)
-        g.add("color_match", "INPAINT_ColorMatch", target=out, reference=reference,
-              exclude_mask=mask, strength=float(req.color_match))
+        g.add(
+            "color_match",
+            "INPAINT_ColorMatch",
+            target=out,
+            reference=reference,
+            exclude_mask=mask,
+            strength=float(req.color_match),
+        )
         out = g.out("color_match")
     if req.needs_scaling:
         out = _scale_image(g, "out_scale", out, req.width, req.height)
@@ -217,8 +259,14 @@ def _finish(g: Graph, req: InpaintRequest, out: list, mask: list, caps: Capabili
     return g.to_dict()
 
 
-def build_flux_fill(req: InpaintRequest, image_ref: str, mask_ref: str, seed: int,
-                    caps: Capabilities, filename_prefix: str = "stable-boy/flux") -> dict:
+def build_flux_fill(
+    req: InpaintRequest,
+    image_ref: str,
+    mask_ref: str,
+    seed: int,
+    caps: Capabilities,
+    filename_prefix: str = "stable-boy/flux",
+) -> dict:
     """FLUX.1 Fill: UNet (GGUF or fp8) + T5/CLIP-L + FLUX VAE, InpaintModelConditioning,
     FluxGuidance, cfg 1.0."""
     g = Graph()
@@ -229,23 +277,47 @@ def build_flux_fill(req: InpaintRequest, image_ref: str, mask_ref: str, seed: in
     image, mask = _load_inputs(g, req, image_ref, mask_ref, caps)
     image = _prefill(g, image, mask, req, caps)
     g.add("diff", "DifferentialDiffusion", model=model)
-    g.add("encode", "InpaintModelConditioning", positive=positive, negative=negative, vae=vae,
-          pixels=image, mask=mask, noise_mask=True)
+    g.add(
+        "encode",
+        "InpaintModelConditioning",
+        positive=positive,
+        negative=negative,
+        vae=vae,
+        pixels=image,
+        mask=mask,
+        noise_mask=True,
+    )
     latent = g.out("encode", 2)
     batch = max(1, int(req.sampling.batch))
     if batch > 1:
         g.add("batch", "RepeatLatentBatch", samples=latent, amount=batch)
         latent = g.out("batch")
-    g.add("sampler", "KSampler", model=g.out("diff"), positive=g.out("encode", 0),
-          negative=g.out("encode", 1), latent_image=latent, seed=int(seed),
-          steps=int(req.sampling.steps), cfg=1.0, sampler_name="euler", scheduler="normal",
-          denoise=float(req.sampling.denoise))
+    g.add(
+        "sampler",
+        "KSampler",
+        model=g.out("diff"),
+        positive=g.out("encode", 0),
+        negative=g.out("encode", 1),
+        latent_image=latent,
+        seed=int(seed),
+        steps=int(req.sampling.steps),
+        cfg=1.0,
+        sampler_name="euler",
+        scheduler="normal",
+        denoise=float(req.sampling.denoise),
+    )
     g.add("decode", "VAEDecode", samples=g.out("sampler"), vae=vae)
     return _finish(g, req, g.out("decode"), mask, caps, filename_prefix)
 
 
-def build_qwen_edit(req: InpaintRequest, image_ref: str, mask_ref: str, seed: int,
-                    caps: Capabilities, filename_prefix: str = "stable-boy/qwen") -> dict:
+def build_qwen_edit(
+    req: InpaintRequest,
+    image_ref: str,
+    mask_ref: str,
+    seed: int,
+    caps: Capabilities,
+    filename_prefix: str = "stable-boy/qwen",
+) -> dict:
     """Qwen-Image-Edit (2509/2511 class): instruction-driven edit of the context
     region, limited to the mask with a latent noise mask."""
     g = Graph()
@@ -273,24 +345,46 @@ def build_qwen_edit(req: InpaintRequest, image_ref: str, mask_ref: str, seed: in
     if batch > 1:
         g.add("batch", "RepeatLatentBatch", samples=latent, amount=batch)
         latent = g.out("batch")
-    g.add("sampler", "KSampler", model=model, positive=g.out("pos"), negative=g.out("neg"),
-          latent_image=latent, seed=int(seed), steps=int(req.sampling.steps),
-          cfg=float(req.sampling.cfg if 1.0 < req.sampling.cfg <= 5.0 else 2.5), sampler_name="euler",
-          scheduler="simple", denoise=float(req.sampling.denoise))
+    g.add(
+        "sampler",
+        "KSampler",
+        model=model,
+        positive=g.out("pos"),
+        negative=g.out("neg"),
+        latent_image=latent,
+        seed=int(seed),
+        steps=int(req.sampling.steps),
+        cfg=float(req.sampling.cfg if 1.0 < req.sampling.cfg <= 5.0 else 2.5),
+        sampler_name="euler",
+        scheduler="simple",
+        denoise=float(req.sampling.denoise),
+    )
     g.add("decode", "VAEDecode", samples=g.out("sampler"), vae=vae)
     return _finish(g, req, g.out("decode"), mask, caps, filename_prefix)
 
 
-def build_removal(req: InpaintRequest, image_ref: str, mask_ref: str, seed: int,
-                  caps: Capabilities, filename_prefix: str = "stable-boy/remove") -> dict:
+def build_removal(
+    req: InpaintRequest,
+    image_ref: str,
+    mask_ref: str,
+    seed: int,
+    caps: Capabilities,
+    filename_prefix: str = "stable-boy/remove",
+) -> dict:
     """Prompt-free removal with LaMa / MAT through comfyui-inpaint-nodes."""
     if not caps.inpaint_nodes:
         raise ValueError("prompt-free removal needs comfyui-inpaint-nodes on the server")
     g = Graph()
     image, mask = _load_inputs(g, req, image_ref, mask_ref, caps)
     g.add("inpaint_model", "INPAINT_LoadInpaintModel", model_name=req.model.inpaint_model)
-    g.add("remove", "INPAINT_InpaintWithModel", inpaint_model=g.out("inpaint_model"), image=image,
-          mask=mask, seed=int(seed))
+    g.add(
+        "remove",
+        "INPAINT_InpaintWithModel",
+        inpaint_model=g.out("inpaint_model"),
+        image=image,
+        mask=mask,
+        seed=int(seed),
+    )
     out = g.out("remove")
     if req.needs_scaling:
         out = _scale_image(g, "out_scale", out, req.width, req.height)
@@ -315,8 +409,14 @@ def select_builder(template: str):
         raise ValueError(f"unknown workflow template '{template}'") from None
 
 
-def build_fill(req: InpaintRequest, image_ref: str, mask_ref: str, seed: int, caps: Capabilities,
-               filename_prefix: str = "stable-boy/fill") -> dict:
+def build_fill(
+    req: InpaintRequest,
+    image_ref: str,
+    mask_ref: str,
+    seed: int,
+    caps: Capabilities,
+    filename_prefix: str = "stable-boy/fill",
+) -> dict:
     """Dispatch on the active model's template."""
     return select_builder(req.model.effective_template)(req, image_ref, mask_ref, seed, caps, filename_prefix)
 
@@ -329,12 +429,27 @@ def build_txt2img(req: Txt2ImgRequest, seed: int, filename_prefix: str = "stable
         raise ValueError("the active model does not support text to image")
     model, clip, vae = _checkpoint(g, req.model.checkpoint)
     positive, negative = _prompts(g, clip, req.prompt, req.negative)
-    g.add("latent", "EmptyLatentImage", width=int(req.width), height=int(req.height),
-          batch_size=max(1, int(req.sampling.batch)))
-    g.add("sampler", "KSampler", model=model, positive=positive, negative=negative,
-          latent_image=g.out("latent"), seed=int(seed), steps=int(req.sampling.steps),
-          cfg=float(req.sampling.cfg), sampler_name=req.sampling.sampler,
-          scheduler=req.sampling.scheduler, denoise=1.0)
+    g.add(
+        "latent",
+        "EmptyLatentImage",
+        width=int(req.width),
+        height=int(req.height),
+        batch_size=max(1, int(req.sampling.batch)),
+    )
+    g.add(
+        "sampler",
+        "KSampler",
+        model=model,
+        positive=positive,
+        negative=negative,
+        latent_image=g.out("latent"),
+        seed=int(seed),
+        steps=int(req.sampling.steps),
+        cfg=float(req.sampling.cfg),
+        sampler_name=req.sampling.sampler,
+        scheduler=req.sampling.scheduler,
+        denoise=1.0,
+    )
     g.add("decode", "VAEDecode", samples=g.out("sampler"), vae=vae)
     g.add(OUTPUT_NODE, "SaveImage", images=g.out("decode"), filename_prefix=filename_prefix)
     return g.to_dict()
@@ -342,8 +457,9 @@ def build_txt2img(req: Txt2ImgRequest, seed: int, filename_prefix: str = "stable
 
 def total_steps(graph: dict) -> int:
     """Sum of sampler steps in a graph (for progress estimation)."""
-    return sum(int(n["inputs"].get("steps", 0)) for n in graph.values()
-               if n["class_type"] in ("KSampler", "KSamplerAdvanced"))
+    return sum(
+        int(n["inputs"].get("steps", 0)) for n in graph.values() if n["class_type"] in ("KSampler", "KSamplerAdvanced")
+    )
 
 
 def describe_node_errors(node_errors: dict, graph: dict) -> str:

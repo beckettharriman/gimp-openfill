@@ -1,0 +1,329 @@
+{
+  "id": "mode-tier-mat",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Object Removal"
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "image_size_unchanged": {
+      "ok": true,
+      "value": [
+        1024,
+        768
+      ]
+    },
+    "layer_covers_selection": {
+      "ok": true,
+      "value": {
+        "layer": [
+          160,
+          40,
+          780,
+          720
+        ],
+        "selection": [
+          420,
+          300,
+          260,
+          200
+        ]
+      }
+    },
+    "mask_opaque_over_selection": {
+      "ok": true,
+      "value": 1.0
+    },
+    "content_changed_in_selection": {
+      "ok": true,
+      "value": 75.18
+    },
+    "outside_grown_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "selection_restored": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 3.86,
+    "layer_size": [
+      780,
+      720
+    ],
+    "layer_offset": [
+      160,
+      40
+    ],
+    "mask_opaque_fraction_in_selection": 1.0,
+    "mask_opaque_fraction_in_fully_selected": 1.0,
+    "mask_pixels_gt0": 84588,
+    "selection_pixels_ge128": 52000,
+    "mean_abs_diff_in_selection": 75.18,
+    "outside_max_abs_diff": 0,
+    "outside_changed_pixels": 0,
+    "laplacian_var_in_after": 18.95,
+    "laplacian_var_out_after": 29.6,
+    "laplacian_var_in_before": 538.21,
+    "detail_ratio_in_vs_out": 0.64,
+    "blur_flag": false
+  },
+  "memory": {
+    "samples": 5,
+    "peak_gimp_tree_mb": 417,
+    "peak_comfyui_mb": 4419,
+    "peak_gpu_mib": 5572
+  },
+  "evidence_files": {
+    "before.png scale": 1.0,
+    "after.png scale": 1.0,
+    "crop_box": [
+      160,
+      40,
+      940,
+      760
+    ],
+    "before-crop.png scale": 1.0,
+    "after-crop.png scale": 1.0
+  },
+  "spec": {
+    "id": "mode-tier-mat",
+    "image": {
+      "w": 1024,
+      "h": 768
+    },
+    "selection": {
+      "kind": "rect",
+      "rect": [
+        0.41,
+        0.39,
+        0.254,
+        0.26
+      ],
+      "units": "frac"
+    },
+    "proc": "fill",
+    "args": {
+      "prompt": "",
+      "negative": "blurry",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "mat-places512",
+      "remove": true
+    },
+    "removal": true
+  },
+  "gimp": {
+    "id": "mode-tier-mat",
+    "spec": {
+      "id": "mode-tier-mat",
+      "image": {
+        "w": 1024,
+        "h": 768
+      },
+      "selection": {
+        "kind": "rect",
+        "rect": [
+          0.41,
+          0.39,
+          0.254,
+          0.26
+        ],
+        "units": "frac"
+      },
+      "proc": "fill",
+      "args": {
+        "prompt": "",
+        "negative": "blurry",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 1234,
+        "model": "mat-places512",
+        "remove": true
+      },
+      "removal": true
+    },
+    "started": "2026-10-09 01:30:05",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "scene",
+          "size": [
+            1024,
+            768
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "rect",
+          "empty": false,
+          "bounds": [
+            420,
+            300,
+            260,
+            200
+          ]
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "a0f123d6899e487f8b1ffbefdcf18f11"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "a7e4a5e35d046485456b3fbcc9674e51"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 3.86,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 537,
+            "name": "Background",
+            "size": [
+              1024,
+              768
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 543,
+            "name": "Object Removal",
+            "size": [
+              780,
+              720
+            ],
+            "offset": [
+              160,
+              40
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 537,
+            "name": "Background",
+            "size": [
+              1024,
+              768
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          1024,
+          768
+        ],
+        "selection_restored": true,
+        "new_top_level": [
+          {
+            "id": 543,
+            "name": "Object Removal",
+            "size": [
+              780,
+              720
+            ],
+            "offset": [
+              160,
+              40
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 780,
+          "height": 720,
+          "channels": 4,
+          "offset": [
+            160,
+            40
+          ],
+          "md5": "6c7d4bd7efb1369dcf7b84587267adc2"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 780,
+          "height": 720,
+          "channels": 1,
+          "offset": [
+            160,
+            40
+          ],
+          "md5": "4a14c029d0fb41a8d51a8e741233af05"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "ee60701ea98779ea69c3becceef8a0a9"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 4.23
+  },
+  "analysis_error": null
+}

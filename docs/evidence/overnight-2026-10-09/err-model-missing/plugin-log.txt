@@ -1,0 +1,17 @@
+2026-10-09 01:32:33,788 ERROR [34044 stable-boy] procedure failed: A model file is missing on the backend: 'FLUX.1 Fill [dev] (first-party safetensors, fp8 at load time)' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download.
+Traceback (most recent call last):
+  File "C:\AI\overnight-scratch\gimp-profile-test\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 482, in run_fill
+    layers = app.generative_fill(
+        image,
+    ...<6 lines>...
+        remove=bool(config.get_property("remove")),
+    )
+  File "C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/app.py", line 420, in generative_fill
+    entry, model = self.resolve_model(model_choice)
+                   ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/app.py", line 165, in resolve_model
+    raise ModelMissing(
+    ...<2 lines>...
+    )
+stable_boy.backend.ModelMissing: 'FLUX.1 Fill [dev] (first-party safetensors, fp8 at load time)' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download.
+

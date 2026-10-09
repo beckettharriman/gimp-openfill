@@ -1,0 +1,69 @@
+{
+  "case": "rob-config-corrupt",
+  "acceptance_rule": "plain words plus a next step, no traceback, image and processes clean",
+  "verdict": "FAIL",
+  "verdict_reason": "The corrupt file is silently treated as absent: no log line, no backup, no message to the user; the plug-in carried on with defaults (port 8188, default ComfyUI folder, Hugging Face token empty). Same hang as rob-config-missing (progress window waits for Close in a NONINTERACTIVE call). No traceback. The corrupt file was left in place ({ not json); any later Settings.save (window position, token, active model) overwrites it with defaults and loses the user's real settings and token without a copy.",
+  "message_shown_in_progress_window": "The AI backend is not available: ComfyUI did not come up at http://127.0.0.1:8188 within 240 s. Last log lines:\n(no backend log yet)",
+  "notes": [
+    "Same harness as rob-config-missing (proxy to a closed port, placeholder supervisor)."
+  ],
+  "status": null,
+  "user_message_verbatim": [],
+  "return_message": null,
+  "seconds_in_procedure": null,
+  "checks": {
+    "traceback_in_gimp_output": false,
+    "image_untouched": null,
+    "layer_count_before_after": [
+      null,
+      null
+    ],
+    "selection_unchanged": true,
+    "dirty_after (undo step added)": null,
+    "processes_alive_10s_after_gimp_exit": 0,
+    "cleanup_seconds_after_exit": null,
+    "gimp_killed_by_launcher": true
+  },
+  "driver": {},
+  "launcher": {
+    "case": "rob-config-corrupt",
+    "started": "2026-10-09T01:06:19",
+    "harness": [
+      "HTTP_PROXY=http://127.0.0.1:9 (no request reaches 8188); placeholder supervisor pid 3752 in server-state.json with status=failed"
+    ],
+    "events": [
+      "01:06:20 gimp-console pid 25840",
+      "01:06:51 plug-in window open after 30 s (pid 31944, title 'Stable Boy - Generative Fill'); screenshot C:\\AI\\overnight-scratch\\rob\\logs\\rob-config-corrupt\\window.png",
+      "01:07:35 timeout after 75 s: killing gimp-console tree",
+      "01:07:35 gimp exited after 75.7 s (killed=True)",
+      "01:07:35 driver did not finish: plugin-log.txt sliced by the launcher"
+    ],
+    "config_mode": "corrupt",
+    "config_written": "{ not json",
+    "profile_listing_before": [
+      "tasks 1",
+      "tmp 1",
+      "config.json 10",
+      "stable-boy.log 15394"
+    ],
+    "gimp_seconds": 75.7,
+    "gimp_exit_code": -1,
+    "gimp_killed_by_launcher": true,
+    "window_screenshot": "C:\\AI\\overnight-scratch\\rob\\logs\\rob-config-corrupt\\window.png",
+    "processes_10s_after_exit": [],
+    "server_state_10s_after_exit": "{\r\n  \"supervisor_pid\": 3752,\r\n  \"server_pid\": 0,\r\n  \"url\": \"http://127.0.0.1:8188\",\r\n  \"port\": 8188,\r\n  \"status\": \"failed\",\r\n  \"note\": \"placeholder written by the robustness launcher\"\r\n}",
+    "cleanup_seconds_after_exit": null,
+    "dummy_hits": 34,
+    "profile_listing_after": [
+      "tasks 1",
+      "tmp 1",
+      "config.json 10",
+      "server-state.json 186",
+      "stable-boy.log 16561"
+    ],
+    "config_after": "{ not json",
+    "restored": "config.json = baseline copy; state, task and comfyui.log files removed",
+    "finished": "2026-10-09T01:07:45"
+  },
+  "gimp_stderr": "GIMP-Message: Welcome to GIMP 3.2.6!\n\ngimp_ui_theme_changed: error loading C:\\AI\\overnight-scratch\\gimp-profile-rob\\theme.css: Error opening file C:\\AI\\overnight-scratch\\gimp-profile-rob\\theme.css: No such file or directory\ngimp_ui_theme_changed: error parsing C:\\AI\\overnight-scratch\\gimp-profile-rob\\theme.css: <broken file>:1:0Failed to import: Error opening file C:\\AI\\overnight-scratch\\gimp-profile-rob\\theme.css: No such file or directory\n"
+}

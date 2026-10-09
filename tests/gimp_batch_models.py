@@ -25,7 +25,7 @@ import traceback
 import gi
 
 gi.require_version("Gimp", "3.0")
-from gi.repository import Gimp, Gio, GLib
+from gi.repository import Gimp, Gio
 
 REPO = os.environ.get("SB_REPO", r"C:\repos\gimp-stable-boy")
 sys.path.insert(0, os.path.join(REPO, "gimp-stable-boy"))
@@ -48,8 +48,10 @@ def step(name, **info):
 
 
 def describe_layers(image):
-    return [{"name": l.get_name(), "has_mask": l.get_mask() is not None, "visible": l.get_visible()}
-            for l in image.get_layers()]
+    return [
+        {"name": layer.get_name(), "has_mask": layer.get_mask() is not None, "visible": layer.get_visible()}
+        for layer in image.get_layers()
+    ]
 
 
 def run_fill(image, prompt, model):
@@ -74,9 +76,16 @@ def wait_task(app, task_id, timeout=900):
         status = app.task_status()
         cur = status.get("current") or {}
         if cur.get("task_id") == task_id:
-            samples.append({"t": round(time.time() - t0, 1), "done": cur.get("done"), "total": cur.get("total"),
-                            "speed_mbps": round((cur.get("speed") or 0) / 1048576, 2), "state": cur.get("state"),
-                            "file": cur.get("file")})
+            samples.append(
+                {
+                    "t": round(time.time() - t0, 1),
+                    "done": cur.get("done"),
+                    "total": cur.get("total"),
+                    "speed_mbps": round((cur.get("speed") or 0) / 1048576, 2),
+                    "state": cur.get("state"),
+                    "file": cur.get("file"),
+                }
+            )
         for h in status.get("history") or []:
             if h.get("task_id") == task_id:
                 return h, samples
@@ -85,13 +94,18 @@ def wait_task(app, task_id, timeout=900):
 
 
 try:
-    from stable_boy.app import App
     from stable_boy import catalog as cat
+    from stable_boy.app import App
 
     app = App()
     rows = app.model_rows()
-    step("catalog", ids=[r["id"] for r in rows], statuses={r["id"]: r["status"] for r in rows},
-         active=app.settings.active_model, models_root=str(app.models_root))
+    step(
+        "catalog",
+        ids=[r["id"] for r in rows],
+        statuses={r["id"]: r["status"] for r in rows},
+        active=app.settings.active_model,
+        models_root=str(app.models_root),
+    )
 
     entry = cat.by_id(app.catalog, DOWNLOAD_ID)
     for f in entry.files:  # start clean so the download really happens
@@ -105,8 +119,15 @@ try:
     f = entry.files[0]
     path = app.models_root / f.dest
     digest = hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
-    step("download-verified", exists=path.exists(), size=path.stat().st_size if path.exists() else None,
-         expected_size=f.size, sha256=digest, expected_sha256=f.sha256, match=digest == f.sha256)
+    step(
+        "download-verified",
+        exists=path.exists(),
+        size=path.stat().st_size if path.exists() else None,
+        expected_size=f.size,
+        sha256=digest,
+        expected_sha256=f.sha256,
+        match=digest == f.sha256,
+    )
     status_now = {r["id"]: r["status"] for r in app.model_rows()}
     step("status-after-download", status=status_now.get(DOWNLOAD_ID), all=status_now)
 
@@ -118,7 +139,9 @@ try:
     app.set_active(DOWNLOAD_ID)
     app2 = App()
     entry_, spec = app2.resolve_model("active")
-    step("set-active", active=app2.settings.active_model, template=spec.effective_template, prompt_free=spec.prompt_free)
+    step(
+        "set-active", active=app2.settings.active_model, template=spec.effective_template, prompt_free=spec.prompt_free
+    )
 
     image = Gimp.file_load(Gimp.RunMode.NONINTERACTIVE, Gio.File.new_for_path(IMAGE))
     Gimp.Display.new(image)
@@ -135,6 +158,7 @@ try:
         result3, _ = wait_task(app, tid, timeout=900)
         step("nodes-installed", result=result3, folder_exists=(app.custom_nodes_dir / nodes[0].folder).is_dir())
         from stable_boy.comfy_api import ComfyClient
+
         client = ComfyClient(app.server.url())
         seen = False
         for _ in range(120):
@@ -156,7 +180,8 @@ try:
     if os.environ.get("SB_TEST_SETTINGS") == "1":
         os.environ["SB_SETTINGS_TAB"] = "models"
         os.environ.setdefault("SB_TEST_AUTOCLOSE", "8")
-        open(os.path.join(OUT, "dialog-open.marker"), "w").write(str(time.time()))
+        with open(os.path.join(OUT, "dialog-open.marker"), "w") as fh:
+            fh.write(str(time.time()))
         proc = Gimp.get_pdb().lookup_procedure("python-fu-stable-boy-settings")
         config = proc.create_config()
         config.set_property("run-mode", Gimp.RunMode.INTERACTIVE)

@@ -1,0 +1,19 @@
+2026-10-09 01:25:30,640 INFO  [30824 stable-boy] refused: indexed image
+2026-10-09 01:25:30,643 ERROR [30824 stable-boy] procedure failed: This image uses indexed colors, which cannot hold generated pixels without destroying them. Convert it with Image > Mode > RGB (or Grayscale) and run the command again.
+Traceback (most recent call last):
+  File "C:\AI\overnight-scratch\gimp-profile-test\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 118, in run_fill
+    app.generative_fill(image, config.get_property("prompt"), config.get_property("negative"),
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        config.get_property("variations"), config.get_property("strength"),
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        config.get_property("seed"), config.get_property("model"),
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        remove=bool(config.get_property("remove")))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/app.py", line 405, in generative_fill
+    self._check_image(image)
+    ~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/app.py", line 671, in _check_image
+    raise UnsupportedImage(INDEXED_MESSAGE)
+stable_boy.app.UnsupportedImage: This image uses indexed colors, which cannot hold generated pixels without destroying them. Convert it with Image > Mode > RGB (or Grayscale) and run the command again.
+

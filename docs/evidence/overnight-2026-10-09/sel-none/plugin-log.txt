@@ -1,0 +1,16 @@
+2026-10-09 01:21:37,234 INFO  [37132 stable-boy] fill: refused, nothing selected
+2026-10-09 01:21:37,236 ERROR [37132 stable-boy] procedure failed: Nothing is selected. Select the area to fill first (for example with the Rectangle or Free Select tool), then run Generative Fill again. To regenerate the whole image, use Select > All.
+Traceback (most recent call last):
+  File "C:\AI\overnight-scratch\gimp-profile-test\plug-ins\gimp-stable-boy\gimp-stable-boy.py", line 118, in run_fill
+    app.generative_fill(image, config.get_property("prompt"), config.get_property("negative"),
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        config.get_property("variations"), config.get_property("strength"),
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        config.get_property("seed"), config.get_property("model"),
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        remove=bool(config.get_property("remove")))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:/AI/overnight-scratch/gimp-profile-test/plug-ins/gimp-stable-boy/stable_boy/app.py", line 409, in generative_fill
+    raise NothingSelected(NO_SELECTION_MESSAGE)
+stable_boy.app.NothingSelected: Nothing is selected. Select the area to fill first (for example with the Rectangle or Free Select tool), then run Generative Fill again. To regenerate the whole image, use Select > All.
+

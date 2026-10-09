@@ -21,7 +21,7 @@ gi.require_version("Gegl", "0.4")
 from gi.repository import Gegl, Gimp, Gio  # noqa: E402
 
 from . import png  # noqa: E402
-from .geometry import Rect  # noqa: E402
+from .geometry import Rect, flatten_over_mean  # noqa: E402
 
 RGBA = "R'G'B'A u8"
 GRAY = "Y u8"
@@ -33,8 +33,13 @@ class GimpIoError(RuntimeError):
 
 # ---------------------------------------------------------------- reading ----
 
+
 def image_rect(image: Gimp.Image) -> Rect:
     return Rect(0, 0, image.get_width(), image.get_height())
+
+
+def is_indexed(image: Gimp.Image) -> bool:
+    return image.get_base_type() == Gimp.ImageBaseType.INDEXED
 
 
 def selection_rect(image: Gimp.Image) -> Rect | None:
@@ -46,21 +51,40 @@ def selection_rect(image: Gimp.Image) -> Rect | None:
     return Rect(x1, y1, x2 - x1, y2 - y1)
 
 
-def _read_buffer(buffer: Gegl.Buffer, rect: Rect, fmt: str,
-                 abyss: Gegl.AbyssPolicy = Gegl.AbyssPolicy.CLAMP) -> bytes:
+def _read_buffer(buffer: Gegl.Buffer, rect: Rect, fmt: str, abyss: Gegl.AbyssPolicy = Gegl.AbyssPolicy.CLAMP) -> bytes:
     region = Gegl.Rectangle.new(rect.x, rect.y, rect.width, rect.height)
     data = buffer.get(region, 1.0, fmt, abyss)
     return bytes(data)
 
 
+def _visible_without_channels(image: Gimp.Image) -> Gimp.Layer | None:
+    """The visible composite without channel overlays (a tinted user channel,
+    the red quick mask), which GIMP's projection would otherwise bake into the
+    pixels sent to the model. With visible channels the composite is taken from
+    a throw-away duplicate, so the user's image and its undo history are never
+    touched (freezing undo around visibility toggles crashed GIMP 3.2.6)."""
+    if not any(ch.get_visible() for ch in image.get_channels()):
+        return Gimp.Layer.new_from_visible(image, image, "stable-boy export")
+    dup = image.duplicate()
+    try:
+        dup.undo_disable()
+        for channel in dup.get_channels():
+            channel.set_visible(False)
+        return Gimp.Layer.new_from_visible(dup, image, "stable-boy export")
+    finally:
+        dup.delete()
+
+
 def export_region_png(image: Gimp.Image, rect: Rect, transparent_outside: bool = False) -> bytes:
-    """Composite of all visible layers inside ``rect`` as an RGBA PNG.
+    """Composite of all visible layers inside ``rect`` as an opaque RGBA PNG.
 
     ``rect`` may extend past the image; with ``transparent_outside`` those
-    pixels are transparent black (used by expand before the canvas grows),
-    otherwise the edge pixels are repeated.
+    pixels are transparent (used by expand before the canvas grows),
+    otherwise the edge pixels are repeated. Visible channels are not part of
+    the composite. Transparent pixels are flattened over the mean visible
+    colour: models read RGB only and would see them as black.
     """
-    layer = Gimp.Layer.new_from_visible(image, image, "stable-boy export")
+    layer = _visible_without_channels(image)
     if layer is None:
         raise GimpIoError("GIMP could not render the visible image")
     try:
@@ -71,7 +95,7 @@ def export_region_png(image: Gimp.Image, rect: Rect, transparent_outside: bool =
     expected = rect.width * rect.height * 4
     if len(pixels) != expected:
         raise GimpIoError(f"read {len(pixels)} bytes, expected {expected}")
-    return png.encode(rect.width, rect.height, pixels, 4)
+    return png.encode(rect.width, rect.height, flatten_over_mean(pixels), 4)
 
 
 def export_selection_mask_png(image: Gimp.Image, rect: Rect) -> bytes:
@@ -89,6 +113,7 @@ def mask_png_from_bytes(rect: Rect, pixels: bytes) -> bytes:
 
 
 # ---------------------------------------------------------------- writing ----
+
 
 def write_temp_png(data: bytes, directory: Path | None = None, prefix: str = "stable-boy-") -> Path:
     directory = Path(directory) if directory else Path(tempfile.gettempdir())
@@ -124,7 +149,7 @@ class SavedSelection:
         self.channel: Gimp.Channel | None = None
         self.was_empty = Gimp.Selection.is_empty(image)
 
-    def __enter__(self) -> "SavedSelection":
+    def __enter__(self) -> SavedSelection:
         if not self.was_empty:
             self.channel = Gimp.Selection.save(self.image)
         return self
@@ -139,8 +164,9 @@ class SavedSelection:
 
 def select_from_mask(image: Gimp.Image, rect: Rect, pixels: bytes) -> None:
     """Replace the selection with an 8-bit mask covering ``rect``."""
-    channel = Gimp.Channel.new(image, "stable-boy mask", image.get_width(), image.get_height(),
-                               100.0, Gegl.Color.new("black"))
+    channel = Gimp.Channel.new(
+        image, "stable-boy mask", image.get_width(), image.get_height(), 100.0, Gegl.Color.new("black")
+    )
     if channel is None:
         raise GimpIoError("GIMP could not create a temporary channel")
     buffer = channel.get_buffer()
@@ -153,9 +179,15 @@ def select_from_mask(image: Gimp.Image, rect: Rect, pixels: bytes) -> None:
         image.remove_channel(channel)
 
 
-def add_selection_mask(image: Gimp.Image, layer: Gimp.Layer, selection: Gimp.Channel | None,
-                       feather: float, mask_rect: Rect | None = None,
-                       mask_pixels: bytes | None = None, grow: int = 0) -> None:
+def add_selection_mask(
+    image: Gimp.Image,
+    layer: Gimp.Layer,
+    selection: Gimp.Channel | None,
+    feather: float,
+    mask_rect: Rect | None = None,
+    mask_pixels: bytes | None = None,
+    grow: int = 0,
+) -> None:
     """Attach a layer mask (selection grown by ``grow`` then feathered, or an
     explicit mask) to ``layer``. Growing first keeps the regenerated rim of a
     removed object inside the opaque part of the mask."""
@@ -173,16 +205,27 @@ def add_selection_mask(image: Gimp.Image, layer: Gimp.Layer, selection: Gimp.Cha
     layer.add_mask(mask)
 
 
-def insert_results(image: Gimp.Image, images: list[bytes], origin: Rect, base_name: str,
-                   feather: float, temp_dir: Path | None, use_selection_mask: bool = True,
-                   group_variations: bool = True, mask_pixels: bytes | None = None,
-                   grow: int = 0) -> list[Gimp.Layer]:
+def insert_results(
+    image: Gimp.Image,
+    images: list[bytes],
+    origin: Rect,
+    base_name: str,
+    feather: float,
+    temp_dir: Path | None,
+    use_selection_mask: bool = True,
+    group_variations: bool = True,
+    mask_pixels: bytes | None = None,
+    grow: int = 0,
+    scale_to_origin: bool = False,
+) -> list[Gimp.Layer]:
     """Insert generated PNGs as layers at ``origin`` with a feathered mask.
 
     The mask comes from the user's selection, or from ``mask_pixels`` (an
     8-bit mask the size of ``origin``) when given. Several variations go into
     a layer group; only the first is visible. Runs inside one undo group and
-    restores the user's selection.
+    restores the user's selection. With ``scale_to_origin`` a result whose
+    size differs from ``origin`` (generated at the model's working size) is
+    scaled to it.
     """
     layers: list[Gimp.Layer] = []
     image.undo_group_start()
@@ -195,8 +238,11 @@ def insert_results(image: Gimp.Image, images: list[bytes], origin: Rect, base_na
             for index, data in enumerate(images):
                 name = base_name if len(images) == 1 else f"{base_name} ({index + 1})"
                 layer = load_layer_from_png(image, data, name, temp_dir)
-                layer.set_offsets(origin.x, origin.y)
                 image.insert_layer(layer, parent, index)
+                # scaling needs the layer attached to the image (silently ignored before)
+                if scale_to_origin and (layer.get_width(), layer.get_height()) != (origin.width, origin.height):
+                    layer.scale(origin.width, origin.height, False)
+                layer.set_offsets(origin.x, origin.y)
                 if use_selection_mask:
                     add_selection_mask(image, layer, saved.channel, feather, origin, mask_pixels, grow)
                 layer.set_visible(index == 0)
@@ -223,7 +269,10 @@ def new_image_from_pngs(images: list[bytes], base_name: str, temp_dir: Path | No
         image.insert_layer(layer, None, index)
         layer.set_visible(index == 0)
     image.undo_enable()
-    Gimp.Display.new(image)
+    try:
+        Gimp.Display.new(image)
+    except Exception:  # noqa: BLE001 - no display in batch/console mode; the image still exists
+        pass
     Gimp.displays_flush()
     return image
 

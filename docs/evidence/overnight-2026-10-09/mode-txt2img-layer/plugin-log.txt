@@ -1,0 +1,3 @@
+2026-10-09 01:28:45,263 INFO  [17404 stable-boy] txt2img: 680x512 model=sd-v1-5-inpainting.ckpt target=layer
+2026-10-09 01:28:45,314 INFO  [17404 stable-boy] queued prompt fc217eca-9411-4c5a-915a-03e9544604d9 (timeout 120s, 25 steps x 1)
+2026-10-09 01:28:51,375 INFO  [17404 stable-boy] txt2img: done, seed=1234

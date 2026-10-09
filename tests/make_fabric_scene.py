@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Generate tests/data/fabric-button.png: dark knit fabric with a small bright
 round button (the Beckett bug: tiny selection on dark textured cloth)."""
+
 import math
 import os
 import random
@@ -37,7 +38,8 @@ for y in range(H):
                 v = 210
             r, g, b = v, v * 0.96, v * 0.9
         i = (y * W + x) * 3
-        px[i:i + 3] = bytes((int(max(0, min(255, r))), int(max(0, min(255, g))), int(max(0, min(255, b)))))
+        px[i : i + 3] = bytes((int(max(0, min(255, r))), int(max(0, min(255, g))), int(max(0, min(255, b)))))
 out = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", OUT_NAME)
-open(out, "wb").write(png.encode(W, H, bytes(px), 3))
+with open(out, "wb") as fh:
+    fh.write(png.encode(W, H, bytes(px), 3))
 print("wrote", out, "button at", BUTTON)

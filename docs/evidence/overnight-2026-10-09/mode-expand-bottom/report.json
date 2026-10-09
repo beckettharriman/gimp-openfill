@@ -1,0 +1,290 @@
+{
+  "id": "mode-expand-bottom",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Generative Expand: grass field under a blue sky, photo"
+      ]
+    },
+    "canvas_grew": {
+      "ok": true,
+      "value": [
+        1024,
+        896
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "new_area_opaque": {
+      "ok": true,
+      "value": 255.0
+    },
+    "no_hard_seam_at_old_edge": {
+      "ok": true,
+      "value": 2.87
+    },
+    "new_area_not_empty": {
+      "ok": true,
+      "value": 85.9
+    },
+    "old_pixels_outside_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "selection_state_after": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 10.32,
+    "layer_size": [
+      1024,
+      896
+    ],
+    "layer_offset": [
+      0,
+      0
+    ],
+    "laplacian_var_new_area": 2.32,
+    "laplacian_var_old_area": 60.03,
+    "seam_mean_abs_diff_max": 2.87,
+    "new_area_mean_rgb": [
+      69.8,
+      139.1,
+      48.8
+    ],
+    "old_pixels_outside_mask_max_abs_diff": 0,
+    "old_pixels_outside_mask_count": 729088
+  },
+  "memory": {
+    "samples": 12,
+    "peak_gimp_tree_mb": 430,
+    "peak_comfyui_mb": 6950,
+    "peak_gpu_mib": 3776
+  },
+  "evidence_files": {
+    "before.png scale": 1.0,
+    "after.png scale": 1.0
+  },
+  "spec": {
+    "id": "mode-expand-bottom",
+    "image": {
+      "w": 1024,
+      "h": 768
+    },
+    "selection": {
+      "kind": "none"
+    },
+    "proc": "expand",
+    "args": {
+      "prompt": "grass field under a blue sky, photo",
+      "negative": "blurry",
+      "variations": 1,
+      "seed": 1234,
+      "model": "sd15-inpainting",
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 128
+    }
+  },
+  "gimp": {
+    "id": "mode-expand-bottom",
+    "spec": {
+      "id": "mode-expand-bottom",
+      "image": {
+        "w": 1024,
+        "h": 768
+      },
+      "selection": {
+        "kind": "none"
+      },
+      "proc": "expand",
+      "args": {
+        "prompt": "grass field under a blue sky, photo",
+        "negative": "blurry",
+        "variations": 1,
+        "seed": 1234,
+        "model": "sd15-inpainting",
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 128
+      }
+    },
+    "started": "2026-10-09 01:28:21",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "scene",
+          "size": [
+            1024,
+            768
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "none",
+          "empty": true,
+          "bounds": null
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "a0f123d6899e487f8b1ffbefdcf18f11"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "cb18a5d28e77522dfec6a6255bc3847e"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 10.32,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 447,
+            "name": "Background",
+            "size": [
+              1024,
+              768
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 452,
+            "name": "Generative Expand: grass field under a blue sky, photo",
+            "size": [
+              1024,
+              896
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 447,
+            "name": "Background",
+            "size": [
+              1024,
+              768
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          1024,
+          896
+        ],
+        "selection_restored": null,
+        "selection_after_empty": true,
+        "new_top_level": [
+          {
+            "id": 452,
+            "name": "Generative Expand: grass field under a blue sky, photo",
+            "size": [
+              1024,
+              896
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 1024,
+          "height": 896,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "5bef6335ea0bd1a474213160695e2ca5"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 1024,
+          "height": 896,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "6295adf734801e38c7608e596e025481"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 1024,
+          "height": 896,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "bb550c2e31ceef00c31980ce2e86b1ae"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 10.74
+  },
+  "analysis_error": null
+}

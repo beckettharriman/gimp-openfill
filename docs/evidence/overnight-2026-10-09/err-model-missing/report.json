@@ -1,0 +1,234 @@
+{
+  "id": "err-model-missing",
+  "pass": true,
+  "checks": {
+    "returns_error": {
+      "ok": true,
+      "value": "execution-error"
+    },
+    "message_mentions_download": {
+      "ok": true,
+      "value": "A model file is missing on the backend: 'FLUX.1 Fill [dev] (first-party safetensors, fp8 at load time)' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download."
+    },
+    "no_layer_added": {
+      "ok": true,
+      "value": [
+        1,
+        1
+      ]
+    },
+    "image_size_unchanged": {
+      "ok": true,
+      "value": [
+        1024,
+        768
+      ]
+    },
+    "selection_unchanged": {
+      "ok": true,
+      "value": true
+    },
+    "composite_unchanged": {
+      "ok": true,
+      "value": null
+    }
+  },
+  "metrics": {
+    "status": "execution-error",
+    "message": "A model file is missing on the backend: 'FLUX.1 Fill [dev] (first-party safetensors, fp8 at load time)' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download.",
+    "seconds": 0.67
+  },
+  "memory": {
+    "samples": 2,
+    "peak_gimp_tree_mb": 413,
+    "peak_comfyui_mb": 7185,
+    "peak_gpu_mib": 3364
+  },
+  "evidence_files": {
+    "before.png scale": 1.0,
+    "after.png scale": 1.0
+  },
+  "spec": {
+    "id": "err-model-missing",
+    "image": {
+      "w": 1024,
+      "h": 768
+    },
+    "selection": {
+      "kind": "rect",
+      "rect": [
+        0.41,
+        0.39,
+        0.254,
+        0.26
+      ],
+      "units": "frac"
+    },
+    "proc": "fill",
+    "args": {
+      "prompt": "red brick wall",
+      "negative": "blurry",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "flux1-fill-dev",
+      "remove": false
+    },
+    "expect": {
+      "status": "error",
+      "message_contains": [
+        "download"
+      ]
+    }
+  },
+  "gimp": {
+    "id": "err-model-missing",
+    "spec": {
+      "id": "err-model-missing",
+      "image": {
+        "w": 1024,
+        "h": 768
+      },
+      "selection": {
+        "kind": "rect",
+        "rect": [
+          0.41,
+          0.39,
+          0.254,
+          0.26
+        ],
+        "units": "frac"
+      },
+      "proc": "fill",
+      "args": {
+        "prompt": "red brick wall",
+        "negative": "blurry",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 1234,
+        "model": "flux1-fill-dev",
+        "remove": false
+      },
+      "expect": {
+        "status": "error",
+        "message_contains": [
+          "download"
+        ]
+      }
+    },
+    "started": "2026-10-09 01:32:32",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "scene",
+          "size": [
+            1024,
+            768
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "rect",
+          "empty": false,
+          "bounds": [
+            420,
+            300,
+            260,
+            200
+          ]
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "a0f123d6899e487f8b1ffbefdcf18f11"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "a7e4a5e35d046485456b3fbcc9674e51"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 0.67,
+        "status": "execution-error",
+        "message": "A model file is missing on the backend: 'FLUX.1 Fill [dev] (first-party safetensors, fp8 at load time)' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models and press Download.",
+        "layers_before": [
+          {
+            "id": 663,
+            "name": "Background",
+            "size": [
+              1024,
+              768
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 663,
+            "name": "Background",
+            "size": [
+              1024,
+              768
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 1,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          1024,
+          768
+        ],
+        "selection_restored": true,
+        "new_top_level": [],
+        "raw_after": {
+          "file": "after.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "a0f123d6899e487f8b1ffbefdcf18f11"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 1.05
+  },
+  "analysis_error": null
+}

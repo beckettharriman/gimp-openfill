@@ -6,10 +6,9 @@
 from __future__ import annotations
 
 import json
-import socket
 import time
 import uuid
-from typing import Callable, Optional
+from collections.abc import Callable
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -20,8 +19,9 @@ ProgressCallback = Callable[[float, str], None]
 
 
 class ComfyApiError(RuntimeError):
-    def __init__(self, message: str, status: int = 0, node_errors: dict | None = None,
-                 payload: dict | None = None) -> None:
+    def __init__(
+        self, message: str, status: int = 0, node_errors: dict | None = None, payload: dict | None = None
+    ) -> None:
         super().__init__(message)
         self.status = status
         self.node_errors = node_errors or {}
@@ -31,8 +31,7 @@ class ComfyApiError(RuntimeError):
 class ComfyExecutionError(ComfyApiError):
     """``execution_error`` event from the server (includes the exception type)."""
 
-    def __init__(self, message: str, exception_type: str = "", node_type: str = "",
-                 traceback: str = "") -> None:
+    def __init__(self, message: str, exception_type: str = "", node_type: str = "", traceback: str = "") -> None:
         super().__init__(message)
         self.exception_type = exception_type
         self.node_type = node_type
@@ -45,16 +44,23 @@ class ComfyExecutionError(ComfyApiError):
 
 
 class ComfyClient:
-    def __init__(self, base_url: str = "http://127.0.0.1:8188", timeout: float = 30.0,
-                 client_id: str | None = None) -> None:
+    def __init__(
+        self, base_url: str = "http://127.0.0.1:8188", timeout: float = 30.0, client_id: str | None = None
+    ) -> None:
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
         self.client_id = client_id or uuid.uuid4().hex
 
     # low level -----------------------------------------------------------
 
-    def _request(self, method: str, path: str, body: bytes | None = None,
-                 content_type: str | None = None, timeout: float | None = None) -> bytes:
+    def _request(
+        self,
+        method: str,
+        path: str,
+        body: bytes | None = None,
+        content_type: str | None = None,
+        timeout: float | None = None,
+    ) -> bytes:
         headers = {"Accept": "application/json"}
         if content_type:
             headers["Content-Type"] = content_type
@@ -63,17 +69,24 @@ class ComfyClient:
             with urlopen(req, timeout=timeout or self.timeout) as resp:
                 return resp.read()
         except HTTPError as err:
-            raw = err.read()
+            try:
+                raw = err.read()
+            finally:
+                err.close()  # the error response holds the socket open otherwise (ResourceWarning)
             payload = {}
             try:
                 payload = json.loads(raw.decode("utf-8"))
             except Exception:
                 pass
-            message = payload.get("error", {}).get("message") if isinstance(payload.get("error"), dict) \
+            message = (
+                payload.get("error", {}).get("message")
+                if isinstance(payload.get("error"), dict)
                 else payload.get("error") or raw[:300].decode("utf-8", "replace")
-            raise ComfyApiError(f"{method} {path} -> HTTP {err.code}: {message}", err.code,
-                                payload.get("node_errors"), payload) from err
-        except (URLError, socket.timeout, TimeoutError, ConnectionError, OSError) as err:
+            )
+            raise ComfyApiError(
+                f"{method} {path} -> HTTP {err.code}: {message}", err.code, payload.get("node_errors"), payload
+            ) from err
+        except (URLError, TimeoutError, ConnectionError, OSError) as err:
             raise ComfyApiError(f"{method} {path} failed: {err}") from err
 
     def _json(self, method: str, path: str, body: dict | None = None, timeout: float | None = None) -> dict:
@@ -117,20 +130,21 @@ class ComfyClient:
         except (KeyError, TypeError, IndexError):
             return []
 
-    def upload_image(self, filename: str, data: bytes, subfolder: str = "stable-boy",
-                     overwrite: bool = True) -> str:
+    def upload_image(self, filename: str, data: bytes, subfolder: str = "stable-boy", overwrite: bool = True) -> str:
         """POST multipart to ``/upload/image``; returns ``subfolder/filename``."""
         boundary = "----StableBoy" + uuid.uuid4().hex
+        filename, subfolder = _header_safe(filename), _header_safe(subfolder)
         fields = {"type": "input", "subfolder": subfolder, "overwrite": "true" if overwrite else "false"}
         body = bytearray()
         for key, value in fields.items():
-            body += (f"--{boundary}\r\nContent-Disposition: form-data; name=\"{key}\"\r\n\r\n{value}\r\n").encode()
-        body += (f"--{boundary}\r\nContent-Disposition: form-data; name=\"image\"; "
-                 f"filename=\"{filename}\"\r\nContent-Type: image/png\r\n\r\n").encode()
+            body += (f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"\r\n\r\n{value}\r\n').encode()
+        body += (
+            f'--{boundary}\r\nContent-Disposition: form-data; name="image"; '
+            f'filename="{filename}"\r\nContent-Type: image/png\r\n\r\n'
+        ).encode()
         body += data
         body += f"\r\n--{boundary}--\r\n".encode()
-        raw = self._request("POST", "/upload/image", bytes(body),
-                            f"multipart/form-data; boundary={boundary}")
+        raw = self._request("POST", "/upload/image", bytes(body), f"multipart/form-data; boundary={boundary}")
         info = json.loads(raw.decode("utf-8"))
         name = info.get("name", filename)
         sub = info.get("subfolder", subfolder)
@@ -140,8 +154,9 @@ class ComfyClient:
         payload = {"prompt": graph, "client_id": self.client_id}
         info = self._json("POST", "/prompt", payload)
         if "prompt_id" not in info:
-            raise ComfyApiError(f"/prompt did not return a prompt_id: {info}", payload=info,
-                                node_errors=info.get("node_errors"))
+            raise ComfyApiError(
+                f"/prompt did not return a prompt_id: {info}", payload=info, node_errors=info.get("node_errors")
+            )
         return info["prompt_id"]
 
     def history(self, prompt_id: str) -> dict | None:
@@ -150,13 +165,6 @@ class ComfyClient:
 
     def queue(self) -> dict:
         return self._json("GET", "/queue")
-
-    def is_busy(self) -> bool:
-        try:
-            q = self.queue()
-        except ComfyApiError:
-            return False
-        return bool(q.get("queue_running")) or bool(q.get("queue_pending"))
 
     def interrupt(self) -> None:
         self._json("POST", "/interrupt", {})
@@ -174,10 +182,16 @@ class ComfyClient:
     def clear_queue(self) -> None:
         self._json("POST", "/queue", {"clear": True})
 
-    def wait_for(self, prompt_id: str, total_steps: int, deadline: float,
-                 progress: ProgressCallback | None = None, poll_interval: float = 1.0,
-                 preview: Callable[[bytes], None] | None = None,
-                 cancel: Callable[[], bool] | None = None) -> dict:
+    def wait_for(
+        self,
+        prompt_id: str,
+        total_steps: int,
+        deadline: float,
+        progress: ProgressCallback | None = None,
+        poll_interval: float = 1.0,
+        preview: Callable[[bytes], None] | None = None,
+        cancel: Callable[[], bool] | None = None,
+    ) -> dict:
         """Block until ``prompt_id`` finishes; return ``history[prompt_id]``.
 
         Uses the websocket for step-level progress (and binary preview frames,
@@ -188,7 +202,7 @@ class ComfyClient:
         :class:`ComfyApiError` on timeout and :class:`ComfyExecutionError`
         on failure.
         """
-        ws: Optional[WebSocket] = None
+        ws: WebSocket | None = None
         try:
             ws = WebSocket(ws_url(self.base_url, self.client_id), timeout=5.0)
             ws.connect()
@@ -215,7 +229,7 @@ class ComfyClient:
                 if ws is not None:
                     try:
                         opcode, payload = ws.recv()
-                    except socket.timeout:
+                    except TimeoutError:
                         opcode, payload = None, b""
                     except (WebSocketError, OSError):
                         ws = None
@@ -242,13 +256,14 @@ class ComfyClient:
                             if node is None and data.get("prompt_id") == prompt_id:
                                 break  # finished
                             if progress and node is not None:
-                                progress(min(0.99, done_steps / max(1, total_steps)),
-                                         f"Running node {node}...")
+                                progress(min(0.99, done_steps / max(1, total_steps)), f"Running node {node}...")
                         elif kind == "execution_error" and data.get("prompt_id") == prompt_id:
                             raise ComfyExecutionError(
                                 data.get("exception_message", "execution error"),
-                                data.get("exception_type", ""), data.get("node_type", ""),
-                                "\n".join(data.get("traceback", []) or []))
+                                data.get("exception_type", ""),
+                                data.get("node_type", ""),
+                                "\n".join(data.get("traceback", []) or []),
+                            )
                         elif kind == "execution_interrupted" and data.get("prompt_id") == prompt_id:
                             raise ComfyApiError("generation was interrupted")
                 # Poll the history as a safety net (and as the only signal
@@ -301,3 +316,10 @@ def _status_message(status: dict) -> str:
             data = msg[1] or {}
             return f"{data.get('exception_type', '')}: {data.get('exception_message', 'error')}"
     return "execution failed"
+
+
+def _header_safe(value: str) -> str:
+    """Make a value safe inside a quoted multipart header parameter: no quotes,
+    backslashes, CR/LF or other control characters, ASCII only."""
+    out = "".join(c if 32 <= ord(c) < 127 and c not in '"\\' else "_" for c in str(value))
+    return out or "_"

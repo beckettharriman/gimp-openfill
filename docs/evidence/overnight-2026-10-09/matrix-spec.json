@@ -1,0 +1,1806 @@
+{
+ "cases": [
+  {
+   "id": "sel-none",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   },
+   "expect": {
+    "status": "error",
+    "message_contains": [
+     "select"
+    ]
+   }
+  },
+  {
+   "id": "sel-whole-image",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "all"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-tiny-20px",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     500,
+     380,
+     20,
+     20
+    ],
+    "units": "px"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-huge-85pct",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.04,
+     0.04,
+     0.92,
+     0.92
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-edge-left",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0,
+     0.35,
+     0.2,
+     0.3
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-edge-top",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.4,
+     0,
+     0.2,
+     0.25
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-edge-right",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.8,
+     0.35,
+     0.2,
+     0.3
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-edge-bottom",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.4,
+     0.75,
+     0.2,
+     0.25
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-corner-topleft",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0,
+     0,
+     0.2,
+     0.25
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-corner-bottomright",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.8,
+     0.75,
+     0.2,
+     0.25
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-multi-disjoint",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "multi",
+    "rects": [
+     [
+      0.1,
+      0.2,
+      0.15,
+      0.2
+     ],
+     [
+      0.7,
+      0.6,
+      0.15,
+      0.2
+     ]
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-feathered",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac",
+    "feather": 20
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-quickmask-painted",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "blob",
+    "rect": [
+     0.35,
+     0.3,
+     0.3,
+     0.35
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-layer-offset",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "setup": [
+     {
+      "op": "layer_offset",
+      "size": [
+       400,
+       300
+      ],
+      "at": [
+       300,
+       200
+      ]
+     }
+    ]
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.35,
+     0.35,
+     0.3,
+     0.3
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-layer-in-group",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "setup": [
+     {
+      "op": "layer_in_group",
+      "size": [
+       400,
+       300
+      ],
+      "at": [
+       300,
+       200
+      ]
+     }
+    ]
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.35,
+     0.35,
+     0.3,
+     0.3
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-layer-mask-active",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "setup": [
+     "layer_mask_active"
+    ]
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-channel-active",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "setup": [
+     "channel_active"
+    ]
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-256",
+   "image": {
+    "w": 256,
+    "h": 256
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.35,
+     0.35,
+     0.3,
+     0.3
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-1024",
+   "image": {
+    "w": 1024,
+    "h": 1024
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-3000",
+   "image": {
+    "w": 3000,
+    "h": 2000
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-6000",
+   "image": {
+    "w": 6000,
+    "h": 4000
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-aspect-wide",
+   "image": {
+    "w": 4096,
+    "h": 256
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.45,
+     0.2,
+     0.1,
+     0.6
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-aspect-tall",
+   "image": {
+    "w": 256,
+    "h": 4096
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.2,
+     0.45,
+     0.6,
+     0.1
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-grayscale",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "base": "gray"
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-indexed",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "base": "indexed"
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   },
+   "expect": {
+    "status": "error",
+    "message_contains": [
+     "indexed"
+    ]
+   }
+  },
+  {
+   "id": "img-16bit-int",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "precision": "u16"
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-32bit-float",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "precision": "float"
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-linear",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "precision": "linear"
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-alpha-transparent",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "setup": [
+     {
+      "op": "alpha_transparent",
+      "rect": [
+       300,
+       250,
+       250,
+       300
+      ]
+     }
+    ]
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-text-layer",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "setup": [
+     {
+      "op": "text_layer",
+      "text": "SALE",
+      "size": 120,
+      "at": [
+       440,
+       300
+      ]
+     }
+    ]
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-rotated-layer",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "setup": [
+     {
+      "op": "rotated_layer",
+      "size": [
+       360,
+       240
+      ],
+      "at": [
+       380,
+       260
+      ],
+      "degrees": 30
+     }
+    ]
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-multilayer-hidden",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "setup": [
+     "hidden_layer"
+    ]
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   },
+   "hidden_magenta_check": true
+  },
+  {
+   "id": "img-unsaved-new",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "source": "new"
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-with-path",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "setup": [
+     "path"
+    ]
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "prompt-empty",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   },
+   "removal": true
+  },
+  {
+   "id": "prompt-very-long",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with white mortar, weathered, photo, red brick wall with whit",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "prompt-unicode-emoji",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "café 日本 🌸",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "prompt-quotes-backslashes",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "a \"sign\" with \\ and \\\\ and 'quotes'",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "prompt-negative-only",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "red, bricks, text, people",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   },
+   "removal": true
+  },
+  {
+   "id": "mode-fill",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "mode-remove",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": true
+   },
+   "removal": true
+  },
+  {
+   "id": "mode-expand-left",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "grass field under a blue sky, photo",
+    "negative": "blurry",
+    "variations": 1,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "left": 128,
+    "top": 0,
+    "right": 0,
+    "bottom": 0
+   }
+  },
+  {
+   "id": "mode-expand-top",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "grass field under a blue sky, photo",
+    "negative": "blurry",
+    "variations": 1,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "left": 0,
+    "top": 128,
+    "right": 0,
+    "bottom": 0
+   }
+  },
+  {
+   "id": "mode-expand-right",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "grass field under a blue sky, photo",
+    "negative": "blurry",
+    "variations": 1,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "left": 0,
+    "top": 0,
+    "right": 128,
+    "bottom": 0
+   }
+  },
+  {
+   "id": "mode-expand-bottom",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "grass field under a blue sky, photo",
+    "negative": "blurry",
+    "variations": 1,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "left": 0,
+    "top": 0,
+    "right": 0,
+    "bottom": 128
+   }
+  },
+  {
+   "id": "mode-expand-all",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "expand",
+   "args": {
+    "prompt": "grass field under a blue sky, photo",
+    "negative": "blurry",
+    "variations": 1,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "left": 128,
+    "top": 128,
+    "right": 128,
+    "bottom": 128
+   }
+  },
+  {
+   "id": "mode-txt2img-layer",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     100,
+     100,
+     256,
+     192
+    ],
+    "units": "px"
+   },
+   "proc": "txt2img",
+   "args": {
+    "prompt": "a small wooden cabin in a meadow, photo",
+    "negative": "blurry",
+    "variations": 1,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "width": 0,
+    "height": 0,
+    "target": "layer"
+   }
+  },
+  {
+   "id": "mode-txt2img-image",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "none"
+   },
+   "proc": "txt2img",
+   "args": {
+    "prompt": "a small wooden cabin in a meadow, photo",
+    "negative": "blurry",
+    "variations": 1,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "width": 512,
+    "height": 384,
+    "target": "image"
+   }
+  },
+  {
+   "id": "mode-variations-4",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 4,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   },
+   "dump_all_children": true
+  },
+  {
+   "id": "mode-tier-sd15",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "fast",
+    "remove": false
+   }
+  },
+  {
+   "id": "mode-tier-sdxl-fooocus",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "quality",
+    "remove": false
+   }
+  },
+  {
+   "id": "mode-tier-juggernaut",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "remove": false
+   }
+  },
+  {
+   "id": "mode-tier-mat",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "mat-places512",
+    "remove": true
+   },
+   "removal": true
+  },
+  {
+   "id": "mode-seed-random",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": -1,
+    "model": "sd15-inpainting",
+    "remove": false
+   },
+   "runs": 2,
+   "repeat_expect": "differ"
+  },
+  {
+   "id": "mode-seed-fixed-repeat",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "sd15-inpainting",
+    "remove": false
+   },
+   "runs": 2,
+   "repeat_expect": "identical"
+  },
+  {
+   "id": "sel-tiny-20px-quality",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     500,
+     380,
+     20,
+     20
+    ],
+    "units": "px"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-edge-top-quality",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.4,
+     0,
+     0.2,
+     0.25
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-corner-topleft-quality",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0,
+     0,
+     0.2,
+     0.25
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "remove": false
+   }
+  },
+  {
+   "id": "img-unsaved-new-quality",
+   "image": {
+    "w": 1024,
+    "h": 768,
+    "source": "new"
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "juggernaut-xl-v9",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-edge-left-seed7",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0,
+     0.35,
+     0.2,
+     0.3
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 7,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-tiny-20px-seed7",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     500,
+     380,
+     20,
+     20
+    ],
+    "units": "px"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 7,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-edge-left-seed99",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0,
+     0.35,
+     0.2,
+     0.3
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 99,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "sel-tiny-20px-seed99",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     500,
+     380,
+     20,
+     20
+    ],
+    "units": "px"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 99,
+    "model": "sd15-inpainting",
+    "remove": false
+   }
+  },
+  {
+   "id": "err-model-missing",
+   "image": {
+    "w": 1024,
+    "h": 768
+   },
+   "selection": {
+    "kind": "rect",
+    "rect": [
+     0.41,
+     0.39,
+     0.254,
+     0.26
+    ],
+    "units": "frac"
+   },
+   "proc": "fill",
+   "args": {
+    "prompt": "red brick wall",
+    "negative": "blurry",
+    "variations": 1,
+    "strength": 1.0,
+    "seed": 1234,
+    "model": "flux1-fill-dev",
+    "remove": false
+   },
+   "expect": {
+    "status": "error",
+    "message_contains": [
+     "download"
+    ]
+   }
+  }
+ ]
+}

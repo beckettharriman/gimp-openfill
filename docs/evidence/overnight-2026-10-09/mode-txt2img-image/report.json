@@ -1,0 +1,216 @@
+{
+  "id": "mode-txt2img-image",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_image_created": {
+      "ok": true,
+      "value": [
+        [
+          680,
+          512
+        ]
+      ]
+    },
+    "source_untouched": {
+      "ok": true,
+      "value": null
+    },
+    "content_not_flat": {
+      "ok": true,
+      "value": 5010.22
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 1.12,
+    "laplacian_var": 5010.22
+  },
+  "memory": {
+    "samples": 3,
+    "peak_gimp_tree_mb": 375,
+    "peak_comfyui_mb": 6891,
+    "peak_gpu_mib": 3138
+  },
+  "evidence_files": {
+    "before.png scale": 1.0,
+    "after.png scale": 1.0
+  },
+  "spec": {
+    "id": "mode-txt2img-image",
+    "image": {
+      "w": 1024,
+      "h": 768
+    },
+    "selection": {
+      "kind": "none"
+    },
+    "proc": "txt2img",
+    "args": {
+      "prompt": "a small wooden cabin in a meadow, photo",
+      "negative": "blurry",
+      "variations": 1,
+      "seed": 1234,
+      "model": "sd15-inpainting",
+      "width": 512,
+      "height": 384,
+      "target": "image"
+    }
+  },
+  "gimp": {
+    "id": "mode-txt2img-image",
+    "spec": {
+      "id": "mode-txt2img-image",
+      "image": {
+        "w": 1024,
+        "h": 768
+      },
+      "selection": {
+        "kind": "none"
+      },
+      "proc": "txt2img",
+      "args": {
+        "prompt": "a small wooden cabin in a meadow, photo",
+        "negative": "blurry",
+        "variations": 1,
+        "seed": 1234,
+        "model": "sd15-inpainting",
+        "width": 512,
+        "height": 384,
+        "target": "image"
+      }
+    },
+    "started": "2026-10-09 01:28:51",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "scene",
+          "size": [
+            1024,
+            768
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "none",
+          "empty": true,
+          "bounds": null
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "a0f123d6899e487f8b1ffbefdcf18f11"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "cb18a5d28e77522dfec6a6255bc3847e"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 1.12,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 475,
+            "name": "Background",
+            "size": [
+              1024,
+              768
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 475,
+            "name": "Background",
+            "size": [
+              1024,
+              768
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 1,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          1024,
+          768
+        ],
+        "selection_restored": true,
+        "new_top_level": [],
+        "raw_after": {
+          "file": "after.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "a0f123d6899e487f8b1ffbefdcf18f11"
+        },
+        "new_images": [
+          {
+            "size": [
+              680,
+              512
+            ],
+            "layers": 1,
+            "raw": {
+              "file": "newimage1.raw",
+              "width": 680,
+              "height": 512,
+              "channels": 4,
+              "offset": [
+                0,
+                0
+              ],
+              "md5": "fe522f11cb7def831d8b06813c7de6fe"
+            }
+          }
+        ]
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 1.52
+  },
+  "analysis_error": null
+}

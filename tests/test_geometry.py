@@ -85,13 +85,13 @@ class SmallSelectionPipelineTests(unittest.TestCase):
         image = g.Rect(0, 0, 3024, 4032)
         sel = g.Rect(474, 1010, 38, 33)
         ctx = g.context_rect(sel, image, g.SDXL)
-        self.assertEqual(ctx.size, (256, 256))             # tight crop, not 768
+        self.assertEqual(ctx.size, (256, 256))  # tight crop, not 768
         self.assertTrue(ctx.contains(sel))
         ws = g.working_size(ctx.width, ctx.height, g.SDXL)
         self.assertEqual((ws.width, ws.height), (768, 768))  # upscaled 3x so the button is ~114 px
         mp = g.mask_params(sel, ws.scale)
-        self.assertEqual(mp.grow_image, 6)                  # 15 % of 38 -> 6 px (min 6)
-        self.assertEqual(mp.feather_image, 2)               # 6 % of 38 -> 2 px, not 24
+        self.assertEqual(mp.grow_image, 6)  # 15 % of 38 -> 6 px (min 6)
+        self.assertEqual(mp.feather_image, 2)  # 6 % of 38 -> 2 px, not 24
         self.assertEqual(mp.grow_work, 18)
         self.assertLessEqual(mp.blur_work, mp.grow_work)
 
@@ -103,8 +103,8 @@ class SmallSelectionPipelineTests(unittest.TestCase):
 
     def test_large_selection_caps(self):
         mp = g.mask_params(g.Rect(0, 0, 1200, 900), 0.5)
-        self.assertEqual(mp.grow_image, 48)                 # capped
-        self.assertEqual(mp.feather_image, 24)              # capped
+        self.assertEqual(mp.grow_image, 48)  # capped
+        self.assertEqual(mp.feather_image, 24)  # capped
         self.assertEqual(mp.grow_work, 24)
         self.assertEqual(mp.blur_work, 12)
 
@@ -157,11 +157,59 @@ class MiscTests(unittest.TestCase):
     def test_seed(self):
         self.assertEqual(g.seed_or_random(7), 7)
         import random
+
         self.assertEqual(g.seed_or_random(-1, random.Random(1)), random.Random(1).randrange(0, 2**32 - 1))
 
     def test_timeout_has_floor(self):
         self.assertGreaterEqual(g.estimate_timeout(1, 1, 1000), 120)
         self.assertGreater(g.estimate_timeout(50, 4, 1024 * 1024), g.estimate_timeout(10, 1, 1024 * 1024))
+
+
+class FillPolicyTests(unittest.TestCase):
+    image = g.Rect(0, 0, 1024, 768)
+
+    def test_prompt_fill_uses_tighter_context_than_removal(self):
+        sel = g.Rect(410, 0, 205, 192)
+        tight = g.context_rect(sel, self.image, g.SD15, padding_ratio=g.fill_padding(False))
+        wide = g.context_rect(sel, self.image, g.SD15, padding_ratio=g.fill_padding(True))
+        self.assertLess(tight.area, wide.area)
+        self.assertTrue(tight.contains(sel))
+
+    def test_color_match_skipped_without_reference(self):
+        whole = self.image
+        self.assertFalse(g.color_match_useful(whole, whole, self.image))
+        # touches left, top and bottom edges
+        tall_left = g.Rect(0, 0, 200, 768)
+        self.assertFalse(g.color_match_useful(tall_left, g.Rect(0, 0, 600, 768), self.image))
+        # ordinary selection in the middle keeps colour matching
+        mid = g.Rect(420, 300, 260, 200)
+        self.assertTrue(g.color_match_useful(mid, g.context_rect(mid, self.image, g.SD15), self.image))
+        # a corner selection touches only two edges
+        corner = g.Rect(0, 0, 100, 100)
+        self.assertTrue(g.color_match_useful(corner, g.Rect(0, 0, 300, 300), self.image))
+
+    def test_layer_mask_grow(self):
+        mp = g.mask_params(g.Rect(0, 0, 260, 200), 1.0)
+        self.assertEqual(g.layer_mask_grow(mp, True), mp.grow_image)
+        self.assertEqual(g.layer_mask_grow(mp, False), min(mp.grow_image, mp.feather_image))
+        self.assertLessEqual(g.layer_mask_grow(mp, False), mp.grow_image)
+        tiny = g.mask_params(g.Rect(0, 0, 10, 10), 1.0)
+        self.assertGreaterEqual(g.layer_mask_grow(tiny, False), 1)
+
+    def test_flatten_over_mean(self):
+        opaque = bytes([10, 20, 30, 255]) * 4
+        self.assertIs(g.flatten_over_mean(opaque), opaque)
+        # two opaque red pixels, two fully transparent black ones -> transparent become red
+        px = bytes([200, 0, 0, 255, 200, 0, 0, 255, 0, 0, 0, 0, 0, 0, 0, 0])
+        out = g.flatten_over_mean(px)
+        self.assertEqual(out, bytes([200, 0, 0, 255]) * 4)
+        # half transparent pixel blends with the mean
+        px = bytes([100, 100, 100, 255, 0, 0, 0, 128])
+        out = g.flatten_over_mean(px)
+        self.assertEqual(out[3::4], bytes([255, 255]))
+        self.assertTrue(25 <= out[4] <= 40, out)  # mean is alpha-weighted (67), half of it shows
+        # nothing visible -> mid grey
+        self.assertEqual(g.flatten_over_mean(bytes(8)), bytes([128, 128, 128, 255]) * 2)
 
 
 if __name__ == "__main__":

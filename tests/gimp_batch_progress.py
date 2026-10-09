@@ -27,8 +27,12 @@ sys.path.insert(0, os.path.join(REPO, "gimp-stable-boy"))
 IMAGE = os.environ.get("SB_TEST_IMAGE", os.path.join(REPO, "tests", "data", "test-scene.png"))
 OUT = os.environ.get("SB_TEST_OUT", os.path.join(REPO, "docs", "evidence", "progress-window"))
 os.makedirs(OUT, exist_ok=True)
-report = {"started": time.strftime("%Y-%m-%d %H:%M:%S"), "gimp_pid": os.getpid(),
-          "cancel_at": os.environ.get("SB_TEST_CANCEL_AT"), "steps": []}
+report = {
+    "started": time.strftime("%Y-%m-%d %H:%M:%S"),
+    "gimp_pid": os.getpid(),
+    "cancel_at": os.environ.get("SB_TEST_CANCEL_AT"),
+    "steps": [],
+}
 
 
 def step(name, **info):
@@ -38,7 +42,7 @@ def step(name, **info):
 
 
 def layers(image):
-    return [{"name": l.get_name(), "has_mask": l.get_mask() is not None} for l in image.get_layers()]
+    return [{"name": layer.get_name(), "has_mask": layer.get_mask() is not None} for layer in image.get_layers()]
 
 
 try:
@@ -46,8 +50,11 @@ try:
     from stable_boy.comfy_api import ComfyClient
 
     app = App()
-    step("settings", progress_window=app.settings.progress_window,
-         position=(app.settings.progress_window_x, app.settings.progress_window_y))
+    step(
+        "settings",
+        progress_window=app.settings.progress_window,
+        position=(app.settings.progress_window_x, app.settings.progress_window_y),
+    )
     url = app.server.ensure_running(lambda f, t: None)  # warm backend so the run is about sampling
     step("backend", url=url)
 
@@ -55,7 +62,8 @@ try:
     Gimp.Display.new(image)
     image.select_rectangle(Gimp.ChannelOps.REPLACE, 420, 300, 260, 200)
     before = layers(image)
-    open(os.path.join(OUT, "fill-started.marker"), "w").write(str(time.time()))
+    with open(os.path.join(OUT, "fill-started.marker"), "w") as fh:
+        fh.write(str(time.time()))
     proc = Gimp.get_pdb().lookup_procedure("python-fu-stable-boy-generative-fill")
     config = proc.create_config()
     config.set_property("run-mode", Gimp.RunMode.NONINTERACTIVE)
@@ -71,8 +79,14 @@ try:
     result = proc.run(config)
     status = result.index(0)
     after = layers(image)
-    step("generative-fill", status=str(status), seconds=round(time.time() - t0, 1), layers_before=before,
-         layers_after=after, layer_added=len(after) > len(before))
+    step(
+        "generative-fill",
+        status=str(status),
+        seconds=round(time.time() - t0, 1),
+        layers_before=before,
+        layers_after=after,
+        layer_added=len(after) > len(before),
+    )
     Gimp.file_save(Gimp.RunMode.NONINTERACTIVE, image, Gio.File.new_for_path(os.path.join(OUT, "after.png")))
 
     client = ComfyClient(url)

@@ -1,0 +1,67 @@
+{
+  "case": "rob-config-missing",
+  "acceptance_rule": "plain words plus a next step, no traceback, image and processes clean",
+  "verdict": "FAIL",
+  "verdict_reason": "Defaults load as intended (log: model sd15-inpainting, supervisor launched with the default ComfyUI folder and --port 8188). But the NONINTERACTIVE call never returned: with the default progress_window=true the failure is shown in the progress window, Runner.fail() then waits in Gtk.main() for Close, so the batch call hung until the launcher killed GIMP after 75 s. Gimp.message was never reached, nothing on stderr. The window opened partly off screen (no image window to anchor to).",
+  "message_shown_in_progress_window": "The AI backend is not available: ComfyUI did not come up at http://127.0.0.1:8188 within 240 s. Last log lines:\n(no backend log yet)",
+  "notes": [
+    "Harness: no config.json means url 8188 and autostart true, which belong to another lane tonight. HTTP_PROXY pointed at a closed port so no request reached 8188, and a placeholder supervisor pid (status failed) in server-state.json made the spawned supervisor exit without starting ComfyUI. The message text above is therefore produced by the harness state; the hang and the defaults are the observations.",
+    "'within 240 s' is printed although the wait ended after about 2 s (status failed)."
+  ],
+  "status": null,
+  "user_message_verbatim": [],
+  "return_message": null,
+  "seconds_in_procedure": null,
+  "checks": {
+    "traceback_in_gimp_output": false,
+    "image_untouched": null,
+    "layer_count_before_after": [
+      null,
+      null
+    ],
+    "selection_unchanged": true,
+    "dirty_after (undo step added)": null,
+    "processes_alive_10s_after_gimp_exit": 0,
+    "cleanup_seconds_after_exit": null,
+    "gimp_killed_by_launcher": true
+  },
+  "driver": {},
+  "launcher": {
+    "case": "rob-config-missing",
+    "started": "2026-10-09T01:04:30",
+    "harness": [
+      "HTTP_PROXY=http://127.0.0.1:9 (no request reaches 8188); placeholder supervisor pid 12136 in server-state.json with status=failed"
+    ],
+    "events": [
+      "01:04:30 gimp-console pid 26752",
+      "01:05:01 plug-in window open after 30 s (pid 12240, title 'Stable Boy - Generative Fill'); screenshot C:\\AI\\overnight-scratch\\rob\\logs\\rob-config-missing\\window.png",
+      "01:05:45 timeout after 75 s: killing gimp-console tree",
+      "01:05:46 gimp exited after 75.5 s (killed=True)"
+    ],
+    "config_mode": "missing",
+    "config_written": "(absent)",
+    "profile_listing_before": [
+      "tasks 1",
+      "tmp 1",
+      "stable-boy.log 14226"
+    ],
+    "gimp_seconds": 75.5,
+    "gimp_exit_code": 3,
+    "gimp_killed_by_launcher": true,
+    "window_screenshot": "C:\\AI\\overnight-scratch\\rob\\logs\\rob-config-missing\\window.png",
+    "processes_10s_after_exit": [],
+    "server_state_10s_after_exit": "{\r\n  \"supervisor_pid\": 12136,\r\n  \"server_pid\": 0,\r\n  \"url\": \"http://127.0.0.1:8188\",\r\n  \"port\": 8188,\r\n  \"status\": \"failed\",\r\n  \"note\": \"placeholder written by the robustness launcher\"\r\n}",
+    "cleanup_seconds_after_exit": null,
+    "dummy_hits": 34,
+    "profile_listing_after": [
+      "tasks 1",
+      "tmp 1",
+      "server-state.json 187",
+      "stable-boy.log 15394"
+    ],
+    "config_after": "(absent)",
+    "restored": "config.json = baseline copy; state, task and comfyui.log files removed",
+    "finished": "2026-10-09T01:05:56"
+  },
+  "gimp_stderr": "GIMP-Message: Welcome to GIMP 3.2.6!\n\ngimp_ui_theme_changed: error loading C:\\AI\\overnight-scratch\\gimp-profile-rob\\theme.css: Error opening file C:\\AI\\overnight-scratch\\gimp-profile-rob\\theme.css: No such file or directory\ngimp_ui_theme_changed: error parsing C:\\AI\\overnight-scratch\\gimp-profile-rob\\theme.css: <broken file>:1:0Failed to import: Error opening file C:\\AI\\overnight-scratch\\gimp-profile-rob\\theme.css: No such file or directory\n"
+}

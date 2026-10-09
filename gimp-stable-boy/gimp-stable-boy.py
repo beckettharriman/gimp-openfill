@@ -139,32 +139,6 @@ KIND_CAPABILITY = {"fill": ("fill", "remove"), "expand": ("expand",), "txt2img":
 LEGACY_NICKS = ("fast", "quality")
 
 
-def _bind_runner(interactive: bool) -> None:
-    """Make App build its Runner with ``interactive=...``: a failed
-    non-interactive run must not wait in the progress window for Close.
-    App creates the Runner itself (app.py), so the factory it looks up is
-    replaced for this plug-in process. Works whether or not runner.Runner
-    already accepts the keyword (it is only passed when it does)."""
-    import inspect
-
-    from stable_boy import app as app_module
-    from stable_boy import runner as runner_module
-
-    base = runner_module.Runner
-    try:
-        accepts = "interactive" in inspect.signature(base.__init__).parameters
-    except (TypeError, ValueError):
-        accepts = False
-    if not accepts:
-        return
-
-    def make_runner(*args, **kwargs):
-        kwargs.setdefault("interactive", interactive)
-        return base(*args, **kwargs)
-
-    app_module.Runner = make_runner
-
-
 def _test_hooks() -> dict:
     """Test hooks for GUI runs (screenshots): a JSON file named by
     SB_TEST_UI_FILE (re-read on every call, so one GIMP session can open
@@ -477,8 +451,7 @@ def run_fill(procedure, run_mode, image, drawables, config, data):
 
     app = None
     try:
-        _bind_runner(run_mode == Gimp.RunMode.INTERACTIVE)
-        app = App()
+        app = App(interactive=run_mode == Gimp.RunMode.INTERACTIVE)
         layers = app.generative_fill(
             image,
             config.get_property("prompt"),
@@ -507,8 +480,7 @@ def run_expand(procedure, run_mode, image, drawables, config, data):
 
     app = None
     try:
-        _bind_runner(run_mode == Gimp.RunMode.INTERACTIVE)
-        app = App()
+        app = App(interactive=run_mode == Gimp.RunMode.INTERACTIVE)
         layers = app.generative_expand(
             image,
             config.get_property("prompt"),
@@ -537,8 +509,7 @@ def run_txt2img(procedure, run_mode, image, drawables, config, data):
 
     app = None
     try:
-        _bind_runner(run_mode == Gimp.RunMode.INTERACTIVE)
-        app = App()
+        app = App(interactive=run_mode == Gimp.RunMode.INTERACTIVE)
         app.text_to_image(
             image,
             config.get_property("prompt"),

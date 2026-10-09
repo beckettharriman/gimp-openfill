@@ -1,0 +1,3 @@
+2026-10-09 01:27:23,036 INFO  [38368 stable-boy] fill: selection=Rect(x=420, y=300, width=260, height=200) context=Rect(x=160, y=40, width=780, height=720) working=768x712 scale=0.98 mask(grow=16/16px feather=16/16px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=sd15-inpainting template=sd15_inpaint
+2026-10-09 01:27:23,208 INFO  [38368 stable-boy] queued prompt 63c25915-1b36-4081-9056-8e225b6b0b60 (timeout 131s, 25 steps x 1)
+2026-10-09 01:27:36,792 INFO  [38368 stable-boy] fill: done, seed=1234, 1 layer(s)

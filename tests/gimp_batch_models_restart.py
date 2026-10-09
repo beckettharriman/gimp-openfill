@@ -34,8 +34,8 @@ def step(name, **info):
 
 
 try:
-    from stable_boy.app import App
     from stable_boy import catalog as cat
+    from stable_boy.app import App
     from stable_boy.comfy_api import ComfyClient
     from stable_boy.config import comfy_layout
 
@@ -44,14 +44,24 @@ try:
     client = ComfyClient(url)
     before = client.system_stats()
     state_before = app.server.read_state()
-    step("backend-up", url=url, server_pid=state_before.get("server_pid"), supervisor=state_before.get("supervisor_pid"),
-         gguf_before=bool(client.object_info("UnetLoaderGGUF")))
+    step(
+        "backend-up",
+        url=url,
+        server_pid=state_before.get("server_pid"),
+        supervisor=state_before.get("supervisor_pid"),
+        gguf_before=bool(client.object_info("UnetLoaderGGUF")),
+    )
 
     entry = cat.by_id(app.catalog, "flux1-fill-dev-gguf-q4")
     layout = comfy_layout(app.settings.comfy_dir)
-    task = {"type": "install_nodes", "model_id": entry.id, "custom_nodes_dir": str(app.custom_nodes_dir),
-            "python": str(layout["python"]), "restart_backend": True,
-            "nodes": [{"repo": n.repo, "folder": n.folder, "commit": n.commit} for n in entry.requires_nodes]}
+    task = {
+        "type": "install_nodes",
+        "model_id": entry.id,
+        "custom_nodes_dir": str(app.custom_nodes_dir),
+        "python": str(layout["python"]),
+        "restart_backend": True,
+        "nodes": [{"repo": n.repo, "folder": n.folder, "commit": n.commit} for n in entry.requires_nodes],
+    }
     tid = app.server.queue_task(task)
     step("install-queued", task_id=tid, worker_alive=app.server.task_worker_alive())
     result = None
@@ -71,17 +81,27 @@ try:
     for _ in range(150):
         st = app.server.read_state()
         new_pid = st.get("server_pid")
-        if new_pid and new_pid != state_before.get("server_pid") and client.is_alive(2.0) \
-                and client.object_info("UnetLoaderGGUF"):
+        if (
+            new_pid
+            and new_pid != state_before.get("server_pid")
+            and client.is_alive(2.0)
+            and client.object_info("UnetLoaderGGUF")
+        ):
             restarted = True
             break
         time.sleep(2)
-    step("backend-restarted", restarted=restarted, old_pid=state_before.get("server_pid"), new_pid=new_pid,
-         gguf_after=bool(client.object_info("UnetLoaderGGUF")) if client.is_alive(2.0) else None)
+    step(
+        "backend-restarted",
+        restarted=restarted,
+        old_pid=state_before.get("server_pid"),
+        new_pid=new_pid,
+        gguf_after=bool(client.object_info("UnetLoaderGGUF")) if client.is_alive(2.0) else None,
+    )
 
     os.environ["SB_SETTINGS_TAB"] = "models"
     os.environ.setdefault("SB_TEST_AUTOCLOSE", "10")
-    open(os.path.join(OUT, "dialog-open.marker"), "w").write(str(time.time()))
+    with open(os.path.join(OUT, "dialog-open.marker"), "w") as fh:
+        fh.write(str(time.time()))
     proc = Gimp.get_pdb().lookup_procedure("python-fu-stable-boy-settings")
     config = proc.create_config()
     config.set_property("run-mode", Gimp.RunMode.INTERACTIVE)

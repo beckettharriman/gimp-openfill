@@ -4,6 +4,9 @@
 """Run a backend job with the floating progress window (worker thread) or,
 when the window is disabled, inline with GIMP's status-bar progress only.
 
+This is a GIMP-side module (like ``gimp_io``): it needs Gimp/GimpUi for the
+status bar progress and the window, so it is not imported by the unit tests.
+
 Threading contract: the worker thread talks only to the backend (HTTP and
 websocket). Every GIMP or GTK call happens on the main thread, either
 before/after the worker runs or inside ``GLib.idle_add`` callbacks.
@@ -13,8 +16,7 @@ from __future__ import annotations
 
 import os
 import threading
-import time
-from typing import Callable
+from collections.abc import Callable
 
 import gi
 
@@ -25,23 +27,28 @@ from gi.repository import Gimp, GimpUi, GLib  # noqa: E402
 from . import gimp_io  # noqa: E402
 from .backend import GenerationCancelled, describe_error  # noqa: E402
 
+FAIL_WINDOW_TIMEOUT_MS = 20000  # a failed run closes its window after this even if nobody clicks
 Job = Callable[[Callable, Callable | None, Callable | None], object]
 
 
 class Runner:
-    def __init__(self, app, title: str, model_name: str) -> None:
+    def __init__(self, app, title: str, model_name: str, interactive: bool = True) -> None:
         self.app = app
         self.title = title
         self.model_name = model_name
         self.window = None
         self.status = gimp_io.GimpProgress(title)
         self._downloads_timer = 0
-        self.use_window = bool(app.settings.progress_window)
+        # Non-interactive runs (scripts, batch) never open the window: nobody is there to close it.
+        self.use_window = bool(app.settings.progress_window) and bool(interactive)
         self._closed = False
+        self._window_gone = False
+        self._fallback = 0
         if self.use_window:
             try:
                 GimpUi.init("gimp-stable-boy")
                 from .progress_window import ProgressWindow
+
                 handle = None
                 try:
                     data = Gimp.progress_get_window_handle()
@@ -49,8 +56,14 @@ class Runner:
                 except Exception:  # noqa: BLE001
                     handle = None
                 pos = (app.settings.progress_window_x, app.settings.progress_window_y)
-                self.window = ProgressWindow(title, model_name, on_cancel=self._cancel_clicked,
-                                             position=pos, anchor_handle=handle, on_moved=self._save_position)
+                self.window = ProgressWindow(
+                    title,
+                    model_name,
+                    on_cancel=self._cancel_clicked,
+                    position=pos,
+                    anchor_handle=handle,
+                    on_moved=self._save_position,
+                )
                 self._downloads_timer = GLib.timeout_add(1000, self._poll_downloads)
             except Exception as err:  # noqa: BLE001 - the window is optional
                 app.log.warning("progress window unavailable: %s", err)
@@ -115,6 +128,7 @@ class Runner:
         thread = threading.Thread(target=worker, name="stable-boy-job", daemon=True)
         thread.start()
         from gi.repository import Gtk
+
         Gtk.main()
         thread.join(5)
         self.status.done()
@@ -125,6 +139,7 @@ class Runner:
     @staticmethod
     def _quit_loop() -> None:
         from gi.repository import Gtk
+
         if Gtk.main_level() > 0:
             Gtk.main_quit()
 
@@ -134,9 +149,12 @@ class Runner:
         if self.window is None or self._closed:
             return
         self._closed = True
-        self.app.log.info("progress window: %d preview frame(s) shown, closing after success", self.window.preview_frames)
+        self.app.log.info(
+            "progress window: %d preview frame(s) shown, closing after success", self.window.preview_frames
+        )
         self.window.finish(True, message, close_after_ms)
         from gi.repository import Gtk
+
         Gtk.main()  # until close_now() quits it
 
     def fail(self, error: BaseException) -> None:
@@ -146,21 +164,37 @@ class Runner:
         if self.window is None or self._closed:
             return
         self._closed = True
-        self.app.log.info("progress window: %d preview frame(s) shown, finishing with %s",
-                          self.window.preview_frames, type(error).__name__)
+        self.app.log.info(
+            "progress window: %d preview frame(s) shown, finishing with %s",
+            self.window.preview_frames,
+            type(error).__name__,
+        )
         from gi.repository import Gtk
+
         if isinstance(error, GenerationCancelled):
             self.window.finish(False, "Cancelled - the image was left unchanged.", 0)
-            GLib.timeout_add(1500, lambda: (self.window.close_now(), False)[1])
+            GLib.timeout_add(1500, self._close_window_once)
         else:
             self.window.finish(False, describe_error(error), 0)
+        # Never wait forever for Close: the procedure must return (the error is also
+        # reported through the PDB and Gimp.message).
+        self._fallback = GLib.timeout_add(FAIL_WINDOW_TIMEOUT_MS, self._fallback_close)
         Gtk.main()
+        if self._fallback:  # closed by the user (or the cancel timer) first
+            GLib.source_remove(self._fallback)
+            self._fallback = 0
+
+    def _fallback_close(self) -> bool:
+        self._fallback = 0
+        return self._close_window_once()
+
+    def _close_window_once(self) -> bool:
+        if not self._window_gone:
+            self._window_gone = True
+            self.window.close_now()
+        return False
 
     def _stop_downloads(self) -> None:
         if self._downloads_timer:
             GLib.source_remove(self._downloads_timer)
             self._downloads_timer = 0
-
-
-def elapsed_since(t0: float) -> float:
-    return time.monotonic() - t0

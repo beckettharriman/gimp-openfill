@@ -1,0 +1,236 @@
+{
+  "id": "img-indexed",
+  "pass": true,
+  "checks": {
+    "returns_error": {
+      "ok": true,
+      "value": "execution-error"
+    },
+    "message_mentions_indexed": {
+      "ok": true,
+      "value": "This image uses indexed colors, which cannot hold generated pixels without destroying them. Convert it with Image > Mode > RGB (or Grayscale) and run the command again."
+    },
+    "no_layer_added": {
+      "ok": true,
+      "value": [
+        1,
+        1
+      ]
+    },
+    "image_size_unchanged": {
+      "ok": true,
+      "value": [
+        1024,
+        768
+      ]
+    },
+    "selection_unchanged": {
+      "ok": true,
+      "value": true
+    },
+    "composite_unchanged": {
+      "ok": true,
+      "value": null
+    }
+  },
+  "metrics": {
+    "status": "execution-error",
+    "message": "This image uses indexed colors, which cannot hold generated pixels without destroying them. Convert it with Image > Mode > RGB (or Grayscale) and run the command again.",
+    "seconds": 0.69
+  },
+  "memory": {
+    "samples": 4,
+    "peak_gimp_tree_mb": 396,
+    "peak_comfyui_mb": 6605,
+    "peak_gpu_mib": 3900
+  },
+  "evidence_files": {
+    "before.png scale": 1.0,
+    "after.png scale": 1.0
+  },
+  "spec": {
+    "id": "img-indexed",
+    "image": {
+      "w": 1024,
+      "h": 768,
+      "base": "indexed"
+    },
+    "selection": {
+      "kind": "rect",
+      "rect": [
+        0.41,
+        0.39,
+        0.254,
+        0.26
+      ],
+      "units": "frac"
+    },
+    "proc": "fill",
+    "args": {
+      "prompt": "red brick wall",
+      "negative": "blurry",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "sd15-inpainting",
+      "remove": false
+    },
+    "expect": {
+      "status": "error",
+      "message_contains": [
+        "indexed"
+      ]
+    }
+  },
+  "gimp": {
+    "id": "img-indexed",
+    "spec": {
+      "id": "img-indexed",
+      "image": {
+        "w": 1024,
+        "h": 768,
+        "base": "indexed"
+      },
+      "selection": {
+        "kind": "rect",
+        "rect": [
+          0.41,
+          0.39,
+          0.254,
+          0.26
+        ],
+        "units": "frac"
+      },
+      "proc": "fill",
+      "args": {
+        "prompt": "red brick wall",
+        "negative": "blurry",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 1234,
+        "model": "sd15-inpainting",
+        "remove": false
+      },
+      "expect": {
+        "status": "error",
+        "message_contains": [
+          "indexed"
+        ]
+      }
+    },
+    "started": "2026-10-09 01:25:28",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "scene",
+          "size": [
+            1024,
+            768
+          ],
+          "setup": [],
+          "base_type": "2",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "rect",
+          "empty": false,
+          "bounds": [
+            420,
+            300,
+            260,
+            200
+          ]
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "5f625bf78b473cf7b8c76b490a514d0d"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "a7e4a5e35d046485456b3fbcc9674e51"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 0.69,
+        "status": "execution-error",
+        "message": "This image uses indexed colors, which cannot hold generated pixels without destroying them. Convert it with Image > Mode > RGB (or Grayscale) and run the command again.",
+        "layers_before": [
+          {
+            "id": 245,
+            "name": "Background",
+            "size": [
+              1024,
+              768
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 245,
+            "name": "Background",
+            "size": [
+              1024,
+              768
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 1,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          1024,
+          768
+        ],
+        "selection_restored": true,
+        "new_top_level": [],
+        "raw_after": {
+          "file": "after.raw",
+          "width": 1024,
+          "height": 768,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "5f625bf78b473cf7b8c76b490a514d0d"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 1.94
+  },
+  "analysis_error": null
+}

@@ -7,10 +7,9 @@ import time
 import unittest
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-from stable_boy.backend import ModelMissing, OutOfMemory, WorkflowRejected
+from stable_boy.backend import InpaintRequest, ModelMissing, ModelSpec, OutOfMemory, Sampling, WorkflowRejected
 from stable_boy.backends.comfy import ComfyBackend
 from stable_boy.comfy_api import ComfyApiError, ComfyClient, ComfyExecutionError
-from stable_boy.backend import InpaintRequest, ModelSpec, Sampling
 
 
 class StubState:
@@ -41,15 +40,22 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == "/system_stats":
-            self._send(200, {"system": {"comfyui_version": "0.39.0"},
-                             "devices": [{"vram_total": 8, "vram_free": 7}]})
+            self._send(200, {"system": {"comfyui_version": "0.39.0"}, "devices": [{"vram_total": 8, "vram_free": 7}]})
         elif self.path == "/object_info/CheckpointLoaderSimple":
-            self._send(200, {"CheckpointLoaderSimple": {"input": {"required": {"ckpt_name": [["a.ckpt", "b.safetensors"]]}}}})
+            self._send(
+                200, {"CheckpointLoaderSimple": {"input": {"required": {"ckpt_name": [["a.ckpt", "b.safetensors"]]}}}}
+            )
         elif self.path == "/object_info/INPAINT_ExpandMask":
             self._send(200, {"INPAINT_ExpandMask": {"input": {"required": {}}}})
         elif self.path == "/object_info/INPAINT_LoadFooocusInpaint":
-            self._send(200, {"INPAINT_LoadFooocusInpaint": {"input": {"required": {
-                "head": [["head.pth"]], "patch": [["v26.patch"]]}}}})
+            self._send(
+                200,
+                {
+                    "INPAINT_LoadFooocusInpaint": {
+                        "input": {"required": {"head": [["head.pth"]], "patch": [["v26.patch"]]}}
+                    }
+                },
+            )
         elif self.path.startswith("/object_info/"):
             self._send(404, {"error": "not found"})
         elif self.path.startswith("/history/"):
@@ -58,13 +64,42 @@ class Handler(BaseHTTPRequestHandler):
             if STATE.history_calls < STATE.history_ready_after:
                 self._send(200, {})
             elif STATE.history_error:
-                self._send(200, {pid: {"status": {"status_str": "error", "messages": [
-                    ["execution_error", {"exception_type": "torch.OutOfMemoryError",
-                                         "exception_message": "CUDA out of memory"}]]}}})
+                self._send(
+                    200,
+                    {
+                        pid: {
+                            "status": {
+                                "status_str": "error",
+                                "messages": [
+                                    [
+                                        "execution_error",
+                                        {
+                                            "exception_type": "torch.OutOfMemoryError",
+                                            "exception_message": "CUDA out of memory",
+                                        },
+                                    ]
+                                ],
+                            }
+                        }
+                    },
+                )
             else:
-                self._send(200, {pid: {"status": {"status_str": "success"}, "outputs": {
-                    "save": {"images": [{"filename": "out.png", "subfolder": "sb", "type": "output"},
-                                        {"filename": "tmp.png", "subfolder": "", "type": "temp"}]}}}})
+                self._send(
+                    200,
+                    {
+                        pid: {
+                            "status": {"status_str": "success"},
+                            "outputs": {
+                                "save": {
+                                    "images": [
+                                        {"filename": "out.png", "subfolder": "sb", "type": "output"},
+                                        {"filename": "tmp.png", "subfolder": "", "type": "temp"},
+                                    ]
+                                }
+                            },
+                        }
+                    },
+                )
         elif self.path.startswith("/view?"):
             self._send(200, b"PNGDATA:" + self.path.encode(), "image/png")
         elif self.path == "/queue":
@@ -124,8 +159,9 @@ class ComfyClientTests(unittest.TestCase):
         self.assertEqual(STATE.prompts[0]["client_id"], self.client.client_id)
         STATE.history_ready_after = 2
         events = []
-        entry = self.client.wait_for(pid, 10, time.monotonic() + 20, lambda f, t: events.append((f, t)),
-                                     poll_interval=0.05)
+        entry = self.client.wait_for(
+            pid, 10, time.monotonic() + 20, lambda f, t: events.append((f, t)), poll_interval=0.05
+        )
         self.assertEqual(entry["status"]["status_str"], "success")
         self.assertEqual(events[-1], (1.0, "Done"))
         images = self.client.output_images(entry, "save")
@@ -157,9 +193,20 @@ class ComfyClientTests(unittest.TestCase):
             self.client.wait_for("pid-1", 10, time.monotonic() + 0.3, poll_interval=0.05)
 
     def test_prompt_rejection_carries_node_errors(self):
-        STATE.fail_prompt = {"error": {"type": "prompt_outputs_failed_validation", "message": "Prompt outputs failed validation"},
-                             "node_errors": {"ckpt": {"errors": [{"message": "Value not in list", "details": "ckpt_name: 'x' not in list",
-                                                                   "extra_info": {"input_name": "ckpt_name"}}]}}}
+        STATE.fail_prompt = {
+            "error": {"type": "prompt_outputs_failed_validation", "message": "Prompt outputs failed validation"},
+            "node_errors": {
+                "ckpt": {
+                    "errors": [
+                        {
+                            "message": "Value not in list",
+                            "details": "ckpt_name: 'x' not in list",
+                            "extra_info": {"input_name": "ckpt_name"},
+                        }
+                    ]
+                }
+            },
+        }
         with self.assertRaises(ComfyApiError) as ctx:
             self.client.queue_prompt({"ckpt": {"class_type": "CheckpointLoaderSimple", "inputs": {}}})
         self.assertEqual(ctx.exception.status, 400)
@@ -189,8 +236,18 @@ class ComfyBackendTests(unittest.TestCase):
         self.backend = ComfyBackend(self.url, ComfyClient(self.url, timeout=5))
 
     def _request(self, **kw):
-        base = dict(image_png=b"img", mask_png=b"mask", width=64, height=64, work_width=64, work_height=64,
-                    prompt="p", negative="n", model=ModelSpec("a.ckpt"), sampling=Sampling(steps=4, seed=1))
+        base = dict(
+            image_png=b"img",
+            mask_png=b"mask",
+            width=64,
+            height=64,
+            work_width=64,
+            work_height=64,
+            prompt="p",
+            negative="n",
+            model=ModelSpec("a.ckpt"),
+            sampling=Sampling(steps=4, seed=1),
+        )
         base.update(kw)
         return InpaintRequest(**base)
 
@@ -207,13 +264,26 @@ class ComfyBackendTests(unittest.TestCase):
         self.assertEqual(result.seed, 1)
         self.assertEqual(len(STATE.uploads), 2)
         graph = STATE.prompts[0]["prompt"]
-        self.assertEqual(graph["load_image"]["inputs"]["image"], "stable-boy/sb-%s-image.png" % result.info["job"])
+        self.assertEqual(
+            graph["load_image"]["inputs"]["image"], "stable-boy/sb-{}-image.png".format(result.info["job"])
+        )
         self.assertEqual(graph["mask_grow"]["class_type"], "INPAINT_ExpandMask")
 
     def test_missing_model_is_translated(self):
-        STATE.fail_prompt = {"error": {"message": "validation"}, "node_errors": {"ckpt": {"errors": [
-            {"message": "Value not in list", "details": "ckpt_name: 'zzz' not in ['a.ckpt']",
-             "extra_info": {"input_name": "ckpt_name"}}]}}}
+        STATE.fail_prompt = {
+            "error": {"message": "validation"},
+            "node_errors": {
+                "ckpt": {
+                    "errors": [
+                        {
+                            "message": "Value not in list",
+                            "details": "ckpt_name: 'zzz' not in ['a.ckpt']",
+                            "extra_info": {"input_name": "ckpt_name"},
+                        }
+                    ]
+                }
+            },
+        }
         with self.assertRaises(ModelMissing):
             self.backend.inpaint(self._request())
 
@@ -223,8 +293,16 @@ class ComfyBackendTests(unittest.TestCase):
             self.backend.inpaint(self._request())
 
     def test_other_rejection(self):
-        STATE.fail_prompt = {"error": {"message": "bad"}, "node_errors": {"sampler": {"errors": [
-            {"message": "Value bigger than max", "details": "steps", "extra_info": {"input_name": "steps"}}]}}}
+        STATE.fail_prompt = {
+            "error": {"message": "bad"},
+            "node_errors": {
+                "sampler": {
+                    "errors": [
+                        {"message": "Value bigger than max", "details": "steps", "extra_info": {"input_name": "steps"}}
+                    ]
+                }
+            },
+        }
         with self.assertRaises(WorkflowRejected):
             self.backend.inpaint(self._request())
 

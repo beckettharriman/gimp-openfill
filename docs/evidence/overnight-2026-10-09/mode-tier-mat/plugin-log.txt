@@ -1,0 +1,4 @@
+2026-10-09 01:30:06,750 INFO  [4200 stable-boy] fill: Remove object -> using mat-places512
+2026-10-09 01:30:06,751 INFO  [4200 stable-boy] fill: selection=Rect(x=420, y=300, width=260, height=200) context=Rect(x=160, y=40, width=780, height=720) working=784x720 scale=1.01 mask(grow=16/16px feather=16/16px layer grow=16px) prefill=border/navier-stokes color_match=1.0 model=mat-places512 template=inpaint_model
+2026-10-09 01:30:06,956 INFO  [4200 stable-boy] queued prompt c956c29d-dd20-462b-b7f7-4e8f740e0a47 (timeout 132s, 25 steps x 1)
+2026-10-09 01:30:09,874 INFO  [4200 stable-boy] fill: done, seed=1234, 1 layer(s)

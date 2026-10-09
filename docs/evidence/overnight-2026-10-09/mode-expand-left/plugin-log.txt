@@ -1,0 +1,3 @@
+2026-10-09 01:27:50,260 INFO  [36724 stable-boy] expand: margins=(128, 0, 0, 0) canvas=1152x768 context=Rect(x=0, y=0, width=1152, height=768) working=768x512 model=sd15-inpainting
+2026-10-09 01:27:51,068 INFO  [36724 stable-boy] queued prompt 139f8403-ecb4-4af9-978c-6af4b263415c (timeout 120s, 25 steps x 1)
+2026-10-09 01:28:01,971 INFO  [36724 stable-boy] expand: done, seed=1234, 1 layer(s)

@@ -1,0 +1,155 @@
+{
+  "case": "rob-port-in-use-offline",
+  "acceptance_rule": "plain words plus a next step, no traceback, image and processes clean",
+  "verdict": "FAIL",
+  "verdict_reason": "Good: the HTTP 500 dummy was not taken for ComfyUI (34 health probes, all rejected), the supervisor and ComfyUI were gone when the error appeared (supervisor: 'backend exited with code 1'), nothing alive 10 s after GIMP exit, image untouched. Bad: no port check before launching, so the user waits about 29 s while ComfyUI loads only to fail binding; the message is a raw ComfyUI log dump with ANSI color codes, claims 'within 240 s', and the only next step in it is ComfyUI's own '--port' advice instead of the plug-in's URL setting.",
+  "message_shown_in_progress_window": null,
+  "notes": [
+    "ComfyUI was started with extra_server_args '--cpu --verbose INFO' so it never touched the GPU (see rob-extra-server-args-dash for why a single '--cpu' could not be used)."
+  ],
+  "status": "execution-error",
+  "user_message_verbatim": [
+    "The AI backend is not available: ComfyUI did not come up at http://127.0.0.1:8199 within 240 s. Last log lines:\n\u001b[32m[INFO]\u001b[0m \nImport times for custom nodes:\n\u001b[32m[INFO]\u001b[0m    0.0 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\websocket_image_save.py\n\u001b[32m[INFO]\u001b[0m    0.0 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\comfyui-inpaint-nodes\n\u001b[32m[INFO]\u001b[0m    0.1 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-GGUF\n\u001b[32m[INFO]\u001b[0m \n\u001b[32m[INFO]\u001b[0m Using RAM pressure cache.\n\u001b[1m\u001b[31m[ERROR]\u001b[0m Port 8199 is already in use on address 127.0.0.1. Please close the other application or use a different port with --port."
+  ],
+  "return_message": "The AI backend is not available: ComfyUI did not come up at http://127.0.0.1:8199 within 240 s. Last log lines:\n\u001b[32m[INFO]\u001b[0m \nImport times for custom nodes:\n\u001b[32m[INFO]\u001b[0m    0.0 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\websocket_image_save.py\n\u001b[32m[INFO]\u001b[0m    0.0 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\comfyui-inpaint-nodes\n\u001b[32m[INFO]\u001b[0m    0.1 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-GGUF\n\u001b[32m[INFO]\u001b[0m \n\u001b[32m[INFO]\u001b[0m Using RAM pressure cache.\n\u001b[1m\u001b[31m[ERROR]\u001b[0m Port 8199 is already in use on address 127.0.0.1. Please close the other application or use a different port with --port.",
+  "seconds_in_procedure": 29.55,
+  "checks": {
+    "traceback_in_gimp_output": false,
+    "image_untouched": true,
+    "layer_count_before_after": [
+      1,
+      1
+    ],
+    "selection_unchanged": true,
+    "dirty_after (undo step added)": false,
+    "processes_alive_10s_after_gimp_exit": 0,
+    "cleanup_seconds_after_exit": null,
+    "gimp_killed_by_launcher": false
+  },
+  "driver": {
+    "case": "rob-port-in-use-offline",
+    "started": "2026-10-09 01:01:14",
+    "gimp_pid": 32544,
+    "gimp_version": "3.2.6",
+    "profile": "C:\\AI\\overnight-scratch\\gimp-profile-rob",
+    "procedure": "python-fu-stable-boy-generative-fill",
+    "before": {
+      "size": [
+        512,
+        384
+      ],
+      "layers": [
+        "Background"
+      ],
+      "layer_count": 1,
+      "channels": [],
+      "selection": {
+        "empty": false,
+        "bounds": [
+          200,
+          140,
+          120,
+          100
+        ],
+        "md5": "e4b93e7537a7f238fcfadaa370994efb"
+      },
+      "dirty": false,
+      "undo_enabled": true,
+      "composite_md5": "51a04777d42260a4cd990298df1b01d3"
+    },
+    "args": {
+      "prompt": "a red brick wall, photo",
+      "negative": "blurry",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "fast"
+    },
+    "call_started": 1791522076.9934702,
+    "status": "execution-error",
+    "return_message": "The AI backend is not available: ComfyUI did not come up at http://127.0.0.1:8199 within 240 s. Last log lines:\n\u001b[32m[INFO]\u001b[0m \nImport times for custom nodes:\n\u001b[32m[INFO]\u001b[0m    0.0 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\websocket_image_save.py\n\u001b[32m[INFO]\u001b[0m    0.0 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\comfyui-inpaint-nodes\n\u001b[32m[INFO]\u001b[0m    0.1 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-GGUF\n\u001b[32m[INFO]\u001b[0m \n\u001b[32m[INFO]\u001b[0m Using RAM pressure cache.\n\u001b[1m\u001b[31m[ERROR]\u001b[0m Port 8199 is already in use on address 127.0.0.1. Please close the other application or use a different port with --port.",
+    "seconds": 29.55,
+    "call_finished": 1791522106.547907,
+    "after": {
+      "size": [
+        512,
+        384
+      ],
+      "layers": [
+        "Background"
+      ],
+      "layer_count": 1,
+      "channels": [],
+      "selection": {
+        "empty": false,
+        "bounds": [
+          200,
+          140,
+          120,
+          100
+        ],
+        "md5": "e4b93e7537a7f238fcfadaa370994efb"
+      },
+      "dirty": false,
+      "undo_enabled": true,
+      "composite_md5": "51a04777d42260a4cd990298df1b01d3"
+    },
+    "image_untouched": true,
+    "finished": "2026-10-09 01:01:48"
+  },
+  "launcher": {
+    "case": "rob-port-in-use-offline",
+    "started": "2026-10-09T01:01:06",
+    "harness": [
+      "dummy http500 listener on 127.0.0.1:8199, pid 37432"
+    ],
+    "events": [
+      "01:01:07 gimp-console pid 27768",
+      "01:01:49 gimp exited after 41.5 s (killed=False)"
+    ],
+    "config_mode": "set",
+    "config_written": "{\r\n  \"backend\": \"comfyui\",\r\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\r\n  \"url\": \"http://127.0.0.1:8199\",\r\n  \"a1111_url\": \"http://127.0.0.1:7860\",\r\n  \"autostart\": true,\r\n  \"idle_timeout_minutes\": 2,\r\n  \"startup_timeout\": 240,\r\n  \"request_timeout\": 0,\r\n  \"extra_server_args\": \"--cpu --verbose INFO\",\r\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\r\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\r\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\r\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\r\n  \"quality\": \"fast\",\r\n  \"steps\": 25,\r\n  \"cfg\": 7.0,\r\n  \"sampler\": \"dpmpp_2m\",\r\n  \"scheduler\": \"karras\",\r\n  \"denoise\": 1.0,\r\n  \"grow\": 16,\r\n  \"feather\": 24,\r\n  \"grow_percent\": 10.0,\r\n  \"feather_percent\": 6.0,\r\n  \"prefill\": true,\r\n  \"max_side_sd15\": 768,\r\n  \"max_side_sdxl\": 1024,\r\n  \"txt2img_width\": 768,\r\n  \"txt2img_height\": 512,\r\n  \"debug\": false,\r\n  \"active_model\": \"mat-places512\",\r\n  \"hf_token\": \"<redacted>\",\r\n  \"progress_window\": false,\r\n  \"progress_window_x\": 1694,\r\n  \"progress_window_y\": 2328\r\n}",
+    "profile_listing_before": [
+      "tmp 1",
+      "config.json 1003",
+      "stable-boy.log 7818"
+    ],
+    "gimp_seconds": 41.5,
+    "gimp_exit_code": 0,
+    "gimp_killed_by_launcher": false,
+    "window_screenshot": null,
+    "processes_10s_after_exit": [],
+    "server_state_10s_after_exit": "(absent)",
+    "cleanup_seconds_after_exit": null,
+    "dummy_hits": 34,
+    "profile_listing_after": [
+      "tasks 1",
+      "tmp 1",
+      "comfyui.log 5890",
+      "config.json 1003",
+      "stable-boy.log 13113",
+      "tasks-status.json 113"
+    ],
+    "config_after": "{\r\n  \"backend\": \"comfyui\",\r\n  \"comfy_dir\": \"C:\\\\AI\\\\ComfyUI\\\\ComfyUI_windows_portable\",\r\n  \"url\": \"http://127.0.0.1:8199\",\r\n  \"a1111_url\": \"http://127.0.0.1:7860\",\r\n  \"autostart\": true,\r\n  \"idle_timeout_minutes\": 2,\r\n  \"startup_timeout\": 240,\r\n  \"request_timeout\": 0,\r\n  \"extra_server_args\": \"--cpu --verbose INFO\",\r\n  \"checkpoint\": \"sd-v1-5-inpainting.ckpt\",\r\n  \"sdxl_checkpoint\": \"sd_xl_base_1.0.safetensors\",\r\n  \"fooocus_head\": \"fooocus_inpaint_head.pth\",\r\n  \"fooocus_patch\": \"inpaint_v26.fooocus.patch\",\r\n  \"quality\": \"fast\",\r\n  \"steps\": 25,\r\n  \"cfg\": 7.0,\r\n  \"sampler\": \"dpmpp_2m\",\r\n  \"scheduler\": \"karras\",\r\n  \"denoise\": 1.0,\r\n  \"grow\": 16,\r\n  \"feather\": 24,\r\n  \"grow_percent\": 10.0,\r\n  \"feather_percent\": 6.0,\r\n  \"prefill\": true,\r\n  \"max_side_sd15\": 768,\r\n  \"max_side_sdxl\": 1024,\r\n  \"txt2img_width\": 768,\r\n  \"txt2img_height\": 512,\r\n  \"debug\": false,\r\n  \"active_model\": \"mat-places512\",\r\n  \"hf_token\": \"<redacted>\",\r\n  \"progress_window\": false,\r\n  \"progress_window_x\": 1694,\r\n  \"progress_window_y\": 2328\r\n}",
+    "comfyui_log_tail": [
+      "\u001b[32m[INFO]\u001b[0m comfy-aimdo version: 0.5.5",
+      "\u001b[32m[INFO]\u001b[0m [Prompt Server] web root: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\comfyui_frontend_package\\static",
+      "\u001b[32m[INFO]\u001b[0m Asset seeder disabled",
+      "C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\torch\\jit\\_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.",
+      "  warnings.warn(",
+      "\u001b[32m[INFO]\u001b[0m No OpenGL_accelerate module loaded: No module named 'OpenGL_accelerate'",
+      "\u001b[32m[INFO]\u001b[0m ComfyUI-GGUF: Allowing full torch compile",
+      "\u001b[32m[INFO]\u001b[0m ",
+      "Import times for custom nodes:",
+      "\u001b[32m[INFO]\u001b[0m    0.0 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\websocket_image_save.py",
+      "\u001b[32m[INFO]\u001b[0m    0.0 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\comfyui-inpaint-nodes",
+      "\u001b[32m[INFO]\u001b[0m    0.1 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-GGUF",
+      "\u001b[32m[INFO]\u001b[0m ",
+      "\u001b[32m[INFO]\u001b[0m Using RAM pressure cache.",
+      "\u001b[1m\u001b[31m[ERROR]\u001b[0m Port 8199 is already in use on address 127.0.0.1. Please close the other application or use a different port with --port."
+    ],
+    "restored": "config.json = baseline copy; state, task and comfyui.log files removed",
+    "finished": "2026-10-09T01:01:59"
+  },
+  "gimp_stderr": "GIMP-Message: Welcome to GIMP 3.2.6!\n\nGenerative Fill-Warning: The AI backend is not available: ComfyUI did not come up at http://127.0.0.1:8199 within 240 s. Last log lines:\n\u001b[32m[INFO]\u001b[0m \nImport times for custom nodes:\n\u001b[32m[INFO]\u001b[0m    0.0 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\websocket_image_save.py\n\u001b[32m[INFO]\u001b[0m    0.0 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\comfyui-inpaint-nodes\n\u001b[32m[INFO]\u001b[0m    0.1 seconds: C:\\AI\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-GGUF\n\u001b[32m[INFO]\u001b[0m \n\u001b[32m[INFO]\u001b[0m Using RAM pressure cache.\n\u001b[1m\u001b[31m[ERROR]\u001b[0m Port 8199 is already in use on address 127.0.0.1. Please close the other application or use a different port with --port.\n\n"
+}

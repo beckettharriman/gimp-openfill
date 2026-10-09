@@ -1,0 +1,6 @@
+set GIMP3_DIRECTORY=C:\AI\overnight-scratch\gimp-profile-test
+set SB_MATRIX_SPEC=C:\AI\overnight-scratch\runs\matrix-spec.json
+set SB_MATRIX_OUT=C:\AI\overnight-scratch\runs
+set SB_MATRIX_ONLY=sel-tiny-20px,sel-edge-top,sel-edge-right,sel-corner-topleft,sel-multi-disjoint,img-aspect-tall,sel-edge-left-seed7,sel-edge-left-seed99,sel-edge-left,sel-edge-bottom,mode-fill,img-1024,sel-huge-85pct,mode-tier-juggernaut
+"C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe" --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b "exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_matrix.py').read())"
+(launcher: python C:\AI\overnight-scratch\runs\run_matrix.py --spec C:\AI\overnight-scratch\runs\matrix-spec.json --only sel-tiny-20px,sel-edge-top,sel-edge-right,sel-corner-topleft,sel-multi-disjoint,img-aspect-tall,sel-edge-left-seed7,sel-edge-left-seed99,sel-edge-left,sel-edge-bottom,mode-fill,img-1024,sel-huge-85pct,mode-tier-juggernaut)

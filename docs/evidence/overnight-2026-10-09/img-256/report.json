@@ -1,0 +1,331 @@
+{
+  "id": "img-256",
+  "pass": true,
+  "checks": {
+    "returns_success": {
+      "ok": true,
+      "value": "success success"
+    },
+    "new_layer_or_group": {
+      "ok": true,
+      "value": [
+        "Generative Fill: red brick wall"
+      ]
+    },
+    "layer_has_mask": {
+      "ok": true,
+      "value": null
+    },
+    "image_size_unchanged": {
+      "ok": true,
+      "value": [
+        256,
+        256
+      ]
+    },
+    "layer_covers_selection": {
+      "ok": true,
+      "value": {
+        "layer": [
+          32,
+          32,
+          192,
+          192
+        ],
+        "selection": [
+          90,
+          90,
+          77,
+          77
+        ]
+      }
+    },
+    "mask_opaque_over_selection": {
+      "ok": true,
+      "value": 1.0
+    },
+    "content_changed_in_selection": {
+      "ok": true,
+      "value": 54.48
+    },
+    "outside_grown_mask_unchanged": {
+      "ok": true,
+      "value": 0
+    },
+    "not_a_flat_blob": {
+      "ok": true,
+      "value": 72.87
+    },
+    "selection_restored": {
+      "ok": true,
+      "value": true
+    }
+  },
+  "metrics": {
+    "status": "success",
+    "message": "success",
+    "seconds": 6.35,
+    "layer_size": [
+      192,
+      192
+    ],
+    "layer_offset": [
+      32,
+      32
+    ],
+    "mask_opaque_fraction_in_selection": 1.0,
+    "mask_opaque_fraction_in_fully_selected": 1.0,
+    "mask_pixels_gt0": 9325,
+    "selection_pixels_ge128": 5929,
+    "mean_abs_diff_in_selection": 54.48,
+    "outside_max_abs_diff": 0,
+    "outside_changed_pixels": 0,
+    "laplacian_var_in_after": 72.87,
+    "laplacian_var_out_after": 30.01,
+    "laplacian_var_in_before": 770.66,
+    "detail_ratio_in_vs_out": 2.428,
+    "blur_flag": false
+  },
+  "memory": {
+    "samples": 8,
+    "peak_gimp_tree_mb": 411,
+    "peak_comfyui_mb": 6565,
+    "peak_gpu_mib": 3420
+  },
+  "evidence_files": {
+    "before.png scale": 1.0,
+    "after.png scale": 1.0,
+    "crop_box": [
+      13,
+      13,
+      244,
+      244
+    ],
+    "before-crop.png scale": 1.0,
+    "after-crop.png scale": 1.0
+  },
+  "spec": {
+    "id": "img-256",
+    "image": {
+      "w": 256,
+      "h": 256
+    },
+    "selection": {
+      "kind": "rect",
+      "rect": [
+        0.35,
+        0.35,
+        0.3,
+        0.3
+      ],
+      "units": "frac"
+    },
+    "proc": "fill",
+    "args": {
+      "prompt": "red brick wall",
+      "negative": "blurry",
+      "variations": 1,
+      "strength": 1.0,
+      "seed": 1234,
+      "model": "sd15-inpainting",
+      "remove": false
+    }
+  },
+  "gimp": {
+    "id": "img-256",
+    "spec": {
+      "id": "img-256",
+      "image": {
+        "w": 256,
+        "h": 256
+      },
+      "selection": {
+        "kind": "rect",
+        "rect": [
+          0.35,
+          0.35,
+          0.3,
+          0.3
+        ],
+        "units": "frac"
+      },
+      "proc": "fill",
+      "args": {
+        "prompt": "red brick wall",
+        "negative": "blurry",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 1234,
+        "model": "sd15-inpainting",
+        "remove": false
+      }
+    },
+    "started": "2026-10-09 01:24:19",
+    "gimp_version": "3.2.6",
+    "runs": [
+      {
+        "run": 1,
+        "image": {
+          "source": "scene",
+          "size": [
+            256,
+            256
+          ],
+          "setup": [],
+          "base_type": "0",
+          "precision": "150"
+        },
+        "selection": {
+          "kind": "rect",
+          "empty": false,
+          "bounds": [
+            90,
+            90,
+            77,
+            77
+          ]
+        },
+        "raw_before": {
+          "file": "before.raw",
+          "width": 256,
+          "height": 256,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "8afddfd38fef6250ce564b8084b9edf9"
+        },
+        "raw_selection": {
+          "file": "selection.raw",
+          "width": 256,
+          "height": 256,
+          "channels": 1,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "602c83843d1713b5055fba2c96772220"
+        },
+        "drawables": [
+          "Background"
+        ],
+        "seconds": 6.35,
+        "status": "success",
+        "message": "success",
+        "layers_before": [
+          {
+            "id": 175,
+            "name": "Background",
+            "size": [
+              256,
+              256
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layers_after": [
+          {
+            "id": 181,
+            "name": "Generative Fill: red brick wall",
+            "size": [
+              192,
+              192
+            ],
+            "offset": [
+              32,
+              32
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          },
+          {
+            "id": 175,
+            "name": "Background",
+            "size": [
+              256,
+              256
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": false
+          }
+        ],
+        "layer_count_before": 1,
+        "layer_count_after": 2,
+        "channels_before": [],
+        "channels_after": [],
+        "size_after": [
+          256,
+          256
+        ],
+        "selection_restored": true,
+        "new_top_level": [
+          {
+            "id": 181,
+            "name": "Generative Fill: red brick wall",
+            "size": [
+              192,
+              192
+            ],
+            "offset": [
+              32,
+              32
+            ],
+            "visible": true,
+            "is_group": false,
+            "has_mask": true
+          }
+        ],
+        "raw_layer": {
+          "file": "layer.raw",
+          "width": 192,
+          "height": 192,
+          "channels": 4,
+          "offset": [
+            32,
+            32
+          ],
+          "md5": "cc58b5bf31750f86c377e794a5ffedd8"
+        },
+        "raw_mask": {
+          "file": "mask.raw",
+          "width": 192,
+          "height": 192,
+          "channels": 1,
+          "offset": [
+            32,
+            32
+          ],
+          "md5": "5d23c6fad35b949f3d8c9701fbe8883b"
+        },
+        "raw_after": {
+          "file": "after.raw",
+          "width": 256,
+          "height": 256,
+          "channels": 4,
+          "offset": [
+            0,
+            0
+          ],
+          "md5": "8832744c9a76e0bea2f325d323345107"
+        },
+        "new_images": []
+      }
+    ],
+    "driver_error": null,
+    "total_seconds": 6.82
+  },
+  "analysis_error": null
+}

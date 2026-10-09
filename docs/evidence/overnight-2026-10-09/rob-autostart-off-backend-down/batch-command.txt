@@ -1,0 +1,5 @@
+set GIMP3_DIRECTORY=C:\AI\overnight-scratch\gimp-profile-rob
+set SB_ROB_CASE=rob-autostart-off-backend-down
+set SB_ROB_OUT=C:\repos\gimp-stable-boy\docs\evidence\overnight-2026-10-09\rob-autostart-off-backend-down
+"C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe" --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b "exec(open(r'C:\repos\gimp-stable-boy\tests\gimp_batch_robustness.py').read())"
+(launcher: pwsh -File C:\AI\overnight-scratch\rob\run-case.ps1 -Case rob-autostart-off-backend-down; config mode: set; )

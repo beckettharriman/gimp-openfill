@@ -35,8 +35,15 @@ SCALE = float(os.environ.get("SB_SS_SCALE", "0") or 0)
 REMOVE = os.environ.get("SB_SS_REMOVE", "0") == "1"
 PROMPT = os.environ.get("SB_SS_PROMPT", "")
 os.makedirs(OUT, exist_ok=True)
-report = {"started": time.strftime("%Y-%m-%d %H:%M:%S"), "image": IMAGE, "selection": SEL, "scale": SCALE,
-          "remove": REMOVE, "prompt": PROMPT, "runs": []}
+report = {
+    "started": time.strftime("%Y-%m-%d %H:%M:%S"),
+    "image": IMAGE,
+    "selection": SEL,
+    "scale": SCALE,
+    "remove": REMOVE,
+    "prompt": PROMPT,
+    "runs": [],
+}
 
 
 def save(image, path):
@@ -67,6 +74,7 @@ def open_image():
 def _buffer_bytes(drawable, fmt):
     gi.require_version("Gegl", "0.4")
     from gi.repository import Gegl
+
     buf = drawable.get_buffer()
     return bytes(buf.get(buf.get_extent(), 1.0, fmt, Gegl.AbyssPolicy.NONE))
 
@@ -77,6 +85,7 @@ def compare_with_raw_output(image, tag):
     evidence so the sent crop/mask and raw output are kept."""
     import glob
     import shutil
+
     dumps = sorted(glob.glob(os.path.join(Gimp.directory(), "stable-boy", "tmp", "debug-fill-*")))
     if not dumps:
         return {"error": "no debug dump (set SB_DEBUG_DUMP=1 in the launcher environment)"}
@@ -84,15 +93,25 @@ def compare_with_raw_output(image, tag):
     dest = os.path.join(OUT, f"{tag}-dump")
     shutil.copytree(dump, dest, dirs_exist_ok=True)
     layer = image.get_layers()[0]
-    raw = Gimp.file_load_layer(Gimp.RunMode.NONINTERACTIVE, image, Gio.File.new_for_path(os.path.join(dump, "result-0.png")))
-    out = {"dump": dest, "layer": layer.get_name(), "layer_size": [layer.get_width(), layer.get_height()],
-           "layer_offset": list(layer.get_offsets()[-2:]), "raw_size": [raw.get_width(), raw.get_height()]}
+    raw = Gimp.file_load_layer(
+        Gimp.RunMode.NONINTERACTIVE, image, Gio.File.new_for_path(os.path.join(dump, "result-0.png"))
+    )
+    out = {
+        "dump": dest,
+        "layer": layer.get_name(),
+        "layer_size": [layer.get_width(), layer.get_height()],
+        "layer_offset": list(layer.get_offsets()[-2:]),
+        "raw_size": [raw.get_width(), raw.get_height()],
+    }
     if (raw.get_width(), raw.get_height()) == (layer.get_width(), layer.get_height()):
         a = _buffer_bytes(layer, "R'G'B' u8")
         b = _buffer_bytes(raw, "R'G'B' u8")
-        diffs = [abs(x - y) for x, y in zip(a, b)]
-        out["content_vs_raw"] = {"max_abs_diff": max(diffs), "mean_abs_diff": round(sum(diffs) / len(diffs), 3),
-                                 "identical": max(diffs) == 0}
+        diffs = [abs(x - y) for x, y in zip(a, b, strict=False)]
+        out["content_vs_raw"] = {
+            "max_abs_diff": max(diffs),
+            "mean_abs_diff": round(sum(diffs) / len(diffs), 3),
+            "identical": max(diffs) == 0,
+        }
     raw.delete()
     mask = layer.get_mask()
     if mask is not None:
@@ -102,8 +121,13 @@ def compare_with_raw_output(image, tag):
         ox, oy = out["layer_offset"]
         cx, cy = int(x + sw / 2 - ox), int(y + sh / 2 - oy)
         center = m[cy * w + cx] if 0 <= cx < w and 0 <= cy < h else None
-        out["mask"] = {"center_value": center, "max": max(m), "pixels_ge_250": sum(1 for v in m if v >= 250),
-                       "pixels_gt_0": sum(1 for v in m if v > 0), "selection_area": int(3.1416 * sw * sh / 4)}
+        out["mask"] = {
+            "center_value": center,
+            "max": max(m),
+            "pixels_ge_250": sum(1 for v in m if v >= 250),
+            "pixels_gt_0": sum(1 for v in m if v > 0),
+            "selection_area": int(3.1416 * sw * sh / 4),
+        }
     return out
 
 
@@ -112,7 +136,7 @@ def log_tail(n=4):
         path = os.path.join(Gimp.directory(), "stable-boy", "stable-boy.log")
         with open(path, encoding="utf-8", errors="replace") as fh:
             lines = fh.read().splitlines()
-        return [l[26:240] for l in lines[-n:]]
+        return [line[26:240] for line in lines[-n:]]
     except OSError:
         return []
 
@@ -142,8 +166,13 @@ try:
             config.set_property("remove", REMOVE)
         t0 = time.time()
         status = proc.run(config).index(0)
-        entry = {"model": model_id, "status": str(status), "seconds": round(time.time() - t0, 1),
-                 "layers": [l.get_name() for l in image.get_layers()], "log": log_tail(5)}
+        entry = {
+            "model": model_id,
+            "status": str(status),
+            "seconds": round(time.time() - t0, 1),
+            "layers": [layer.get_name() for layer in image.get_layers()],
+            "log": log_tail(5),
+        }
         tag = model_id.split("-")[0]
         if status == 3:
             crop_export(image, sel, os.path.join(OUT, f"{tag}-after-crop.png"))
