@@ -19,6 +19,8 @@ ProgressCallback = Callable[[float, str], None]
 
 
 class ComfyApiError(RuntimeError):
+    """An HTTP or protocol error from ComfyUI (``status`` 0 when the server was not reached)."""
+
     def __init__(
         self, message: str, status: int = 0, node_errors: dict | None = None, payload: dict | None = None
     ) -> None:
@@ -39,11 +41,14 @@ class ComfyExecutionError(ComfyApiError):
 
     @property
     def is_out_of_memory(self) -> bool:
+        """True when the server ran out of GPU (or CUDA) memory."""
         text = f"{self.exception_type} {self!s}".lower()
         return "outofmemory" in text or "out of memory" in text or "cuda error" in text
 
 
 class ComfyClient:
+    """Minimal ComfyUI HTTP and websocket client (standard library only)."""
+
     def __init__(
         self, base_url: str = "http://127.0.0.1:8188", timeout: float = 30.0, client_id: str | None = None
     ) -> None:
@@ -102,6 +107,7 @@ class ComfyClient:
     # endpoints -----------------------------------------------------------
 
     def is_alive(self, timeout: float = 3.0) -> bool:
+        """True when /system_stats answers within ``timeout`` seconds."""
         try:
             self._request("GET", "/system_stats", timeout=timeout)
             return True
@@ -109,9 +115,11 @@ class ComfyClient:
             return False
 
     def system_stats(self) -> dict:
+        """GET /system_stats (versions, devices, VRAM)."""
         return self._json("GET", "/system_stats")
 
     def object_info(self, node_class: str | None = None) -> dict:
+        """GET /object_info, or one node class ({} when that class is not installed)."""
         path = "/object_info" if node_class is None else f"/object_info/{node_class}"
         try:
             return self._json("GET", path)
@@ -151,6 +159,7 @@ class ComfyClient:
         return f"{sub}/{name}" if sub else name
 
     def queue_prompt(self, graph: dict) -> str:
+        """POST a workflow graph to /prompt; returns its prompt id."""
         payload = {"prompt": graph, "client_id": self.client_id}
         info = self._json("POST", "/prompt", payload)
         if "prompt_id" not in info:
@@ -160,16 +169,20 @@ class ComfyClient:
         return info["prompt_id"]
 
     def history(self, prompt_id: str) -> dict | None:
+        """The /history entry of ``prompt_id``, or None while it has none."""
         info = self._json("GET", f"/history/{prompt_id}")
         return info.get(prompt_id)
 
     def queue(self) -> dict:
+        """GET /queue (running and pending prompts)."""
         return self._json("GET", "/queue")
 
     def interrupt(self) -> None:
+        """POST /interrupt: stop the prompt that is running now."""
         self._json("POST", "/interrupt", {})
 
     def view(self, filename: str, subfolder: str = "", folder_type: str = "output") -> bytes:
+        """Download an output (or input/temp) image through /view."""
         query = urlencode({"filename": filename, "subfolder": subfolder, "type": folder_type})
         return self._request("GET", f"/view?{query}", timeout=max(self.timeout, 120))
 
@@ -180,6 +193,7 @@ class ComfyClient:
     # job tracking --------------------------------------------------------
 
     def clear_queue(self) -> None:
+        """Remove every pending prompt from the queue."""
         self._json("POST", "/queue", {"clear": True})
 
     def wait_for(

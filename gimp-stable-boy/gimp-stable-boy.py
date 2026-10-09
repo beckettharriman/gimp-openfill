@@ -27,9 +27,11 @@ Menu:
 
 from __future__ import annotations
 
+import logging
 import os
 import sys
 import traceback
+from typing import TYPE_CHECKING
 
 import gi
 
@@ -42,6 +44,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from stable_boy import __version__, ui_text  # noqa: E402
 from stable_boy.backend import BackendError, GenerationCancelled, describe_error  # noqa: E402
 from stable_boy.config import Paths, Settings  # noqa: E402
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from stable_boy.app import App
 
 PROC_FILL = "python-fu-stable-boy-generative-fill"
 PROC_EXPAND = "python-fu-stable-boy-generative-expand"
@@ -71,6 +78,7 @@ SCHEDULERS = ["normal", "karras", "exponential", "sgm_uniform", "simple", "ddim_
 
 
 def _choice(options: list[tuple[str, str]]) -> Gimp.Choice:
+    """A Gimp.Choice from (nick, label) pairs, in order."""
     choice = Gimp.Choice.new()
     for index, (nick, label) in enumerate(options):
         choice.add(nick, index, label, "")
@@ -92,12 +100,13 @@ def _model_choice() -> Gimp.Choice:
         for entry in load_catalog(plugin_dir=Path(__file__).resolve().parent):  # resolve() follows a junction
             if entry.runnable:
                 options.append((entry.id, f"{entry.name} [{entry.tier}]".replace("_", "__")))
-    except Exception:
+    except Exception:  # noqa: BLE001 - registration must not fail: the three fixed entries still work
         pass
     return _choice(options)
 
 
 def _load_models_cache() -> dict:
+    """The checkpoint lists cached by the last backend check ({} when there is none)."""
     import json
 
     try:
@@ -107,7 +116,19 @@ def _load_models_cache() -> dict:
         return {}
 
 
-def _fail(procedure, error: BaseException, log=None):
+def _plugin_log() -> logging.Logger | None:
+    """The plug-in log (stable-boy.log in the profile), or None when it cannot be opened."""
+    try:
+        from stable_boy.log import get_logger
+
+        paths = Paths.for_profile(Gimp.directory())
+        return get_logger(paths.log, debug=Settings.load(paths.config).debug)
+    except Exception:  # noqa: BLE001 - logging must never break a run
+        return None
+
+
+def _fail(procedure: Gimp.Procedure, error: BaseException, log: logging.Logger | None = None) -> Gimp.ValueArray:
+    """Report ``error`` to the user (unless cancelled) and build the procedure's return values."""
     if isinstance(error, GenerationCancelled):
         # The user asked for it: no error dialog (the progress window already says so), CANCEL status.
         if log is not None:
@@ -125,7 +146,7 @@ def _fail(procedure, error: BaseException, log=None):
     return procedure.new_return_values(Gimp.PDBStatusType.EXECUTION_ERROR, GLib.Error(text))
 
 
-def _dialog(procedure, config, title: str) -> bool:
+def _dialog(procedure: Gimp.Procedure, config: Gimp.ProcedureConfig, title: str) -> bool:
     """Fallback: the generic GIMP dialog generated from the procedure arguments."""
     GimpUi.init("gimp-stable-boy")
     dialog = GimpUi.ProcedureDialog.new(procedure, config, title)
@@ -172,14 +193,15 @@ def _test_hooks() -> dict:
     return hooks
 
 
-def _pspec(config, prop):
+def _pspec(config: Gimp.ProcedureConfig, prop: str) -> GObject.ParamSpec | None:
+    """The ParamSpec of argument ``prop``, or None when there is no such argument."""
     try:
         return config.find_property(prop)
     except Exception:  # noqa: BLE001
         return None
 
 
-def _choice_options(config, prop) -> list[tuple[str, str]] | None:
+def _choice_options(config: Gimp.ProcedureConfig, prop: str) -> list[tuple[str, str]] | None:
     """(nick, label) pairs of a choice argument, or None for other argument types."""
     pspec = _pspec(config, prop)
     if pspec is None or "Choice" not in pspec.__gtype__.name:
@@ -191,7 +213,9 @@ def _choice_options(config, prop) -> list[tuple[str, str]] | None:
         return None
 
 
-def _model_options(config, kind: str, settings: Settings) -> tuple[list[tuple[str, str]], str, bool]:
+def _model_options(
+    config: Gimp.ProcedureConfig, kind: str, settings: Settings
+) -> tuple[list[tuple[str, str]], str, bool]:
     """Model dropdown: the active model first, then the catalog models that
     can do ``kind`` (downloaded ones before the others)."""
     from pathlib import Path
@@ -223,7 +247,8 @@ def _model_options(config, kind: str, settings: Settings) -> tuple[list[tuple[st
     return options + installed_rows + other_rows, active_name, prompt_free
 
 
-def _image_sizes(image):
+def _image_sizes(image: Gimp.Image | None) -> tuple[tuple[int, int] | None, tuple[int, int] | None]:
+    """(image size, selection bounds size) for the dialog status lines."""
     if image is None:
         return None, None
     from stable_boy import gimp_io
@@ -236,7 +261,9 @@ def _image_sizes(image):
     return size, ((sel.width, sel.height) if sel is not None else None)
 
 
-def _generation_dialog(kind: str, procedure, config, image, hooks: dict) -> bool:
+def _generation_dialog(
+    kind: str, procedure: Gimp.Procedure, config: Gimp.ProcedureConfig, image: Gimp.Image | None, hooks: dict
+) -> bool:
     """The redesigned dialog; writes the user's choices back into ``config``
     (the same properties NONINTERACTIVE callers set)."""
     gi.require_version("Gtk", "3.0")
@@ -282,11 +309,13 @@ def _generation_dialog(kind: str, procedure, config, image, hooks: dict) -> bool
         try:
             fresh.save(paths.config)
         except OSError as err:  # the history is a convenience: generate anyway
-            print(f"[stable-boy] prompt history not saved: {err}", file=sys.stderr)
+            log = _plugin_log()
+            if log is not None:
+                log.warning("prompt history not saved: %s", err)
     return True
 
 
-def _dry_run(kind: str, config, hooks: dict) -> bool:
+def _dry_run(kind: str, config: Gimp.ProcedureConfig, hooks: dict) -> bool:
     """Test hook: record what the dialog wrote into the config instead of generating."""
     if not hooks.get("dry_run"):
         return False
@@ -300,17 +329,39 @@ def _dry_run(kind: str, config, hooks: dict) -> bool:
     return True
 
 
-def _ask(kind: str, title: str, procedure, config, image, hooks: dict) -> bool:
+def _ask(
+    kind: str,
+    title: str,
+    procedure: Gimp.Procedure,
+    config: Gimp.ProcedureConfig,
+    image: Gimp.Image | None,
+    hooks: dict,
+) -> bool:
+    """Run the dialog for ``kind``; False when cancelled."""
     try:
         return _generation_dialog(kind, procedure, config, image, hooks)
     except Exception:  # noqa: BLE001 - never leave the user without a dialog
-        print(f"[stable-boy] custom dialog failed, using the generic one:\n{traceback.format_exc()}", file=sys.stderr)
+        log = _plugin_log()
+        if log is not None:
+            log.error("custom dialog failed, using the generic one:\n%s", traceback.format_exc())
         return _dialog(procedure, config, title)
 
 
-def _pick_variation(image, layers, title: str, autoclose: float = 0, test_steps=None) -> str:
+def _pick_variation(
+    image: Gimp.Image | None,
+    layers: list[Gimp.Layer] | None,
+    title: str,
+    autoclose: float = 0,
+    test_steps: list[str] | None = None,
+) -> str:
     """After several variations were inserted (in a layer group): let the
-    user keep one, keep all, or discard them. Returns the outcome."""
+    user keep one, keep all, or discard them. Returns the outcome.
+
+    Previewing a variation only toggles layer visibility. The undo stack is
+    frozen meanwhile, so browsing the thumbnails does not bury the
+    generation's own undo step under one visibility step per click; Discard
+    thaws it first and is a single undo step of its own.
+    """
     if image is None or not layers or len(layers) < 2:
         return "keep"
     gi.require_version("Gtk", "3.0")
@@ -331,7 +382,15 @@ def _pick_variation(image, layers, title: str, autoclose: float = 0, test_steps=
         image.set_selected_layers([layers[index]])
         Gimp.displays_flush()
 
+    frozen = [False]
+
+    def thaw() -> None:
+        if frozen[0]:
+            frozen[0] = False
+            image.undo_thaw()
+
     def discard() -> None:
+        thaw()
         parent = layers[0].get_parent()
         image.undo_group_start()
         try:
@@ -348,10 +407,26 @@ def _pick_variation(image, layers, title: str, autoclose: float = 0, test_steps=
             image.undo_group_end()
         Gimp.displays_flush()
 
-    return run_picker(title, thumbs, show, lambda: None, discard, autoclose_seconds=autoclose, test_steps=test_steps)
+    try:
+        frozen[0] = bool(image.undo_freeze())
+    except Exception:  # noqa: BLE001 - without a frozen stack the previews are ordinary undo steps
+        frozen[0] = False
+    try:
+        return run_picker(
+            title, thumbs, show, lambda: None, discard, autoclose_seconds=autoclose, test_steps=test_steps
+        )
+    finally:
+        thaw()
 
 
-def _after_insert(run_mode, image, layers, title: str, hooks: dict, log=None) -> None:
+def _after_insert(
+    run_mode: Gimp.RunMode,
+    image: Gimp.Image | None,
+    layers: list[Gimp.Layer] | None,
+    title: str,
+    hooks: dict,
+    log: logging.Logger | None = None,
+) -> None:
     """INTERACTIVE only: the variations picker. Never fails the procedure."""
     if run_mode != Gimp.RunMode.INTERACTIVE:
         return
@@ -365,7 +440,7 @@ def _after_insert(run_mode, image, layers, title: str, hooks: dict, log=None) ->
 # ---------------------------------------------------------- test hooks ----
 
 
-def _test_fake_variations(image, count: int, hooks: dict) -> None:
+def _test_fake_variations(image: Gimp.Image, count: int, hooks: dict) -> None:
     """Screenshot hook: copies of the selected area (all but the first
     tinted) as variation layers in a group, then the picker. No backend."""
     from stable_boy import gimp_io
@@ -395,7 +470,7 @@ def _test_fake_variations(image, count: int, hooks: dict) -> None:
     )
 
 
-def _test_progress_demo(image, seconds: float) -> None:
+def _test_progress_demo(image: Gimp.Image | None, seconds: float) -> None:
     """Screenshot hook: the real progress window fed with scripted steps."""
     gi.require_version("Gtk", "3.0")
     from gi.repository import Gtk
@@ -427,7 +502,7 @@ def _test_progress_demo(image, seconds: float) -> None:
         (2.5 + i * 0.35, 0.05 + 0.9 * i / 25, f"Generating... step {i}/25") for i in range(1, 13)
     ]
 
-    def at(fraction, text, show_preview):
+    def at(fraction: float, text: str, show_preview: bool) -> bool:
         win._set_step(fraction, text)
         if show_preview and pixbuf is not None:
             win.show_pixbuf(pixbuf)
@@ -442,7 +517,15 @@ def _test_progress_demo(image, seconds: float) -> None:
 # ------------------------------------------------------------------ runs ----
 
 
-def run_fill(procedure, run_mode, image, drawables, config, data):
+def run_fill(
+    procedure: Gimp.Procedure,
+    run_mode: Gimp.RunMode,
+    image: Gimp.Image,
+    _drawables: list[Gimp.Drawable],
+    config: Gimp.ProcedureConfig,
+    _data: object,
+) -> Gimp.ValueArray:
+    """Filters > AI > Generative Fill: dialog (interactive), generation, variations picker."""
     hooks = _test_hooks() if run_mode == Gimp.RunMode.INTERACTIVE else {}
     if hooks.get("fake_variations"):
         _test_fake_variations(image, int(hooks["fake_variations"]), hooks)
@@ -475,7 +558,15 @@ def run_fill(procedure, run_mode, image, drawables, config, data):
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
 
 
-def run_expand(procedure, run_mode, image, drawables, config, data):
+def run_expand(
+    procedure: Gimp.Procedure,
+    run_mode: Gimp.RunMode,
+    image: Gimp.Image,
+    _drawables: list[Gimp.Drawable],
+    config: Gimp.ProcedureConfig,
+    _data: object,
+) -> Gimp.ValueArray:
+    """Filters > AI > Generative Expand: grow the canvas and outpaint the new border."""
     hooks = _test_hooks() if run_mode == Gimp.RunMode.INTERACTIVE else {}
     if run_mode == Gimp.RunMode.INTERACTIVE and not _ask(
         "expand", "Generative Expand", procedure, config, image, hooks
@@ -506,7 +597,15 @@ def run_expand(procedure, run_mode, image, drawables, config, data):
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
 
 
-def run_txt2img(procedure, run_mode, image, drawables, config, data):
+def run_txt2img(
+    procedure: Gimp.Procedure,
+    run_mode: Gimp.RunMode,
+    image: Gimp.Image | None,
+    _drawables: list[Gimp.Drawable],
+    config: Gimp.ProcedureConfig,
+    _data: object,
+) -> Gimp.ValueArray:
+    """Filters > AI > Text to Image: a new layer (or a new image) from a prompt."""
     hooks = _test_hooks() if run_mode == Gimp.RunMode.INTERACTIVE else {}
     if run_mode == Gimp.RunMode.INTERACTIVE and not _ask("txt2img", "Text to Image", procedure, config, image, hooks):
         return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
@@ -565,7 +664,7 @@ SETTINGS_KEYS = [
 ]
 
 
-def _settings_test_backend(app, values: dict, report) -> str:
+def _settings_test_backend(app: App, values: dict, report: Callable[[str], None]) -> str:
     """Runs in the Settings dialog's worker thread (no GIMP calls): apply the
     values on screen to a private App, start the backend if needed, check it."""
     for key, value in values.items():
@@ -579,12 +678,12 @@ def _settings_test_backend(app, values: dict, report) -> str:
         return ui_text.health_text(False, health.detail, 0, False)
     try:
         app.refresh_models_cache(health)
-    except Exception:  # noqa: BLE001
-        pass
+    except Exception as err:  # noqa: BLE001 - the cache only fills the legacy checkpoint lists
+        app.log.warning("models cache not refreshed: %s", err)
     return ui_text.health_text(True, health.detail, len(health.checkpoints), health.inpaint_nodes)
 
 
-def _settings_dialog(procedure, config) -> bool:
+def _settings_dialog(procedure: Gimp.Procedure, config: Gimp.ProcedureConfig) -> bool:
     """Settings: General (what a user needs, the rest behind expanders) and
     Models. Writes the values back into ``config``."""
     gi.require_version("Gtk", "3.0")
@@ -627,14 +726,15 @@ def _settings_dialog(procedure, config) -> bool:
     return True
 
 
-def run_settings(procedure, config, data):
+def run_settings(procedure: Gimp.Procedure, config: Gimp.ProcedureConfig, _data: object) -> Gimp.ValueArray:
+    """Filters > AI > Generative Fill Settings: edit and save the profile's config.json."""
     run_mode = config.get_property("run-mode")
     paths = Paths.for_profile(Gimp.directory()).ensure()
     settings = Settings.load(paths.config)
     for key in SETTINGS_KEYS:  # dialog always starts from the saved file, not last-used values
         try:
             config.set_property(key.replace("_", "-"), getattr(settings, key))
-        except Exception:
+        except Exception:  # noqa: BLE001 - a hand-edited value of the wrong type keeps the default
             pass
     if run_mode == Gimp.RunMode.INTERACTIVE and not _settings_dialog(procedure, config):
         return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
@@ -663,7 +763,8 @@ def run_settings(procedure, config, data):
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
 
 
-def run_stop(procedure, config, data):
+def run_stop(procedure: Gimp.Procedure, _config: Gimp.ProcedureConfig, _data: object) -> Gimp.ValueArray:
+    """Filters > AI > Stop AI Backend: ask the supervisor to stop the managed ComfyUI."""
     from stable_boy.app import App
 
     try:
@@ -677,13 +778,18 @@ def run_stop(procedure, config, data):
 
 
 class StableBoy(Gimp.PlugIn):
-    def do_set_i18n(self, name):
+    """The plug-in: registers the five Filters > AI procedures."""
+
+    def do_set_i18n(self, _name: str) -> tuple[bool, str | None, str | None]:
+        """No translations are shipped."""
         return False, None, None
 
-    def do_query_procedures(self):
+    def do_query_procedures(self) -> list[str]:
+        """Names of the procedures this plug-in provides."""
         return [PROC_FILL, PROC_EXPAND, PROC_TXT2IMG, PROC_SETTINGS, PROC_STOP]
 
-    def do_create_procedure(self, name):
+    def do_create_procedure(self, name: str) -> Gimp.Procedure | None:
+        """Build the procedure ``name`` with its arguments."""
         if name == PROC_FILL:
             return self._fill()
         if name == PROC_EXPAND:
@@ -697,7 +803,7 @@ class StableBoy(Gimp.PlugIn):
         return None
 
     @staticmethod
-    def _common_prompt_args(procedure, variations_default=1):
+    def _common_prompt_args(procedure: Gimp.Procedure, variations_default: int = 1) -> None:
         procedure.add_string_argument("prompt", "_Prompt", "What should appear in the selection", "", RW)
         procedure.add_string_argument(
             "negative", "_Negative prompt", "What to avoid", "blurry, low quality, watermark, text", RW
@@ -707,7 +813,7 @@ class StableBoy(Gimp.PlugIn):
         )
 
     @staticmethod
-    def _seed_quality_args(procedure):
+    def _seed_quality_args(procedure: Gimp.Procedure) -> None:
         procedure.add_int_argument("seed", "_Seed", "-1 for random", -1, 2**31 - 1, -1, RW)
         procedure.add_choice_argument(
             "model",
@@ -718,7 +824,9 @@ class StableBoy(Gimp.PlugIn):
             RW,
         )
 
-    def _image_procedure(self, name, func, label, blurb, help_text):
+    def _image_procedure(
+        self, name: str, func: Callable[..., Gimp.ValueArray], label: str, blurb: str, help_text: str
+    ) -> Gimp.ImageProcedure:
         procedure = Gimp.ImageProcedure.new(self, name, Gimp.PDBProcType.PLUGIN, func, None)
         procedure.set_image_types("RGB*, GRAY*")
         procedure.set_sensitivity_mask(
@@ -732,7 +840,7 @@ class StableBoy(Gimp.PlugIn):
         procedure.set_attribution(AUTHOR, AUTHOR, "2022-2026")
         return procedure
 
-    def _fill(self):
+    def _fill(self) -> Gimp.ImageProcedure:
         p = self._image_procedure(
             PROC_FILL,
             run_fill,
@@ -764,7 +872,7 @@ class StableBoy(Gimp.PlugIn):
         self._seed_quality_args(p)
         return p
 
-    def _expand(self):
+    def _expand(self) -> Gimp.ImageProcedure:
         p = self._image_procedure(
             PROC_EXPAND,
             run_expand,
@@ -787,7 +895,7 @@ class StableBoy(Gimp.PlugIn):
         self._seed_quality_args(p)
         return p
 
-    def _txt2img(self):
+    def _txt2img(self) -> Gimp.ImageProcedure:
         p = self._image_procedure(
             PROC_TXT2IMG,
             run_txt2img,
@@ -816,7 +924,7 @@ class StableBoy(Gimp.PlugIn):
         self._seed_quality_args(p)
         return p
 
-    def _settings(self):
+    def _settings(self) -> Gimp.Procedure:
         p = Gimp.Procedure.new(self, PROC_SETTINGS, Gimp.PDBProcType.PLUGIN, run_settings, None)
         p.set_menu_label("Generative Fill _Settings...")
         p.add_menu_path(MENU)
@@ -920,7 +1028,7 @@ class StableBoy(Gimp.PlugIn):
         return p
 
     @staticmethod
-    def _model_arg(procedure, name, nick, options, default):
+    def _model_arg(procedure: Gimp.Procedure, name: str, nick: str, options: list | None, default: str) -> None:
         options = [str(o) for o in (options or [])]
         if default and default not in options:
             options.insert(0, default)
@@ -932,7 +1040,7 @@ class StableBoy(Gimp.PlugIn):
         else:
             procedure.add_string_argument(name, nick, "", default, RW)
 
-    def _stop(self):
+    def _stop(self) -> Gimp.Procedure:
         p = Gimp.Procedure.new(self, PROC_STOP, Gimp.PDBProcType.PLUGIN, run_stop, None)
         p.set_menu_label("Stop AI _Backend")
         p.add_menu_path(MENU)

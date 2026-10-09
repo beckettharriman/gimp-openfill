@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import time
 import webbrowser
+from typing import TYPE_CHECKING
 
 import gi
 
@@ -25,6 +26,9 @@ from . import catalog as cat  # noqa: E402
 from . import ui_text  # noqa: E402
 from .backend import BackendError  # noqa: E402
 from .dialogs import style  # noqa: E402
+
+if TYPE_CHECKING:
+    from .app import App
 
 TOKEN_PAGE = "https://huggingface.co/settings/tokens"
 
@@ -62,6 +66,8 @@ def _status_line(row: dict, current: dict, pending: list[str]) -> str:
 
 
 class ModelRow(Gtk.ListBoxRow):
+    """One catalog model: name, summary, state line, progress bar, primary button and a menu."""
+
     def __init__(self, panel: ModelsPanel, row: dict, order: int) -> None:
         super().__init__()
         self.panel = panel
@@ -117,6 +123,7 @@ class ModelRow(Gtk.ListBoxRow):
             webbrowser.open(url)
 
     def update(self, row: dict, current: dict, pending: list[str], has_token: bool) -> None:
+        """Redraw from a ``App.model_rows`` row and the supervisor's current/pending tasks."""
         self.data = row
         tags = []
         if row["active"]:
@@ -147,7 +154,9 @@ class ModelRow(Gtk.ListBoxRow):
 
 
 class ModelsPanel(Gtk.Box):
-    def __init__(self, app) -> None:
+    """The Models tab of the Settings dialog (polls the supervisor once per second)."""
+
+    def __init__(self, app: App) -> None:
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         self.app = app
         self.set_border_width(12)
@@ -224,6 +233,7 @@ class ModelsPanel(Gtk.Box):
     # helpers -------------------------------------------------------------
 
     def stop(self) -> None:
+        """Stop polling and close the downloads window (the dialog is closing)."""
         if self._timer:
             GLib.source_remove(self._timer)
             self._timer = 0
@@ -237,6 +247,7 @@ class ModelsPanel(Gtk.Box):
             widget.grab_focus()
 
     def selected_id(self) -> str | None:
+        """Catalog id of the selected row, if any."""
         row = self.list.get_selected_row()
         return row.model_id if row is not None else None
 
@@ -318,9 +329,16 @@ class ModelsPanel(Gtk.Box):
         self.token_revealer.set_reveal_child(show)
 
     def _tick(self) -> bool:
+        try:
+            self._tick_once()
+        except Exception as err:  # noqa: BLE001 - a raising GLib callback would stop polling for good
+            self.app.log.warning("models tab refresh failed: %s", err)
+        return True
+
+    def _tick_once(self) -> None:
         if time.monotonic() - self._last_rows_refresh > 3:
             self._refresh_rows()
-            return True
+            return
         current = self.app.task_status().get("current") or {}
         pending = self._pending()
         has_token = self._has_token()
@@ -336,18 +354,22 @@ class ModelsPanel(Gtk.Box):
                 self._say(
                     ui_text.with_next_step(f"The last task for {last.get('model_id')} failed: {last.get('message')}")
                 )
-        return True
 
     # actions -------------------------------------------------------------
 
     def primary_clicked(self, model_id: str) -> None:
+        """The row's primary button: download, cancel, set active, install nodes or ask for a token."""
         widget = self._widgets.get(model_id)
         action = getattr(widget, "action", None)
         self.list.select_row(widget)
         if action == "download":
             self._download(model_id)
         elif action == "cancel":
-            self.app.server.request_cancel()
+            try:
+                self.app.server.request_cancel()
+            except OSError as err:
+                self._say(ui_text.with_next_step(f"The download could not be cancelled: {err}"))
+                return
             self._say("Download cancelled. The partial file is kept, so Resume download continues where it stopped.")
         elif action == "activate":
             self._set_active(model_id)
@@ -390,7 +412,11 @@ class ModelsPanel(Gtk.Box):
             self._say(ui_text.save_failed(str(self.app.paths.config), str(err)))
 
     def _install_nodes(self, model_id: str) -> None:
-        nodes = self.app.nodes_to_install(model_id)
+        try:
+            nodes = self.app.nodes_to_install(model_id)
+        except BackendError as err:
+            self._say(ui_text.with_next_step(str(err)))
+            return
         if not nodes:
             self._say("Nothing to install.")
             return
@@ -417,6 +443,7 @@ class ModelsPanel(Gtk.Box):
             self._say(ui_text.with_next_step(str(err)))
 
     def remove_clicked(self, model_id: str) -> None:
+        """Menu entry Delete downloaded files: confirm, then queue the removal."""
         r = self._row(model_id)
         if not r:
             return
@@ -434,11 +461,15 @@ class ModelsPanel(Gtk.Box):
         dialog.destroy()
         if answer != Gtk.ResponseType.OK:
             return
-        self.app.remove_model(model_id)
+        try:
+            self.app.remove_model(model_id)
+        except (BackendError, OSError) as err:
+            self._say(ui_text.with_next_step(f"The files of {r['name']} could not be deleted: {err}"))
+            return
         self._say(f"Deleting the files of {r['name']}...")
         self._refresh_rows(force=True)
 
-    def _on_open_folder(self, *_):
+    def _on_open_folder(self, *_: object) -> None:
         try:
             self.app.open_models_folder()
         except OSError as err:
@@ -447,7 +478,7 @@ class ModelsPanel(Gtk.Box):
                 "file manager yourself."
             )
 
-    def _on_save_token(self, *_):
+    def _on_save_token(self, *_: object) -> None:
         try:
             self.app.save_token(self.token.get_text())
         except OSError as err:
@@ -487,9 +518,13 @@ class ModelsPanel(Gtk.Box):
         win = self._dl_window
         if win is None:
             return False
-        status = self.app.task_status()
+        try:
+            status = self.app.task_status()
+            pending = [t.get("model_id") or t.get("type", "task") for t in self.app.server.pending_tasks()]
+        except Exception as err:  # noqa: BLE001 - keep polling; the status files are best effort
+            self.app.log.debug("download status poll failed: %s", err)
+            return True
         current = status.get("current") or {}
-        pending = [t.get("model_id") or t.get("type", "task") for t in self.app.server.pending_tasks()]
         win.set_downloads(current, pending)
         if current.get("type") == "download":
             done, total = current.get("done") or 0, current.get("total") or 0
@@ -517,6 +552,6 @@ class ModelsPanel(Gtk.Box):
         if self._dl_window is not None:
             try:
                 self._dl_window.destroy()
-            except Exception:  # noqa: BLE001
+            except Exception:  # noqa: BLE001 - already destroyed with the dialog
                 pass
             self._dl_window = None

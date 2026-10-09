@@ -49,6 +49,7 @@ _css_installed = False
 
 
 def install_css() -> None:
+    """Install the button colours for the default screen once per process."""
     global _css_installed
     if _css_installed:
         return
@@ -140,10 +141,32 @@ def set_transient(window: Gtk.Window) -> None:
     window.move(max(0, x + (w - width) // 2), max(0, y + (h - height) // 3))
 
 
-def autoclose(dialog: Gtk.Dialog, seconds: float, response=CANCEL) -> None:
+def timeout_while_alive(widget: Gtk.Widget, ms: int, fn: Callable[[], object]) -> None:
+    """Run ``fn`` once after ``ms`` unless ``widget`` is destroyed first.
+
+    Used by the test hooks: a timer that outlives its dialog would otherwise
+    fire into a later window of the same plug-in run.
+    """
+    state = {"id": 0}
+
+    def fire() -> bool:
+        state["id"] = 0
+        fn()
+        return False
+
+    def drop(*_: object) -> None:
+        if state["id"]:
+            GLib.source_remove(state["id"])
+            state["id"] = 0
+
+    state["id"] = GLib.timeout_add(ms, fire)
+    widget.connect("destroy", drop)
+
+
+def autoclose(dialog: Gtk.Dialog, seconds: float, response: Gtk.ResponseType = CANCEL) -> None:
     """Test hook: answer the dialog after ``seconds`` (0 = never)."""
     if seconds and seconds > 0:
-        GLib.timeout_add(int(seconds * 1000), lambda: (dialog.response(response), False)[1])
+        timeout_while_alive(dialog, int(seconds * 1000), lambda: dialog.response(response))
 
 
 def send_key(widget: Gtk.Widget, keyval: int, state: int = 0) -> None:
@@ -174,15 +197,14 @@ def scripted_input(
     if not text and not key:
         return
 
-    def act():
+    def act() -> None:
         if text is not None and prompt is not None:
             prompt.buffer.set_text(text)
             prompt.view.grab_focus()
         if key:
             send_key(prompt.view if prompt is not None else dialog, Gdk.keyval_from_name(key))
-        return False
 
-    GLib.timeout_add(int(delay * 1000), act)
+    timeout_while_alive(dialog, int(delay * 1000), act)
 
 
 class PromptBox(Gtk.Box):
@@ -244,34 +266,39 @@ class PromptBox(Gtk.Box):
         self.recent.set_popup(menu)
         self.recent.set_sensitive(bool(history))
         if not history:
-            self.recent.set_tooltip_text("Prompts you generate with are remembered here (last 20).")
+            self.recent.set_tooltip_text(
+                f"Prompts you generate with are remembered here (last {ui_text.HISTORY_LIMIT})."
+            )
         row.pack_start(self.recent, False, False, 0)
         row.pack_end(_dim("Enter generates, Shift+Enter starts a new line", wrap=False), False, False, 0)
         self.pack_start(row, False, False, 0)
         self._changed()
 
-    def _key(self, _view, event) -> bool:
+    def _key(self, _view: Gtk.TextView, event: Gdk.EventKey) -> bool:
         enter = event.keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter, Gdk.KEY_ISO_Enter)
         if enter and not event.state & (Gdk.ModifierType.SHIFT_MASK | Gdk.ModifierType.CONTROL_MASK):
             self._on_activate()
             return True
         return False
 
-    def _changed(self, *_) -> None:
+    def _changed(self, *_: object) -> None:
         self.placeholder.set_visible(self.buffer.get_char_count() == 0)
         if self._on_changed:
             self._on_changed()
 
     def get_text(self) -> str:
+        """The prompt as typed (not stripped)."""
         start, end = self.buffer.get_bounds()
         return self.buffer.get_text(start, end, False)
 
     def set_text(self, text: str) -> None:
+        """Replace the prompt, select it and focus the text view."""
         self.buffer.set_text(text)
         self.select_all()
         self.view.grab_focus()
 
     def select_all(self) -> None:
+        """Select the whole prompt, so typing replaces it."""
         start, end = self.buffer.get_bounds()
         self.buffer.select_range(start, end)
 
@@ -411,7 +438,7 @@ class GenerationDialog(Gtk.Dialog):
         self.remove_radio = rem
         return box
 
-    def _mode_changed(self, button) -> None:
+    def _mode_changed(self, button: Gtk.RadioButton) -> None:
         self.stack.set_visible_child_name("remove" if button.get_active() else "prompt")
         if not button.get_active():
             self.prompt.view.grab_focus()
@@ -572,6 +599,7 @@ class GenerationDialog(Gtk.Dialog):
 
     @property
     def removing(self) -> bool:
+        """True when Remove object is chosen (Fill only)."""
         return bool(self.remove_radio and self.remove_radio.get_active())
 
     def _update_status(self) -> None:
@@ -601,6 +629,7 @@ class GenerationDialog(Gtk.Dialog):
             self.warning.set_visible(bool(warning))
 
     def collect(self) -> dict:
+        """The procedure arguments as chosen, typed exactly as the ProcedureConfig expects."""
         out = {
             "prompt": self.prompt.get_text().strip(),
             "negative": self.negative.get_text().strip(),
@@ -630,7 +659,7 @@ def run_generation_dialog(
     test_text: str | None = None,
     test_key: str | None = None,
     test_open_recent: bool = False,
-    **kwargs,
+    **kwargs: object,
 ) -> dict | None:
     """Show the dialog; the collected values, or None when cancelled."""
     dialog = GenerationDialog(kind, values, history, models, **kwargs)
@@ -638,7 +667,7 @@ def run_generation_dialog(
     autoclose(dialog, autoclose_seconds)
     scripted_input(dialog, dialog.prompt, test_text, test_key)
     if test_open_recent:
-        GLib.timeout_add(1200, lambda: (dialog.prompt.recent.set_active(True), False)[1])
+        timeout_while_alive(dialog, 1200, lambda: dialog.prompt.recent.set_active(True))
     try:
         while True:
             response = dialog.run()
@@ -811,7 +840,7 @@ class SettingsDialog(Gtk.Dialog):
         scroller.add(box)
         return scroller
 
-    def _grid(self, fields) -> Gtk.Grid:
+    def _grid(self, fields: tuple[tuple[str, str, str], ...]) -> Gtk.Grid:
         grid = Gtk.Grid(column_spacing=12, row_spacing=4)
         row = 0
         for key, label, hint in fields:
@@ -869,7 +898,7 @@ class SettingsDialog(Gtk.Dialog):
             return box
         return entry
 
-    def _browse(self, _button, entry: Gtk.Entry) -> None:
+    def _browse(self, _button: Gtk.Button, entry: Gtk.Entry) -> None:
         chooser = Gtk.FileChooserDialog(
             title="Choose the ComfyUI folder", transient_for=self, action=Gtk.FileChooserAction.SELECT_FOLDER
         )
@@ -883,6 +912,7 @@ class SettingsDialog(Gtk.Dialog):
     # values --------------------------------------------------------------
 
     def collect(self) -> dict:
+        """The settings as shown, with the type of each original value (bool, int, float, str)."""
         out = {}
         for key, widget in self.widgets.items():
             old = self.values[key]
@@ -899,7 +929,7 @@ class SettingsDialog(Gtk.Dialog):
 
     # test backend --------------------------------------------------------
 
-    def _on_test(self, _button) -> None:
+    def _on_test(self, _button: Gtk.Button) -> None:
         if self._test_backend is None:
             return
         values = self.collect()
@@ -926,7 +956,7 @@ class SettingsDialog(Gtk.Dialog):
         self.test_button.set_sensitive(True)
         self.test_label.set_text(text)
 
-    def _on_destroy(self, *_) -> None:
+    def _on_destroy(self, *_: object) -> None:
         self._alive = False
         if self.panel is not None and hasattr(self.panel, "stop"):
             self.panel.stop()
@@ -936,13 +966,14 @@ def run_settings_dialog(
     values: dict,
     choices: dict,
     ranges: dict,
-    models_panel_factory=None,
-    test_backend=None,
+    models_panel_factory: Callable[[], Gtk.Widget] | None = None,
+    test_backend: Callable[[dict, Callable[[str], None]], str] | None = None,
     autoclose_seconds: float = 0,
     tab: str = "",
     show_advanced: bool = False,
     select_model: str = "",
 ) -> dict | None:
+    """Show the Settings dialog; the collected values, or None when cancelled."""
     dialog = SettingsDialog(values, choices, ranges, models_panel_factory, test_backend)
     set_transient(dialog)
     for expander in dialog.expanders[:1] if show_advanced else []:
@@ -950,7 +981,7 @@ def run_settings_dialog(
     if tab == "models" and dialog.notebook.get_n_pages() > 1:
         dialog.notebook.set_current_page(1)
         if select_model and hasattr(dialog.panel, "select"):
-            GLib.timeout_add(300, lambda: (dialog.panel.select(select_model), False)[1])
+            timeout_while_alive(dialog, 300, lambda: dialog.panel.select(select_model))
     autoclose(dialog, autoclose_seconds)
     try:
         response = dialog.run()

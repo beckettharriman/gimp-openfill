@@ -30,7 +30,7 @@ from .progress import Eta, FrameThrottle, download_row, fit_within, format_durat
 PREVIEW_LONG_SIDE = 320
 
 
-def _window_rect_from_handle(handle_bytes) -> tuple[int, int, int, int] | None:
+def _window_rect_from_handle(handle_bytes: bytes | None) -> tuple[int, int, int, int] | None:
     """Windows only: (x, y, w, h) of the native window GIMP reported as the
     progress parent (the image window of the display the plug-in runs on)."""
     if sys.platform != "win32" or not handle_bytes:
@@ -83,7 +83,7 @@ class _NoActivate:
         found = []
         proto = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)
 
-        def cb(hwnd, _):
+        def cb(hwnd: int, _: object) -> bool:
             pid = ctypes.c_ulong()
             user32.GetWindowThreadProcessId(ctypes.c_void_p(hwnd), ctypes.byref(pid))
             if pid.value != os.getpid():
@@ -99,6 +99,7 @@ class _NoActivate:
         return found[0] if found else 0
 
     def before_show(self) -> None:
+        """Mark the realized native window WS_EX_NOACTIVATE (call before it is shown)."""
         if sys.platform != "win32":
             return
         try:
@@ -114,6 +115,7 @@ class _NoActivate:
             self.hwnd = 0
 
     def after_show(self) -> bool:
+        """GLib timeout callback: hand the focus back if the window took it; never repeats."""
         if sys.platform != "win32" or not self.previous:
             return False
         try:
@@ -134,7 +136,7 @@ class ProgressWindow(Gtk.Window):
         model_name: str,
         on_cancel: Callable[[], None] | None = None,
         position: tuple[int, int] | None = None,
-        anchor_handle=None,
+        anchor_handle: bytes | None = None,
         on_moved: Callable[[int, int], None] | None = None,
         show_preview: bool = True,
         quit_main_on_close: bool = True,
@@ -155,6 +157,8 @@ class ProgressWindow(Gtk.Window):
         self._eta = Eta()
         self._throttle = FrameThrottle(0.25)
         self._finished = False
+        self._closed = False
+        self._close_timer = 0
         self._cancel_requested = False
         self._last_pos: tuple[int, int] | None = None
         self.preview_frames = 0
@@ -237,7 +241,7 @@ class ProgressWindow(Gtk.Window):
             pass
         return areas
 
-    def _place(self, position, anchor_handle) -> None:
+    def _place(self, position: tuple[int, int] | None, anchor_handle: bytes | None) -> None:
         """Remembered position (clamped onto a current monitor, so a position
         saved on a monitor that is gone cannot hide the window), else the top
         right of the image window, else of the primary monitor."""
@@ -261,19 +265,22 @@ class ProgressWindow(Gtk.Window):
             x, y = rx + rw - width - 24, ry + 48
         self.move(*ui_text.clamp_position(x, y, width, height, areas))
 
-    def _configure(self, _widget, event) -> bool:
+    def _configure(self, _widget: Gtk.Widget, event: Gdk.EventConfigure) -> bool:
         self._last_pos = (event.x, event.y)
         return False
 
     # worker-facing API (thread safe) -------------------------------------
 
-    def post(self, fn: Callable, *args) -> None:
+    def post(self, fn: Callable, *args: object) -> None:
+        """Run ``fn(*args)`` once on the GTK main loop (safe from any thread)."""
         GLib.idle_add(lambda: (fn(*args), False)[1])
 
     def set_step(self, fraction: float, text: str) -> None:
+        """Update the progress bar (0..1) and the step text."""
         self.post(self._set_step, fraction, text)
 
     def preview_frame(self, payload: bytes) -> None:
+        """Show a backend preview frame (binary websocket payload), throttled."""
         if not self._throttle.admit():
             return
         frame = parse_preview_frame(payload)
@@ -281,13 +288,16 @@ class ProgressWindow(Gtk.Window):
             self.post(self._show_preview, frame.data)
 
     def finish(self, success: bool, message: str = "", close_after_ms: int = 1000) -> None:
+        """End the operation: success closes after ``close_after_ms``; failure waits for Close."""
         self.post(self._finish, success, message, close_after_ms)
 
     def set_downloads(self, current: dict | None, pending: list[str] | None = None) -> None:
+        """Show the supervisor's current task and the queued model ids."""
         self.post(self._set_downloads, current, pending or [])
 
     @property
     def cancelled(self) -> bool:
+        """True once Cancel was pressed."""
         return self._cancel_requested
 
     # main-thread implementation -------------------------------------------
@@ -318,13 +328,15 @@ class ProgressWindow(Gtk.Window):
             pixbuf = pixbuf.scale_simple(w, h, GdkPixbuf.InterpType.BILINEAR)
         self.show_pixbuf(pixbuf)
 
-    def show_pixbuf(self, pixbuf) -> None:
+    def show_pixbuf(self, pixbuf: GdkPixbuf.Pixbuf) -> None:
         """Main thread: show a preview image (replaces the placeholder text)."""
         self.preview.set_from_pixbuf(pixbuf)
         self.preview_hint.hide()
         self.preview_frames += 1
 
     def _set_downloads(self, current: dict | None, pending: list[str]) -> None:
+        if self._closed:
+            return
         lines = []
         if current and current.get("type") == "download":
             lines.append("Download: " + download_row(current))
@@ -339,13 +351,15 @@ class ProgressWindow(Gtk.Window):
             self.downloads_label.hide()
 
     def _finish(self, success: bool, message: str, close_after_ms: int) -> None:
+        if self._closed:
+            return
         self._finished = True
         self.cancel_button.set_sensitive(False)
         if success:
             self.bar.set_fraction(1.0)
             self.bar.set_text("100%")
             self.step_label.set_text(message or "Done")
-            GLib.timeout_add(max(0, close_after_ms), lambda: (self.close_now(), False)[1])
+            self._close_timer = GLib.timeout_add(max(0, close_after_ms), self._close_timeout)
         else:
             cancelled = self._cancel_requested or message.lower().startswith("cancel")
             self.step_label.set_markup("<b>Cancelled</b>" if cancelled else "<b>Something went wrong</b>")
@@ -370,7 +384,12 @@ class ProgressWindow(Gtk.Window):
         )
         return True
 
-    def _cancel_clicked(self, *_):
+    def _close_timeout(self) -> bool:
+        self._close_timer = 0  # returning False removes the source
+        self.close_now()
+        return False
+
+    def _cancel_clicked(self, *_: object) -> None:
         self._cancel_requested = True
         self.cancel_button.set_sensitive(False)
         self.step_label.set_text("Cancelling, the image stays unchanged...")
@@ -378,6 +397,19 @@ class ProgressWindow(Gtk.Window):
             self._on_cancel()
 
     def close_now(self) -> None:
+        """Close the window (idempotent) and leave the nested main loop it runs in.
+
+        Safe to call twice (for example the success timer and a caller's own
+        close): only the first call destroys the window and quits the loop, so
+        an outer main loop is never quit by mistake.
+        """
+        if self._closed:
+            return
+        self._closed = True
+        self._finished = True  # idle callbacks still queued must not touch destroyed widgets
+        if self._close_timer:
+            GLib.source_remove(self._close_timer)
+            self._close_timer = 0
         if self._timer:
             GLib.source_remove(self._timer)
             self._timer = 0

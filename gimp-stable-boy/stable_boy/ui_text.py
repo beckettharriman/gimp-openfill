@@ -41,6 +41,7 @@ def parse_history(text: str | None) -> list[str]:
 
 
 def dump_history(history: list[str]) -> str:
+    """JSON for ``Settings.prompt_history`` (at most HISTORY_LIMIT prompts)."""
     return json.dumps(list(history)[:HISTORY_LIMIT], ensure_ascii=False)
 
 
@@ -102,12 +103,14 @@ def plain_step_text(text: str) -> str:
 
 
 def elapsed_text(elapsed: str, remaining: str | None = None) -> str:
+    """Time line of the progress window."""
     if remaining and remaining.strip("-: "):
         return f"Elapsed {elapsed}, about {remaining} left"
     return f"Elapsed {elapsed}"
 
 
 def prompt_free_warning(model_name: str) -> str:
+    """Fill dialog warning when the active model ignores prompts (removal models)."""
     short = (model_name or "The active model").split(" - ")[0]
     return (
         f"Note: the active model ({short}) only removes objects and ignores the prompt. "
@@ -128,6 +131,7 @@ def selection_status(selection: tuple[int, int] | None, image: tuple[int, int] |
 
 
 def expand_status(image: tuple[int, int] | None, left: int, top: int, right: int, bottom: int) -> str:
+    """Status line of the Generative Expand dialog."""
     if image is None:
         return ""
     width, height = image[0] + max(0, left) + max(0, right), image[1] + max(0, top) + max(0, bottom)
@@ -139,6 +143,7 @@ def expand_status(image: tuple[int, int] | None, left: int, top: int, right: int
 def txt2img_status(
     width: int, height: int, selection: tuple[int, int] | None, default: tuple[int, int], target: str
 ) -> str:
+    """Status line of the Text to Image dialog."""
     if width > 0 and height > 0:
         size = f"{width} x {height} px"
     elif selection is not None and target == "layer":
@@ -162,7 +167,7 @@ def clamp_position(
     if not areas:
         return x, y
 
-    def distance(area):
+    def distance(area: tuple[int, int, int, int]) -> int:
         ax, ay, aw, ah = area
         dx = max(ax - x, 0, x - (ax + aw))
         dy = max(ay - y, 0, y - (ay + ah))
@@ -219,6 +224,7 @@ INTERRUPTED_OUTSIDE = (
 
 
 def next_step(message: str) -> str:
+    """The "Next step: ..." sentence that fits an error ``message``."""
     lowered = (message or "").lower()
     for needle, step in _NEXT_STEPS:
         if needle in lowered:

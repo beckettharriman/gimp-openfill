@@ -29,8 +29,8 @@ THUMB = 160
 class VariationPicker(Gtk.Window):
     """``thumbnails``: list of (name, GdkPixbuf or None).
 
-    ``on_show(index)`` is called when a thumbnail is clicked (also once for
-    the first one); ``on_keep_all()`` and ``on_discard()`` when those
+    ``on_show(index)`` is called when a thumbnail is clicked (not on open:
+    the image keeps the state the insertion left); ``on_keep_all()`` and ``on_discard()`` when those
     buttons are pressed. "Keep selected" and closing the window keep the
     current choice. ``on_closed()`` runs once at the end in every case.
     """
@@ -54,6 +54,7 @@ class VariationPicker(Gtk.Window):
         self._on_discard = on_discard
         self._on_closed = on_closed
         self._done = False
+        self._sources: list[int] = []
         self.choice = 0
         self.outcome = "keep"
 
@@ -117,12 +118,12 @@ class VariationPicker(Gtk.Window):
         if self.buttons:
             self.buttons[0].grab_focus()
 
-    def _toggled(self, button, index: int) -> None:
+    def _toggled(self, button: Gtk.ToggleButton, index: int) -> None:
         if button.get_active() and not self._done:
             self.choice = index
             self._on_show(index)
 
-    def _key(self, _w, event) -> bool:
+    def _key(self, _w: Gtk.Widget, event: Gdk.EventKey) -> bool:
         if event.keyval == Gdk.KEY_Escape:
             self.finish("keep")
             return True
@@ -136,18 +137,34 @@ class VariationPicker(Gtk.Window):
                 return True
         return False
 
-    def _keep_all(self, *_):
+    def _keep_all(self, *_: object) -> None:
         self._on_keep_all()
         self.finish("keep_all")
 
-    def _discard(self, *_):
+    def _discard(self, *_: object) -> None:
         self._on_discard()
         self.finish("discard")
 
+    def add_timeout(self, ms: int, fn: Callable[[], object]) -> None:
+        """Run ``fn`` once after ``ms`` unless the picker has closed by then."""
+
+        def fire() -> bool:
+            self._sources.remove(source)
+            if not self._done:
+                fn()
+            return False
+
+        source = GLib.timeout_add(ms, fire)
+        self._sources.append(source)
+
     def finish(self, outcome: str) -> None:
+        """Close the picker with ``outcome`` (keep, keep_all, discard); later calls do nothing."""
         if self._done:
             return
         self._done = True
+        for source in self._sources:  # test timers still pending must not outlive the window
+            GLib.source_remove(source)
+        self._sources.clear()
         self.outcome = outcome
         self.destroy()
         if self._on_closed:
@@ -169,6 +186,7 @@ def _play_step(picker: VariationPicker, step: str) -> bool:
 
 
 def scaled(pixbuf: GdkPixbuf.Pixbuf | None, size: int = THUMB) -> GdkPixbuf.Pixbuf | None:
+    """``pixbuf`` scaled down to fit ``size`` x ``size`` (never up); None stays None."""
     if pixbuf is None:
         return None
     w, h = pixbuf.get_width(), pixbuf.get_height()
@@ -180,10 +198,10 @@ def scaled(pixbuf: GdkPixbuf.Pixbuf | None, size: int = THUMB) -> GdkPixbuf.Pixb
 
 def run_picker(
     title: str,
-    thumbnails,
-    on_show,
-    on_keep_all,
-    on_discard,
+    thumbnails: list[tuple[str, GdkPixbuf.Pixbuf | None]],
+    on_show: Callable[[int], None],
+    on_keep_all: Callable[[], None],
+    on_discard: Callable[[], None],
     autoclose_seconds: float = 0,
     test_steps: list[str] | None = None,
 ) -> str:
@@ -202,8 +220,8 @@ def run_picker(
         on_closed=lambda: Gtk.main_quit() if Gtk.main_level() > 0 else None,
     )
     if autoclose_seconds and autoclose_seconds > 0:
-        GLib.timeout_add(int(autoclose_seconds * 1000), lambda: (picker.finish("keep"), False)[1])
+        picker.add_timeout(int(autoclose_seconds * 1000), lambda: picker.finish("keep"))
     for index, step in enumerate(test_steps or []):
-        GLib.timeout_add(1000 * (index + 1), _play_step, picker, str(step))
+        picker.add_timeout(1000 * (index + 1), lambda s=str(step): _play_step(picker, s))
     Gtk.main()
     return picker.outcome

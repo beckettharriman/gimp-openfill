@@ -72,24 +72,69 @@ is slow (font cache); allow about two minutes. `install.ps1 -Uninstall` and
 Only one generation should run on a machine at a time; a second ComfyUI on
 the same GPU fails or swaps heavily.
 
+### Robustness and UI screenshot harnesses
+
+Two harnesses cover what the generation scripts do not. Both are driven by
+environment variables, which must be set before GIMP starts (the plug-in
+processes inherit GIMP's environment, not the batch script's):
+
+- `tests/gimp_batch_robustness.py` runs one failure scenario per GIMP start
+  (backend not installed, port in use, cancel at each phase, backend crash,
+  corrupt download, two GIMPs, ...). `SB_ROB_CASE` names the case (a
+  `rob-...` id), `SB_ROB_OUT` the case's evidence folder. The scenario itself
+  (a broken `config.json`, a listener on the port, a killed process) is set up
+  by whoever starts GIMP; the script builds a small image with a selection,
+  runs Generative Fill non-interactively and writes `gimp-report.json`,
+  `before.png`, `after.png` and `plugin-log.txt`. Run it with
+  `gimp-console-3.2.exe` and keep GIMP's stderr: in console mode the messages
+  the user would see (`Gimp.message`) go there.
+- `tests/gimp_batch_ui_screenshots.py` opens every dialog interactively in a
+  GUI GIMP and captures each window, without generating, checking the backend
+  or downloading. `SB_TEST_UI_FILE` names a JSON hooks file that the script
+  rewrites before each dialog (`autoclose`, `settings_tab`, `advanced`,
+  `mode`, `fake_variations`, `progress_demo`, `type` / `press`, `dry_run`; see
+  `_test_hooks` in `gimp-stable-boy.py`). `SB_TEST_OUT` is the screenshot
+  folder (default `docs/screenshots/`), `SB_REPO` the checkout, and
+  `SB_TEST_MENU=1` also captures the Filters > AI menu.
+
+The plug-in reads a few more test-only variables: `SB_TEST_CANCEL_FILE` and
+`SB_TEST_CANCEL_AT` press Cancel at a given progress step (`runner.py`), and
+`SB_TEST_AUTOCLOSE` / `SB_SETTINGS_TAB` are older forms of the UI hooks. None
+of them is set in normal use, and they never change what a normal run does.
+
 ### Evidence
 
-Results of GIMP runs go under `docs/evidence/<run-or-date>/<case-id>/`, with
-short kebab-case case ids (`sel-tiny-20px`, `mode-expand-left`). A case folder
+Results of GIMP runs go under `docs/evidence/<run-or-date>/<case-id>/` (for
+example `docs/evidence/overnight-2026-10-09/rob-port-in-use-8188/`), with
+short kebab-case case ids whose prefix says what is varied: `sel-` (the
+selection), `img-` (image type or size), `mode-` (operation or model),
+`prompt-`, `photo-` (real photographs), `rob-` (robustness) and `err-`
+(error messages). A case folder
 normally holds `batch-command.txt` (the exact command), `report.json`
 (inputs, timings, pass or fail, error text), `before.png` / `after.png`
 downscaled to at most 1024 px on the long side, and `plugin-log.txt` (the
-relevant `stable-boy.log` lines). Keep large originals out of the repository.
+relevant `stable-boy.log` lines), plus crops when the region is small. A run
+folder may also hold a run-wide spec (`matrix-spec.json`) and a
+`quality-ledger.md` with one visual score row per case. Keep large originals
+out of the repository and the new evidence of one run small (a few tens of
+MB at most).
 Never put a token, a full `config.json` or personal paths you do not want
 published into evidence files.
 
 ## Coding rules
 
-- Only `stable_boy/gimp_io.py` and the entry point `gimp-stable-boy.py` may
-  import `Gimp`, `GimpUi` or other GIMP introspection modules. The GTK dialog
-  modules (`models_ui.py`, `progress_window.py`, `runner.py`) may import `Gtk`,
-  `Gdk` and `GLib` but reach GIMP only through `gimp_io`. Everything else must
-  import without GIMP or GTK so it can be unit-tested.
+- GIMP image work (`Gimp.Image`, layers, selections, undo groups) lives in
+  `stable_boy/gimp_io.py` and the entry point `gimp-stable-boy.py`. The GTK
+  modules (`dialogs.py`, `ui_picker.py`, `models_ui.py`, `progress_window.py`,
+  `runner.py`) may import `Gtk`, `Gdk` and `GLib`; of GIMP they use only
+  `GimpUi.init`, the transient parent and the progress window handle, and
+  `runner.py` the status-bar progress. Everything else must import without
+  GIMP or GTK so it can be unit-tested.
+- GTK is called only from the main thread. Worker threads (the generation in
+  `runner.py`, Check backend in the Settings dialog) hand every UI update to
+  the main loop with `GLib.idle_add`. Every `GLib.timeout_add` source is
+  removed when its window closes, and a timeout callback must not raise
+  (GLib drops a source whose callback raises).
 - No new pip dependencies. GIMP's bundled Python has only the standard
   library (plus PyGObject); the plug-in must run there as shipped.
 - Keep the code valid for Python 3.10 (`target-version = "py310"`).

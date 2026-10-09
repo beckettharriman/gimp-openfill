@@ -296,7 +296,7 @@ class DownloadTests(unittest.TestCase):
             def __enter__(self):
                 return self
 
-            def __exit__(self, *exc):
+            def __exit__(self, *_exc):
                 self.fh.close()
 
             def write(self, block):

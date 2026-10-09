@@ -37,7 +37,7 @@ machine who can read your home folder.
 | Input | Check | Code |
 | --- | --- | --- |
 | Catalog file URLs | https only | `catalog.parse_catalog` |
-| Catalog `dest` paths | relative, plain names only: no `..`, no drive letter, no absolute or UNC path; must end in a plain file name | `downloads.safe_relative_path` |
+| Catalog `dest` paths | relative, plain names only: no `..`, no drive letter, no absolute or UNC path; must end in a plain file name; checked when the catalog is parsed and again when a task is run, where the joined path must also resolve inside the models folder | `downloads.safe_relative_path`, `downloads.safe_join` |
 | Catalog sha256 | 64 lowercase hex characters; every shipped file has one (unit test) | `catalog.parse_catalog`, `tests/test_catalog.py` |
 | Custom node source | `https://github.com/<owner>/<name>`, folder is a plain name, commit is a full 40-character SHA | `downloads.validate_node_spec` |
 | Download task | `model_id` must be a catalog entry; each file's URL and destination must belong to it; size, sha256, `gated` and `optional` are taken from the catalog, never from the task; the models folder must be the one of the configured ComfyUI | `supervisor.TaskWorker.checked_download_files` |
@@ -45,14 +45,14 @@ machine who can read your home folder.
 | Remove task | only files of the named catalog entry, inside the configured models folder | `supervisor.TaskWorker._remove` |
 | Downloaded data | written to `<file>.part`; Content-Length and the catalog size must agree before writing; a body longer than the catalog size is cut off and deleted; a resumed range must start at the expected byte; free disk space checked first; SHA-256 verified before the atomic rename onto the final name; a hash mismatch deletes the `.part` file | `downloads.download_file` |
 | Git checkout | `git clone -- <repo>`; after `git checkout <commit>` the plug-in verifies `git rev-parse HEAD` equals the pinned commit before running pip | `downloads.install_custom_node` |
-| Pids in state files | a pid only counts as a live supervisor or task worker when the process image name is a Python interpreter; the watched GIMP pid counts as gone when its image name changes (pid reuse) | `supervisor.pid_is_python`, `supervisor.run_backend` |
+| Pids in state files | a pid only counts as a live supervisor or task worker when it is alive and its process image name (when it can be read) is a Python interpreter; the watched GIMP pid counts as gone when its image name changes (pid reuse), and other GIMPs registered for the same profile keep the backend alive | `supervisor.pid_is_python`, `supervisor.run_backend` |
 | WebSocket frames | at most 256 MB per frame; the client id is URL-encoded | `websocket.WebSocket`, `websocket.ws_url` |
 
 The plug-in never kills a process by a pid read from a file. The supervisor
 only terminates the ComfyUI child it started itself (a Windows Job Object with
-kill-on-close ties that child to the supervisor). Stopping the backend from
-the settings dialog writes a stop request into `server-state.json`; the
-supervisor acts on it.
+kill-on-close ties that child to the supervisor). Filters > AI > Stop AI
+Backend writes a stop request into `server-state.json`
+(`server.ServerManager.request_stop`); the supervisor acts on it.
 
 Every subprocess is started with an argument list, never through a shell:
 the supervisor and ComfyUI (`server.py`, `supervisor.py`), git and pip for

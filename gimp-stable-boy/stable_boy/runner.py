@@ -17,6 +17,7 @@ from __future__ import annotations
 import os
 import threading
 from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 import gi
 
@@ -27,11 +28,15 @@ from gi.repository import Gimp, GimpUi, GLib  # noqa: E402
 from . import gimp_io  # noqa: E402
 from .backend import GenerationCancelled, describe_error  # noqa: E402
 
+if TYPE_CHECKING:
+    from .app import App
+
 FAIL_WINDOW_TIMEOUT_MS = 20000  # a failed run closes its window after this even if nobody clicks
 Job = Callable[[Callable, Callable | None, Callable | None], object]
 
 
 def _test_cancel_step() -> str:
+    """Test hook (SB_TEST_CANCEL_FILE): the step text at which Cancel is pressed, or ""."""
     path = os.environ.get("SB_TEST_CANCEL_FILE")
     if not path:
         return ""
@@ -43,7 +48,10 @@ def _test_cancel_step() -> str:
 
 
 class Runner:
-    def __init__(self, app, title: str, model_name: str, interactive: bool = True) -> None:
+    """One backend job with its progress UI: the floating window (job in a worker
+    thread, GTK main loop on the main thread) or GIMP's status bar only."""
+
+    def __init__(self, app: App, title: str, model_name: str, interactive: bool = True) -> None:
         self.app = app
         self.title = title
         self.model_name = model_name
@@ -61,6 +69,7 @@ class Runner:
         self._closed = False
         self._window_gone = False
         self._fallback = 0
+        self._cancel_close = 0
         if self.use_window:
             try:
                 GimpUi.init("gimp-stable-boy")
@@ -97,14 +106,18 @@ class Runner:
             self.app.settings.progress_window_x = int(x)
             self.app.settings.progress_window_y = int(y)
             self.app.settings.save(self.app.paths.config)
-        except OSError:
-            pass
+        except OSError as err:  # the position is a convenience; the run goes on
+            self.app.log.warning("progress window position not saved: %s", err)
 
     def _poll_downloads(self) -> bool:
         if self.window is None:
             return False
-        status = self.app.task_status()
-        pending = [t.get("model_id") or t.get("type", "task") for t in self.app.server.pending_tasks()]
+        try:
+            status = self.app.task_status()
+            pending = [t.get("model_id") or t.get("type", "task") for t in self.app.server.pending_tasks()]
+        except Exception as err:  # noqa: BLE001 - a raising GLib callback would stop polling for good
+            self.app.log.debug("download status poll failed: %s", err)
+            return True
         self.window.set_downloads(status.get("current"), pending)
         return True
 
@@ -129,7 +142,7 @@ class Runner:
 
     # run ------------------------------------------------------------------
 
-    def run(self, job: Job):
+    def run(self, job: Job) -> object:
         """Execute ``job(progress, preview, cancel)``; return its result or raise."""
         if self.window is None:
             try:
@@ -198,7 +211,7 @@ class Runner:
 
         if isinstance(error, GenerationCancelled):
             self.window.finish(False, "Cancelled - the image was left unchanged.", 0)
-            GLib.timeout_add(1500, self._close_window_once)
+            self._cancel_close = GLib.timeout_add(1500, self._cancel_close_timeout)
         else:
             self.window.finish(False, describe_error(error), 0)
         # Never wait forever for Close: the procedure must return (the error is also
@@ -208,6 +221,13 @@ class Runner:
         if self._fallback:  # closed by the user (or the cancel timer) first
             GLib.source_remove(self._fallback)
             self._fallback = 0
+        if self._cancel_close:  # closed by the user before the cancel timer fired
+            GLib.source_remove(self._cancel_close)
+            self._cancel_close = 0
+
+    def _cancel_close_timeout(self) -> bool:
+        self._cancel_close = 0
+        return self._close_window_once()
 
     def _fallback_close(self) -> bool:
         self._fallback = 0
