@@ -1,7 +1,9 @@
 # Design: Stable Boy 2 for GIMP 3
 
-Status: implemented (2.0.0-alpha.1). This note records what was built, why, and
-what was learned from the projects surveyed before the port.
+Status: implemented, 2.0.0-beta.1 (first public beta). This note records what
+was built, why, and what was learned from the projects surveyed before the
+port. Tested end to end on Windows 11 with GIMP 3.2.6 and ComfyUI 0.39.0;
+see `docs/evidence/` and `CHANGELOG.md`.
 
 ## Goal
 
@@ -33,16 +35,23 @@ as the design starting point.
 
 ```
 gimp-stable-boy/gimp-stable-boy.py      GIMP entry point: Gimp.PlugIn subclass,
-                                        five procedures, dialogs, orchestration
+                                        five procedures, dialog wiring
 gimp-stable-boy/stable_boy/
   __init__.py        version string
+  app.py             orchestration of fill, expand, text to image and removal
   config.py          Settings dataclass, JSON load/save under Gimp.directory()/stable-boy
-  log.py             file logger (one log per GIMP profile)
+  log.py             file logger (one log per GIMP profile), token redaction
   png.py             pure-Python PNG encoder (RGB/RGBA/Gray 8-bit) and IHDR reader
   geometry.py        pure: Rect, context-region growth, working-size snapping,
+                     mask grow/feather, colour-match and timeout heuristics,
                      outpaint canvas math
   workflow.py        pure: ComfyUI API-format graph builders (SD 1.5 inpaint,
-                     SDXL + Fooocus inpaint, text-to-image)
+                     SDXL + Fooocus inpaint, FLUX Fill, Qwen-Image-Edit,
+                     LaMa/MAT removal, text-to-image)
+  catalog.py         pure: models/catalog.json parsing and validation
+  downloads.py       pure: resumable, sha256-verified downloads; pinned
+                     custom-node installs
+  progress.py        pure: preview frame parsing, ETA, frame throttling
   websocket.py       pure: minimal RFC 6455 client (stdlib sockets only)
   comfy_api.py       pure: urllib client for /system_stats, /object_info,
                      /upload/image, /prompt, /ws, /history, /view, /interrupt
@@ -52,16 +61,28 @@ gimp-stable-boy/stable_boy/
   server.py          ServerManager: discovers/starts the hidden backend,
                      talks to the supervisor through a state file
   supervisor.py      standalone process: owns the ComfyUI child in a Win32 Job
-                     Object, watches the GIMP pid, enforces the idle timeout
+                     Object, watches the GIMP pid, enforces the idle timeout,
+                     runs download and node-install tasks
+  ui_text.py         pure: dialog strings, status lines, error next steps
+  dialogs.py         GTK: Fill, Expand, Text to Image and Settings dialogs
+  models_ui.py       GTK: the Models tab
+  progress_window.py GTK: floating progress window with preview and Cancel
+  ui_picker.py       GTK: variations picker
+  runner.py          worker thread for a generation, main-loop marshalling
   gimp_io.py         everything that touches Gimp/Gegl: export region and mask,
-                     insert result layer with mask, canvas resize, new image
+                     insert result layers with masks, canvas resize, new image
 tests/               pure-Python unit tests (run with system Python, no GIMP)
+                     and gimp_batch_*.py harnesses that run inside GIMP
 install.ps1/.sh      copy the plug-in folder into the GIMP profile, write config
 ```
 
-Rule: everything under `stable_boy/` except `gimp_io.py` imports neither
-`gi` nor GTK, so it is testable under any Python 3.10+ and reusable outside
-GIMP. `gimp-stable-boy.py` and `gimp_io.py` are the only GIMP-aware modules.
+Rule: only the entry point, `gimp_io.py` and the GTK modules (`dialogs.py`,
+`models_ui.py`, `progress_window.py`, `ui_picker.py`, `runner.py`) import
+`gi`; image access goes through `gimp_io` (`dialogs.py` and `runner.py` use
+GIMP only for UI initialisation and window placement). Everything else imports
+neither GIMP nor GTK, so it is testable under any Python 3.10+ and reusable
+outside GIMP; the dialog text and layout logic lives in `ui_text.py` for the
+same reason.
 
 ### Plug-in process model (the part that shapes everything)
 
@@ -113,27 +134,38 @@ untested-on-this-machine because A1111 is not installed here.
 ### Data flow for Generative Fill
 
 1. `gimp_io.selection_rect(image)` reads the selection bounds. If the
-   selection is empty the whole image is used.
-2. `geometry.context_rect()` grows the selection by a padding proportional to
-   its size (35 % of the larger side, at least 32 px), enforces a minimum
-   context size (512 for SD 1.5, 768 for SDXL) centered on the selection, and
-   clamps to the image.
+   selection is empty the call stops with "Nothing is selected ..." before
+   the backend is started (`Select > All` regenerates the whole image).
+   Indexed images are refused with a hint to convert them to RGB.
+2. `geometry.context_rect()` grows the selection by a margin proportional to
+   its larger side (`geometry.fill_padding`: 0.5x for prompted fills, 1x for
+   removal, at least 32 px), enforces the model's minimum context, centres it
+   on the selection and clamps it to the image. The tighter margin for
+   prompted fills came from the SD 1.5 prompt-adherence ablation
+   (`docs/evidence/overnight-2026-10-09/sd15-prompt-ablation/`).
 3. `geometry.working_size()` picks the resolution the model will actually see:
-   the context region is scaled so that its longer side does not exceed the
-   model's maximum (768 / 1024), it is never upscaled more than 2x, and both
-   sides are multiples of 8.
-4. `gimp_io.export_region()` composites the visible image
-   (`Gimp.Layer.new_from_visible`) and reads the context rectangle from its
-   `Gegl.Buffer` as `R'G'B'A u8`; `gimp_io.export_mask()` reads the selection
-   channel as `Y u8`. Both are encoded with `png.py` and uploaded to ComfyUI.
+   the context region is downscaled so that its longer side fits the model's
+   maximum (768 for SD 1.5, 1024 for SDXL, FLUX and Qwen), upscaled (at most
+   8x) so that small selections reach the model's minimum side, and snapped
+   to the latent multiple (8, or 16 for FLUX and Qwen).
+4. `gimp_io.export_region_png()` composites the visible image
+   (`Gimp.Layer.new_from_visible`, from a throw-away duplicate with channels
+   hidden when a channel is visible) and reads the context rectangle from its
+   `Gegl.Buffer` as `R'G'B'A u8`, flattened over the mean visible colour where
+   it is transparent (`geometry.flatten_over_mean`; ComfyUI's LoadImage drops
+   alpha); `gimp_io.export_selection_mask_png()` reads the selection channel
+   as `Y u8`. Both are encoded with `png.py` and uploaded to ComfyUI.
 5. `workflow.build_inpaint()` assembles the graph below and `ComfyBackend`
    queues it, streams `progress` events over the websocket into
    `Gimp.progress_update`, then downloads the output PNGs from `/view`.
-6. `gimp_io.insert_result()` loads each PNG with `Gimp.file_load_layer`,
+6. `gimp_io.insert_results()` loads each PNG with `Gimp.file_load_layer`,
    offsets it to the context origin, adds alpha, and attaches a layer mask
-   created from the original selection feathered by the configured radius
-   (`Gimp.Selection.feather` on a saved copy, `layer.create_mask(SELECTION)`).
-   Variations go into a layer group with only the first one visible. The
+   built from the selection, grown (`geometry.layer_mask_grow`: by the
+   feather radius for prompted fills so the mask is opaque over the selection
+   and fades outward, by the full grow for removal) and feathered, both as a
+   percentage of the selection size. Variations go into a layer group with
+   only the first one visible; interactive runs then open the variations
+   picker. The
    original selection is restored and everything sits in one undo group.
 
 ### The ComfyUI graphs
@@ -196,22 +228,103 @@ ComfyUI picks `NORMAL_VRAM` on this GPU and offloads automatically; no
 - Progress: websocket `progress` events (`value/max`) drive
   `Gimp.progress_update`; the `executing` event with `node == null` marks
   completion. If the websocket cannot connect, `/history/<id>` is polled.
-- Cancel: the ProcedureDialog has no cancel hook once generation is running,
-  so cancellation is time based (`request_timeout`) and `/interrupt` is sent
-  when the plug-in gives up or hits an exception.
-- Errors are surfaced with `Gimp.message()` in plain words: backend not
-  installed (path check), failed to start (last lines of `comfyui.log`),
-  missing model (name from `/prompt` node_errors), out of VRAM
-  (`OutOfMemoryError` in `execution_error`), timeout.
+- Progress window: generation runs in a worker thread (`runner.py`) while
+  GIMP's main loop drives a small always-on-top window
+  (`progress_window.py`) with the step text, percent, elapsed and remaining
+  time, and a live TAESD preview (ComfyUI started with
+  `--preview-method taesd`, binary websocket frames, at most four per
+  second). GTK and GIMP calls from the worker are marshalled to the main
+  loop.
+- Cancel: the window's Cancel button sets a flag that
+  `ComfyClient.wait_for` checks every loop; it sends `/interrupt`, clears the
+  queue and raises, and nothing is inserted, so the image stays unchanged.
+  `request_timeout` (0 = estimated per request) remains as a safety net, and
+  `/interrupt` is also sent when the plug-in gives up or hits an exception.
+- Errors are plain sentences that end with a next step
+  (`backend.describe_error`, `ui_text.with_next_step`): backend not installed
+  (path check), port taken by another program (named), failed to start (last
+  lines of `comfyui.log`), model not downloaded, out of VRAM
+  (`OutOfMemoryError` in `execution_error`), timeout, cancelled. They are
+  shown in the progress window and returned as the procedure's error for
+  scripts.
 
 ### Settings
 
-Stored as JSON at `<GIMP profile>/stable-boy/config.json`, edited through
-`Filters > AI > Generative Fill Settings...` (a `GimpUi.ProcedureDialog` whose
-choice lists are built from the last cached model list). Keys: backend,
-comfy_dir, url, port, checkpoint, sdxl_checkpoint, inpaint mode preference,
-steps, cfg, sampler, scheduler, denoise, grow, feather, idle_timeout_minutes,
-autostart, request_timeout, max working sizes.
+Stored as JSON at `<GIMP profile>/stable-boy/config.json` (`config.Settings`)
+and edited through `Filters > AI > Generative Fill Settings...`. An unreadable
+file is moved aside as `config.json.corrupt-<time>` and defaults are used; on
+POSIX the file is written owner-only because it can hold the Hugging Face
+token. Every key:
+
+| Key | Default | Dialog label (section) | Notes |
+|---|---|---|---|
+| `comfy_dir` | `C:\AI\ComfyUI\ComfyUI_windows_portable` (Windows) | AI backend folder (General) | portable root or a ComfyUI checkout with a venv |
+| `autostart` | true | Start backend automatically (General) | start ComfyUI hidden when needed |
+| `idle_timeout_minutes` | 20 | Idle timeout (minutes) (General) | 0 keeps the server until GIMP exits |
+| `progress_window` | true | Show the floating progress window (General) | |
+| `active_model` | `sd15-inpainting` | Set active (Models) | catalog id used when a dialog says "active" |
+| `hf_token` | empty | token field (Models) | only for gated files; never logged |
+| `steps` / `cfg` | 25 / 7.0 | Steps, Prompt strictness (CFG) (Advanced generation) | |
+| `sampler` / `scheduler` | `dpmpp_2m` / `karras` | Sampler, Scheduler (Advanced generation) | |
+| `grow_percent` / `grow` | 15 % / 48 px | Repaint margin, limit (Advanced generation) | mask dilation as a percentage of the selection's larger side, capped |
+| `feather_percent` / `feather` | 6 % / 24 px | Edge softness, limit (Advanced generation) | layer mask feather, same scaling |
+| `prefill` | true | Hide old content before generating (Advanced generation) | needs the inpaint nodes |
+| `max_side_sd15` / `max_side_sdxl` | 768 / 1024 | Working size for SD 1.5 / SDXL (Advanced generation) | longest side the model sees |
+| `txt2img_width` / `txt2img_height` | 768 / 512 | Text to Image default width / height (Advanced generation) | used without a selection |
+| `backend` | `comfyui` | Backend (Connection and troubleshooting) | or `a1111`: an AUTOMATIC1111 WebUI started by the user with `--api`, untested |
+| `url` / `a1111_url` | `http://127.0.0.1:8188` / `:7860` | ComfyUI address, AUTOMATIC1111 address (Connection) | host and port used to talk to and start the server |
+| `startup_timeout` | 240 s | Startup time limit (Connection) | |
+| `request_timeout` | 0 | Generation time limit (Connection) | 0 estimates a limit per request |
+| `extra_server_args` | empty | Extra ComfyUI options (Connection) | for example `--lowvram` |
+| `quality` | `fast` | Model for scripts asking 'fast' or 'quality' (Connection) | legacy tiers for older scripts |
+| `checkpoint` / `sdxl_checkpoint` | `sd-v1-5-inpainting.ckpt` / `sd_xl_base_1.0.safetensors` | SD 1.5 / SDXL model file (Connection) | used by the legacy tiers |
+| `fooocus_head` / `fooocus_patch` | `fooocus_inpaint_head.pth` / `inpaint_v26.fooocus.patch` | Fooocus patch file (Connection) | SDXL only |
+| `debug` | false | Verbose log (Connection) | also `SB_DEBUG_DUMP=1` keeps the exact crop, mask and raw result |
+| `denoise` | 1.0 | - | default Change amount for scripts |
+| `progress_window_x` / `_y` | -1 | - | remembered window position; -1 = top right of the image window |
+| `prompt_history` | empty | Recent prompts (Fill dialog) | JSON list, last 20, newest first |
+
+## UX design
+
+The dialogs follow the Photoshop flow and put the prompt first; everything a
+first-time user does not need is collapsed. The screens are in
+`docs/screenshots/` (captured by `tests/gimp_batch_ui_screenshots.py`).
+
+1. **Generative Fill** opens centred on the image window. Two toggle buttons
+   pick the mode: **Fill with a prompt** (a large multi-line prompt box; the
+   last prompt is pre-filled and selected so typing replaces it; **Recent
+   prompts** lists the last 20) or **Remove object** (no prompt; an installed
+   LaMa or MAT model is used automatically). **Advanced** holds Model, Avoid,
+   Variations, Change amount and Seed. A status line shows the selection
+   size, warns when nothing is selected, and notes when the active model can
+   only remove objects. Enter generates, Shift+Enter starts a new line,
+   Escape cancels; Generate is the only blue button. Generate with an empty
+   prompt in Fill mode asks for a prompt instead of generating.
+2. **Generative Expand** has an optional prompt, four margin boxes around a
+   "your image" placeholder, the quick buttons Wider, Taller and All sides,
+   and a status line with the canvas size before and after.
+3. **Text to Image** has a prompt, Size (automatic or width x height),
+   Result as (New layer in this image or New image) and Advanced.
+4. While generating, the **progress window** sits at the top right of the
+   image window, never takes the keyboard focus, and shows plain steps
+   ("Starting the AI backend (first time takes about a minute)", "Generating,
+   step 12 of 25", "Placing the result"), the preview and a red Cancel. On
+   failure it says "Something went wrong" with the message and a next step.
+5. With several variations the **variations picker** shows thumbnails;
+   clicking one (or 1 to 9) shows it in the image. Keep selected (also Enter,
+   Escape or closing) hides the others but keeps them in the layer group, Keep
+   all leaves the group, Discard removes all variations in one undo step.
+6. **Settings** keeps four controls and Check backend on the General tab and
+   moves everything else into Advanced generation and Connection and
+   troubleshooting, each field with a one-line explanation. The **Models**
+   tab has one row per model with one state-driven primary button, and shows
+   the token field only when a gated model needs it.
+
+The generic GIMP procedure dialog remains as a fallback if the custom dialog
+cannot be built, and non-interactive PDB calls use the same arguments, so
+scripts are unaffected by the redesign. GIMP does not let a plug-in claim a
+keyboard shortcut; the Fill dialog's last line tells the user how to assign
+one in `Edit > Keyboard Shortcuts`.
 
 ## What was learned from each surveyed project
 
@@ -254,8 +367,9 @@ autostart, request_timeout, max working sizes.
   socket on 9877; useful as a driving harness for tests, and a reminder that
   GIMP 3.2 is the baseline (`Gimp.ProcedureSensitivityMask`, `get_selected_*`).
 
-## Non-goals for 2.0.0-alpha
+## Non-goals for 2.0
 
-ControlNet, IP-Adapter, regional prompts, live preview, LoRA management, a
-custom GTK canvas. Those belong to Krita-scale projects; this plug-in aims to
+ControlNet, IP-Adapter, regional prompts, LoRA management, a custom GTK
+canvas (live preview, cancel and model download, once listed here, are now
+implemented). Those belong to Krita-scale projects; this plug-in aims to
 be the small, reliable "fill the selection" tool.

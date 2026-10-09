@@ -20,5 +20,5 @@ Everything in this package except ``gimp_io`` is plain Python with no GIMP or
 GTK dependency, so it can be unit-tested and reused outside GIMP.
 """
 
-__version__ = "2.0.0-alpha.1"
+__version__ = "2.0.0-beta.1"
 __all__ = ["__version__"]

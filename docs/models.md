@@ -14,7 +14,7 @@ against the SHA-256 values published by Hugging Face (LFS metadata).
 | Installed at | `C:\AI\ComfyUI\ComfyUI_windows_portable\` |
 | Interpreter | `C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe` (Python 3.13.14, torch 2.14.0+cu130) |
 | Start command (what the plug-in runs) | `python_embeded\python.exe -s ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --dont-print-server` |
-| Port | 8188 (configurable in the settings dialog) |
+| Port | 8188 (ComfyUI address in Settings > General > Connection and troubleshooting) |
 | Logs | `%APPDATA%\GIMP\3.2\stable-boy\comfyui.log` (server), `stable-boy.log` (plug-in and supervisor) |
 
 The official `run_nvidia_gpu.bat` passes `--windows-standalone-build`, which
@@ -69,7 +69,7 @@ Total on disk: about 12.5 GB.
 
 If a request fails with an out-of-memory message, use a smaller selection,
 fewer variations, or the Fast tier. `--lowvram` can be added through
-"Extra ComfyUI arguments" in the settings dialog.
+"Extra ComfyUI options" (Settings > General > Connection and troubleshooting).
 
 ## The catalog (`models/catalog.json`)
 
@@ -90,7 +90,7 @@ Additional entries beyond the four files above:
 | `flux1-fill-dev-gguf-q4` | `unet/flux1-fill-dev-Q4_0.gguf` (YarvixPA), `clip/t5-v1_1-xxl-encoder-Q5_K_M.gguf` (city96), `clip/clip_l.safetensors` (comfyanonymous), `vae/ae.safetensors` (black-forest-labs, gated) | 10.8 GB | FLUX.1 [dev] Non-Commercial (encoders Apache-2.0) | community quantization |
 | `flux1-fill-dev` | `diffusion_models/flux1-fill-dev.safetensors`, `clip/t5xxl_fp8_e4m3fn.safetensors`, `clip/clip_l.safetensors`, `vae/ae.safetensors` | 29.3 GB | FLUX.1 [dev] Non-Commercial | black-forest-labs (first-party, gated) |
 | `qwen-image-edit-2511-gguf-q4` | `unet/qwen-image-edit-2511-Q4_K_M.gguf` (unsloth), `text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors`, `vae/qwen_image_vae.safetensors` (Comfy-Org) | 22.9 GB | Apache-2.0 | community quantization |
-| `lama-big` | `inpaint/big-lama.pt` | 206 MB | Apache-2.0 | advimman/lama checkpoint from the Sanster/models GitHub release (no published checksum) |
+| `lama-big` | `inpaint/big-lama.pt` | 206 MB | Apache-2.0 | advimman/lama checkpoint from the Sanster/models GitHub release (the host publishes no checksum; the catalog sha256 was recorded from the release file on 2026-10-09) |
 | `mat-places512` | `inpaint/MAT_Places512_G_fp16.safetensors` | 125 MB | CC BY-NC 4.0 | Acly/MAT (fp16 conversion of fenglinglwb/MAT) |
 
 No reputable repository offers a Q4_K_M quantization of FLUX.1 Fill; the
@@ -106,8 +106,10 @@ Custom node packs referenced by the catalog:
 
 ## Adding other models
 
-Any SD 1.5 or SDXL checkpoint dropped into `models/checkpoints/` appears in
-the settings dialog after the next "Check backend now". For SDXL, keep the
+Any SD 1.5 or SDXL checkpoint dropped into `models/checkpoints/` is offered
+as "SD 1.5 model file" or "SDXL model file" (Settings > General > Connection
+and troubleshooting) after the next Check backend; these files are used when
+a script asks for the legacy `fast` or `quality` tier. For SDXL, keep the
 Fooocus patch; for SD 1.5, prefer checkpoints trained for inpainting (names
 usually contain `inpainting`), although regular checkpoints also work with
 `InpaintModelConditioning` at reduced quality.
