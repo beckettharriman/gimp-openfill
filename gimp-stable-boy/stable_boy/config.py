@@ -64,6 +64,7 @@ class Settings:
     progress_window: bool = True                   # floating progress/preview window
     progress_window_x: int = -1                    # last position; -1 = top-right of the image window
     progress_window_y: int = -1
+    prompt_history: str = ""                       # JSON list of recent prompts, newest first (dialogs)
 
     # ------------------------------------------------------------------
 

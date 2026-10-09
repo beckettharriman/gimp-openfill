@@ -23,6 +23,8 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("GdkPixbuf", "2.0")
 from gi.repository import Gdk, GdkPixbuf, GLib, Gtk  # noqa: E402
 
+from . import ui_text  # noqa: E402
+from .dialogs import style  # noqa: E402
 from .progress import Eta, FrameThrottle, download_row, fit_within, format_duration, parse_preview_frame  # noqa: E402
 
 PREVIEW_LONG_SIDE = 320
@@ -61,6 +63,9 @@ class ProgressWindow(Gtk.Window):
         self._quit_main_on_close = quit_main_on_close
         self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
         self.set_keep_above(True)
+        # Never take the keyboard focus away from the image window: shown
+        # without activation; clicks (Cancel) still work.
+        self.set_focus_on_map(False)
         self.set_resizable(False)
         self.set_deletable(False)
         self.set_border_width(10)
@@ -77,22 +82,33 @@ class ProgressWindow(Gtk.Window):
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         self.add(box)
         self.title_label = Gtk.Label(xalign=0)
-        self.title_label.set_markup(f"<b>{GLib.markup_escape_text(title)}</b>  "
-                                    f"<small>{GLib.markup_escape_text(model_name)}</small>")
+        model_text = f"  <small>with {GLib.markup_escape_text(model_name)}</small>" if model_name else ""
+        self.title_label.set_markup(f"<b>{GLib.markup_escape_text(title)}</b>{model_text}")
         box.pack_start(self.title_label, False, False, 0)
-        self.step_label = Gtk.Label(label="Starting...", xalign=0)
+        self.step_label = Gtk.Label(label="Getting ready...", xalign=0)
         self.step_label.set_line_wrap(True)
-        self.step_label.set_max_width_chars(48)
+        self.step_label.set_width_chars(36)
+        self.step_label.set_max_width_chars(36)
+        self.step_label.set_lines(2)
         box.pack_start(self.step_label, False, False, 0)
         self.bar = Gtk.ProgressBar()
         self.bar.set_show_text(True)
         box.pack_start(self.bar, False, False, 0)
-        self.time_label = Gtk.Label(label="elapsed 0:00  remaining --:--", xalign=0)
+        self.time_label = Gtk.Label(label=ui_text.elapsed_text("0:00"), xalign=0)
+        self.time_label.get_style_context().add_class("dim-label")
         box.pack_start(self.time_label, False, False, 0)
         self.preview = Gtk.Image()
         self.preview.set_size_request(PREVIEW_LONG_SIDE, 160)
+        preview_box = Gtk.Overlay()
+        preview_box.add(self.preview)
+        self.preview_hint = Gtk.Label(label="A preview appears here once the picture starts to form.")
+        self.preview_hint.set_line_wrap(True)
+        self.preview_hint.set_max_width_chars(30)
+        self.preview_hint.set_justify(Gtk.Justification.CENTER)
+        self.preview_hint.get_style_context().add_class("dim-label")
+        preview_box.add_overlay(self.preview_hint)
         frame = Gtk.Frame()
-        frame.add(self.preview)
+        frame.add(preview_box)
         if not show_preview:
             frame.set_no_show_all(True)
         box.pack_start(frame, False, False, 0)
@@ -101,11 +117,14 @@ class ProgressWindow(Gtk.Window):
         box.pack_start(self.downloads_label, False, False, 0)
         self.message = Gtk.Label(xalign=0)
         self.message.set_line_wrap(True)
-        self.message.set_max_width_chars(48)
+        self.message.set_max_width_chars(40)
         self.message.set_selectable(True)
         box.pack_start(self.message, False, False, 0)
         buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         self.cancel_button = Gtk.Button(label="Cancel")
+        style(self.cancel_button, "danger")
+        self.cancel_button.set_size_request(120, 32)
+        self.cancel_button.set_tooltip_text("Stop now. The image is left unchanged.")
         self.cancel_button.connect("clicked", self._cancel_clicked)
         buttons.pack_end(self.cancel_button, False, False, 0)
         self.close_button = Gtk.Button(label="Close")
@@ -173,7 +192,7 @@ class ProgressWindow(Gtk.Window):
         self.bar.set_fraction(fraction)
         self.bar.set_text(f"{fraction * 100:.0f}%")
         if text:
-            self.step_label.set_text(text)
+            self.step_label.set_text(ui_text.plain_step_text(text))
 
     def _show_preview(self, data: bytes) -> None:
         if self._finished:
@@ -190,7 +209,12 @@ class ProgressWindow(Gtk.Window):
         w, h = fit_within(pixbuf.get_width(), pixbuf.get_height(), PREVIEW_LONG_SIDE)
         if (w, h) != (pixbuf.get_width(), pixbuf.get_height()):
             pixbuf = pixbuf.scale_simple(w, h, GdkPixbuf.InterpType.BILINEAR)
+        self.show_pixbuf(pixbuf)
+
+    def show_pixbuf(self, pixbuf) -> None:
+        """Main thread: show a preview image (replaces the placeholder text)."""
         self.preview.set_from_pixbuf(pixbuf)
+        self.preview_hint.hide()
         self.preview_frames += 1
 
     def _set_downloads(self, current: dict | None, pending: list[str]) -> None:
@@ -216,25 +240,29 @@ class ProgressWindow(Gtk.Window):
             self.step_label.set_text(message or "Done")
             GLib.timeout_add(max(0, close_after_ms), lambda: (self.close_now(), False)[1])
         else:
-            self.step_label.set_text("Failed" if not self._cancel_requested else "Cancelled")
+            cancelled = self._cancel_requested or message.lower().startswith("cancel")
+            self.step_label.set_markup("<b>Cancelled</b>" if cancelled else "<b>Something went wrong</b>")
+            if not cancelled:
+                message = ui_text.with_next_step(message)
             self.message.set_markup(f"<span foreground='#e0a040'>{GLib.markup_escape_text(message)}</span>")
             self.cancel_button.hide()
             self.close_button.show()
         elapsed = time.monotonic() - self._started
-        self.time_label.set_text(f"elapsed {format_duration(elapsed)}")
+        self.time_label.set_text(ui_text.elapsed_text(format_duration(elapsed)))
 
     def _tick(self) -> bool:
         if self._finished:
             return False
         elapsed = time.monotonic() - self._started
         remaining = self._eta.update(elapsed, self.bar.get_fraction())
-        self.time_label.set_text(f"elapsed {format_duration(elapsed)}  remaining {format_duration(remaining)}")
+        self.time_label.set_text(ui_text.elapsed_text(format_duration(elapsed),
+                                                      format_duration(remaining) if remaining is not None else None))
         return True
 
     def _cancel_clicked(self, *_):
         self._cancel_requested = True
         self.cancel_button.set_sensitive(False)
-        self.step_label.set_text("Cancelling...")
+        self.step_label.set_text("Cancelling, the image stays unchanged...")
         if self._on_cancel:
             self._on_cancel()
 

@@ -39,7 +39,7 @@ from gi.repository import Gimp, GimpUi, GLib, GObject  # noqa: E402
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from stable_boy import __version__  # noqa: E402
+from stable_boy import __version__, ui_text  # noqa: E402
 from stable_boy.backend import BackendError, describe_error  # noqa: E402
 from stable_boy.config import Paths, Settings  # noqa: E402
 
@@ -90,7 +90,10 @@ def _load_models_cache() -> dict:
 
 
 def _fail(procedure, error: BaseException, log=None):
-    text = describe_error(error) if isinstance(error, BackendError) else f"{type(error).__name__}: {error}"
+    if isinstance(error, BackendError):
+        text = ui_text.with_next_step(describe_error(error))
+    else:
+        text = ui_text.unexpected_error(type(error).__name__, str(error))
     if log is not None:
         log.error("procedure failed: %s\n%s", text, traceback.format_exc())
     Gimp.message(text)
@@ -98,6 +101,7 @@ def _fail(procedure, error: BaseException, log=None):
 
 
 def _dialog(procedure, config, title: str) -> bool:
+    """Fallback: the generic GIMP dialog generated from the procedure arguments."""
     GimpUi.init("gimp-stable-boy")
     dialog = GimpUi.ProcedureDialog.new(procedure, config, title)
     dialog.fill(None)
@@ -106,44 +110,330 @@ def _dialog(procedure, config, title: str) -> bool:
     return bool(ok)
 
 
+# ------------------------------------------------------------- dialogs ----
+
+KIND_ARGS = {
+    "fill": ["prompt", "negative", "variations", "strength", "seed", "model", "remove"],
+    "expand": ["prompt", "negative", "left", "top", "right", "bottom", "variations", "seed", "model"],
+    "txt2img": ["prompt", "negative", "width", "height", "target", "variations", "seed", "model"],
+}
+KIND_CAPABILITY = {"fill": ("fill", "remove"), "expand": ("expand",), "txt2img": ("txt2img",)}
+LEGACY_NICKS = ("fast", "quality")
+
+
+def _test_hooks() -> dict:
+    """Test hooks for GUI runs (screenshots): a JSON file named by
+    SB_TEST_UI_FILE (re-read on every call, so one GIMP session can open
+    several dialogs with different hooks) or the older SB_TEST_AUTOCLOSE /
+    SB_SETTINGS_TAB variables. Keys: autoclose (seconds, answers Cancel),
+    settings_tab ("models"), fake_variations (count), progress_demo (seconds)."""
+    import json
+    hooks: dict = {}
+    path = os.environ.get("SB_TEST_UI_FILE")
+    if path:
+        try:
+            with open(path, encoding="utf-8") as fh:
+                hooks = json.load(fh) or {}
+        except (OSError, ValueError):
+            hooks = {}
+    if "autoclose" not in hooks and os.environ.get("SB_TEST_AUTOCLOSE"):
+        try:
+            hooks["autoclose"] = float(os.environ["SB_TEST_AUTOCLOSE"])
+        except ValueError:
+            pass
+    if "settings_tab" not in hooks and os.environ.get("SB_SETTINGS_TAB"):
+        hooks["settings_tab"] = os.environ["SB_SETTINGS_TAB"]
+    return hooks
+
+
+def _pspec(config, prop):
+    try:
+        return config.find_property(prop)
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def _choice_options(config, prop) -> list[tuple[str, str]] | None:
+    """(nick, label) pairs of a choice argument, or None for other argument types."""
+    pspec = _pspec(config, prop)
+    if pspec is None or "Choice" not in pspec.__gtype__.name:
+        return None
+    try:
+        choice = Gimp.param_spec_choice_get_choice(pspec)
+        return [(nick, (choice.get_label(nick) or nick).replace("__", "_")) for nick in choice.list_nicks()]
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def _model_options(config, kind: str, settings: Settings) -> tuple[list[tuple[str, str]], str, bool]:
+    """Model dropdown: the active model first, then the catalog models that
+    can do ``kind`` (downloaded ones before the others)."""
+    from pathlib import Path
+    from stable_boy import catalog as cat
+    nicks = [n for n, _ in (_choice_options(config, "model") or [("active", "Active model")])]
+    active_name, prompt_free = settings.active_model, False
+    installed_rows, other_rows = [], []
+    try:
+        catalog = cat.load_catalog(plugin_dir=Path(__file__).resolve().parent)
+        root = cat.default_models_root(settings.comfy_dir)
+        nodes = cat.default_custom_nodes_dir(settings.comfy_dir)
+        for entry in catalog:
+            if entry.id == settings.active_model:
+                active_name = entry.name
+                prompt_free = "remove" in entry.capabilities
+                continue
+            if entry.id not in nicks or not entry.runnable:
+                continue
+            if not any(c in entry.capabilities for c in KIND_CAPABILITY[kind]):
+                continue
+            installed = cat.install_status(entry, root, nodes, catalog).installed
+            label = ui_text.model_option_label(entry.name, installed, False)
+            (installed_rows if installed else other_rows).append((entry.id, label))
+    except Exception:  # noqa: BLE001 - the dropdown still offers the active model
+        pass
+    options = [("active", ui_text.model_option_label(active_name, True, True))]
+    return options + installed_rows + other_rows, active_name, prompt_free
+
+
+def _image_sizes(image):
+    if image is None:
+        return None, None
+    from stable_boy import gimp_io
+    size = (image.get_width(), image.get_height())
+    try:
+        sel = gimp_io.selection_rect(image)
+    except Exception:  # noqa: BLE001
+        sel = None
+    return size, ((sel.width, sel.height) if sel is not None else None)
+
+
+def _generation_dialog(kind: str, procedure, config, image, hooks: dict) -> bool:
+    """The redesigned dialog; writes the user's choices back into ``config``
+    (the same properties NONINTERACTIVE callers set)."""
+    gi.require_version("Gtk", "3.0")
+    from stable_boy import dialogs
+    GimpUi.init("gimp-stable-boy")
+    paths = Paths.for_profile(Gimp.directory()).ensure()
+    settings = Settings.load(paths.config)
+    history = ui_text.parse_history(settings.prompt_history)
+    values = {key: config.get_property(key) for key in KIND_ARGS[kind]}
+    values["prompt"] = ui_text.initial_prompt(values.get("prompt"), history)
+    if values.get("model") in LEGACY_NICKS:
+        values["model"] = "active"
+    if hooks.get("mode") == "remove":
+        values["remove"] = True
+    models, active_name, prompt_free = _model_options(config, kind, settings)
+    image_size, selection_size = _image_sizes(image)
+    result = dialogs.run_generation_dialog(
+        kind, values, history, models, autoclose_seconds=float(hooks.get("autoclose") or 0),
+        image_size=image_size, selection_size=selection_size,
+        default_size=(settings.txt2img_width, settings.txt2img_height),
+        active_prompt_free=prompt_free, active_name=active_name, show_advanced=bool(hooks.get("advanced")),
+        test_text=hooks.get("type"), test_key=hooks.get("press"))
+    if result is None:
+        return False
+    for key, value in result.items():
+        config.set_property(key, value)
+    if result.get("prompt") and not result.get("remove"):
+        fresh = Settings.load(paths.config)
+        fresh.prompt_history = ui_text.dump_history(ui_text.remember_prompt(
+            ui_text.parse_history(fresh.prompt_history), result["prompt"]))
+        fresh.save(paths.config)
+    return True
+
+
+def _dry_run(kind: str, config, hooks: dict) -> bool:
+    """Test hook: record what the dialog wrote into the config instead of generating."""
+    if not hooks.get("dry_run"):
+        return False
+    import json
+    values = {key: config.get_property(key) for key in KIND_ARGS[kind]}
+    with open(hooks.get("dry_run_out") or os.path.join(Gimp.directory(), "stable-boy", "dry-run.json"), "w",
+              encoding="utf-8") as fh:
+        json.dump({"kind": kind, "values": values}, fh, indent=2)
+    return True
+
+
+def _ask(kind: str, title: str, procedure, config, image, hooks: dict) -> bool:
+    try:
+        return _generation_dialog(kind, procedure, config, image, hooks)
+    except Exception:  # noqa: BLE001 - never leave the user without a dialog
+        print(f"[stable-boy] custom dialog failed, using the generic one:\n{traceback.format_exc()}",
+              file=sys.stderr)
+        return _dialog(procedure, config, title)
+
+
+def _pick_variation(image, layers, title: str, autoclose: float = 0) -> str:
+    """After several variations were inserted (in a layer group): let the
+    user keep one, keep all, or discard them. Returns the outcome."""
+    if image is None or not layers or len(layers) < 2:
+        return "keep"
+    gi.require_version("Gtk", "3.0")
+    from stable_boy.ui_picker import run_picker, scaled
+    GimpUi.init("gimp-stable-boy")
+    thumbs = []
+    for layer in layers:
+        try:
+            pixbuf = layer.get_thumbnail(320, 320, Gimp.PixbufTransparency.SMALL_CHECKS)
+        except Exception:  # noqa: BLE001
+            pixbuf = None
+        thumbs.append((layer.get_name(), scaled(pixbuf)))
+
+    def show(index: int) -> None:
+        for i, layer in enumerate(layers):
+            layer.set_visible(i == index)
+        image.set_selected_layers([layers[index]])
+        Gimp.displays_flush()
+
+    def discard() -> None:
+        parent = layers[0].get_parent()
+        image.undo_group_start()
+        try:
+            if (parent is not None and all(layer.get_parent() == parent for layer in layers)
+                    and len(parent.get_children()) == len(layers)):
+                image.remove_layer(parent)
+            else:
+                for layer in layers:
+                    image.remove_layer(layer)
+        finally:
+            image.undo_group_end()
+        Gimp.displays_flush()
+
+    return run_picker(title, thumbs, show, lambda: None, discard, autoclose_seconds=autoclose)
+
+
+def _after_insert(run_mode, image, layers, title: str, hooks: dict, log=None) -> None:
+    """INTERACTIVE only: the variations picker. Never fails the procedure."""
+    if run_mode != Gimp.RunMode.INTERACTIVE:
+        return
+    try:
+        _pick_variation(image, layers, title, float(hooks.get("autoclose") or 0))
+    except Exception:  # noqa: BLE001
+        if log is not None:
+            log.warning("variations picker failed:\n%s", traceback.format_exc())
+
+
+# ---------------------------------------------------------- test hooks ----
+
+def _test_fake_variations(image, count: int, hooks: dict) -> None:
+    """Screenshot hook: copies of the selected area (all but the first
+    tinted) as variation layers in a group, then the picker. No backend."""
+    from stable_boy import gimp_io
+    from stable_boy.geometry import Rect
+    rect = gimp_io.selection_rect(image) or gimp_io.image_rect(image)
+    pad = max(16, max(rect.width, rect.height) // 4)
+    full = gimp_io.image_rect(image)
+    x0, y0 = max(0, rect.x - pad), max(0, rect.y - pad)
+    x1, y1 = min(full.width, rect.x + rect.width + pad), min(full.height, rect.y + rect.height + pad)
+    ctx = Rect(x0, y0, x1 - x0, y1 - y0)
+    data = gimp_io.export_region_png(image, ctx)
+    paths = Paths.for_profile(Gimp.directory()).ensure()
+    layers = gimp_io.insert_results(image, [data] * max(2, count), ctx, "Generative Fill: test variations",
+                                    8.0, paths.temp)
+    tints = [None, (200.0, 60.0, 0.0), (30.0, 70.0, 10.0), (120.0, 50.0, 0.0)]
+    for layer, tint in zip(layers, tints):
+        if tint is not None:
+            try:
+                layer.colorize_hsl(*tint)
+            except Exception:  # noqa: BLE001
+                pass
+    Gimp.displays_flush()
+    _pick_variation(image, layers, "Generative Fill", float(hooks.get("autoclose") or 0))
+
+
+def _test_progress_demo(image, seconds: float) -> None:
+    """Screenshot hook: the real progress window fed with scripted steps."""
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gtk
+    from stable_boy.progress_window import ProgressWindow
+    GimpUi.init("gimp-stable-boy")
+    handle = None
+    try:
+        data = Gimp.progress_get_window_handle()
+        handle = data.get_data() if data is not None else None
+    except Exception:  # noqa: BLE001
+        handle = None
+    win = ProgressWindow("Generative Fill", "SD 1.5 Inpainting", on_cancel=None, position=(-1, -1),
+                         anchor_handle=handle)
+    pixbuf = None
+    if image is not None:
+        try:
+            pixbuf = image.get_layers()[0].get_thumbnail(320, 320, Gimp.PixbufTransparency.SMALL_CHECKS)
+        except Exception:  # noqa: BLE001
+            pixbuf = None
+    script = [(0.0, 0.05, "Starting the AI backend... 8 s")] + [
+        (2.5 + i * 0.35, 0.05 + 0.9 * i / 25, f"Generating... step {i}/25") for i in range(1, 13)]
+
+    def at(fraction, text, show_preview):
+        win._set_step(fraction, text)
+        if show_preview and pixbuf is not None:
+            win.show_pixbuf(pixbuf)
+        return False
+
+    for t, fraction, text in script:
+        GLib.timeout_add(int(t * 1000), at, fraction, text, text.startswith("Generating"))
+    GLib.timeout_add(int(max(seconds, 8.0) * 1000), lambda: (win.close_now(), False)[1])
+    Gtk.main()
+
+
 # ------------------------------------------------------------------ runs ----
 
 def run_fill(procedure, run_mode, image, drawables, config, data):
-    if run_mode == Gimp.RunMode.INTERACTIVE and not _dialog(procedure, config, "Generative Fill"):
+    hooks = _test_hooks() if run_mode == Gimp.RunMode.INTERACTIVE else {}
+    if hooks.get("fake_variations"):
+        _test_fake_variations(image, int(hooks["fake_variations"]), hooks)
+        return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
+    if hooks.get("progress_demo"):
+        _test_progress_demo(image, float(hooks["progress_demo"]))
+        return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
+    if run_mode == Gimp.RunMode.INTERACTIVE and not _ask("fill", "Generative Fill", procedure, config, image,
+                                                         hooks):
         return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
+    if _dry_run("fill", config, hooks):
+        return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
     from stable_boy.app import App
     app = None
     try:
         app = App()
-        app.generative_fill(image, config.get_property("prompt"), config.get_property("negative"),
-                            config.get_property("variations"), config.get_property("strength"),
-                            config.get_property("seed"), config.get_property("model"),
-                            remove=bool(config.get_property("remove")))
+        layers = app.generative_fill(image, config.get_property("prompt"), config.get_property("negative"),
+                                     config.get_property("variations"), config.get_property("strength"),
+                                     config.get_property("seed"), config.get_property("model"),
+                                     remove=bool(config.get_property("remove")))
     except Exception as err:  # noqa: BLE001 - every failure must reach the user
         return _fail(procedure, err, app.log if app else None)
+    _after_insert(run_mode, image, layers, "Generative Fill", hooks, app.log)
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
 
 
 def run_expand(procedure, run_mode, image, drawables, config, data):
-    if run_mode == Gimp.RunMode.INTERACTIVE and not _dialog(procedure, config, "Generative Expand"):
+    hooks = _test_hooks() if run_mode == Gimp.RunMode.INTERACTIVE else {}
+    if run_mode == Gimp.RunMode.INTERACTIVE and not _ask("expand", "Generative Expand", procedure, config,
+                                                         image, hooks):
         return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
+    if _dry_run("expand", config, hooks):
+        return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
     from stable_boy.app import App
     app = None
     try:
         app = App()
-        app.generative_expand(image, config.get_property("prompt"), config.get_property("negative"),
-                              config.get_property("left"), config.get_property("top"),
-                              config.get_property("right"), config.get_property("bottom"),
-                              config.get_property("variations"), config.get_property("seed"),
-                              config.get_property("model"))
+        layers = app.generative_expand(image, config.get_property("prompt"), config.get_property("negative"),
+                                       config.get_property("left"), config.get_property("top"),
+                                       config.get_property("right"), config.get_property("bottom"),
+                                       config.get_property("variations"), config.get_property("seed"),
+                                       config.get_property("model"))
     except Exception as err:  # noqa: BLE001
         return _fail(procedure, err, app.log if app else None)
+    _after_insert(run_mode, image, layers, "Generative Expand", hooks, app.log)
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
 
 
 def run_txt2img(procedure, run_mode, image, drawables, config, data):
-    if run_mode == Gimp.RunMode.INTERACTIVE and not _dialog(procedure, config, "Text to Image"):
+    hooks = _test_hooks() if run_mode == Gimp.RunMode.INTERACTIVE else {}
+    if run_mode == Gimp.RunMode.INTERACTIVE and not _ask("txt2img", "Text to Image", procedure, config, image,
+                                                         hooks):
         return procedure.new_return_values(Gimp.PDBStatusType.CANCEL, GLib.Error())
+    if _dry_run("txt2img", config, hooks):
+        return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
     from stable_boy.app import App
     app = None
     try:
@@ -164,49 +454,61 @@ SETTINGS_KEYS = ["backend", "comfy_dir", "url", "a1111_url", "autostart", "idle_
                  "request_timeout", "extra_server_args", "debug"]
 
 
+def _settings_test_backend(app, values: dict, report) -> str:
+    """Runs in the Settings dialog's worker thread (no GIMP calls): apply the
+    values on screen to a private App, start the backend if needed, check it."""
+    for key, value in values.items():
+        setattr(app.settings, key, value)
+    try:
+        backend = app.backend(lambda _f, text: report(ui_text.plain_step_text(text)))
+        health = backend.health()
+    except BackendError as err:
+        return ui_text.health_text(False, str(err), 0, False)
+    if not health.ok:
+        return ui_text.health_text(False, health.detail, 0, False)
+    try:
+        app.refresh_models_cache(health)
+    except Exception:  # noqa: BLE001
+        pass
+    return ui_text.health_text(True, health.detail, len(health.checkpoints), health.inpaint_nodes)
+
+
 def _settings_dialog(procedure, config) -> bool:
-    """Settings as a notebook: General (generated from the procedure arguments)
-    and Models (the catalog panel)."""
+    """Settings: General (what a user needs, the rest behind expanders) and
+    Models. Writes the values back into ``config``."""
     gi.require_version("Gtk", "3.0")
-    from gi.repository import Gtk
+    from stable_boy import dialogs
     from stable_boy.app import App
     from stable_boy.models_ui import ModelsPanel
 
     GimpUi.init("gimp-stable-boy")
-    dialog = GimpUi.ProcedureDialog.new(procedure, config, "Generative Fill Settings")
-    general = dialog.fill_box("general", [k.replace("_", "-") for k in SETTINGS_KEYS] + ["check-backend"])
-    scroller = Gtk.ScrolledWindow()
-    scroller.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-    scroller.set_min_content_height(480)
-    scroller.add(general)
-    notebook = Gtk.Notebook()
-    notebook.append_page(scroller, Gtk.Label(label="General"))
-    panel = None
-    try:
-        panel = ModelsPanel(App())
-        notebook.append_page(panel, Gtk.Label(label="Models"))
-    except Exception as err:  # noqa: BLE001 - the General page must still work
-        notebook.append_page(Gtk.Label(label=f"Models tab unavailable: {err}"), Gtk.Label(label="Models"))
-    dialog.get_content_area().pack_start(notebook, True, True, 0)
-    dialog.set_default_size(920, 720)
-    notebook.show_all()
-    if os.environ.get("SB_SETTINGS_TAB") == "models":
-        def _go_models(*_):
-            notebook.set_current_page(1)
-            print(f"[stable-boy] models tab requested; current page {notebook.get_current_page()} of "
-                  f"{notebook.get_n_pages()}", file=sys.stderr)
-            return False
-        dialog.connect("map-event", _go_models)
-        GLib.timeout_add(400, _go_models)
-        GLib.timeout_add(1500, _go_models)
-    autoclose = float(os.environ.get("SB_TEST_AUTOCLOSE", "0") or 0)
-    if autoclose > 0:
-        GLib.timeout_add(int(autoclose * 1000), lambda: dialog.response(Gtk.ResponseType.OK) or False)
-    ok = dialog.run()
-    if panel is not None:
-        panel.stop()
-    dialog.destroy()
-    return bool(ok)
+    hooks = _test_hooks()
+    values, choices, ranges = {}, {}, {}
+    for key in SETTINGS_KEYS:
+        prop = key.replace("_", "-")
+        values[key] = config.get_property(prop)
+        options = _choice_options(config, prop)
+        if options is not None:
+            choices[key] = options
+        pspec = _pspec(config, prop)
+        if isinstance(values[key], (int, float)) and not isinstance(values[key], bool) and pspec is not None:
+            try:
+                ranges[key] = (pspec.minimum, pspec.maximum)
+            except AttributeError:
+                pass
+    test_app = App()  # created here: App() reads the profile path through GIMP (main thread only)
+    result = dialogs.run_settings_dialog(values, choices, ranges, models_panel_factory=lambda: ModelsPanel(App()),
+                                         test_backend=lambda v, report: _settings_test_backend(test_app, v, report),
+                                         autoclose_seconds=float(hooks.get("autoclose") or 0),
+                                         tab=str(hooks.get("settings_tab") or ""),
+                                         show_advanced=bool(hooks.get("advanced")),
+                                         select_model=str(hooks.get("select_model") or ""))
+    if result is None:
+        return False
+    for key, value in result.items():
+        config.set_property(key.replace("_", "-"), value)
+    config.set_property("check-backend", False)  # the dialog has its own Test backend button
+    return True
 
 
 def run_settings(procedure, config, data):
