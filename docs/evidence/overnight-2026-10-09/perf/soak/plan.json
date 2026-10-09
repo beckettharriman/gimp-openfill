@@ -1,0 +1,112 @@
+{
+ "image": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+ "size": 2048,
+ "pause_after": 2.0,
+ "cases": [
+  {
+   "id": "cold-sd15-1024",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-01",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-02",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-03",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-04",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-05",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-06",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-07",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-08",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-09",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-10",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-11",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-12",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-13",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-14",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-15",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-16",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-17",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-18",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-19",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  },
+  {
+   "id": "soak-20",
+   "model": "sd15-inpainting",
+   "sel": 1024
+  }
+ ]
+}

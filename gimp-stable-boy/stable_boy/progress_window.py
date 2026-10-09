@@ -63,11 +63,13 @@ class _NoActivate:
 
     GWL_EXSTYLE = -20
     WS_EX_NOACTIVATE = 0x08000000
+    SW_SHOWNOACTIVATE = 4
 
     def __init__(self, title: str) -> None:
         self.title = title
         self.hwnd = 0
         self.previous = 0
+        self.forced_show = False  # ensure_visible() had to show the native window
         if sys.platform != "win32":
             return
         try:
@@ -114,8 +116,24 @@ class _NoActivate:
         except Exception:  # noqa: BLE001 - focus handling is best effort
             self.hwnd = 0
 
+    def ensure_visible(self) -> bool:
+        """Show the native window if GTK showed the widget but the window is not
+        WS_VISIBLE (seen in plug-in processes started by GIMP 3.2.6 on Windows).
+        Returns True when it had to be shown here."""
+        if sys.platform != "win32" or not self.hwnd:
+            return False
+        try:
+            if self.user32.IsWindowVisible(ctypes.c_void_p(self.hwnd)):
+                return False
+            self.user32.ShowWindow(ctypes.c_void_p(self.hwnd), self.SW_SHOWNOACTIVATE)
+            return True
+        except Exception:  # noqa: BLE001 - best effort
+            return False
+
     def after_show(self) -> bool:
         """GLib timeout callback: hand the focus back if the window took it; never repeats."""
+        if self.ensure_visible():
+            self.forced_show = True
         if sys.platform != "win32" or not self.previous:
             return False
         try:
@@ -224,6 +242,8 @@ class ProgressWindow(Gtk.Window):
         self.get_child().show_all()
         self._place(position, anchor_handle)  # before showing: no jump, never off screen
         self.show()
+        if self._no_activate.ensure_visible():
+            self._no_activate.forced_show = True
         GLib.timeout_add(150, self._no_activate.after_show)
         self._timer = GLib.timeout_add(500, self._tick)
 

@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import time
 import uuid
 
@@ -52,6 +53,7 @@ class ComfyBackend(Backend):
         self.log = logger
         self._caps: workflow.Capabilities | None = None
         self._progress = Progress()
+        self._first_step = 0.0  # monotonic time of the first sampling step of the current job
 
     # ------------------------------------------------------------------
 
@@ -110,13 +112,26 @@ class ComfyBackend(Backend):
         if request.model.uses_fooocus and not caps.inpaint_nodes:
             raise ModelMissing("the Fooocus inpaint patch needs comfyui-inpaint-nodes on the server")
         seed = seed_or_random(request.sampling.seed)
-        job = uuid.uuid4().hex[:12]
         self._report(progress, 0.0, "Uploading selection...")
+        started = time.monotonic()
         try:
-            image_ref = self.client.upload_image(f"sb-{job}-image.png", workflow.probe_safe_png(request.image_png))
-            mask_ref = self.client.upload_image(f"sb-{job}-mask.png", workflow.probe_safe_png(request.mask_png))
+            image_data = workflow.probe_safe_png(request.image_png)
+            mask_data = workflow.probe_safe_png(request.mask_png)
+            # Named after the content: the same crop and mask (a re-run with another seed or prompt)
+            # get the same file names, so ComfyUI reuses its cached outputs of the nodes that only
+            # depend on them (image and mask preparation, VAE encode) instead of running them again.
+            job = _content_id(image_data, mask_data)
+            image_ref = self.client.upload_image(f"sb-{job}-image.png", image_data)
+            mask_ref = self.client.upload_image(f"sb-{job}-mask.png", mask_data)
         except ComfyApiError as err:
             raise BackendUnavailable(f"upload failed: {err}") from err
+        if self.log:
+            self.log.info(
+                "timing: upload image=%d mask=%d bytes in %.3f s",
+                len(image_data),
+                len(mask_data),
+                time.monotonic() - started,
+            )
         prefix = f"stable-boy/{request.mode}-{job}"
         try:
             graph = workflow.build_fill(request, image_ref, mask_ref, seed, caps, filename_prefix=prefix)
@@ -175,12 +190,14 @@ class ComfyBackend(Backend):
     ) -> list[bytes]:
         timeout = self.request_timeout or estimate_timeout(steps, batch, pixels)
         deadline = time.monotonic() + timeout
+        self._first_step = 0.0
         self._report(progress, 0.02, "Submitting workflow...")
         try:
             prompt_id = self.client.queue_prompt(graph)
         except ComfyApiError as err:
             raise self._translate_queue_error(err, graph) from err
         self._progress = Progress(0.0, "queued", True)
+        queued = time.monotonic()
         if self.log:
             self.log.info("queued prompt %s (timeout %.0fs, %d steps x %d)", prompt_id, timeout, steps, batch)
         try:
@@ -203,6 +220,7 @@ class ComfyBackend(Backend):
             raise BackendUnavailable(text) from err
         finally:
             self._progress = Progress(1.0, "done", False)
+        finished = time.monotonic()
         self._report(progress, 0.99, "Downloading result...")
         try:
             images = self.client.output_images(entry, workflow.OUTPUT_NODE)
@@ -210,6 +228,15 @@ class ComfyBackend(Backend):
             if self._connection_lost(err):
                 raise BackendUnavailable(CONNECTION_LOST) from err
             raise BackendUnavailable(f"could not download the result: {err}") from err
+        if self.log:
+            first = self._first_step or finished
+            self.log.info(
+                "timing: queue->first step %.3f s, sampling %.3f s, download %d bytes in %.3f s",
+                first - queued,
+                finished - first,
+                sum(len(i) for i in images),
+                time.monotonic() - finished,
+            )
         if not images:
             raise WorkflowRejected("the workflow finished without producing an image")
         return images
@@ -220,6 +247,8 @@ class ComfyBackend(Backend):
 
     def _wrap(self, progress: ProgressCallback | None) -> ProgressCallback:
         def cb(fraction: float, text: str) -> None:
+            if not self._first_step and "step" in text:
+                self._first_step = time.monotonic()  # for the timing log line
             self._progress = Progress(fraction, text, fraction < 1.0)
             if progress:
                 progress(fraction, text)
@@ -244,3 +273,12 @@ class ComfyBackend(Backend):
         if err.status == 0:
             return BackendUnavailable(str(err))
         return WorkflowRejected(str(err))
+
+
+def _content_id(*parts: bytes) -> str:
+    """12 hex digits identifying ``parts`` (used in upload and output file names)."""
+    digest = hashlib.sha256()
+    for part in parts:
+        digest.update(len(part).to_bytes(8, "big"))
+        digest.update(part)
+    return digest.hexdigest()[:12]

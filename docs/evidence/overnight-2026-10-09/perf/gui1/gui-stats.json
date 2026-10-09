@@ -1,0 +1,16 @@
+{
+ "session": "gui1",
+ "warmup_fill_noninteractive": {
+  "polls": 873,
+  "timeouts_100ms": 1,
+  "max_ms": 110.51,
+  "polls_over_50ms": 4
+ },
+ "demo_fill_dialog_to_layer": {
+  "polls": 511,
+  "timeouts_100ms": 0,
+  "max_ms": 50.17,
+  "polls_over_50ms": 1
+ },
+ "demo_wall_s_including_dialog": 26.05
+}

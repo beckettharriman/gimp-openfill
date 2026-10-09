@@ -1,0 +1,7 @@
+{"t": 1791532798.2129316, "event": "start"}
+{"t": 1791532798.633902, "event": "display"}
+{"t": 1791532844.3493052, "event": "warmup_done", "status": "3", "wall_s": 45.168}
+{"t": 1791532846.3747427, "event": "selection"}
+{"t": 1791532849.377664, "event": "dialog_call"}
+{"t": 1791532875.4315634, "event": "demo_done", "status": "3", "wall_s": 26.047}
+{"t": 1791532879.4334831, "event": "end"}

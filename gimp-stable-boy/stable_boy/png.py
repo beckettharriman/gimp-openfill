@@ -29,10 +29,13 @@ def _chunk(kind: bytes, data: bytes) -> bytes:
     return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", crc)
 
 
-def encode(width: int, height: int, pixels: bytes, channels: int, compress_level: int = 6) -> bytes:
+def encode(width: int, height: int, pixels: bytes, channels: int, compress_level: int = 1) -> bytes:
     """Encode interleaved 8-bit ``pixels`` (row-major, no padding) as PNG.
 
-    ``channels`` is 1 (gray), 2 (gray+alpha), 3 (RGB) or 4 (RGBA).
+    ``channels`` is 1 (gray), 2 (gray+alpha), 3 (RGB) or 4 (RGBA). The default
+    zlib level 1 is chosen for speed: the PNGs only travel to the backend, and on
+    a 2048 x 2048 photo crop level 1 encodes about twice as fast as level 6 for a
+    file a few percent larger (docs/performance.md).
     """
     if channels not in COLOR_TYPES:
         raise PngError(f"unsupported channel count: {channels}")

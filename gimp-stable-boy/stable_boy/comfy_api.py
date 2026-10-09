@@ -6,16 +6,23 @@
 from __future__ import annotations
 
 import json
+import socket
 import time
 import uuid
 from collections.abc import Callable
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, urlopen
 
 from .websocket import OP_BINARY, OP_TEXT, WebSocket, WebSocketError, ws_url
 
 ProgressCallback = Callable[[float, str], None]
+
+# A server on this machine accepts a TCP connection within milliseconds even while it is busy (the
+# kernel completes the handshake). On Windows a refused loopback connection is only reported after
+# about 2 s of SYN retries, so the health check first probes the port with this short timeout.
+LOOPBACK_PROBE_TIMEOUT = 0.5
+_LOOPBACK_HOSTS = ("127.0.0.1", "localhost", "::1")
 
 
 class ComfyApiError(RuntimeError):
@@ -108,10 +115,28 @@ class ComfyClient:
 
     def is_alive(self, timeout: float = 3.0) -> bool:
         """True when /system_stats answers within ``timeout`` seconds."""
+        if not self._loopback_port_open():
+            return False
         try:
             self._request("GET", "/system_stats", timeout=timeout)
             return True
         except ComfyApiError:
+            return False
+
+    def _loopback_port_open(self) -> bool:
+        """False only when the server is on this machine and nothing accepts on its port."""
+        parts = urlsplit(self.base_url)
+        host = parts.hostname or ""
+        if host not in _LOOPBACK_HOSTS:
+            return True
+        try:
+            port = parts.port or (443 if parts.scheme == "https" else 80)
+        except ValueError:
+            return True
+        try:
+            with socket.create_connection((host, port), timeout=LOOPBACK_PROBE_TIMEOUT):
+                return True
+        except OSError:
             return False
 
     def system_stats(self) -> dict:

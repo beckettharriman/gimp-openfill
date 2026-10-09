@@ -1,0 +1,10 @@
+{
+  "port_8188_open_before": false,
+  "vram_before": 11,
+  "steps": 20,
+  "t_launch": 1791532595.7294798,
+  "gimp_pid": 18672,
+  "t_exit": 1791532772.5405486,
+  "port_closed_after_exit_s": 0.5,
+  "vram_after": 11
+}

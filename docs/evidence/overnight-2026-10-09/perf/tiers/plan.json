@@ -1,0 +1,174 @@
+{
+ "image": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+ "size": 2048,
+ "pause_after": 1.0,
+ "cases": [
+  {
+   "id": "cold-sd15-512",
+   "model": "sd15-inpainting",
+   "sel": 512
+  },
+  {
+   "id": "sd15-512-r1",
+   "model": "sd15-inpainting",
+   "sel": 512,
+   "remove": false
+  },
+  {
+   "id": "sd15-1024-r1",
+   "model": "sd15-inpainting",
+   "sel": 1024,
+   "remove": false
+  },
+  {
+   "id": "sd15-2048-r1",
+   "model": "sd15-inpainting",
+   "sel": 2048,
+   "remove": false
+  },
+  {
+   "id": "sd15-512-r2",
+   "model": "sd15-inpainting",
+   "sel": 512,
+   "remove": false
+  },
+  {
+   "id": "sd15-1024-r2",
+   "model": "sd15-inpainting",
+   "sel": 1024,
+   "remove": false
+  },
+  {
+   "id": "sd15-2048-r2",
+   "model": "sd15-inpainting",
+   "sel": 2048,
+   "remove": false
+  },
+  {
+   "id": "quality-switch-512",
+   "model": "quality",
+   "sel": 512,
+   "remove": false
+  },
+  {
+   "id": "quality-512-r1",
+   "model": "quality",
+   "sel": 512,
+   "remove": false
+  },
+  {
+   "id": "quality-1024-r1",
+   "model": "quality",
+   "sel": 1024,
+   "remove": false
+  },
+  {
+   "id": "quality-2048-r1",
+   "model": "quality",
+   "sel": 2048,
+   "remove": false
+  },
+  {
+   "id": "quality-512-r2",
+   "model": "quality",
+   "sel": 512,
+   "remove": false
+  },
+  {
+   "id": "quality-1024-r2",
+   "model": "quality",
+   "sel": 1024,
+   "remove": false
+  },
+  {
+   "id": "quality-2048-r2",
+   "model": "quality",
+   "sel": 2048,
+   "remove": false
+  },
+  {
+   "id": "juggernaut-switch-512",
+   "model": "juggernaut-xl-v9",
+   "sel": 512,
+   "remove": false
+  },
+  {
+   "id": "juggernaut-512-r1",
+   "model": "juggernaut-xl-v9",
+   "sel": 512,
+   "remove": false
+  },
+  {
+   "id": "juggernaut-1024-r1",
+   "model": "juggernaut-xl-v9",
+   "sel": 1024,
+   "remove": false
+  },
+  {
+   "id": "juggernaut-2048-r1",
+   "model": "juggernaut-xl-v9",
+   "sel": 2048,
+   "remove": false
+  },
+  {
+   "id": "juggernaut-512-r2",
+   "model": "juggernaut-xl-v9",
+   "sel": 512,
+   "remove": false
+  },
+  {
+   "id": "juggernaut-1024-r2",
+   "model": "juggernaut-xl-v9",
+   "sel": 1024,
+   "remove": false
+  },
+  {
+   "id": "juggernaut-2048-r2",
+   "model": "juggernaut-xl-v9",
+   "sel": 2048,
+   "remove": false
+  },
+  {
+   "id": "mat-switch-512",
+   "model": "mat-places512",
+   "sel": 512,
+   "remove": true
+  },
+  {
+   "id": "mat-512-r1",
+   "model": "mat-places512",
+   "sel": 512,
+   "remove": true
+  },
+  {
+   "id": "mat-1024-r1",
+   "model": "mat-places512",
+   "sel": 1024,
+   "remove": true
+  },
+  {
+   "id": "mat-2048-r1",
+   "model": "mat-places512",
+   "sel": 2048,
+   "remove": true
+  },
+  {
+   "id": "mat-512-r2",
+   "model": "mat-places512",
+   "sel": 512,
+   "remove": true
+  },
+  {
+   "id": "mat-1024-r2",
+   "model": "mat-places512",
+   "sel": 1024,
+   "remove": true
+  },
+  {
+   "id": "mat-2048-r2",
+   "model": "mat-places512",
+   "sel": 2048,
+   "remove": true
+  }
+ ]
+}

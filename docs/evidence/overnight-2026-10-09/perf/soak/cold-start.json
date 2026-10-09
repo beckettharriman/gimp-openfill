@@ -1,0 +1,14 @@
+{
+ "session": "soak",
+ "case": "cold-sd15-1024",
+ "launch_to_image_ready_s": 7.0,
+ "launch_to_fill_call_s": 7.03,
+ "fill_call_to_supervisor_launch_s": 4.99,
+ "supervisor_launch_to_backend_ready_s": 26.12,
+ "launch_to_backend_ready_s": 38.14,
+ "backend_ready_to_result_downloaded_s": 16.51,
+ "launch_to_first_fill_done_s": 55.35,
+ "first_fill_wall_s": 48.327,
+ "queue_to_first_step_s": 10.037,
+ "sampling_s": 6.333
+}

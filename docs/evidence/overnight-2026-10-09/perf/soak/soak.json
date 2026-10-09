@@ -1,0 +1,233 @@
+[
+ {
+  "n": 0,
+  "id": "cold-sd15-1024",
+  "wall_s": 48.327,
+  "status": "success",
+  "gimp_console_mb": 327.4,
+  "children_mb": 126.0,
+  "comfy_mb": 6646.6,
+  "vram_mib": 2292,
+  "sample_t": 1791532249.643878
+ },
+ {
+  "n": 1,
+  "id": "soak-01",
+  "wall_s": 11.092,
+  "status": "success",
+  "gimp_console_mb": 355.4,
+  "children_mb": 125.8,
+  "comfy_mb": 6655.7,
+  "vram_mib": 2292,
+  "sample_t": 1791532262.7843735
+ },
+ {
+  "n": 2,
+  "id": "soak-02",
+  "wall_s": 11.257,
+  "status": "success",
+  "gimp_console_mb": 345.1,
+  "children_mb": 125.8,
+  "comfy_mb": 6657.3,
+  "vram_mib": 2292,
+  "sample_t": 1791532276.466963
+ },
+ {
+  "n": 3,
+  "id": "soak-03",
+  "wall_s": 11.255,
+  "status": "success",
+  "gimp_console_mb": 347.6,
+  "children_mb": 125.8,
+  "comfy_mb": 6658.5,
+  "vram_mib": 2292,
+  "sample_t": 1791532289.3632405
+ },
+ {
+  "n": 4,
+  "id": "soak-04",
+  "wall_s": 11.36,
+  "status": "success",
+  "gimp_console_mb": 355.4,
+  "children_mb": 125.8,
+  "comfy_mb": 6659.3,
+  "vram_mib": 2292,
+  "sample_t": 1791532303.0096242
+ },
+ {
+  "n": 5,
+  "id": "soak-05",
+  "wall_s": 11.448,
+  "status": "success",
+  "gimp_console_mb": 355.4,
+  "children_mb": 125.8,
+  "comfy_mb": 6659.6,
+  "vram_mib": 2292,
+  "sample_t": 1791532316.0896783
+ },
+ {
+  "n": 6,
+  "id": "soak-06",
+  "wall_s": 11.584,
+  "status": "success",
+  "gimp_console_mb": 355.4,
+  "children_mb": 125.7,
+  "comfy_mb": 6660.2,
+  "vram_mib": 2292,
+  "sample_t": 1791532330.2224815
+ },
+ {
+  "n": 7,
+  "id": "soak-07",
+  "wall_s": 11.425,
+  "status": "success",
+  "gimp_console_mb": 355.4,
+  "children_mb": 125.7,
+  "comfy_mb": 6661.3,
+  "vram_mib": 2292,
+  "sample_t": 1791532343.2159412
+ },
+ {
+  "n": 8,
+  "id": "soak-08",
+  "wall_s": 11.46,
+  "status": "success",
+  "gimp_console_mb": 345.0,
+  "children_mb": 125.7,
+  "comfy_mb": 6661.3,
+  "vram_mib": 2292,
+  "sample_t": 1791532356.6887717
+ },
+ {
+  "n": 9,
+  "id": "soak-09",
+  "wall_s": 11.536,
+  "status": "success",
+  "gimp_console_mb": 347.6,
+  "children_mb": 125.7,
+  "comfy_mb": 6660.7,
+  "vram_mib": 2292,
+  "sample_t": 1791532370.8727846
+ },
+ {
+  "n": 10,
+  "id": "soak-10",
+  "wall_s": 11.591,
+  "status": "success",
+  "gimp_console_mb": 355.4,
+  "children_mb": 125.7,
+  "comfy_mb": 6661.0,
+  "vram_mib": 2292,
+  "sample_t": 1791532384.3909206
+ },
+ {
+  "n": 11,
+  "id": "soak-11",
+  "wall_s": 11.599,
+  "status": "success",
+  "gimp_console_mb": 351.9,
+  "children_mb": 125.7,
+  "comfy_mb": 6661.1,
+  "vram_mib": 2292,
+  "sample_t": 1791532397.96312
+ },
+ {
+  "n": 12,
+  "id": "soak-12",
+  "wall_s": 11.832,
+  "status": "success",
+  "gimp_console_mb": 342.5,
+  "children_mb": 125.7,
+  "comfy_mb": 6661.6,
+  "vram_mib": 2292,
+  "sample_t": 1791532411.6693199
+ },
+ {
+  "n": 13,
+  "id": "soak-13",
+  "wall_s": 11.723,
+  "status": "success",
+  "gimp_console_mb": 347.6,
+  "children_mb": 125.7,
+  "comfy_mb": 6662.1,
+  "vram_mib": 2292,
+  "sample_t": 1791532425.404669
+ },
+ {
+  "n": 14,
+  "id": "soak-14",
+  "wall_s": 11.677,
+  "status": "success",
+  "gimp_console_mb": 355.4,
+  "children_mb": 125.7,
+  "comfy_mb": 6662.1,
+  "vram_mib": 2292,
+  "sample_t": 1791532438.9986486
+ },
+ {
+  "n": 15,
+  "id": "soak-15",
+  "wall_s": 11.587,
+  "status": "success",
+  "gimp_console_mb": 355.4,
+  "children_mb": 125.7,
+  "comfy_mb": 6662.1,
+  "vram_mib": 2292,
+  "sample_t": 1791532453.13692
+ },
+ {
+  "n": 16,
+  "id": "soak-16",
+  "wall_s": 11.864,
+  "status": "success",
+  "gimp_console_mb": 355.4,
+  "children_mb": 125.7,
+  "comfy_mb": 6662.4,
+  "vram_mib": 2292,
+  "sample_t": 1791532466.6587098
+ },
+ {
+  "n": 17,
+  "id": "soak-17",
+  "wall_s": 11.782,
+  "status": "success",
+  "gimp_console_mb": 355.4,
+  "children_mb": 125.7,
+  "comfy_mb": 6664.5,
+  "vram_mib": 2292,
+  "sample_t": 1791532480.8233974
+ },
+ {
+  "n": 18,
+  "id": "soak-18",
+  "wall_s": 11.993,
+  "status": "success",
+  "gimp_console_mb": 355.6,
+  "children_mb": 125.8,
+  "comfy_mb": 6664.5,
+  "vram_mib": 2292,
+  "sample_t": 1791532494.4579172
+ },
+ {
+  "n": 19,
+  "id": "soak-19",
+  "wall_s": 11.844,
+  "status": "success",
+  "gimp_console_mb": 355.6,
+  "children_mb": 126.2,
+  "comfy_mb": 6664.9,
+  "vram_mib": 2292,
+  "sample_t": 1791532508.648412
+ },
+ {
+  "n": 20,
+  "id": "soak-20",
+  "wall_s": 11.908,
+  "status": "success",
+  "gimp_console_mb": 355.6,
+  "children_mb": 126.2,
+  "comfy_mb": 6663.2,
+  "vram_mib": 2292,
+  "sample_t": 1791532522.2188334
+ }
+]

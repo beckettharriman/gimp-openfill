@@ -1,0 +1,5 @@
+{"t": 1791532796.5205004, "event": "main_window", "hwnd": 15480702}
+{"t": 1791532850.8933954, "event": "dialog_seen", "title": "Generative Fill", "hwnd": 10618744}
+{"t": 1791532855.00774, "event": "enter_posted", "hwnd": 10618744}
+{"t": 1791532857.5087504, "event": "dialog_still_visible_after_enter", "visible": false}
+{"t": 1791532880.7558062, "event": "end"}

@@ -1,0 +1,13 @@
+{"t": 1791533665.5736563, "event": "main_window", "hwnd": 7930034}
+{"t": 1791533665.755915, "event": "welcome_closed"}
+{"t": 1791533665.9697483, "event": "welcome_closed"}
+{"t": 1791533666.1839824, "event": "welcome_closed"}
+{"t": 1791533666.99237, "event": "window", "hwnd": 11796980, "rect": [0, 0, 0, 0]}
+{"t": 1791533668.0023952, "event": "window", "hwnd": 24447246, "rect": [0, 0, 0, 0]}
+{"t": 1791533716.1122084, "event": "window", "hwnd": 12517750, "rect": [0, 0, 0, 0]}
+{"t": 1791533717.0840402, "event": "dialog_seen", "title": "Generative Fill", "hwnd": 7733922}
+{"t": 1791533717.1190667, "event": "window", "hwnd": 7733922, "rect": [622, 268, 1266, 738]}
+{"t": 1791533721.1666653, "event": "enter_posted", "hwnd": 7733922}
+{"t": 1791533721.6086633, "event": "window", "hwnd": 7799458, "rect": [1189, 130, 1573, 553]}
+{"t": 1791533723.6683466, "event": "dialog_still_visible_after_enter", "visible": false}
+{"t": 1791533746.4326313, "event": "end"}

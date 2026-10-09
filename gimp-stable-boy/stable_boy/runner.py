@@ -47,6 +47,31 @@ def _test_cancel_step() -> str:
         return ""
 
 
+class _StallProbe:
+    """Measurement hook (SB_PERF_STALL=1): a 20 ms GLib timer on the plug-in's main
+    loop; the largest gap between two ticks is how long the loop was blocked."""
+
+    def __init__(self) -> None:
+        import time
+
+        self._clock = time.perf_counter
+        self.last = self._clock()
+        self.max_gap = 0.0
+        self.ticks = 0
+        self.source = GLib.timeout_add(20, self._tick)
+
+    def _tick(self) -> bool:
+        now = self._clock()
+        self.max_gap = max(self.max_gap, now - self.last)
+        self.last = now
+        self.ticks += 1
+        return True
+
+    def stop(self, log) -> None:
+        GLib.source_remove(self.source)
+        log.info("perf: plug-in main loop max gap %.1f ms over %d ticks of 20 ms", self.max_gap * 1000, self.ticks)
+
+
 class Runner:
     """One backend job with its progress UI: the floating window (job in a worker
     thread, GTK main loop on the main thread) or GIMP's status bar only."""
@@ -163,7 +188,10 @@ class Runner:
         thread.start()
         from gi.repository import Gtk
 
+        stall = _StallProbe() if os.environ.get("SB_PERF_STALL") == "1" else None
         Gtk.main()
+        if stall is not None:
+            stall.stop(self.app.log)
         thread.join(5)
         self.status.done()
         if "error" in box:
@@ -188,7 +216,9 @@ class Runner:
             return
         self._closed = True
         self.app.log.info(
-            "progress window: %d preview frame(s) shown, closing after success", self.window.preview_frames
+            "progress window: %d preview frame(s) shown, closing after success%s",
+            self.window.preview_frames,
+            " (native window had to be shown explicitly)" if self.window._no_activate.forced_show else "",
         )
         self.window.finish(True, message, close_after_ms)
         from gi.repository import Gtk

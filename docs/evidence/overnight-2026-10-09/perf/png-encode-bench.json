@@ -1,0 +1,41 @@
+{
+ "method": "stable_boy.png.encode on the centre square of photos/landscape.jpg scaled to N x N RGBA (as the crop a fill uploads), best of 5, CPython 3.13.0 zlib 1.3.1",
+ "rows": [
+  {
+   "size": 1024,
+   "zlib_level": 6,
+   "best_s": 0.291,
+   "bytes": 2337411
+  },
+  {
+   "size": 1024,
+   "zlib_level": 1,
+   "best_s": 0.16,
+   "bytes": 2394478
+  },
+  {
+   "size": 1024,
+   "zlib_level": 0,
+   "best_s": 0.025,
+   "bytes": 4195716
+  },
+  {
+   "size": 2048,
+   "zlib_level": 6,
+   "best_s": 1.141,
+   "bytes": 9134560
+  },
+  {
+   "size": 2048,
+   "zlib_level": 1,
+   "best_s": 0.635,
+   "bytes": 9380446
+  },
+  {
+   "size": 2048,
+   "zlib_level": 0,
+   "best_s": 0.09,
+   "bytes": 16780612
+  }
+ ]
+}

@@ -1,0 +1,67 @@
+{
+ "image": "C:\\AI\\overnight-scratch\\photos\\landscape.jpg",
+ "size": 2048,
+ "pause_after": 1.0,
+ "cases": [
+  {
+   "id": "cold-sd15-1024",
+   "model": "sd15-inpainting",
+   "sel": 1024,
+   "seed": 1234
+  },
+  {
+   "id": "sd15-1024-seed1235",
+   "model": "sd15-inpainting",
+   "sel": 1024,
+   "seed": 1235
+  },
+  {
+   "id": "sd15-1024-seed1236",
+   "model": "sd15-inpainting",
+   "sel": 1024,
+   "seed": 1236
+  },
+  {
+   "id": "sd15-1024-seed1237",
+   "model": "sd15-inpainting",
+   "sel": 1024,
+   "seed": 1237
+  },
+  {
+   "id": "sd15-1024-seed1235-repeat",
+   "model": "sd15-inpainting",
+   "sel": 1024,
+   "seed": 1235
+  },
+  {
+   "id": "sd15-512-seed1235",
+   "model": "sd15-inpainting",
+   "sel": 512,
+   "seed": 1235
+  },
+  {
+   "id": "sd15-512-seed1236",
+   "model": "sd15-inpainting",
+   "sel": 512,
+   "seed": 1236
+  },
+  {
+   "id": "juggernaut-switch-1024",
+   "model": "juggernaut-xl-v9",
+   "sel": 1024,
+   "seed": 1
+  },
+  {
+   "id": "juggernaut-1024-seed2",
+   "model": "juggernaut-xl-v9",
+   "sel": 1024,
+   "seed": 2
+  },
+  {
+   "id": "juggernaut-1024-seed3",
+   "model": "juggernaut-xl-v9",
+   "sel": 1024,
+   "seed": 3
+  }
+ ]
+}

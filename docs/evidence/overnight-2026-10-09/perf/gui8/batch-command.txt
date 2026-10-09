@@ -1,0 +1,2 @@
+C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe --new-instance --no-splash --batch-interpreter python-fu-eval -b exec(open(r'C:\AI\overnight-scratch\perf\gui_demo.py').read())
+(env GIMP3_DIRECTORY=C:\AI\overnight-scratch\gimp-profile-test SB_TEST_UI_FILE=C:\AI\overnight-scratch\perf\gui8\ui-hooks.json SB_PERF_STALL=1; config steps=20 progress_window=true)

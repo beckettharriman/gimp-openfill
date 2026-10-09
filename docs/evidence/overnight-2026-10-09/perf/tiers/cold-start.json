@@ -1,0 +1,14 @@
+{
+ "session": "tiers",
+ "case": "cold-sd15-512",
+ "launch_to_image_ready_s": 6.2,
+ "launch_to_fill_call_s": 6.22,
+ "fill_call_to_supervisor_launch_s": 4.25,
+ "supervisor_launch_to_backend_ready_s": 22.1,
+ "launch_to_backend_ready_s": 32.58,
+ "backend_ready_to_result_downloaded_s": 12.15,
+ "launch_to_first_fill_done_s": 45.25,
+ "first_fill_wall_s": 39.024,
+ "queue_to_first_step_s": 6.517,
+ "sampling_s": 5.583
+}

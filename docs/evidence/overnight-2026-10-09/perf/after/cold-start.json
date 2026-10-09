@@ -1,0 +1,14 @@
+{
+ "session": "after",
+ "case": "cold-sd15-1024",
+ "launch_to_image_ready_s": 6.1,
+ "launch_to_fill_call_s": 6.12,
+ "fill_call_to_supervisor_launch_s": 2.93,
+ "supervisor_launch_to_backend_ready_s": 22.15,
+ "launch_to_backend_ready_s": 31.21,
+ "backend_ready_to_result_downloaded_s": 13.08,
+ "launch_to_first_fill_done_s": 44.95,
+ "first_fill_wall_s": 38.821,
+ "queue_to_first_step_s": 6.644,
+ "sampling_s": 6.277
+}
