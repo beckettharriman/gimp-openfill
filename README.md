@@ -331,11 +331,13 @@ For a bug report, turn on **Verbose log**, reproduce, and attach
 
 **Synthetic matrix.** 64 cases (selections, image modes and sizes, every
 mode and tier, prompts) were scored visually in the deliberately blunt
-[quality ledger](docs/evidence/overnight-2026-10-09/quality-ledger.md): **11 PASS, 31 PASS-WITH-NOTES,
-22 FAIL**. 14 of the FAILs are model behaviour (SD 1.5 ignoring the prompt on
-flat sky or a 20 px selection, where the Quality tier draws it); the other 8
-are plug-in-side weaknesses still open (flat untextured blocks, washed-out
-fine texture, a too-short working crop on a 16:1 strip, `sel-feathered`).
+[quality ledger](docs/evidence/overnight-2026-10-09/quality-ledger.md): **11 PASS, 33 PASS-WITH-NOTES,
+20 FAIL**. 14 of the FAILs are model behaviour (SD 1.5 ignoring the prompt on
+flat sky or a 20 px selection, where the Quality tier draws it); the other 6
+are plug-in-side weaknesses still open (washed-out fine texture on offset or
+grouped layers, a too-short working crop on a 16:1 strip, `sel-feathered`,
+`sel-edge-bottom`). An A/B of pre-fill, colour matching and working size is
+recorded in the ledger's last section.
 
 **Real photos.** 28 remove, replace and extend cases on six Wikimedia
 Commons photographs (face, fabric, landscape, architecture, text, product)

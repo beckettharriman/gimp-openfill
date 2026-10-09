@@ -10,7 +10,7 @@ GIMP started with `--new-instance` and an isolated profile
 - [quality-ledger.md](quality-ledger.md): the visual verdict of every
   generation case, one row each (seams, colour, blur, artifacts, mask edge,
   content, 1 to 5, plus a verdict). Synthetic matrix: 11 PASS,
-  31 PASS-WITH-NOTES, 22 FAIL of 64; real photos (section "Real photos"):
+  33 PASS-WITH-NOTES, 20 FAIL of 64 (after the A/B re-runs); real photos (section "Real photos"):
   8 PASS, 10 PASS-WITH-NOTES, 10 FAIL of 28. It also separates model
   limitations from plug-in defects and lists what is still open.
 - [photos-README.md](photos-README.md): the six photographs (source URLs,
