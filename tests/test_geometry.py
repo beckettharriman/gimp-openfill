@@ -410,9 +410,125 @@ class FillPlanTests(unittest.TestCase):
             self.assertEqual(t.rect.width % 8, 0)
         self.assertEqual(len(plan.refine_tiles), 1)
 
+    def test_layout_pass_only_when_tiled(self):
+        small = g.plan_fill(
+            g.Rect(922, 384, 256, 256), g.Rect(0, 0, 1280, 853), g.SD15, "sd15", False, 0.5, layout=True
+        )
+        self.assertFalse(small.layout)
+        suede = g.plan_fill(
+            g.Rect(96, 289, 1690, 866), g.Rect(0, 0, 1920, 1443), g.SD15, "sd15", False, 0.5, layout=True
+        )
+        self.assertTrue(suede.tiles)
+        self.assertTrue(suede.layout)
+        off = g.plan_fill(g.Rect(96, 289, 1690, 866), g.Rect(0, 0, 1920, 1443), g.SD15, "sd15", False, 0.5)
+        self.assertFalse(off.layout)
+        self.assertEqual(off.tiles, suede.tiles)  # the tiles themselves do not change
+
+    def test_layout_pass_is_one_pass_over_the_whole_context(self):
+        for arch, prof, sel, img in (
+            ("sd15", g.SD15, g.Rect(96, 289, 1690, 866), g.Rect(0, 0, 1920, 1443)),
+            ("sdxl", g.SDXL, g.Rect(160, 51, 1620, 89), g.Rect(0, 0, 2000, 1273)),
+        ):
+            plan = g.plan_fill(sel, img, prof, arch, False, 0.5, layout=True)
+            self.assertTrue(plan.layout)
+            single = g.plan_fill(sel, img, prof, arch, False, 0.5).work
+            w = plan.work
+            self.assertGreaterEqual(w.scale, min(single.scale, 1.0))
+            self.assertGreaterEqual(w.scale, g.LAYOUT_MIN_SCALE - 1e-9, arch)
+            self.assertLessEqual(max(w.width, w.height), g.LAYOUT_MAX_SIDE_FACTOR * prof.max_side + prof.multiple)
+            self.assertAlmostEqual(w.width / plan.context.width, w.scale, delta=0.02)
+            self.assertEqual(w.width % prof.multiple, 0)
+
+    def test_layout_decision(self):
+        def plan(sel, img, arch):
+            return g.plan_fill(sel, img, g.PROFILES[arch], arch, False, 0.5, layout=True)
+
+        roof, image = g.Rect(160, 51, 1620, 89), g.Rect(0, 0, 2000, 1273)
+        self.assertTrue(plan(roof, image, "sdxl").layout)  # SDXL strip: tiles mostly wall
+        self.assertFalse(plan(roof, image, "sd15").layout)  # SD 1.5 strip tiles already work
+        self.assertTrue(plan(roof, image, "sd15").tiles)
+        brick, image = g.Rect(96, 72, 1728, 1296), g.Rect(0, 0, 1920, 1440)
+        self.assertTrue(plan(brick, image, "sd15").layout)  # SD 1.5: always when tiled
+        self.assertFalse(plan(brick, image, "sdxl").layout)  # large SDXL area: tiles only
+        self.assertTrue(plan(brick, image, "sdxl").tiles)
+        leather = plan(g.Rect(1488, 1200, 792, 1350), g.Rect(0, 0, 2400, 3000), "sdxl")
+        self.assertTrue(leather.tiles)
+        self.assertFalse(leather.layout)
+        self.assertFalse(g.wants_layout("sd15", brick, (), 1.0))  # never without tiles
+
+    def test_layout_scale_capped_on_huge_contexts(self):
+        ctx = g.Rect(0, 0, 6000, 4000)
+        single = g.working_size(ctx.width, ctx.height, g.SD15)
+        w = g.layout_work(ctx, g.SD15, single)
+        self.assertLess(w.scale, g.LAYOUT_MIN_SCALE)
+        self.assertLessEqual(max(w.width, w.height), g.LAYOUT_MAX_SIDE_FACTOR * g.SD15.max_side + 8)
+        self.assertGreaterEqual(w.scale, single.scale)
+
+    def test_strip_tiles_centred_on_the_selection_across(self):
+        # away from the image edge the window is centred on the strip across it
+        sel = g.Rect(160, 600, 1620, 89)
+        plan = g.plan_fill(sel, g.Rect(0, 0, 2000, 1400), g.SDXL, "sdxl", False, 0.5)
+        self.assertTrue(plan.tiles)
+        local = sel.relative_to(plan.context)
+        for t in plan.tiles:
+            above, below = local.y - t.rect.y, t.rect.bottom - local.bottom
+            self.assertLessEqual(abs(above - below), 2)
+        # at the edge it is moved inside the image, not cut
+        edge = g.plan_fill(g.Rect(160, 51, 1620, 89), g.Rect(0, 0, 2000, 1273), g.SDXL, "sdxl", False, 0.5)
+        for t in edge.tiles:
+            self.assertEqual(t.rect.y, 0)
+            self.assertGreaterEqual(t.work_height, 0.75 * g.SDXL.min_side)
+
     def test_other_architectures_unchanged(self):
         sel = g.Rect(96, 72, 1728, 1296)
         plan = g.plan_fill(sel, g.Rect(0, 0, 1920, 1440), g.INPAINT_MODEL, "inpaint_model", True, 0.5)
         self.assertEqual(plan.tiles, ())
         ctx = g.context_rect(sel, g.Rect(0, 0, 1920, 1440), g.INPAINT_MODEL, 0.5)
         self.assertEqual(plan.context, ctx)
+
+
+class RemovalPlanTests(unittest.TestCase):
+    """Tiled LaMa/MAT removal (geometry.plan_removal)."""
+
+    image = g.Rect(0, 0, 1920, 1268)
+
+    def test_small_hole_is_not_tiled(self):
+        self.assertIsNone(g.plan_removal(g.Rect(893, 512, 163, 256), g.Rect(0, 0, 1920, 1280)))
+        self.assertIsNone(g.plan_removal(g.Rect(154, 324, 154, 188), g.Rect(0, 0, 1280, 853)))
+
+    def test_deep_hole_is_not_tiled(self):
+        # windows inside a hole this deep would be nearly all hole
+        self.assertIsNone(g.plan_removal(g.Rect(115, 119, 794, 614), g.Rect(0, 0, 1280, 853)))
+        self.assertIsNone(g.plan_removal(g.Rect(0, 900, 720, 1140), g.Rect(0, 0, 2400, 3000)))
+
+    def test_disabled(self):
+        self.assertIsNone(g.plan_removal(g.Rect(192, 913, 806, 355), self.image, tile=0))
+
+    def test_band_is_tiled_at_one_to_one(self):
+        sel = g.Rect(192, 913, 806, 355)
+        plan = g.plan_removal(sel, self.image)
+        self.assertIsNotNone(plan)
+        self.assertGreater(len(plan.tiles), 1)
+        self.assertTrue(self.image.contains(plan.context))
+        self.assertTrue(plan.context.contains(sel))
+        self.assertEqual(plan.work.scale, 1.0)
+        local = sel.relative_to(plan.context)
+        for t in plan.tiles:
+            self.assertEqual((t.work_width, t.work_height), (t.rect.width, t.rect.height))
+            self.assertLessEqual(max(t.rect.width, t.rect.height), g.REMOVAL_TILE)
+        for y in range(local.y, local.bottom, 20):
+            for x in range(local.x, local.right, 20):
+                self.assertTrue(any(t.rect.x <= x < t.rect.right and t.rect.y <= y < t.rect.bottom for t in plan.tiles))
+        self.assertEqual(plan.tiles[0].done, ())
+        for prev, tile in zip(plan.tiles, plan.tiles[1:], strict=False):
+            self.assertGreaterEqual(prev.rect.right - tile.rect.x, g.REMOVAL_TILE_OVERLAP)
+            self.assertTrue(tile.done)
+
+    def test_band_windows_centred_across(self):
+        sel = g.Rect(300, 600, 1200, 154)
+        plan = g.plan_removal(sel, g.Rect(0, 0, 1920, 1400))
+        local = sel.relative_to(plan.context)
+        for t in plan.tiles:
+            self.assertLessEqual(abs((local.y - t.rect.y) - (t.rect.bottom - local.bottom)), 2)
+            self.assertGreaterEqual(t.rect.height, g.REMOVAL_TILE - 1)
+            self.assertLessEqual(t.rect.height, g.REMOVAL_TILE)

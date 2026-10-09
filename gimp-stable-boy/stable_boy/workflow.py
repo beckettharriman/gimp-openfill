@@ -141,6 +141,9 @@ class PlannedInpaintRequest(InpaintRequest):
     tiles: tuple = ()  # geometry.Tile, main pass (empty: one pass at work size)
     refine_tiles: tuple = ()  # geometry.Tile at scale 1 (empty: no refine)
     refine_denoise: float = 0.4
+    # Below 1.0 (``FillPlan.layout``): the whole context is generated first in
+    # one pass at the work size, then the tiles add detail at this denoise.
+    tile_denoise: float = 1.0
     full_grow: int = 0
     full_blur: int = 0
     # Generation model for the refine pass of a prompt-free removal (LaMa/MAT
@@ -479,9 +482,11 @@ def build_inpaint(
     if not caps.inpaint_nodes:
         tiles, refine_tiles = (), ()
     batch = max(1, int(req.sampling.batch))
-    if not tiles:
+    tile_denoise = float(getattr(req, "tile_denoise", 1.0))
+    layout = bool(tiles) and tile_denoise < 1.0
+    if not tiles or layout:
         out = _single_pass(g, req, caps, model, positive, negative, vae, seed)
-        if not refine_tiles:
+        if not tiles and not refine_tiles:
             g.add(OUTPUT_NODE, "SaveImage", images=out, filename_prefix=filename_prefix)
             return g.to_dict()
     full_mask = _full_mask(g, req)
@@ -491,7 +496,7 @@ def build_inpaint(
         dest = g.out("dest_batch")
     g.add("tdiff", "DifferentialDiffusion", model=model)
     diff_model = g.out("tdiff")
-    if tiles:
+    if tiles and not layout:
         if req.model.uses_fooocus:
             g.add(
                 "fooocus_patch",
@@ -529,6 +534,27 @@ def build_inpaint(
             mask=full_mask,
         )
         dest = g.out("main_paste")
+    if layout:
+        # Detail tiles over the layout pass: no pre-fill and the whole tile in
+        # the conditioning (the refine path), so they keep its layout.
+        for i, tile in enumerate(tiles):
+            dest = _tile_pass(
+                g,
+                f"t{i}",
+                req,
+                caps,
+                dest,
+                full_mask,
+                tile,
+                diff_model,
+                positive,
+                negative,
+                vae,
+                seed,
+                tile_denoise,
+                True,
+                batch,
+            )
     for i, tile in enumerate(refine_tiles):
         dest = _tile_pass(
             g,
@@ -750,6 +776,10 @@ def build_removal(
     if not caps.inpaint_nodes:
         raise ValueError("prompt-free removal needs comfyui-inpaint-nodes on the server")
     g = Graph()
+    if _tiles(req):
+        out = _removal_tiles(g, req, image_ref, mask_ref, seed)
+        g.add(OUTPUT_NODE, "SaveImage", images=out, filename_prefix=filename_prefix)
+        return g.to_dict()
     image, mask = _load_inputs(g, req, image_ref, mask_ref, caps)
     g.add("inpaint_model", "INPAINT_LoadInpaintModel", model_name=req.model.inpaint_model)
     g.add(
@@ -769,6 +799,84 @@ def build_removal(
         out = _removal_refine(g, req, caps, out, refine_model, refine_tiles, seed)
     g.add(OUTPUT_NODE, "SaveImage", images=out, filename_prefix=filename_prefix)
     return g.to_dict()
+
+
+# Blend band (px) of a removal tile into the parts earlier tiles finished; it
+# lies inside the band the tile repaints (half the overlap).
+REMOVAL_BLEND = 24
+
+
+def _removal_tiles(g: Graph, req: InpaintRequest, image_ref: str, mask_ref: str, seed: int) -> list:
+    """Tiled removal at 1:1 (``geometry.plan_removal``): each window of the
+    context goes through the removal node on its own, with the parts earlier
+    windows finished as known pixels, and is blended back over a short ramp."""
+    g.add("load_image", "LoadImage", image=image_ref)
+    g.add("load_mask", "LoadImage", image=mask_ref)
+    full_mask = _full_mask(g, req)
+    g.add("inpaint_model", "INPAINT_LoadInpaintModel", model_name=req.model.inpaint_model)
+    dest = g.out("load_image", 0)
+    for i, tile in enumerate(_tiles(req)):
+        p = f"rm{i}"
+        r = tile.rect
+        g.add(f"{p}_crop", "ImageCrop", image=dest, width=r.width, height=r.height, x=r.x, y=r.y)
+        g.add(f"{p}_mcrop", "CropMask", mask=full_mask, x=r.x, y=r.y, width=r.width, height=r.height)
+        hole, blend = g.out(f"{p}_mcrop"), g.out(f"{p}_mcrop")
+        if tile.done:
+            g.add(f"{p}_done", "SolidMask", value=0.0, width=r.width, height=r.height)
+            done = g.out(f"{p}_done")
+            for j, d in enumerate(tile.done):
+                g.add(f"{p}_d{j}", "SolidMask", value=1.0, width=d.width, height=d.height)
+                g.add(
+                    f"{p}_dadd{j}",
+                    "MaskComposite",
+                    destination=done,
+                    source=g.out(f"{p}_d{j}"),
+                    x=d.x,
+                    y=d.y,
+                    operation="add",
+                )
+                done = g.out(f"{p}_dadd{j}")
+            g.add(f"{p}_hole", "MaskComposite", destination=hole, source=done, x=0, y=0, operation="subtract")
+            hole = g.out(f"{p}_hole")
+            # ramp from 0 at the finished part to 1 inside the repainted band
+            g.add(
+                f"{p}_dgrow",
+                "INPAINT_ExpandMask",
+                mask=done,
+                grow=REMOVAL_BLEND // 2,
+                blur=REMOVAL_BLEND + 1,
+                blur_type="gaussian",
+            )
+            g.add(
+                f"{p}_blend",
+                "MaskComposite",
+                destination=hole,
+                source=g.out(f"{p}_dgrow"),
+                x=0,
+                y=0,
+                operation="subtract",
+            )
+            blend = g.out(f"{p}_blend")
+        g.add(
+            f"{p}_remove",
+            "INPAINT_InpaintWithModel",
+            inpaint_model=g.out("inpaint_model"),
+            image=g.out(f"{p}_crop"),
+            mask=hole,
+            seed=int(seed),
+        )
+        g.add(
+            f"{p}_paste",
+            "ImageCompositeMasked",
+            destination=dest,
+            source=g.out(f"{p}_remove"),
+            x=r.x,
+            y=r.y,
+            resize_source=False,
+            mask=blend,
+        )
+        dest = g.out(f"{p}_paste")
+    return dest
 
 
 def _removal_refine(

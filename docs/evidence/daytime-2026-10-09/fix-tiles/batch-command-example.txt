@@ -1,0 +1,10 @@
+C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\gimp-console-3.2.exe --new-instance --no-splash --console-messages --batch-interpreter python-fu-eval -b exec(open(r'C:\AI\overnight-scratch\day\fix2\gimp_batch_benchmark.py').read())
+{
+ "GIMP3_DIRECTORY": "C:\\AI\\overnight-scratch\\gimp-profile-fix",
+ "SB_BENCH_SPEC": "C:\\AI\\overnight-scratch\\day\\fix2\\gimp\\td65\\spec.json",
+ "SB_BENCH_OUT": "C:\\AI\\overnight-scratch\\day\\fix2\\gimp\\td65",
+ "SB_BENCH_MODEL": "sdxl-base",
+ "SB_BENCH_CASES": "architecture-material-roof-tiles",
+ "SB_REPO": "C:\\AI\\overnight-scratch\\fix-worktree",
+ "SB_DEBUG_DUMP": "1"
+}
