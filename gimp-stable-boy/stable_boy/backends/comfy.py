@@ -8,6 +8,7 @@ from __future__ import annotations
 import hashlib
 import time
 import uuid
+from pathlib import Path
 
 from .. import workflow
 from ..backend import (
@@ -20,6 +21,7 @@ from ..backend import (
     HealthStatus,
     InpaintRequest,
     ModelMissing,
+    ModelSpec,
     OutOfMemory,
     PreviewCallback,
     Progress,
@@ -29,6 +31,13 @@ from ..backend import (
 )
 from ..comfy_api import ComfyApiError, ComfyClient, ComfyExecutionError
 from ..geometry import estimate_timeout, seed_or_random
+
+# While the server keeps sending progress, previews or node events, the
+# deadline moves to at least this many seconds after the last one: the
+# estimate only has to cover a silent stretch, not the whole job.
+ACTIVITY_EXTENSION = 180.0
+# Model folders searched for the size of a request's model files.
+MODEL_FOLDERS = ("checkpoints", "diffusion_models", "unet", "clip", "text_encoders", "vae", "inpaint")
 
 CONNECTION_LOST = (
     "ComfyUI stopped while it was generating (it crashed or was closed), so the image was not changed. "
@@ -46,8 +55,10 @@ class ComfyBackend(Backend):
         client: ComfyClient | None = None,
         request_timeout: float = 0.0,
         logger=None,
+        models_root: Path | str | None = None,
     ) -> None:
         self.url = url
+        self.models_root = Path(models_root) if models_root else None
         self.client = client or ComfyClient(url)
         self.request_timeout = request_timeout  # 0 = estimate per request
         self.log = logger
@@ -137,9 +148,11 @@ class ComfyBackend(Backend):
             graph = workflow.build_fill(request, image_ref, mask_ref, seed, caps, filename_prefix=prefix)
         except ValueError as err:
             raise WorkflowRejected(str(err)) from err
-        pixels = request.work_width * request.work_height
+        pixels = int(getattr(request, "work_pixels", 0) or request.work_width * request.work_height)
         try:
-            images = self._run(graph, request.sampling.steps, request.sampling.batch, pixels, progress, preview, cancel)
+            images = self._run(
+                graph, request.sampling.steps, request.sampling.batch, pixels, progress, preview, cancel, request.model
+            )
         except WorkflowRejected as err:
             # The telea / navier-stokes pre-fill modes need OpenCV on the server.
             # Fall back to the dependency-free neutral fill instead of failing.
@@ -149,7 +162,9 @@ class ComfyBackend(Backend):
                 self.log.warning("server has no OpenCV; retrying with neutral pre-fill")
             request.prefill_mode = "neutral"
             graph = workflow.build_fill(request, image_ref, mask_ref, seed, caps, filename_prefix=prefix)
-            images = self._run(graph, request.sampling.steps, request.sampling.batch, pixels, progress, preview, cancel)
+            images = self._run(
+                graph, request.sampling.steps, request.sampling.batch, pixels, progress, preview, cancel, request.model
+            )
         return GenerationResult(images, seed, {"job": job, "graph": graph, "backend": self.name})
 
     def txt2img(
@@ -173,6 +188,7 @@ class ComfyBackend(Backend):
             progress,
             preview,
             cancel,
+            request.model,
         )
         return GenerationResult(images, seed, {"job": job, "graph": graph, "backend": self.name})
 
@@ -187,9 +203,11 @@ class ComfyBackend(Backend):
         progress: ProgressCallback | None,
         preview: PreviewCallback | None = None,
         cancel: CancelCallback | None = None,
+        model: ModelSpec | None = None,
     ) -> list[bytes]:
-        timeout = self.request_timeout or estimate_timeout(steps, batch, pixels)
-        deadline = time.monotonic() + timeout
+        timeout = self.request_timeout or self._estimate(steps, batch, pixels, model)
+        started = time.monotonic()
+        deadline = started + timeout
         self._first_step = 0.0
         self._report(progress, 0.02, "Submitting workflow...")
         try:
@@ -202,7 +220,13 @@ class ComfyBackend(Backend):
             self.log.info("queued prompt %s (timeout %.0fs, %d steps x %d)", prompt_id, timeout, steps, batch)
         try:
             entry = self.client.wait_for(
-                prompt_id, workflow.total_steps(graph), deadline, self._wrap(progress), preview=preview, cancel=cancel
+                prompt_id,
+                workflow.total_steps(graph),
+                deadline,
+                self._wrap(progress),
+                preview=preview,
+                cancel=cancel,
+                activity_extension=0.0 if self.request_timeout else ACTIVITY_EXTENSION,
             )
         except ComfyExecutionError as err:
             if err.is_out_of_memory:
@@ -214,7 +238,7 @@ class ComfyBackend(Backend):
                 raise GenerationCancelled(text) from err
             if "timed out" in text:
                 self.cancel()
-                raise GenerationTimeout(f"no result after {timeout:.0f} s") from err
+                raise GenerationTimeout(f"no result after {time.monotonic() - started:.0f} s") from err
             if self._connection_lost(err):
                 raise BackendUnavailable(CONNECTION_LOST) from err
             raise BackendUnavailable(text) from err
@@ -240,6 +264,25 @@ class ComfyBackend(Backend):
         if not images:
             raise WorkflowRejected("the workflow finished without producing an image")
         return images
+
+    def _estimate(self, steps: int, batch: int, pixels: int, model: ModelSpec | None) -> float:
+        """Automatic timeout: sampling time plus the load time of the model
+        files, with the cold floor when the server's last prompt used other
+        model files (or there was none, e.g. right after a start)."""
+        names = model_files(model)
+        cold = False
+        if names:
+            try:
+                cold = not names <= self.client.last_model_files()
+            except (ComfyApiError, AttributeError, TypeError, ValueError):
+                cold = True  # unknown: allow for a load
+        size = model_bytes(self.models_root, names)
+        timeout = estimate_timeout(steps, batch, pixels, model_bytes=size, cold=cold)
+        if self.log:
+            self.log.info(
+                "timeout estimate %.0f s (model files %.1f GB, %s)", timeout, size / 1e9, "cold" if cold else "warm"
+            )
+        return timeout
 
     def _connection_lost(self, err: ComfyApiError) -> bool:
         """A transport failure (no HTTP status) while ComfyUI no longer answers: it stopped mid-job."""
@@ -282,3 +325,39 @@ def _content_id(*parts: bytes) -> str:
         digest.update(len(part).to_bytes(8, "big"))
         digest.update(part)
     return digest.hexdigest()[:12]
+
+
+def model_files(model: ModelSpec | None) -> set[str]:
+    """File names a request loads (checkpoint, UNet, text encoders, VAE,
+    removal model, Fooocus files)."""
+    if model is None:
+        return set()
+    names = (
+        model.checkpoint,
+        model.unet,
+        model.clip1,
+        model.clip2,
+        model.vae,
+        model.inpaint_model,
+        model.fooocus_head if model.uses_fooocus else "",
+        model.fooocus_patch if model.uses_fooocus else "",
+    )
+    return {n for n in names if n}
+
+
+def model_bytes(models_root: Path | None, names: set[str]) -> int:
+    """Total size on disk of ``names`` under the usual model folders of
+    ``models_root`` (0 for files not found, or without a root)."""
+    if models_root is None:
+        return 0
+    total = 0
+    for name in names:
+        for folder in MODEL_FOLDERS:
+            path = models_root / folder / name
+            try:
+                if path.is_file():
+                    total += path.stat().st_size
+                    break
+            except OSError:
+                continue
+    return total

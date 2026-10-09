@@ -64,6 +64,19 @@ def _scale_image(g: Graph, node_id: str, image: list, width: int, height: int) -
     return g.out(node_id)
 
 
+def _hard_model_mask(req: InpaintRequest) -> bool:
+    """The model mask stays hard (grown, not blurred). The LaMa/MAT node wants
+    a hard mask. An SD 1.5 inpainting checkpoint sees the hole as grey in its
+    conditioning image wherever the mask is 0.5 or more, while a blurred noise
+    mask lets the sampler touch that band only in the last steps; there it
+    reproduced the grey of the conditioning image as a pale frame around the
+    fill. With a hard mask the whole hole is generated from the first step and
+    the GIMP layer mask's feather makes the soft transition. Fills only: the
+    expand path keeps its blur."""
+    template = req.model.effective_template
+    return template == "inpaint_model" or (template == "sd15_inpaint" and req.mode == "fill")
+
+
 def _prepare_mask(g: Graph, mask_image: list, req: InpaintRequest, caps: Capabilities) -> list:
     """Mask image (gray PNG loaded as IMAGE) -> grown, feathered MASK."""
     if req.needs_scaling:
@@ -74,7 +87,7 @@ def _prepare_mask(g: Graph, mask_image: list, req: InpaintRequest, caps: Capabil
     # The blur must not exceed the growth, otherwise a small selection never
     # reaches mask value 1.0 and the model only partially repaints it. The
     # LaMa/MAT node wants a hard mask: no blur at all.
-    hard = req.model.effective_template == "inpaint_model"
+    hard = _hard_model_mask(req)
     blur = 0 if hard else max(0, min(int(req.feather), grow))
     if caps.inpaint_nodes:
         if grow or blur:
@@ -111,25 +124,40 @@ def _prefill(g: Graph, image: list, mask: list, req: InpaintRequest, caps: Capab
     return g.out("preblur")
 
 
-def build_inpaint(
-    req: InpaintRequest,
-    image_ref: str,
-    mask_ref: str,
-    seed: int,
-    caps: Capabilities,
-    filename_prefix: str = "stable-boy/fill",
-) -> dict:
-    """Build the inpaint / outpaint graph.
+@dataclass
+class PlannedInpaintRequest(InpaintRequest):
+    """An inpaint request with an optional tiled main pass and an optional
+    full-resolution refine pass (``geometry.FillPlan``).
 
-    ``image_ref`` and ``mask_ref`` are the names returned by ``/upload/image``
-    (``subfolder/filename``). Returns the API-format prompt dict.
+    ``full_grow`` and ``full_blur`` are the mask growth and blur at context
+    resolution (image px), used by the tiled and refine passes, which work on
+    the context at its own size.
     """
-    g = Graph()
-    model, clip, vae = _checkpoint(g, req.model.checkpoint)
-    positive, negative = _prompts(g, clip, req.prompt, req.negative)
 
-    g.add("load_image", "LoadImage", image=image_ref)
-    g.add("load_mask", "LoadImage", image=mask_ref)
+    tiles: tuple = ()  # geometry.Tile, main pass (empty: one pass at work size)
+    refine_tiles: tuple = ()  # geometry.Tile at scale 1 (empty: no refine)
+    refine_denoise: float = 0.4
+    full_grow: int = 0
+    full_blur: int = 0
+
+    @property
+    def work_pixels(self) -> int:
+        """Pixels sampled over all passes (for the timeout estimate)."""
+        main = sum(t.work_width * t.work_height for t in self.tiles) or self.work_width * self.work_height
+        return main + sum(t.work_width * t.work_height for t in self.refine_tiles)
+
+
+def _tiles(req: InpaintRequest) -> tuple:
+    return tuple(getattr(req, "tiles", ()) or ())
+
+
+def _refine_tiles(req: InpaintRequest) -> tuple:
+    return tuple(getattr(req, "refine_tiles", ()) or ())
+
+
+def _single_pass(g: Graph, req: InpaintRequest, caps: Capabilities, model, positive, negative, vae, seed: int) -> list:
+    """The classic pass: the whole context at the working size; returns the
+    decoded (colour matched) result at context size."""
     image = g.out("load_image", 0)
     if req.needs_scaling:
         image = _scale_image(g, "image_scale", image, req.work_width, req.work_height)
@@ -210,7 +238,288 @@ def build_inpaint(
         out = g.out("color_match")
     if req.needs_scaling:
         out = _scale_image(g, "out_scale", out, req.width, req.height)
-    g.add(OUTPUT_NODE, "SaveImage", images=out, filename_prefix=filename_prefix)
+    return out
+
+
+def _full_mask(g: Graph, req: InpaintRequest) -> list:
+    """The selection mask at context resolution, grown and blurred like the
+    model mask of the single pass (needs comfyui-inpaint-nodes)."""
+    g.add("fmask_raw", "ImageToMask", image=g.out("load_mask", 0), channel="red")
+    grow = max(0, int(getattr(req, "full_grow", 0)))
+    blur = 0 if _hard_model_mask(req) else max(0, min(int(getattr(req, "full_blur", 0)), grow))
+    g.add("fmask_grow", "INPAINT_ExpandMask", mask=g.out("fmask_raw"), grow=grow, blur=blur, blur_type="gaussian")
+    g.add("fmask", "INPAINT_StabilizeMask", mask=g.out("fmask_grow"), epsilon=0.01)
+    return g.out("fmask")
+
+
+def _tile_mask(g: Graph, p: str, full_mask: list, tile, overlap_blur: int) -> list:
+    """The full mask cropped to ``tile``, faded out over the parts earlier
+    tiles finished (``tile.done``), so the tile repaints only its own area and
+    a blend band."""
+    r = tile.rect
+    g.add(f"{p}_mcrop", "CropMask", mask=full_mask, x=r.x, y=r.y, width=r.width, height=r.height)
+    mask = g.out(f"{p}_mcrop")
+    if not tile.done:
+        return mask
+    g.add(f"{p}_keep", "SolidMask", value=1.0, width=r.width, height=r.height)
+    keep = g.out(f"{p}_keep")
+    for i, d in enumerate(tile.done):
+        g.add(f"{p}_done{i}", "SolidMask", value=1.0, width=d.width, height=d.height)
+        g.add(
+            f"{p}_keep{i}",
+            "MaskComposite",
+            destination=keep,
+            source=g.out(f"{p}_done{i}"),
+            x=d.x,
+            y=d.y,
+            operation="subtract",
+        )
+        keep = g.out(f"{p}_keep{i}")
+    g.add(f"{p}_ramp", "INPAINT_ExpandMask", mask=keep, grow=0, blur=max(3, overlap_blur), blur_type="gaussian")
+    g.add(f"{p}_mask", "MaskComposite", destination=mask, source=g.out(f"{p}_ramp"), x=0, y=0, operation="multiply")
+    return g.out(f"{p}_mask")
+
+
+def _scale_mask(g: Graph, p: str, mask: list, width: int, height: int) -> list:
+    g.add(f"{p}_mimg", "MaskToImage", mask=mask)
+    g.add(
+        f"{p}_mscale",
+        "ImageScale",
+        image=g.out(f"{p}_mimg"),
+        upscale_method="bilinear",
+        width=width,
+        height=height,
+        crop="disabled",
+    )
+    g.add(f"{p}_mback", "ImageToMask", image=g.out(f"{p}_mscale"), channel="red")
+    g.add(f"{p}_mstable", "INPAINT_StabilizeMask", mask=g.out(f"{p}_mback"), epsilon=0.01)
+    return g.out(f"{p}_mstable")
+
+
+def _tile_pass(
+    g: Graph,
+    p: str,
+    req: InpaintRequest,
+    caps: Capabilities,
+    dest: list,
+    full_mask: list,
+    tile,
+    model,
+    positive,
+    negative,
+    vae,
+    seed: int,
+    denoise: float,
+    refine: bool,
+    batch: int,
+) -> list:
+    """One tile of a tiled pass: crop ``dest``, (scale,) pre-fill (generation
+    only), sample, decode, (colour match, scale back) and composite back into
+    ``dest`` through the tile mask. Returns the new ``dest``."""
+    r = tile.rect
+    g.add(f"{p}_crop", "ImageCrop", image=dest, width=r.width, height=r.height, x=r.x, y=r.y)
+    crop = g.out(f"{p}_crop")
+    tmask = _tile_mask(g, p, full_mask, tile, 65)
+    scaled = (tile.work_width, tile.work_height) != (r.width, r.height)
+    image, mask = crop, tmask
+    if scaled:
+        image = _scale_image(g, f"{p}_scale", crop, tile.work_width, tile.work_height)
+        mask = _scale_mask(g, p, tmask, tile.work_width, tile.work_height)
+    reference = image
+    if not refine and req.prefill and caps.inpaint_nodes:
+        style = "border" if req.prefill_style == "border" else "blur"
+        if style == "border":
+            mode = req.prefill_mode if req.prefill_mode in ("navier-stokes", "telea", "neutral") else "navier-stokes"
+            g.add(f"{p}_prefill", "INPAINT_MaskedFill", image=image, mask=mask, fill=mode, falloff=0)
+            g.add(f"{p}_preblur", "INPAINT_MaskedBlur", image=g.out(f"{p}_prefill"), mask=mask, blur=65, falloff=0)
+        else:
+            g.add(f"{p}_preblur", "INPAINT_MaskedBlur", image=image, mask=mask, blur=65, falloff=9)
+        image = g.out(f"{p}_preblur")
+    use_fooocus = not refine and req.model.uses_fooocus and caps.inpaint_nodes
+    inpaint_ckpt = req.model.arch == "sd15" or req.model.effective_template == "sd15_inpaint"
+    if use_fooocus:
+        first = image
+        if batch > 1:
+            g.add(f"{p}_first", "ImageFromBatch", image=image, batch_index=0, length=1)
+            first = g.out(f"{p}_first")
+        g.add(
+            f"{p}_penc",
+            "INPAINT_VAEEncodeInpaintConditioning",
+            positive=positive,
+            negative=negative,
+            vae=vae,
+            pixels=first,
+            mask=mask,
+        )
+        g.add(
+            f"{p}_patch",
+            "INPAINT_ApplyFooocusInpaint",
+            model=model,
+            patch=g.out("fooocus_patch"),
+            latent=g.out(f"{p}_penc", 2),
+        )
+        tile_model = g.out(f"{p}_patch")
+        pos, neg = g.out(f"{p}_penc", 0), g.out(f"{p}_penc", 1)
+        if batch > 1:
+            g.add(f"{p}_venc", "VAEEncode", pixels=image, vae=vae)
+            g.add(f"{p}_lat", "SetLatentNoiseMask", samples=g.out(f"{p}_venc"), mask=mask)
+            latent = g.out(f"{p}_lat")
+        else:
+            latent = g.out(f"{p}_penc", 3)
+    elif inpaint_ckpt:
+        g.add(
+            f"{p}_enc",
+            "InpaintModelConditioning",
+            positive=positive,
+            negative=negative,
+            vae=vae,
+            pixels=image,
+            mask=mask,
+            noise_mask=True,
+        )
+        tile_model, pos, neg, latent = model, g.out(f"{p}_enc", 0), g.out(f"{p}_enc", 1), g.out(f"{p}_enc", 2)
+    else:
+        g.add(f"{p}_venc", "VAEEncode", pixels=image, vae=vae)
+        g.add(f"{p}_lat", "SetLatentNoiseMask", samples=g.out(f"{p}_venc"), mask=mask)
+        tile_model, pos, neg, latent = model, positive, negative, g.out(f"{p}_lat")
+    g.add(
+        f"{p}_sampler",
+        "KSampler",
+        model=tile_model,
+        positive=pos,
+        negative=neg,
+        latent_image=latent,
+        seed=int(seed),
+        steps=int(req.sampling.steps),
+        cfg=float(req.sampling.cfg),
+        sampler_name=req.sampling.sampler,
+        scheduler=req.sampling.scheduler,
+        denoise=float(denoise),
+    )
+    g.add(f"{p}_decode", "VAEDecode", samples=g.out(f"{p}_sampler"), vae=vae)
+    out = g.out(f"{p}_decode")
+    if not refine and caps.inpaint_nodes and req.color_match > 0:
+        g.add(
+            f"{p}_cm",
+            "INPAINT_ColorMatch",
+            target=out,
+            reference=reference,
+            exclude_mask=mask,
+            strength=float(req.color_match),
+        )
+        out = g.out(f"{p}_cm")
+    if scaled:
+        out = _scale_image(g, f"{p}_back", out, r.width, r.height)
+    g.add(
+        f"{p}_paste",
+        "ImageCompositeMasked",
+        destination=dest,
+        source=out,
+        x=r.x,
+        y=r.y,
+        resize_source=False,
+        mask=tmask,
+    )
+    return g.out(f"{p}_paste")
+
+
+def build_inpaint(
+    req: InpaintRequest,
+    image_ref: str,
+    mask_ref: str,
+    seed: int,
+    caps: Capabilities,
+    filename_prefix: str = "stable-boy/fill",
+) -> dict:
+    """Build the inpaint / outpaint graph.
+
+    ``image_ref`` and ``mask_ref`` are the names returned by ``/upload/image``
+    (``subfolder/filename``). Returns the API-format prompt dict.
+
+    A ``PlannedInpaintRequest`` with ``tiles`` runs the main pass as a chain of
+    overlapping tiles (each sees the result of the earlier ones); with
+    ``refine_tiles`` the result is composited over the original at full
+    resolution and repainted there at ``refine_denoise``, tile by tile. Both
+    need comfyui-inpaint-nodes; without them the single pass is used.
+    """
+    g = Graph()
+    model, clip, vae = _checkpoint(g, req.model.checkpoint)
+    positive, negative = _prompts(g, clip, req.prompt, req.negative)
+    g.add("load_image", "LoadImage", image=image_ref)
+    g.add("load_mask", "LoadImage", image=mask_ref)
+    tiles, refine_tiles = _tiles(req), _refine_tiles(req)
+    if not caps.inpaint_nodes:
+        tiles, refine_tiles = (), ()
+    batch = max(1, int(req.sampling.batch))
+    if not tiles:
+        out = _single_pass(g, req, caps, model, positive, negative, vae, seed)
+        if not refine_tiles:
+            g.add(OUTPUT_NODE, "SaveImage", images=out, filename_prefix=filename_prefix)
+            return g.to_dict()
+    full_mask = _full_mask(g, req)
+    dest = g.out("load_image", 0)
+    if batch > 1:
+        g.add("dest_batch", "RepeatImageBatch", image=dest, amount=batch)
+        dest = g.out("dest_batch")
+    g.add("tdiff", "DifferentialDiffusion", model=model)
+    diff_model = g.out("tdiff")
+    if tiles:
+        if req.model.uses_fooocus:
+            g.add(
+                "fooocus_patch",
+                "INPAINT_LoadFooocusInpaint",
+                head=req.model.fooocus_head,
+                patch=req.model.fooocus_patch,
+            )
+        for i, tile in enumerate(tiles):
+            dest = _tile_pass(
+                g,
+                f"t{i}",
+                req,
+                caps,
+                dest,
+                full_mask,
+                tile,
+                diff_model,
+                positive,
+                negative,
+                vae,
+                seed,
+                float(req.sampling.denoise),
+                False,
+                batch,
+            )
+    else:
+        g.add(
+            "main_paste",
+            "ImageCompositeMasked",
+            destination=dest,
+            source=out,
+            x=0,
+            y=0,
+            resize_source=False,
+            mask=full_mask,
+        )
+        dest = g.out("main_paste")
+    for i, tile in enumerate(refine_tiles):
+        dest = _tile_pass(
+            g,
+            f"r{i}",
+            req,
+            caps,
+            dest,
+            full_mask,
+            tile,
+            diff_model,
+            positive,
+            negative,
+            vae,
+            seed,
+            float(getattr(req, "refine_denoise", 0.4)),
+            True,
+            batch,
+        )
+    g.add(OUTPUT_NODE, "SaveImage", images=dest, filename_prefix=filename_prefix)
     return g.to_dict()
 
 

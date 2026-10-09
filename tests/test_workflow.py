@@ -48,7 +48,13 @@ class InpaintGraphTests(unittest.TestCase):
         graph = w.build_inpaint(_req(grow=10, feather=20), "i", "m", 1, w.Capabilities(True))
         self.assertEqual(graph["mask_grow"]["class_type"], "INPAINT_ExpandMask")
         self.assertEqual(graph["mask_grow"]["inputs"]["grow"], 10)
-        self.assertEqual(graph["mask_grow"]["inputs"]["blur"], 10)  # blur is capped at grow
+        # an SD 1.5 inpainting fill keeps a hard model mask (a blurred band became a pale frame)
+        self.assertEqual(graph["mask_grow"]["inputs"]["blur"], 0)
+        sdxl = ModelSpec(checkpoint="x.safetensors", arch="sdxl")
+        soft = w.build_inpaint(_req(grow=10, feather=20, model=sdxl), "i", "m", 1, w.Capabilities(True))
+        self.assertEqual(soft["mask_grow"]["inputs"]["blur"], 10)  # blur is capped at grow
+        expand = w.build_inpaint(_req(grow=10, feather=20, mode="expand"), "i", "m", 1, w.Capabilities(True))
+        self.assertEqual(expand["mask_grow"]["inputs"]["blur"], 10)  # expand keeps its blur
         lama = ModelSpec(arch="inpaint_model", inpaint_model="big-lama.pt")
         hard = w.build_inpaint(_req(grow=10, feather=20, model=lama), "i", "m", 1, w.Capabilities(True))
         self.assertEqual(hard["mask_grow"]["inputs"]["blur"], 0)  # removal models get a hard mask
@@ -335,3 +341,64 @@ class ProbeSafePngTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TimeoutEstimateTests(unittest.TestCase):
+    """Automatic request timeout of the ComfyUI backend (cold model loads)."""
+
+    def _backend(self, last, root=None):
+        from stable_boy.backends import comfy
+
+        class Client:
+            def last_model_files(self):
+                if isinstance(last, Exception):
+                    raise last
+                return set(last)
+
+        return comfy.ComfyBackend(client=Client(), models_root=root)
+
+    def test_cold_when_the_server_last_ran_another_model(self):
+        model = ModelSpec(checkpoint="a.safetensors", arch="sd15")
+        warm = self._backend({"a.safetensors"})._estimate(25, 1, 512 * 512, model)
+        cold = self._backend({"b.safetensors"})._estimate(25, 1, 512 * 512, model)
+        fresh = self._backend(set())._estimate(25, 1, 512 * 512, model)
+        self.assertLess(warm, 600)
+        self.assertGreaterEqual(cold, 600)
+        self.assertGreaterEqual(fresh, 600)
+
+    def test_unknown_history_counts_as_cold(self):
+        from stable_boy.comfy_api import ComfyApiError
+
+        model = ModelSpec(checkpoint="a.safetensors", arch="sd15")
+        self.assertGreaterEqual(self._backend(ComfyApiError("down"))._estimate(25, 1, 1, model), 600)
+
+    def test_model_size_on_disk_counts(self):
+        import tempfile
+        from pathlib import Path
+
+        from stable_boy.backends import comfy
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "checkpoints").mkdir()
+            (root / "checkpoints" / "a.safetensors").write_bytes(b"x" * 1000)
+            (root / "inpaint").mkdir()
+            (root / "inpaint" / "p.patch").write_bytes(b"x" * 24)
+            spec = ModelSpec(checkpoint="a.safetensors", arch="sdxl", fooocus_head="h.pth", fooocus_patch="p.patch")
+            self.assertEqual(comfy.model_files(spec), {"a.safetensors", "h.pth", "p.patch"})
+            self.assertEqual(comfy.model_bytes(root, comfy.model_files(spec)), 1024)
+            self.assertEqual(comfy.model_bytes(None, {"a.safetensors"}), 0)
+
+    def test_last_model_files_reads_the_latest_prompt(self):
+        from stable_boy.comfy_api import ComfyClient
+
+        client = ComfyClient("http://127.0.0.1:1")
+        graph = {
+            "ckpt": {"class_type": "CheckpointLoaderSimple", "inputs": {"ckpt_name": "a.safetensors"}},
+            "pos": {"class_type": "CLIPTextEncode", "inputs": {"text": "x"}},
+            "p": {"class_type": "INPAINT_LoadFooocusInpaint", "inputs": {"head": "h.pth", "patch": "p.patch"}},
+        }
+        client._json = lambda method, path, payload=None: {"id": {"prompt": [0, "id", graph, {}, []]}}
+        self.assertEqual(client.last_model_files(), {"a.safetensors", "h.pth", "p.patch"})
+        client._json = lambda method, path, payload=None: {}
+        self.assertEqual(client.last_model_files(), set())

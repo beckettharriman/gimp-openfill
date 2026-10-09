@@ -113,7 +113,7 @@ class App:
         timeout = float(self.settings.request_timeout or 0)
         if self.settings.backend == "a1111":
             return A1111Backend(url, timeout, self.log)
-        return ComfyBackend(url, request_timeout=timeout, logger=self.log)
+        return ComfyBackend(url, request_timeout=timeout, logger=self.log, models_root=self.models_root)
 
     def refresh_models_cache(self, health: HealthStatus) -> None:
         if not health.ok:

@@ -198,6 +198,20 @@ class ComfyClient:
         info = self._json("GET", f"/history/{prompt_id}")
         return info.get(prompt_id)
 
+    def last_model_files(self) -> set[str]:
+        """Model file names used by the most recent prompt in the server's
+        history (empty when it has none, e.g. right after a start)."""
+        info = self._json("GET", "/history?max_items=1")
+        names: set[str] = set()
+        for entry in (info or {}).values():
+            prompt = entry.get("prompt") if isinstance(entry, dict) else None
+            graph = prompt[2] if isinstance(prompt, list) and len(prompt) > 2 else {}
+            for node in (graph or {}).values():
+                for key, value in ((node or {}).get("inputs") or {}).items():
+                    if key in MODEL_INPUTS and isinstance(value, str):
+                        names.add(value)
+        return names
+
     def queue(self) -> dict:
         """GET /queue (running and pending prompts)."""
         return self._json("GET", "/queue")
@@ -230,8 +244,13 @@ class ComfyClient:
         poll_interval: float = 1.0,
         preview: Callable[[bytes], None] | None = None,
         cancel: Callable[[], bool] | None = None,
+        activity_extension: float = 0.0,
     ) -> dict:
         """Block until ``prompt_id`` finishes; return ``history[prompt_id]``.
+
+        With ``activity_extension`` the deadline moves to at least that many
+        seconds after every websocket message (progress, node or preview), so
+        a job that keeps reporting progress is never cut off by the estimate.
 
         Uses the websocket for step-level progress (and binary preview frames,
         handed raw to ``preview``) and falls back to polling ``/history`` when
@@ -273,6 +292,8 @@ class ComfyClient:
                     except (WebSocketError, OSError):
                         ws = None
                         opcode, payload = None, b""
+                    if opcode is not None and activity_extension > 0:
+                        deadline = max(deadline, time.monotonic() + activity_extension)
                     if opcode == OP_BINARY and preview is not None:
                         try:
                             preview(payload)
@@ -347,6 +368,12 @@ class ComfyClient:
                     continue
                 images.append(self.view(img["filename"], img.get("subfolder", ""), "output"))
         return images
+
+
+# Node inputs that name a model file (used to tell a warm model from a cold one).
+MODEL_INPUTS = frozenset(
+    ("ckpt_name", "unet_name", "clip_name", "clip_name1", "clip_name2", "vae_name", "model_name", "head", "patch")
+)
 
 
 def _status_message(status: dict) -> str:

@@ -243,6 +243,16 @@ class MiscTests(unittest.TestCase):
         self.assertGreaterEqual(g.estimate_timeout(1, 1, 1000), 120)
         self.assertGreater(g.estimate_timeout(50, 4, 1024 * 1024), g.estimate_timeout(10, 1, 1024 * 1024))
 
+    def test_timeout_covers_a_cold_model_load(self):
+        warm = g.estimate_timeout(25, 1, 1024 * 1024)
+        # a 7 GB model adds its load time from disk
+        self.assertGreater(g.estimate_timeout(25, 1, 1024 * 1024, model_bytes=7_000_000_000), warm + 100)
+        # the first request with a model gets at least ten minutes
+        self.assertGreaterEqual(g.estimate_timeout(25, 1, 1024 * 1024, cold=True), 600)
+        self.assertGreaterEqual(g.estimate_timeout(1, 1, 1000, cold=True), g.COLD_TIMEOUT_FLOOR)
+        # FLUX Q4 cold case: 153 s was not enough
+        self.assertGreaterEqual(g.estimate_timeout(28, 1, 1024 * 1024, model_bytes=12_000_000_000, cold=True), 600)
+
 
 class FillPolicyTests(unittest.TestCase):
     image = g.Rect(0, 0, 1024, 768)
@@ -286,7 +296,7 @@ class FillPolicyTests(unittest.TestCase):
         self.assertEqual(g.prefill_for(True, 1.0, "sd15"), ("border", "navier-stokes"))
         self.assertEqual(g.prefill_for(True, 1.0, "sdxl"), ("border", "navier-stokes"))
         self.assertEqual(g.prefill_for(False, 0.6, "sd15"), ("blur", "navier-stokes"))
-        self.assertEqual(g.prefill_for(False, 1.0, "sd15"), ("border", "neutral"))
+        self.assertEqual(g.prefill_for(False, 1.0, "sd15"), ("border", "navier-stokes"))
         # the SDXL tier paints a framed picture into a flat grey hole
         self.assertEqual(g.prefill_for(False, 1.0, "sdxl"), ("border", "navier-stokes"))
 
