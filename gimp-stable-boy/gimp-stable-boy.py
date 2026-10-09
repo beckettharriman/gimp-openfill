@@ -229,7 +229,7 @@ def _generation_dialog(kind: str, procedure, config, image, hooks: dict) -> bool
         image_size=image_size, selection_size=selection_size,
         default_size=(settings.txt2img_width, settings.txt2img_height),
         active_prompt_free=prompt_free, active_name=active_name, show_advanced=bool(hooks.get("advanced")),
-        test_text=hooks.get("type"), test_key=hooks.get("press"))
+        test_text=hooks.get("type"), test_key=hooks.get("press"), test_open_recent=bool(hooks.get("open_recent")))
     if result is None:
         return False
     for key, value in result.items():

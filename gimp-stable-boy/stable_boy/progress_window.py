@@ -52,6 +52,77 @@ def _window_rect_from_handle(handle_bytes) -> Optional[tuple[int, int, int, int]
         return None
 
 
+class _NoActivate:
+    """Windows: keep the progress window from taking the keyboard focus.
+
+    GTK's focus-on-map hint is not enough there (keep-above re-activates the
+    window), so the native window gets WS_EX_NOACTIVATE before it is shown
+    and, should it still become the foreground window, the previous
+    foreground window is given back its focus. Clicks (Cancel) still work.
+    """
+
+    GWL_EXSTYLE = -20
+    WS_EX_NOACTIVATE = 0x08000000
+
+    def __init__(self, title: str) -> None:
+        self.title = title
+        self.hwnd = 0
+        self.previous = 0
+        if sys.platform != "win32":
+            return
+        try:
+            self.user32 = ctypes.windll.user32  # type: ignore[attr-defined]
+            self.previous = self.user32.GetForegroundWindow()
+        except Exception:  # noqa: BLE001
+            self.previous = 0
+
+    def _find(self) -> int:
+        import os
+        user32 = self.user32
+        found = []
+        proto = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)
+
+        def cb(hwnd, _):
+            pid = ctypes.c_ulong()
+            user32.GetWindowThreadProcessId(ctypes.c_void_p(hwnd), ctypes.byref(pid))
+            if pid.value != os.getpid():
+                return True
+            buf = ctypes.create_unicode_buffer(512)
+            user32.GetWindowTextW(ctypes.c_void_p(hwnd), buf, 512)
+            if buf.value == self.title:
+                found.append(hwnd)
+                return False
+            return True
+        user32.EnumWindows(proto(cb), None)
+        return found[0] if found else 0
+
+    def before_show(self) -> None:
+        if sys.platform != "win32":
+            return
+        try:
+            self.hwnd = self._find()
+            if self.hwnd:
+                get = getattr(self.user32, "GetWindowLongPtrW", self.user32.GetWindowLongW)
+                put = getattr(self.user32, "SetWindowLongPtrW", self.user32.SetWindowLongW)
+                get.restype = ctypes.c_ssize_t
+                put.argtypes = (ctypes.c_void_p, ctypes.c_int, ctypes.c_ssize_t)
+                style = get(ctypes.c_void_p(self.hwnd), self.GWL_EXSTYLE)
+                put(ctypes.c_void_p(self.hwnd), self.GWL_EXSTYLE, style | self.WS_EX_NOACTIVATE)
+        except Exception:  # noqa: BLE001 - focus handling is best effort
+            self.hwnd = 0
+
+    def after_show(self) -> bool:
+        if sys.platform != "win32" or not self.previous:
+            return False
+        try:
+            fg = self.user32.GetForegroundWindow()
+            if self.hwnd and fg == self.hwnd:
+                self.user32.SetForegroundWindow(ctypes.c_void_p(self.previous))
+        except Exception:  # noqa: BLE001
+            pass
+        return False
+
+
 class ProgressWindow(Gtk.Window):
     """Non-modal, always-on-top status window for one operation."""
 
@@ -134,8 +205,12 @@ class ProgressWindow(Gtk.Window):
         box.pack_start(buttons, False, False, 0)
         self.connect("configure-event", self._configure)
         self.connect("delete-event", lambda *_: True)  # only Close/finish close it
+        self._no_activate = _NoActivate(self.get_title())
+        self.realize()  # native window exists now, not yet shown
+        self._no_activate.before_show()
         self.show_all()
         self._place(position, anchor_handle)
+        GLib.timeout_add(150, self._no_activate.after_show)
         self._timer = GLib.timeout_add(500, self._tick)
 
     # placement -----------------------------------------------------------

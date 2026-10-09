@@ -101,14 +101,40 @@ def _spin(lower: float, upper: float, value: float, step: float = 1, digits: int
     return spin
 
 
+def _gimp_window_rect() -> tuple[int, int, int, int] | None:
+    """Screen rectangle of the GIMP image window this procedure runs for
+    (Windows only, through the native handle GIMP reports)."""
+    try:
+        gi.require_version("Gimp", "3.0")
+        from gi.repository import Gimp
+        from .progress_window import _window_rect_from_handle
+        data = Gimp.progress_get_window_handle()
+        return _window_rect_from_handle(data.get_data() if data is not None else None)
+    except Exception:  # noqa: BLE001 - placement is best effort
+        return None
+
+
 def set_transient(window: Gtk.Window) -> None:
-    """Keep plug-in windows above the GIMP image window (best effort)."""
+    """Keep plug-in windows above the GIMP image window and centre them on it
+    (best effort; falls back to the centre of the screen). Call before the
+    window is shown."""
+    window.set_position(Gtk.WindowPosition.CENTER)
     try:
         gi.require_version("GimpUi", "3.0")
         from gi.repository import GimpUi
         GimpUi.window_set_transient(window)
     except Exception:  # noqa: BLE001 - outside GIMP (or older API): no parent
         pass
+    rect = _gimp_window_rect()
+    if rect is None:
+        return
+    scale = max(1, window.get_scale_factor())
+    x, y, w, h = (v // scale for v in rect)
+    _min, natural = window.get_preferred_size()
+    width = max(natural.width, window.get_default_size()[0])
+    height = max(natural.height, window.get_default_size()[1])
+    window.set_position(Gtk.WindowPosition.NONE)
+    window.move(max(0, x + (w - width) // 2), max(0, y + (h - height) // 3))
 
 
 def autoclose(dialog: Gtk.Dialog, seconds: float, response=CANCEL) -> None:
@@ -323,7 +349,7 @@ class GenerationDialog(Gtk.Dialog):
         if kind == "fill":
             body.pack_start(_dim(ui_text.SHORTCUT_HINT), False, False, 0)
 
-        self.show_all()
+        area.show_all()  # the window itself is shown by run(), after placement
         if self.remove_radio is not None and self.remove_radio.get_active():
             self.stack.set_visible_child_name("remove")
         else:
@@ -550,12 +576,14 @@ class GenerationDialog(Gtk.Dialog):
 
 def run_generation_dialog(kind: str, values: dict, history: list[str], models: list[tuple[str, str]],
                           autoclose_seconds: float = 0, test_text: str | None = None,
-                          test_key: str | None = None, **kwargs) -> dict | None:
+                          test_key: str | None = None, test_open_recent: bool = False, **kwargs) -> dict | None:
     """Show the dialog; the collected values, or None when cancelled."""
     dialog = GenerationDialog(kind, values, history, models, **kwargs)
     set_transient(dialog)
     autoclose(dialog, autoclose_seconds)
     scripted_input(dialog, dialog.prompt, test_text, test_key)
+    if test_open_recent:
+        GLib.timeout_add(1200, lambda: (dialog.prompt.recent.set_active(True), False)[1])
     try:
         while True:
             response = dialog.run()
@@ -657,7 +685,7 @@ class SettingsDialog(Gtk.Dialog):
             except Exception as err:  # noqa: BLE001 - the General page must still work
                 self.notebook.append_page(_dim(f"The Models tab could not be opened: {err}", small=False),
                                           Gtk.Label(label="Models"))
-        self.show_all()
+        self.get_content_area().show_all()  # shown by run(), after placement
 
     # building ------------------------------------------------------------
 

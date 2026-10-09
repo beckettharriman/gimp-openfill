@@ -17,7 +17,11 @@ rewrites that JSON file before each call (the plug-in re-reads it), so the
 hooks differ per dialog: ``autoclose`` answers Cancel after N seconds,
 ``settings_tab``, ``advanced`` (expanders open), ``mode`` ("remove"),
 ``fake_variations`` (picker with tinted copies of the selection) and
-``progress_demo`` (the real progress window fed with scripted steps).
+``progress_demo`` (the real progress window fed with scripted steps),
+``type`` / ``press`` (scripted typing and a key press) and ``dry_run``
+(record the procedure config instead of generating). SB_TEST_MENU=1 also
+captures the Filters > AI menu (sends keys to this GIMP window only).
+SB_REPO is the checkout to use, SB_TEST_OUT the screenshot folder.
 
 Each window is captured by a PowerShell helper (written next to the output)
 that finds the window by its exact title among windows of processes whose
@@ -38,8 +42,7 @@ import gi
 gi.require_version("Gimp", "3.0")
 from gi.repository import Gimp, Gio  # noqa: E402
 
-REPO = os.environ.get("SB_REPO", os.path.dirname(os.path.dirname(os.path.abspath(
-    globals().get("__file__", r"C:\AI\overnight-scratch\ux-worktree\tests\x.py")))))
+REPO = os.environ.get("SB_REPO", r"C:\repos\gimp-stable-boy")
 OUT = os.environ.get("SB_TEST_OUT", os.path.join(REPO, "docs", "screenshots"))
 HOOKS = os.environ.get("SB_TEST_UI_FILE", "")
 IMAGE = os.environ.get("SB_TEST_IMAGE", os.path.join(REPO, "tests", "data", "test-scene.png"))
@@ -51,7 +54,8 @@ report = {"started": time.strftime("%Y-%m-%d %H:%M:%S"), "gimp_pid": GIMP_PID, "
           "cases": []}
 
 CAPTURE_PS1 = r'''
-param([string]$Title, [string]$Out, [int]$ParentPid, [string]$DelaysMs = "2500", [int]$TimeoutSec = 90,
+param([string]$Title, [string]$Out, [int]$ParentPid, [string]$DelaysMs = "2500", [int]$Screen = 0, [int]$ClickCancel = 0,
+      [int]$TimeoutSec = 90,
       [int]$MaxWidth = 1600)
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Drawing
@@ -69,6 +73,9 @@ public static class SbWin {
   [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr h, out RECT r);
   [DllImport("user32.dll")] public static extern bool PrintWindow(IntPtr h, IntPtr hdc, uint flags);
   [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
+  [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+  [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
+  [DllImport("user32.dll")] public static extern void mouse_event(uint f, int x, int y, uint d, UIntPtr e);
   [DllImport("dwmapi.dll")] public static extern int DwmGetWindowAttribute(IntPtr h, int a, out RECT r, int size);
   public static IntPtr Find(string title, uint[] pids) {
     IntPtr found = IntPtr.Zero;
@@ -105,7 +112,10 @@ foreach ($d in ($DelaysMs -split ",")) {
   if ($w -le 0 -or $h -le 0) { "EMPTY RECT: $Title"; exit 3 }
   $bmp = New-Object System.Drawing.Bitmap $w, $h
   $g = [System.Drawing.Graphics]::FromImage($bmp)
-  $hdc = $g.GetHdc(); $ok = [SbWin]::PrintWindow($hwnd, $hdc, 2); $g.ReleaseHdc($hdc); $g.Dispose()
+  if ($Screen -eq 1) { $g.CopyFromScreen($r.L, $r.T, 0, 0, $bmp.Size); $ok = "screen" }
+  else { $hdc = $g.GetHdc(); $ok = [SbWin]::PrintWindow($hwnd, $hdc, 2); $g.ReleaseHdc($hdc) }
+  $g.Dispose()
+  $focused = ([SbWin]::GetForegroundWindow() -eq $hwnd)
   $crop = New-Object System.Drawing.Rectangle ($f.L - $r.L), ($f.T - $r.T), ($f.R - $f.L), ($f.B - $f.T)
   $img = $bmp.Clone($crop, $bmp.PixelFormat); $bmp.Dispose()
   if ($img.Width -gt $MaxWidth) {
@@ -117,14 +127,121 @@ foreach ($d in ($DelaysMs -split ",")) {
   }
   $name = if ($i -eq 0) { $Out } else { $Out -replace "\.png$", "-$i.png" }
   $img.Save($name, [System.Drawing.Imaging.ImageFormat]::Png)
-  "saved $name $($img.Width)x$($img.Height) printwindow=$ok rect=$($r.L),$($r.T),$w,$h"
+  "saved $name $($img.Width)x$($img.Height) printwindow=$ok rect=$($r.L),$($r.T),$w,$h foreground=$focused"
   $img.Dispose()
   $i++
 }
+if ($ClickCancel -eq 1) {
+  # a real mouse click on the Cancel button (bottom right of the progress window)
+  $r = New-Object SbWin+RECT; [SbWin]::GetWindowRect($hwnd, [ref]$r) | Out-Null
+  [SbWin]::SetCursorPos($r.R - 70, $r.B - 30) | Out-Null; Start-Sleep -Milliseconds 300
+  [SbWin]::mouse_event(2, 0, 0, 0, [UIntPtr]::Zero); Start-Sleep -Milliseconds 80; [SbWin]::mouse_event(4, 0, 0, 0, [UIntPtr]::Zero)
+  Start-Sleep -Milliseconds 700
+  $w = $r.R - $r.L; $h = $r.B - $r.T
+  $bmp = New-Object System.Drawing.Bitmap $w, $h
+  $g = [System.Drawing.Graphics]::FromImage($bmp)
+  $hdc = $g.GetHdc(); [SbWin]::PrintWindow($hwnd, $hdc, 2) | Out-Null; $g.ReleaseHdc($hdc); $g.Dispose()
+  $name = $Out -replace "\.png$", "-clicked.png"
+  $bmp.Save($name, [System.Drawing.Imaging.ImageFormat]::Png); $bmp.Dispose()
+  "clicked Cancel, saved $name foreground=$([SbWin]::GetForegroundWindow() -eq $hwnd)"
+}
+'''
+
+# Optional (SB_TEST_MENU=1): open Filters > AI in the GIMP window with the
+# keyboard and capture the screen area. Keys are sent only after checking
+# that the foreground window belongs to this GIMP; the screen must be
+# unlocked. "{UP} {UP} {RIGHT}" assumes AI is the second-to-last entry of
+# the Filters menu (GIMP 3.2.6 with no other plug-in submenus after it).
+MENU_PS1 = r'''
+param([int]$GimpPid, [string]$Out, [string]$Keys = "{UP} {UP} {RIGHT}", [int]$CropW = 1000, [int]$CropH = 860)
+$ErrorActionPreference = "Stop"
+Add-Type -AssemblyName System.Drawing
+Add-Type @"
+using System;
+using System.Text;
+using System.Runtime.InteropServices;
+public static class SbMenu {
+  public delegate bool EnumProc(IntPtr h, IntPtr p);
+  [DllImport("user32.dll")] public static extern bool EnumWindows(EnumProc f, IntPtr p);
+  [DllImport("user32.dll", CharSet=CharSet.Unicode)] public static extern int GetWindowText(IntPtr h, StringBuilder s, int n);
+  [DllImport("user32.dll")] public static extern bool IsWindowVisible(IntPtr h);
+  [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr h, out uint pid);
+  [StructLayout(LayoutKind.Sequential)] public struct RECT { public int L, T, R, B; }
+  [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr h, out RECT r);
+  [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr h);
+  [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+  [DllImport("user32.dll")] public static extern bool PostMessage(IntPtr h, uint m, IntPtr w, IntPtr l);
+  public static void CloseWelcome(uint pid) {
+    EnumWindows(delegate(IntPtr h, IntPtr p) {
+      if (!IsWindowVisible(h)) return true;
+      uint wp; GetWindowThreadProcessId(h, out wp);
+      if (wp != pid) return true;
+      var sb = new StringBuilder(512); GetWindowText(h, sb, 512);
+      if (sb.ToString().StartsWith("Welcome")) PostMessage(h, 0x10, IntPtr.Zero, IntPtr.Zero);
+      return true;
+    }, IntPtr.Zero);
+  }
+  [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
+  [DllImport("user32.dll")] public static extern void keybd_event(byte vk, byte scan, uint flags, UIntPtr extra);
+  public static IntPtr FindMain(uint pid) {
+    IntPtr found = IntPtr.Zero; int best = 0;
+    EnumWindows(delegate(IntPtr h, IntPtr p) {
+      if (!IsWindowVisible(h)) return true;
+      uint wp; GetWindowThreadProcessId(h, out wp);
+      if (wp != pid) return true;
+      var sb = new StringBuilder(512); GetWindowText(h, sb, 512);
+      if (!sb.ToString().Contains("GIMP")) return true;
+      RECT r; GetWindowRect(h, out r); int a = (r.R - r.L) * (r.B - r.T);
+      if (a > best) { best = a; found = h; }
+      return true;
+    }, IntPtr.Zero);
+    return found;
+  }
+}
+"@
+[SbMenu]::SetProcessDPIAware() | Out-Null
+[SbMenu]::CloseWelcome([uint32]$GimpPid); Start-Sleep -Milliseconds 800
+$h = [SbMenu]::FindMain([uint32]$GimpPid)
+if ($h -eq [IntPtr]::Zero) { "no GIMP window for pid $GimpPid"; exit 2 }
+# Alt press/release trick so SetForegroundWindow is allowed, then verify before sending anything
+[SbMenu]::keybd_event(0x12, 0, 0, [UIntPtr]::Zero); [SbMenu]::keybd_event(0x12, 0, 2, [UIntPtr]::Zero)
+[SbMenu]::SetForegroundWindow($h) | Out-Null
+Start-Sleep -Milliseconds 700
+$fg = [SbMenu]::GetForegroundWindow()
+[uint32]$fgpid = 0; [SbMenu]::GetWindowThreadProcessId($fg, [ref]$fgpid) | Out-Null
+if ($fgpid -ne $GimpPid) { "foreground is pid $fgpid, not GIMP ${GimpPid} - not sending keys"; exit 3 }
+$r = New-Object SbMenu+RECT; [SbMenu]::GetWindowRect($h, [ref]$r) | Out-Null
+$ws = New-Object -ComObject WScript.Shell
+$ws.SendKeys("%r")
+Start-Sleep -Milliseconds 1200
+if ($Keys) { foreach ($k in ($Keys -split " ")) { $ws.SendKeys($k); Start-Sleep -Milliseconds 400 }; Start-Sleep -Milliseconds 1000 }
+$w = [Math]::Min($r.R - $r.L, $CropW); $hh = [Math]::Min($r.B - $r.T, $CropH)
+$bmp = New-Object System.Drawing.Bitmap $w, $hh
+$g = [System.Drawing.Graphics]::FromImage($bmp)
+$g.CopyFromScreen($r.L, $r.T, 0, 0, $bmp.Size)
+$g.Dispose()
+$bmp.Save($Out, [System.Drawing.Imaging.ImageFormat]::Png)
+"saved $Out rect=$($r.L),$($r.T),$w,$hh"
+$ws.SendKeys("{ESC}"); Start-Sleep -Milliseconds 200; $ws.SendKeys("{ESC}"); Start-Sleep -Milliseconds 200; $ws.SendKeys("{ESC}")
+
 '''
 
 
-def capture(title, out_name, delays_ms="2500"):
+def capture_menu(out_name):
+    script = os.path.join(WORK, "capture-menu.ps1")
+    with open(script, "w", encoding="utf-8") as fh:
+        fh.write(MENU_PS1)
+    powershell = os.path.join(os.environ.get("SystemRoot", r"C:\Windows"), "System32", "WindowsPowerShell",
+                              "v1.0", "powershell.exe")
+    res = subprocess.run([powershell, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", script,
+                          "-GimpPid", str(GIMP_PID), "-Out", os.path.join(OUT, out_name)],
+                         capture_output=True, text=True, timeout=90,
+                         creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+    report["cases"].append({"case": "menu", "capture": (res.stdout + res.stderr).strip(),
+                            "capture_rc": res.returncode})
+
+
+def capture(title, out_name, delays_ms="2500", screen=False, click_cancel=False):
     script = os.path.join(WORK, "capture-window.ps1")
     with open(script, "w", encoding="utf-8") as fh:
         fh.write(CAPTURE_PS1)
@@ -132,7 +249,8 @@ def capture(title, out_name, delays_ms="2500"):
     powershell = os.path.join(os.environ.get("SystemRoot", r"C:\Windows"), "System32", "WindowsPowerShell",
                               "v1.0", "powershell.exe")
     return subprocess.Popen([powershell, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", script,
-                             "-Title", title, "-Out", out, "-ParentPid", str(GIMP_PID), "-DelaysMs", delays_ms],
+                             "-Title", title, "-Out", out, "-ParentPid", str(GIMP_PID), "-DelaysMs", delays_ms, "-Screen", "1" if screen else "0",
+                             "-ClickCancel", "1" if click_cancel else "0"],
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
                             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
 
@@ -144,11 +262,14 @@ def set_hooks(**hooks):
         json.dump(hooks, fh)
 
 
-def run_case(name, proc_name, title, out_name, hooks, image=None, delays_ms="2500", setup=None, names=()):
+extra_clicked = "progress-window-cancel-clicked.png"
+
+
+def run_case(name, proc_name, title, out_name, hooks, image=None, delays_ms="2500", setup=None, names=(), screen=False, click_cancel=False):
     case = {"case": name, "procedure": proc_name, "title": title, "hooks": hooks}
     try:
         set_hooks(**hooks)
-        cap = capture(title, out_name, delays_ms) if out_name else None
+        cap = capture(title, out_name, delays_ms, screen, click_cancel) if out_name else None
         proc = Gimp.get_pdb().lookup_procedure(proc_name)
         config = proc.create_config()
         config.set_property("run-mode", Gimp.RunMode.INTERACTIVE)
@@ -171,6 +292,9 @@ def run_case(name, proc_name, title, out_name, hooks, image=None, delays_ms="250
             case["capture_rc"] = cap.returncode
         for index, extra in enumerate(names, start=1):  # later shots: <out>-<n>.png -> given names
             src = os.path.join(OUT, out_name[:-4] + f"-{index}.png")
+            if extra == "-clicked":
+                src = os.path.join(OUT, out_name[:-4] + "-clicked.png")
+                extra = extra_clicked
             if os.path.exists(src):
                 os.replace(src, os.path.join(OUT, extra))
     except Exception as err:  # noqa: BLE001
@@ -186,6 +310,8 @@ try:
     image.select_rectangle(Gimp.ChannelOps.REPLACE, 420, 300, 260, 200)
     Gimp.displays_flush()
     time.sleep(2)
+    if os.environ.get("SB_TEST_MENU") == "1":
+        capture_menu("filters-ai-menu.png")
     fill, expand, txt = ("python-fu-stable-boy-generative-fill", "python-fu-stable-boy-generative-expand",
                          "python-fu-stable-boy-text-to-image")
     settings = "python-fu-stable-boy-settings"
@@ -193,8 +319,29 @@ try:
     def set_prompt(text):
         return lambda config: config.set_property("prompt", text)
 
+    # Keyboard behaviour, without generating: Enter in the prompt answers
+    # Generate (dry_run records what reached the procedure config instead of
+    # calling the backend, and the prompt history is updated as in real use);
+    # Escape cancels. Three prompts are entered so Recent prompts has entries.
+    dry_out = os.path.join(WORK, "dry-run.json")
+    for prompt in ("a stone fountain in the middle of the lawn", "a small wooden cabin with a red roof",
+                   "a red door with brass handles"):
+        if os.path.exists(dry_out):
+            os.remove(dry_out)
+        run_case("keys-enter", fill, "Generative Fill", None,
+                 {"autoclose": 12, "type": prompt, "press": "Return", "dry_run": True, "dry_run_out": dry_out},
+                 image)
+        try:
+            with open(dry_out, encoding="utf-8") as fh:
+                report["cases"][-1]["dry_run"] = json.load(fh)
+        except OSError as err:
+            report["cases"][-1]["dry_run"] = f"missing: {err}"
+    run_case("keys-escape", fill, "Generative Fill", None, {"autoclose": 12, "press": "Escape"}, image)
+
     run_case("fill", fill, "Generative Fill", "fill-dialog.png", {"autoclose": 7}, image,
              setup=set_prompt("a weathered wooden bench, soft afternoon light"))
+    run_case("fill-recent", fill, "Generative Fill", "fill-dialog-recent-prompts.png",
+             {"autoclose": 7, "open_recent": True}, image, delays_ms="3000", screen=True)
     run_case("fill-advanced", fill, "Generative Fill", "fill-dialog-advanced.png",
              {"autoclose": 7, "advanced": True}, image)
     run_case("fill-remove", fill, "Generative Fill", "fill-dialog-remove.png",
@@ -211,27 +358,10 @@ try:
     run_case("settings-models-token", settings, "Generative Fill Settings", "settings-models-token.png",
              {"autoclose": 8, "settings_tab": "models", "select_model": "flux1-fill-dev"}, delays_ms="3500")
     run_case("progress", fill, "Stable Boy - Generative Fill", "progress-window-start.png",
-             {"progress_demo": 11}, image, delays_ms="1200,8500", names=("progress-window.png",))
+             {"progress_demo": 11}, image, delays_ms="1200,7500", names=("progress-window.png", "-clicked"),
+             click_cancel=True)
     run_case("picker", fill, "Choose a variation - Generative Fill", "variations-picker.png",
              {"autoclose": 7, "fake_variations": 3}, image)
-    # Keyboard behaviour, without generating: Enter in the prompt answers
-    # Generate (dry_run records what reached the procedure config instead of
-    # calling the backend); Escape cancels.
-    dry_out = os.path.join(WORK, "dry-run.json")
-    if os.path.exists(dry_out):
-        os.remove(dry_out)
-    run_case("keys-enter", fill, "Generative Fill", None,
-             {"autoclose": 12, "type": "a red door with brass handles", "press": "Return", "dry_run": True,
-              "dry_run_out": dry_out}, image, delays_ms="600")
-    try:
-        with open(dry_out, encoding="utf-8") as fh:
-            report["cases"][-1]["dry_run"] = json.load(fh)
-    except OSError as err:
-        report["cases"][-1]["dry_run"] = f"missing: {err}"
-    run_case("keys-escape", fill, "Generative Fill", None,
-             {"autoclose": 12, "press": "Escape"}, image, delays_ms="600")
-    run_case("history", fill, "Generative Fill", "fill-dialog-history.png", {"autoclose": 6}, image,
-             setup=set_prompt(""))
     report["ok"] = all("error" not in c for c in report["cases"])
 except Exception as err:  # noqa: BLE001
     report["ok"] = False
