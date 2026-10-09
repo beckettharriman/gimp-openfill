@@ -402,3 +402,108 @@ class TimeoutEstimateTests(unittest.TestCase):
         self.assertEqual(client.last_model_files(), {"a.safetensors", "h.pth", "p.patch"})
         client._json = lambda method, path, payload=None: {}
         self.assertEqual(client.last_model_files(), set())
+
+
+def _planned(plan: g.FillPlan, model=None, batch=1, **extra) -> w.PlannedInpaintRequest:
+    base = dict(
+        image_png=b"",
+        mask_png=b"",
+        width=plan.context.width,
+        height=plan.context.height,
+        work_width=plan.work.width,
+        work_height=plan.work.height,
+        prompt="red clay roof tiles",
+        negative="blurry",
+        model=model or ModelSpec("sd15.ckpt", template="sd15_inpaint"),
+        sampling=Sampling(steps=20, batch=batch, seed=5),
+        prefill_style="border",
+        tiles=plan.tiles,
+        refine_tiles=plan.refine_tiles,
+        refine_denoise=0.4,
+        full_grow=16,
+        full_blur=12,
+    )
+    base.update(extra)
+    return w.PlannedInpaintRequest(**base)
+
+
+ROOF = g.plan_fill(g.Rect(160, 51, 1620, 89), g.Rect(0, 0, 2000, 1273), g.SD15, "sd15", False, 0.5, refine=True)
+STRAWBERRY = g.plan_fill(g.Rect(730, 1267, 557, 490), g.Rect(0, 0, 1920, 2880), g.SD15, "sd15", False, 0.5, refine=True)
+FOOOCUS = ModelSpec("jugg.safetensors", arch="sdxl", fooocus_head="h.pth", fooocus_patch="p.patch")
+
+
+class TiledGraphTests(unittest.TestCase):
+    def test_tiles_chain_through_the_canvas(self):
+        graph = w.build_inpaint(_planned(ROOF), "i", "m", 9, w.Capabilities(True))
+        n = len(ROOF.tiles)
+        self.assertGreater(n, 1)
+        self.assertEqual(graph["t0_crop"]["inputs"]["image"], ["load_image", 0])
+        for i in range(1, n):
+            self.assertEqual(graph[f"t{i}_crop"]["inputs"]["image"], [f"t{i - 1}_paste", 0])
+            self.assertEqual(graph[f"t{i}_mask"]["class_type"], "MaskComposite")  # earlier work faded out
+        self.assertEqual(graph[w.OUTPUT_NODE]["inputs"]["images"], [f"t{n - 1}_paste", 0])
+        for i in range(n):
+            self.assertEqual(graph[f"t{i}_sampler"]["inputs"]["seed"], 9)  # same seed on every tile
+            self.assertEqual(graph[f"t{i}_sampler"]["inputs"]["denoise"], 1.0)
+            self.assertEqual(graph[f"t{i}_prefill"]["inputs"]["fill"], "navier-stokes")
+        self.assertNotIn("sampler", graph)  # no single pass
+        self.assertEqual(graph["fmask_grow"]["inputs"]["blur"], 0)  # SD 1.5 fill: hard mask
+
+    def test_single_pass_then_refine(self):
+        graph = w.build_inpaint(_planned(STRAWBERRY), "i", "m", 9, w.Capabilities(True))
+        self.assertIn("sampler", graph)
+        self.assertEqual(graph["main_paste"]["inputs"]["source"], ["out_scale", 0])
+        last = len(STRAWBERRY.refine_tiles) - 1
+        self.assertEqual(graph[w.OUTPUT_NODE]["inputs"]["images"], [f"r{last}_paste", 0])
+        self.assertEqual(graph["r0_sampler"]["inputs"]["denoise"], 0.4)
+        self.assertNotIn("r0_prefill", graph)  # refine starts from the generated pixels
+        self.assertNotIn("r0_scale", graph)  # full resolution
+        self.assertEqual(graph["r0_enc"]["class_type"], "InpaintModelConditioning")
+
+    def test_variations_repeat_the_canvas(self):
+        graph = w.build_inpaint(_planned(ROOF, batch=3), "i", "m", 9, w.Capabilities(True))
+        self.assertEqual(graph["dest_batch"]["inputs"]["amount"], 3)
+        self.assertNotIn("batch", graph)
+
+    def test_fooocus_tiles_patch_from_the_first_variation(self):
+        plan = g.plan_fill(g.Rect(160, 51, 1620, 89), g.Rect(0, 0, 2000, 1273), g.SDXL, "sdxl", False, 0.5, refine=True)
+        graph = w.build_inpaint(_planned(plan, model=FOOOCUS, batch=2), "i", "m", 9, w.Capabilities(True))
+        self.assertEqual(graph["t0_first"]["class_type"], "ImageFromBatch")
+        self.assertEqual(graph["t0_penc"]["inputs"]["pixels"], ["t0_first", 0])
+        self.assertEqual(graph["t0_sampler"]["inputs"]["latent_image"], ["t0_lat", 0])
+        self.assertEqual(graph["t0_patch"]["class_type"], "INPAINT_ApplyFooocusInpaint")
+        one = w.build_inpaint(_planned(plan, model=FOOOCUS), "i", "m", 9, w.Capabilities(True))
+        self.assertEqual(one["t0_sampler"]["inputs"]["latent_image"], ["t0_penc", 3])
+
+    def test_sdxl_refine_uses_plain_img2img(self):
+        plan = g.plan_fill(
+            g.Rect(1488, 1200, 792, 1350), g.Rect(0, 0, 2400, 3000), g.SDXL, "sdxl", False, 0.5, refine=True
+        )
+        self.assertTrue(plan.refine_tiles)
+        graph = w.build_inpaint(_planned(plan, model=FOOOCUS), "i", "m", 9, w.Capabilities(True))
+        self.assertEqual(graph["r0_venc"]["class_type"], "VAEEncode")
+        self.assertEqual(graph["r0_sampler"]["inputs"]["model"], ["tdiff", 0])  # no Fooocus patch
+
+    def test_without_inpaint_nodes_falls_back_to_one_pass(self):
+        graph = w.build_inpaint(_planned(ROOF), "i", "m", 9, w.Capabilities(False))
+        self.assertIn("sampler", graph)
+        self.assertFalse(any(k.startswith(("t0_", "r0_")) for k in graph))
+
+    def test_work_pixels_counts_every_pass(self):
+        req = _planned(STRAWBERRY)
+        self.assertGreater(req.work_pixels, req.work_width * req.work_height)
+
+    def test_removal_refine_with_a_generation_checkpoint(self):
+        lama = ModelSpec(arch="inpaint_model", inpaint_model="big-lama.pt")
+        req = _planned(
+            STRAWBERRY,
+            model=lama,
+            refine_model=ModelSpec("sd15.ckpt", template="sd15_inpaint"),
+            refine_prompt="background",
+        )
+        graph = w.build_removal(req, "i", "m", 3, w.Capabilities(True))
+        self.assertEqual(graph["ckpt"]["inputs"]["ckpt_name"], "sd15.ckpt")
+        self.assertEqual(graph["r0_crop"]["inputs"]["image"], ["out_scale", 0])
+        self.assertEqual(graph["pos"]["inputs"]["text"], "background")
+        plain = w.build_removal(_planned(STRAWBERRY, model=lama), "i", "m", 3, w.Capabilities(True))
+        self.assertNotIn("ckpt", plain)

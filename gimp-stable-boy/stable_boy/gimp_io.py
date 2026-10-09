@@ -75,8 +75,9 @@ def _visible_without_channels(image: Gimp.Image) -> Gimp.Layer | None:
         dup.delete()
 
 
-def export_region_png(image: Gimp.Image, rect: Rect, transparent_outside: bool = False) -> bytes:
-    """Composite of all visible layers inside ``rect`` as an opaque RGBA PNG.
+def export_region(image: Gimp.Image, rect: Rect, transparent_outside: bool = False) -> tuple[bytes, bytes]:
+    """Composite of all visible layers inside ``rect``: (opaque RGBA PNG, its
+    raw RGBA pixels).
 
     ``rect`` may extend past the image; with ``transparent_outside`` those
     pixels are transparent (used by expand before the canvas grows),
@@ -95,17 +96,67 @@ def export_region_png(image: Gimp.Image, rect: Rect, transparent_outside: bool =
     expected = rect.width * rect.height * 4
     if len(pixels) != expected:
         raise GimpIoError(f"read {len(pixels)} bytes, expected {expected}")
-    return png.encode(rect.width, rect.height, flatten_over_mean(pixels), 4)
+    flat = flatten_over_mean(pixels)
+    return png.encode(rect.width, rect.height, flat, 4), flat
 
 
-def export_selection_mask_png(image: Gimp.Image, rect: Rect) -> bytes:
-    """The selection channel inside ``rect`` as an 8-bit gray PNG (255 = selected)."""
+def export_region_png(image: Gimp.Image, rect: Rect, transparent_outside: bool = False) -> bytes:
+    """The PNG of ``export_region``."""
+    return export_region(image, rect, transparent_outside)[0]
+
+
+def export_selection_mask(image: Gimp.Image, rect: Rect) -> tuple[bytes, bytes]:
+    """The selection channel inside ``rect``: (8-bit gray PNG, raw bytes); 255 = selected."""
     selection = image.get_selection()
     pixels = _read_buffer(selection.get_buffer(), rect, GRAY)
     expected = rect.width * rect.height
     if len(pixels) != expected:
         raise GimpIoError(f"read {len(pixels)} mask bytes, expected {expected}")
-    return png.encode(rect.width, rect.height, pixels, 1)
+    return png.encode(rect.width, rect.height, pixels, 1), pixels
+
+
+def export_selection_mask_png(image: Gimp.Image, rect: Rect) -> bytes:
+    """The selection channel inside ``rect`` as an 8-bit gray PNG (255 = selected)."""
+    return export_selection_mask(image, rect)[0]
+
+
+def layer_rgba(layer: Gimp.Layer) -> bytes:
+    """The layer's own pixels as RGBA bytes (layer size, mask not applied)."""
+    rect = Rect(0, 0, layer.get_width(), layer.get_height())
+    return _read_buffer(layer.get_buffer(), rect, RGBA, Gegl.AbyssPolicy.NONE)
+
+
+def set_layer_rgba(layer: Gimp.Layer, data: bytes) -> None:
+    """Replace the layer's pixels with RGBA bytes of the layer's size."""
+    rect = Gegl.Rectangle.new(0, 0, layer.get_width(), layer.get_height())
+    buffer = layer.get_buffer()
+    buffer.set(rect, RGBA, data)
+    buffer.flush()
+    layer.update(0, 0, layer.get_width(), layer.get_height())
+
+
+def reorder_variations(
+    image: Gimp.Image, layers: list[Gimp.Layer], order: list[int], base_name: str
+) -> list[Gimp.Layer]:
+    """Put the variation layers of one group in ``order`` (indices into
+    ``layers``, best first): the first becomes the top, visible, selected
+    layer and the names are renumbered "(1)", "(2)", ... in the new order.
+    One undo step; returns the layers in the new order."""
+    if len(layers) < 2 or order == list(range(len(layers))):
+        return layers
+    ordered = [layers[i] for i in order]
+    image.undo_group_start()
+    try:
+        parent = ordered[0].get_parent()
+        for position, layer in enumerate(ordered):
+            image.reorder_item(layer, parent, position)
+            layer.set_name(f"{base_name} ({position + 1})")
+            layer.set_visible(position == 0)
+        image.set_selected_layers([ordered[0]])
+    finally:
+        image.undo_group_end()
+    Gimp.displays_flush()
+    return ordered
 
 
 def mask_png_from_bytes(rect: Rect, pixels: bytes) -> bytes:

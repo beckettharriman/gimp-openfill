@@ -69,6 +69,17 @@ class Settings:
     grow_percent: float = 15.0  # dilation as percent of the selection's larger side (covers object rims)
     feather_percent: float = 6.0  # layer mask feather as percent of the larger side
     prefill: bool = True
+    # Second pass at full resolution over the regenerated area when the fill
+    # was worked below 1:1 (SD 1.5 and SDXL tiers), at this denoise. Off: in
+    # the A/B it made fills softer (SD 1.5) or changed their content (SDXL).
+    refine: bool = False
+    refine_denoise: float = 0.4
+    # Add a scene description of the context (light, colour, grain) to prompted fills.
+    scene_caption: bool = False
+    # Add noise to a fill that is cleaner than the grain around it.
+    grain_match: bool = True
+    # Order several variations best first by cheap quality metrics.
+    rank_variations: bool = True
     max_side_sd15: int = 768
     max_side_sdxl: int = 1024
     txt2img_width: int = 768

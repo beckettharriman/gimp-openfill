@@ -18,8 +18,8 @@ import time
 from dataclasses import replace
 from pathlib import Path
 
+from . import caption, geometry, gimp_io, quality, workflow
 from . import catalog as cat
-from . import geometry, gimp_io, workflow
 from .backend import (
     SETTINGS_MENU,
     Backend,
@@ -388,7 +388,9 @@ class App:
 
     def removal_model_available(self) -> cat.ModelEntry | None:
         """An installed prompt-free removal model (LaMa/MAT), best first."""
-        for mid in ("mat-places512", "lama-big"):
+        # LaMa first: on the judged removal cases it won 19 of 33 against MAT and
+        # almost never invents an object; MAT invents glyphs and figures.
+        for mid in ("lama-big", "mat-places512"):
             try:
                 entry = cat.by_id(self.catalog, mid)
             except cat.CatalogError:
@@ -397,6 +399,39 @@ class App:
             if st.installed and not st.missing_nodes:
                 return entry
         return None
+
+    def _is_removal_model(self, choice: str | None) -> bool:
+        """True when ``choice`` explicitly names a prompt-free removal model."""
+        choice = (choice or "active").strip()
+        if choice == "active" or choice in LEGACY_CHOICES:
+            return False
+        try:
+            return cat.by_id(self.catalog, choice).template == "inpaint_model"
+        except cat.CatalogError:
+            return False
+
+    # Preferred SD 1.5 inpainting checkpoints for Generative Expand, best first.
+    EXPAND_SD15_PREFERENCE = ("dreamshaper-8-inpainting", "sd15-inpainting")
+
+    def expand_model_for(
+        self, entry: cat.ModelEntry | None, model: ModelSpec
+    ) -> tuple[cat.ModelEntry | None, ModelSpec]:
+        """Generative Expand on the SDXL tier was acceptable in 0 of 5 benchmark
+        cases against 5 of 6 for SD 1.5 inpainting; until SDXL expand is
+        re-benchmarked an installed SD 1.5 inpainting checkpoint takes it."""
+        if model.arch != "sdxl":
+            return entry, model
+        try:
+            installed = cat.runnable_installed(self.catalog, self.models_root, self.custom_nodes_dir, "expand")
+        except Exception:  # noqa: BLE001 - keep the chosen model when the catalog cannot be read
+            return entry, model
+        sd15 = [e for e in installed if e.arch == "sd15" and e.template != "inpaint_model"]
+        if not sd15:
+            return entry, model
+        rank = {mid: i for i, mid in enumerate(self.EXPAND_SD15_PREFERENCE)}
+        best = min(sd15, key=lambda e: rank.get(e.id, len(rank)))
+        self.log.info("expand: SDXL model %s -> using SD 1.5 %s", entry.id if entry else model.checkpoint, best.id)
+        return best, cat.model_spec_for(best, self.catalog)
 
     def generative_fill(
         self,
@@ -417,14 +452,18 @@ class App:
         if selection is None:
             self.log.info("fill: refused, nothing selected")
             raise NothingSelected(NO_SELECTION_MESSAGE)
-        if remove:
+        if (remove or not prompt.strip()) and not self._is_removal_model(model_choice):
+            # An empty prompt is a removal too: generation checkpoints (SDXL in 10
+            # of 13 judged cases) repaint the object they were asked to remove,
+            # so LaMa (then MAT) takes it whenever one is installed, unless a
+            # removal model was picked explicitly.
             removal = self.removal_model_available()
             if removal is not None:
-                self.log.info("fill: Remove object -> using %s", removal.id)
+                self.log.info("fill: %s -> using %s", "Remove object" if remove else "empty prompt", removal.id)
                 model_choice = removal.id
             else:
                 self.log.info(
-                    "fill: Remove object requested but no LaMa/MAT installed; using %s with a background prompt",
+                    "fill: removal requested but no LaMa/MAT installed; using %s with a background prompt",
                     model_choice,
                 )
         entry, model = self.resolve_model(model_choice)
@@ -432,12 +471,21 @@ class App:
         full = gimp_io.image_rect(image)
         target = selection
         removal_intent = remove or not prompt.strip() or model.prompt_free
-        ctx = geometry.context_rect(
-            target, full, profile, padding_ratio=geometry.fill_padding(removal_intent, model.prompt_free)
+        refine = (
+            bool(self.settings.refine)
+            and model.effective_template in workflow.REFINE_TEMPLATES
+            and float(self.settings.refine_denoise) > 0
         )
-        ws = geometry.working_size(
-            ctx.width, ctx.height, geometry.fill_profile(profile, ctx, model.arch, removal_intent)
+        plan = geometry.plan_fill(
+            target,
+            full,
+            profile,
+            model.arch,
+            removal_intent,
+            geometry.fill_padding(removal_intent, model.prompt_free),
+            refine=refine,
         )
+        ctx, ws = plan.context, plan.work
         mp = geometry.mask_params(
             target,
             ws.scale,
@@ -475,9 +523,30 @@ class App:
             entry.id if entry else model.checkpoint,
             model.effective_template,
         )
-        image_png = gimp_io.export_region_png(image, ctx)
-        mask_png = gimp_io.export_selection_mask_png(image, ctx)
-        request = InpaintRequest(
+        if plan.tiles:
+            self.log.info(
+                "fill: tiles=%d at scale %.2f: %s",
+                len(plan.tiles),
+                plan.tile_scale,
+                [(t.rect.x, t.rect.y, t.rect.width, t.rect.height, t.work_width, t.work_height) for t in plan.tiles],
+            )
+        if plan.refine_tiles:
+            self.log.info(
+                "fill: refine tiles=%d denoise=%.2f: %s",
+                len(plan.refine_tiles),
+                float(self.settings.refine_denoise),
+                [(t.rect.x, t.rect.y, t.rect.width, t.rect.height) for t in plan.refine_tiles],
+            )
+        image_png, image_rgba = gimp_io.export_region(image, ctx)
+        mask_png, mask_raw = gimp_io.export_selection_mask(image, ctx)
+        if self.settings.scene_caption and not removal_intent and not model.prompt_free:
+            sw, sh, small = caption.sample(ctx.width, ctx.height, image_rgba, 4)
+            _, _, small_mask = caption.sample(ctx.width, ctx.height, mask_raw, 1)
+            description = caption.describe(sw, sh, small, 4, small_mask)
+            if description:
+                prompt = caption.augment(prompt, description)
+                self.log.info("fill: scene description added: %s", description)
+        request = workflow.PlannedInpaintRequest(
             image_png=image_png,
             mask_png=mask_png,
             width=ctx.width,
@@ -495,6 +564,11 @@ class App:
             prefill_style=prefill_style,
             prefill_mode=prefill_mode,
             color_match=color_match,
+            tiles=plan.tiles,
+            refine_tiles=plan.refine_tiles,
+            refine_denoise=float(self.settings.refine_denoise),
+            full_grow=mp.grow_image,
+            full_blur=min(mp.grow_image, mp.feather_image),
         )
         title = "Object Removal" if model.prompt_free else "Generative Fill"
         runner = Runner(
@@ -520,9 +594,74 @@ class App:
         except BaseException as err:
             runner.fail(err)
             raise
+        if self.settings.grain_match and not model.prompt_free:
+            self._match_grain(image, layers, ctx, image_rgba, mask_raw, result.seed)
+        if len(layers) > 1 and self.settings.rank_variations:
+            layers = self._rank_variations(image, layers, ctx, image_rgba, mask_raw, removal_intent, title, prompt)
         runner.done(f"Added layer: {layers[0].get_name()}" if layers else "Done")
         self.log.info("fill: done, seed=%s, %d layer(s)", result.seed, len(layers))
         return layers
+
+    def _match_grain(self, image, layers: list, ctx: Rect, image_rgba: bytes, mask_raw: bytes, seed: int) -> None:
+        """Generated fills come back cleaner than a grainy photo. Measure the
+        noise in flat areas around the selection and inside each generated
+        layer and add the missing part (monochrome Gaussian) to the layer; the
+        layer mask limits it to the fill. Nothing is added on clean photos."""
+        try:
+            started = time.monotonic()
+            ring = quality.noise_sigma(ctx.width, ctx.height, image_rgba, 4, mask_raw, inside=False, step=3)
+            if ring < 1.0:
+                self.log.info("fill: grain %.2f around the selection; nothing to match", ring)
+                return
+            image.undo_group_start()
+            try:
+                for index, layer in enumerate(layers):
+                    if (layer.get_width(), layer.get_height()) != (ctx.width, ctx.height):
+                        continue
+                    pixels = gimp_io.layer_rgba(layer)
+                    inside = quality.noise_sigma(ctx.width, ctx.height, pixels, 4, mask_raw, inside=True, step=3)
+                    add = quality.grain_to_add(ring, inside)
+                    self.log.info("fill: grain ring %.2f, layer %d %.2f, adding %.2f", ring, index + 1, inside, add)
+                    if add > 0:
+                        gimp_io.set_layer_rgba(
+                            layer, quality.add_grain(pixels, 4, add, seed=(int(seed) + index) & 0xFFFF)
+                        )
+            finally:
+                image.undo_group_end()
+            self.log.info("fill: grain matched in %.2f s", time.monotonic() - started)
+        except Exception as err:  # noqa: BLE001 - grain is cosmetic; never lose the result
+            self.log.warning("fill: grain matching skipped: %s", err)
+
+    def _rank_variations(
+        self, image, layers: list, ctx: Rect, image_rgba: bytes, mask_raw: bytes, removal: bool, title: str, prompt: str
+    ) -> list:
+        """Order the variation layers best first (``quality.rank`` on small
+        copies of the context); the best becomes the visible one. Ranking is
+        advisory: any failure keeps the original order."""
+        try:
+            started = time.monotonic()
+            sw, sh, original = caption.sample(ctx.width, ctx.height, image_rgba, 4)
+            _, _, small_mask = caption.sample(ctx.width, ctx.height, mask_raw, 1)
+            candidates = []
+            for layer in layers:
+                if (layer.get_width(), layer.get_height()) != (ctx.width, ctx.height):
+                    return layers
+                cw, ch, data = caption.sample(ctx.width, ctx.height, gimp_io.layer_rgba(layer), 4)
+                candidates.append(quality.Buffer(cw, ch, data, 4))
+            base = quality.Buffer(sw, sh, original, 4)
+            distance = quality.signed_distance(sw, sh, small_mask)
+            scores = [quality.score(base, c, small_mask, removal, distance) for c in candidates]
+            order = sorted(range(len(layers)), key=lambda i: (scores[i].total, i))
+            self.log.info(
+                "fill: ranked variations %s (scores %s) in %.2f s",
+                [i + 1 for i in order],
+                [round(sc.total, 3) for sc in scores],
+                time.monotonic() - started,
+            )
+            return gimp_io.reorder_variations(image, layers, order, _layer_name(title, prompt))
+        except Exception as err:  # noqa: BLE001 - ranking must never lose the result
+            self.log.warning("fill: ranking skipped: %s", err)
+            return layers
 
     def generative_expand(
         self,
@@ -545,7 +684,7 @@ class App:
         the previous one and only the last makes the requested variations.
         """
         self._check_image(image)
-        entry, model = self.resolve_model(model_choice)
+        entry, model = self.expand_model_for(*self.resolve_model(model_choice))
         rounds = geometry.expand_rounds(image.get_width(), image.get_height(), left, top, right, bottom)
         if len(rounds) == 1:
             return self._expand_round(image, prompt, negative, rounds[0], variations, seed, entry, model)

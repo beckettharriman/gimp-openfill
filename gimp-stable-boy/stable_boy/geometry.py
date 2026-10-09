@@ -494,7 +494,9 @@ def layer_mask_grow(mask: MaskParams, removal: bool) -> int:
     covered. A prompted fill grows only by the feather radius (GIMP's feather
     is centred on the edge), so the mask is fully opaque over the selection and
     fades outward; growing further exposes the model's repainted context as a
-    pale band around the fill. Never more than the removal grow.
+    pale band around the fill. Never more than the removal grow. (Showing the
+    whole growth on upscaled fills did not change the clipped watermelon,
+    ladybug and earring cases.)
     """
     if removal:
         return mask.grow_image

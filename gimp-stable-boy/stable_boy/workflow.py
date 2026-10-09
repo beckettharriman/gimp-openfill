@@ -18,7 +18,7 @@ from __future__ import annotations
 import zlib
 from dataclasses import dataclass
 
-from .backend import InpaintRequest, Txt2ImgRequest
+from .backend import InpaintRequest, ModelSpec, Txt2ImgRequest
 
 OUTPUT_NODE = "save"
 
@@ -124,6 +124,10 @@ def _prefill(g: Graph, image: list, mask: list, req: InpaintRequest, caps: Capab
     return g.out("preblur")
 
 
+# Templates whose graph supports the tiled main pass and the refine pass.
+REFINE_TEMPLATES = ("sd15_inpaint", "sdxl_fooocus")
+
+
 @dataclass
 class PlannedInpaintRequest(InpaintRequest):
     """An inpaint request with an optional tiled main pass and an optional
@@ -139,6 +143,11 @@ class PlannedInpaintRequest(InpaintRequest):
     refine_denoise: float = 0.4
     full_grow: int = 0
     full_blur: int = 0
+    # Generation model for the refine pass of a prompt-free removal (LaMa/MAT
+    # work at 256/512 px; the refine pass restores texture at full resolution).
+    refine_model: ModelSpec | None = None
+    refine_prompt: str = ""
+    refine_negative: str = ""
 
     @property
     def work_pixels(self) -> int:
@@ -366,6 +375,25 @@ def _tile_pass(
             latent = g.out(f"{p}_lat")
         else:
             latent = g.out(f"{p}_penc", 3)
+    elif inpaint_ckpt and refine:
+        # Refine on an inpainting checkpoint: its conditioning image shows the
+        # whole tile (an empty conditioning mask), so the model reads the
+        # generated pixels instead of a grey hole; the noise mask alone limits
+        # the change to the regenerated area. With the hole in the
+        # conditioning the refine came back greyer and softer.
+        g.add(f"{p}_nomask", "SolidMask", value=0.0, width=tile.work_width, height=tile.work_height)
+        g.add(
+            f"{p}_enc",
+            "InpaintModelConditioning",
+            positive=positive,
+            negative=negative,
+            vae=vae,
+            pixels=image,
+            mask=g.out(f"{p}_nomask"),
+            noise_mask=False,
+        )
+        g.add(f"{p}_lat", "SetLatentNoiseMask", samples=g.out(f"{p}_enc", 2), mask=mask)
+        tile_model, pos, neg, latent = model, g.out(f"{p}_enc", 0), g.out(f"{p}_enc", 1), g.out(f"{p}_lat")
     elif inpaint_ckpt:
         g.add(
             f"{p}_enc",
@@ -735,8 +763,46 @@ def build_removal(
     out = g.out("remove")
     if req.needs_scaling:
         out = _scale_image(g, "out_scale", out, req.width, req.height)
+    refine_model = getattr(req, "refine_model", None)
+    refine_tiles = _refine_tiles(req)
+    if refine_model is not None and refine_tiles:
+        out = _removal_refine(g, req, caps, out, refine_model, refine_tiles, seed)
     g.add(OUTPUT_NODE, "SaveImage", images=out, filename_prefix=filename_prefix)
     return g.to_dict()
+
+
+def _removal_refine(
+    g: Graph, req: InpaintRequest, caps: Capabilities, removed: list, spec: ModelSpec, tiles, seed: int
+) -> list:
+    """Repaint the removal model's (smooth, low-resolution) fill at full
+    resolution with a generation checkpoint at ``refine_denoise``."""
+    from dataclasses import replace as dc_replace
+
+    model, clip, vae = _checkpoint(g, spec.checkpoint)
+    positive, negative = _prompts(g, clip, getattr(req, "refine_prompt", ""), getattr(req, "refine_negative", ""))
+    full_mask = _full_mask(g, req)
+    g.add("tdiff", "DifferentialDiffusion", model=model)
+    dest = removed
+    rreq = dc_replace(req, model=spec, mode="fill")
+    for i, tile in enumerate(tiles):
+        dest = _tile_pass(
+            g,
+            f"r{i}",
+            rreq,
+            caps,
+            dest,
+            full_mask,
+            tile,
+            g.out("tdiff"),
+            positive,
+            negative,
+            vae,
+            seed,
+            float(getattr(req, "refine_denoise", 0.4)),
+            True,
+            1,
+        )
+    return dest
 
 
 BUILDERS = {
