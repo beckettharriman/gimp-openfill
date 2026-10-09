@@ -474,6 +474,7 @@ try:
         {"autoclose": 7, "fake_variations": 3},
         image,
     )
+    report["cases"][-1]["undo_enabled_after"] = image.undo_is_enabled()
 
     # Picker actions on fake variation layers (no backend): pick #3 and keep,
     # keep all, discard. The layer tree is recorded after each.
@@ -498,6 +499,8 @@ try:
         )
         report["cases"][-1]["layers_before"] = before
         report["cases"][-1]["layers_after"] = tree(image)
+        # the picker freezes the undo stack while previewing; it must be thawed again
+        report["cases"][-1]["undo_enabled_after"] = image.undo_is_enabled()
     report["ok"] = all("error" not in c for c in report["cases"])
 except Exception as err:  # noqa: BLE001
     report["ok"] = False
