@@ -152,10 +152,10 @@ _NEXT_STEPS = (
                                "Generative Fill Settings, or start ComfyUI yourself."),
     ("did not come up", "Next step: try again (the first start can take a few minutes). If it keeps "
                         "failing, read comfyui.log in the stable-boy folder of your GIMP profile."),
-    ("is not answering", "Next step: start the WebUI with --api, or switch the backend in Settings."),
+    ("is not answering", ""),  # the A1111 message already says what to do
     ("ran out of memory", ""),  # describe_error already says what to do
-    ("timed out", "Next step: try a smaller selection or fewer variations, or raise the request timeout "
-                  "in Settings > Advanced generation."),
+    ("timed out", "Next step: try a smaller selection or fewer variations, or raise \"Generation time limit\" "
+                  "in Settings > Connection and troubleshooting."),
     ("was cancelled", "Nothing in the image was changed."),
     ("rejected", "Next step: pick another model under Advanced, or turn on \"Verbose log\" in Settings "
                  "and try again."),
