@@ -154,6 +154,8 @@ def download_notice(manifest: SetupManifest) -> str:
 def default_install_dir(env: Mapping[str, str] | None = None) -> Path:
     """``%LOCALAPPDATA%\\OpenFill\\ComfyUI`` (``~/.openfill/ComfyUI`` elsewhere)."""
     env = os.environ if env is None else env
+    if env.get("OPENFILL_INSTALL_DIR"):  # test hook: install somewhere else than the user's profile
+        return Path(env["OPENFILL_INSTALL_DIR"])
     local = env.get("LOCALAPPDATA")
     if local:
         return Path(local) / "OpenFill" / "ComfyUI"
@@ -235,6 +237,8 @@ def detect_comfy(
     """
     env = os.environ if env is None else env
     home = home or Path.home()
+    if env.get("OPENFILL_NO_FIXED_ROOTS"):  # test hook, same name install.ps1 reads
+        fixed_roots, pinokio_roots = (), ()
     found: list[Candidate] = []
     seen: set[str] = set()
     for path, source in _candidate_paths(env, home, fixed_roots, pinokio_roots):

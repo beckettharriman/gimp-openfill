@@ -878,6 +878,33 @@ class ModelsPanel(Gtk.Box):
             self._dl_window = None
 
 
+def _apply_test_hooks(app: App, panel: ModelsPanel, dialog: Gtk.Dialog) -> None:
+    """Test hook ``models_download``: [model ids] pressed one after another, the dialog closes when they are installed."""
+    from .ui_setup import test_hooks
+
+    ids = list(test_hooks().get("models_download") or [])
+    if not ids:
+        return
+
+    def press() -> bool:
+        for model_id in ids:
+            panel.primary_clicked(model_id)
+        GLib.timeout_add(3000, check)
+        return False
+
+    def check() -> bool:
+        status = app.task_status()
+        busy = status.get("current") or app.server.pending_tasks()
+        history = status.get("history") or []
+        failed = [h for h in history[: len(ids) + 1] if h.get("state") not in ("done", None)]
+        if not busy and (failed or set(ids) <= {m.id for m in app.installed_models()}):
+            dialog.response(Gtk.ResponseType.CLOSE)
+            return False
+        return True
+
+    GLib.timeout_add(4000, press)
+
+
 def run_models_dialog(app: App, message: str = cat.NO_MODEL_MESSAGE, parent: Any = None) -> None:
     """The download manager on its own (first run: no model installed yet).
 
@@ -896,6 +923,8 @@ def run_models_dialog(app: App, message: str = cat.NO_MODEL_MESSAGE, parent: Any
         panel.set_margin_end(12)
     dialog.get_content_area().pack_start(panel, True, True, 0)
     dialog.show_all()
+    if isinstance(panel, ModelsPanel):
+        _apply_test_hooks(app, panel, dialog)
     try:
         dialog.run()
     finally:

@@ -35,6 +35,42 @@ STATE_TEXT = {
 }
 
 
+def test_hooks() -> dict[str, Any]:
+    """Hooks for GUI test runs: the JSON file named by OPENFILL_TEST_UI_FILE (same file as the other dialogs)."""
+    import json
+    import os
+
+    path = os.environ.get("OPENFILL_TEST_UI_FILE")
+    if not path:
+        return {}
+    try:
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+    except (OSError, ValueError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def dump_buttons(dialog: Gtk.Dialog, out_path: str) -> None:
+    """Write the screen position of each button of ``dialog`` (centre, pixels) so a test can click it."""
+    import json
+
+    top_window = dialog.get_window()
+    if top_window is None:
+        return
+    _ok, ox, oy = top_window.get_origin()
+    buttons = {}
+    for child in dialog.get_action_area().get_children():
+        if isinstance(child, Gtk.Button):
+            pos = child.translate_coordinates(
+                dialog, child.get_allocated_width() // 2, child.get_allocated_height() // 2
+            )
+            if pos:
+                buttons[child.get_label() or ""] = [ox + pos[0], oy + pos[1]]
+    with open(out_path, "w", encoding="utf-8") as fh:
+        json.dump({"title": dialog.get_title(), "origin": [ox, oy], "buttons": buttons}, fh)
+
+
 def notice_title() -> str:
     """Heading of the notice."""
     return "ComfyUI is required"
@@ -166,6 +202,19 @@ def _download_with_progress(app: App, install_dir: Path, cpu: bool) -> bool:
     return result["ok"] and app.comfy_ready()
 
 
+def _apply_hooks(dialog: Gtk.Dialog) -> None:
+    """Test hooks ``setup_dump`` (write the button positions) and ``setup_action`` (answer after ``setup_delay`` s)."""
+    hooks = test_hooks()
+    dump = hooks.get("setup_dump")
+    if dump:
+        GLib.timeout_add(1500, lambda: (dump_buttons(dialog, str(dump)), False)[1])
+    action = hooks.get("setup_action")
+    if action:
+        response = {"download": RESP_DOWNLOAD, "cancel": Gtk.ResponseType.CANCEL}[str(action)]
+        delay = int(float(hooks.get("setup_delay", 3)) * 1000)
+        GLib.timeout_add(delay, lambda: (dialog.response(response), False)[1])
+
+
 def ensure_comfy(app: App, message: str = "", parent: Gtk.Window | None = None) -> bool:
     """Make sure a working ComfyUI exists; True when it does afterwards.
 
@@ -179,6 +228,7 @@ def ensure_comfy(app: App, message: str = "", parent: Gtk.Window | None = None) 
     while True:
         try:
             dialog = _Notice(app, parent, message)
+            _apply_hooks(dialog)
         except comfy_setup.SetupError as err:
             gi_message(parent, str(err))
             return False
