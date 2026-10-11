@@ -1,17 +1,18 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Inside GIMP: small-selection removal test. For each model id, open the
 image, select an ellipse, run Generative Fill with an EMPTY prompt (removal
 intent), export the full result and a crop around the selection.
 
 Environment:
-    SB_SS_IMAGE   image path (default tests/data/fabric-button.png)
-    SB_SS_SEL     "x,y,w,h" ellipse selection (default around the synthetic button)
-    SB_SS_MODELS  comma-separated catalog ids (default sd15-inpainting,juggernaut-xl-v9,mat-places512)
-    SB_SS_OUT     output folder
-    SB_SS_SCALE   optional: scale the image by this factor first (e.g. 0.2)
-    SB_SS_REMOVE  "1" to tick the Remove object option when the procedure has it
-    SB_SS_PROMPT  prompt (default empty)
+    OPENFILL_SS_IMAGE   image path (default tests/data/fabric-button.png)
+    OPENFILL_SS_SEL     "x,y,w,h" ellipse selection (default around the synthetic button)
+    OPENFILL_SS_MODELS  comma-separated catalog ids (default sd15-inpainting,juggernaut-xl-v9,mat-places512)
+    OPENFILL_SS_OUT     output folder
+    OPENFILL_SS_SCALE   optional: scale the image by this factor first (e.g. 0.2)
+    OPENFILL_SS_REMOVE  "1" to tick the Remove object option when the procedure has it
+    OPENFILL_SS_PROMPT  prompt (default empty)
 """
 
 import json
@@ -25,15 +26,15 @@ import gi
 gi.require_version("Gimp", "3.0")
 from gi.repository import Gimp, Gio
 
-REPO = os.environ.get("SB_REPO", r"C:\repos\gimp-stable-boy")
-sys.path.insert(0, os.path.join(REPO, "gimp-stable-boy"))
-IMAGE = os.environ.get("SB_SS_IMAGE", os.path.join(REPO, "tests", "data", "fabric-button.png"))
-SEL = tuple(int(v) for v in os.environ.get("SB_SS_SEL", "584,514,52,52").split(","))
-MODELS = os.environ.get("SB_SS_MODELS", "sd15-inpainting,juggernaut-xl-v9,mat-places512").split(",")
-OUT = os.environ.get("SB_SS_OUT", os.path.join(REPO, "docs", "evidence", "small-selection", "run"))
-SCALE = float(os.environ.get("SB_SS_SCALE", "0") or 0)
-REMOVE = os.environ.get("SB_SS_REMOVE", "0") == "1"
-PROMPT = os.environ.get("SB_SS_PROMPT", "")
+REPO = os.environ.get("OPENFILL_REPO", r"C:\repos\gimp-stable-boy")
+sys.path.insert(0, os.path.join(REPO, "gimp-openfill"))
+IMAGE = os.environ.get("OPENFILL_SS_IMAGE", os.path.join(REPO, "tests", "data", "fabric-button.png"))
+SEL = tuple(int(v) for v in os.environ.get("OPENFILL_SS_SEL", "584,514,52,52").split(","))
+MODELS = os.environ.get("OPENFILL_SS_MODELS", "sd15-inpainting,juggernaut-xl-v9,mat-places512").split(",")
+OUT = os.environ.get("OPENFILL_SS_OUT", os.path.join(REPO, "docs", "evidence", "small-selection", "run"))
+SCALE = float(os.environ.get("OPENFILL_SS_SCALE", "0") or 0)
+REMOVE = os.environ.get("OPENFILL_SS_REMOVE", "0") == "1"
+PROMPT = os.environ.get("OPENFILL_SS_PROMPT", "")
 os.makedirs(OUT, exist_ok=True)
 report = {
     "started": time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -86,9 +87,9 @@ def compare_with_raw_output(image, tag):
     import glob
     import shutil
 
-    dumps = sorted(glob.glob(os.path.join(Gimp.directory(), "stable-boy", "tmp", "debug-fill-*")))
+    dumps = sorted(glob.glob(os.path.join(Gimp.directory(), "openfill", "tmp", "debug-fill-*")))
     if not dumps:
-        return {"error": "no debug dump (set SB_DEBUG_DUMP=1 in the launcher environment)"}
+        return {"error": "no debug dump (set OPENFILL_DEBUG_DUMP=1 in the launcher environment)"}
     dump = dumps[-1]
     dest = os.path.join(OUT, f"{tag}-dump")
     shutil.copytree(dump, dest, dirs_exist_ok=True)
@@ -133,7 +134,7 @@ def compare_with_raw_output(image, tag):
 
 def log_tail(n=4):
     try:
-        path = os.path.join(Gimp.directory(), "stable-boy", "stable-boy.log")
+        path = os.path.join(Gimp.directory(), "openfill", "openfill.log")
         with open(path, encoding="utf-8", errors="replace") as fh:
             lines = fh.read().splitlines()
         return [line[26:240] for line in lines[-n:]]
@@ -146,7 +147,7 @@ try:
     sel = SEL if not SCALE else tuple(int(v * SCALE) for v in SEL)
     crop_export(first, sel, os.path.join(OUT, "00-before-crop.png"))
     first.delete()
-    proc = Gimp.get_pdb().lookup_procedure("python-fu-stable-boy-generative-fill")
+    proc = Gimp.get_pdb().lookup_procedure("python-fu-openfill-generative-fill")
     has_remove = proc.find_argument("remove") is not None
     for model_id in MODELS:
         image = open_image()
@@ -191,7 +192,7 @@ except Exception as err:  # noqa: BLE001
 finally:
     with open(os.path.join(OUT, "report.json"), "w", encoding="utf-8") as fh:
         json.dump(report, fh, indent=2)
-    if os.environ.get("SB_TEST_QUIT", "1") == "1":
+    if os.environ.get("OPENFILL_TEST_QUIT", "1") == "1":
         q = Gimp.get_pdb().lookup_procedure("gimp-quit")
         cfg = q.create_config()
         cfg.set_property("force", True)

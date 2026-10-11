@@ -10,7 +10,7 @@ The exact command line is in `batch-command.txt`.
 
 The GIMP profile was shared with other plug-ins (PhotoGIMP, G'MIC, GEGL
 effects); the `gegl_op_nop` / `port:load` warnings in `gimp-stderr.txt` come
-from the LinuxBeaver GEGL effects, not from Stable Boy.
+from the LinuxBeaver GEGL effects, not from OpenFill.
 
 ## Run 1 - exit condition (files in this folder)
 

@@ -8,7 +8,7 @@ import struct
 import threading
 import unittest
 
-from stable_boy.websocket import OP_BINARY, OP_CLOSE, OP_PING, OP_TEXT, WebSocket, WebSocketError, ws_url
+from openfill.websocket import OP_BINARY, OP_CLOSE, OP_PING, OP_TEXT, WebSocket, WebSocketError, ws_url
 
 MAGIC = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
 

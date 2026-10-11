@@ -1,6 +1,6 @@
 # Evidence index, overnight run 2026-10-09
 
-Evidence for Stable Boy 2.0.0-beta.1, recorded in GIMP 3.2.6 on Windows 11
+Evidence for OpenFill 2.0.0-beta.1, recorded in GIMP 3.2.6 on Windows 11
 (RTX 4070 Laptop, 8 GB) with ComfyUI 0.39.0. Every case was run in a real
 GIMP started with `--new-instance` and an isolated profile
 (`GIMP3_DIRECTORY`), calling the registered procedures non-interactively.
@@ -82,30 +82,30 @@ Matrix and photo cases,
 
 ```bat
 set GIMP3_DIRECTORY=<isolated test profile with the plug-in linked in>
-set SB_MATRIX_SPEC=<repo>\docs\evidence\overnight-2026-10-09\matrix-spec.json
-set SB_MATRIX_OUT=<scratch output folder>
-set SB_MATRIX_ONLY=sel-edge-top,mode-fill
+set OPENFILL_MATRIX_SPEC=<repo>\docs\evidence\overnight-2026-10-09\matrix-spec.json
+set OPENFILL_MATRIX_OUT=<scratch output folder>
+set OPENFILL_MATRIX_ONLY=sel-edge-top,mode-fill
 gimp-console-3.2.exe --new-instance --no-splash --console-messages ^
     --batch-interpreter python-fu-eval ^
     -b "exec(open(r'<repo>\tests\gimp_batch_matrix.py').read())"
 ```
 
-`SB_MATRIX_ONLY` is an optional comma-separated list of case ids, `SB_REPO`
-the checkout (default `C:\repos\gimp-stable-boy`), and `SB_TEST_QUIT=0` keeps
+`OPENFILL_MATRIX_ONLY` is an optional comma-separated list of case ids, `OPENFILL_REPO`
+the checkout (default `C:\repos\gimp-stable-boy`), and `OPENFILL_TEST_QUIT=0` keeps
 GIMP open afterwards. The script writes `gimp-report.json` and raw pixel
-buffers per case to `SB_MATRIX_OUT`; the pixel metrics in the curated
+buffers per case to `OPENFILL_MATRIX_OUT`; the pixel metrics in the curated
 `report.json` and the downscaled images were computed from those buffers
 afterwards. For the photo cases, download the photographs listed in
 `photos-README.md` and point the `source` paths in `photo-spec.json` at them.
 
 Robustness cases,
 [tests/gimp_batch_robustness.py](../../../tests/gimp_batch_robustness.py):
-one case per GIMP start, with `SB_ROB_CASE` (the case id) and `SB_ROB_OUT`
-(its output folder). Optional: `SB_ROB_PROC`, `SB_ROB_W`, `SB_ROB_H`,
-`SB_ROB_SEL` (x,y,w,h), `SB_ROB_VARIATIONS`, `SB_ROB_PROMPT`,
-`SB_ROB_MODEL`, `SB_ROB_HOLD` (seconds to stay open, for the idle timeout),
-`SB_ROB_WARMUP`, `SB_ROB_WAIT_GO`, and `SB_ROB_CANCEL_STEP` with
-`SB_TEST_CANCEL_FILE` (press Cancel at a given progress text). The scenario
+one case per GIMP start, with `OPENFILL_ROB_CASE` (the case id) and `OPENFILL_ROB_OUT`
+(its output folder). Optional: `OPENFILL_ROB_PROC`, `OPENFILL_ROB_W`, `OPENFILL_ROB_H`,
+`OPENFILL_ROB_SEL` (x,y,w,h), `OPENFILL_ROB_VARIATIONS`, `OPENFILL_ROB_PROMPT`,
+`OPENFILL_ROB_MODEL`, `OPENFILL_ROB_HOLD` (seconds to stay open, for the idle timeout),
+`OPENFILL_ROB_WARMUP`, `OPENFILL_ROB_WAIT_GO`, and `OPENFILL_ROB_CANCEL_STEP` with
+`OPENFILL_TEST_CANCEL_FILE` (press Cancel at a given progress text). The scenario
 itself (a broken `config.json`, a listener on the port, a killed ComfyUI) is
 set up by hand before or during the run, as described in the case's
 `report.json` and `batch-command.txt`. Keep GIMP's stderr: in console mode

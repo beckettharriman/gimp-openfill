@@ -2,7 +2,7 @@
 
 Script: `tests/gimp_batch_progress.py`, launched in a fresh `gimp-3.2.exe
 --new-instance` while an external PowerShell loop enumerated top-level windows
-every 0.5 to 0.7 s, logged every sighting of a window titled "Stable Boy - ..."
+every 0.5 to 0.7 s, logged every sighting of a window titled "OpenFill - ..."
 and captured it (cropped to the window rectangle, DPI aware). Captures are
 numbered in sighting order.
 
@@ -19,7 +19,7 @@ numbered in sighting order.
 
 ## cancel/ (same fill, Cancel pressed automatically at 30 %)
 
-`SB_TEST_CANCEL_AT=0.3` makes the Runner press the window's Cancel button once
+`OPENFILL_TEST_CANCEL_AT=0.3` makes the Runner press the window's Cancel button once
 sampling passes 30 % (same code path as a click).
 
 | Check | Evidence |

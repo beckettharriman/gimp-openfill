@@ -1,4 +1,5 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 """describe_error: every failure reaches the user in plain words with a next step."""
 
@@ -6,8 +7,8 @@ import inspect
 import re
 import unittest
 
-from stable_boy import backend
-from stable_boy.backend import (
+from openfill import backend
+from openfill.backend import (
     BackendError,
     BackendUnavailable,
     GenerationCancelled,
@@ -84,7 +85,7 @@ class DescribeErrorTests(unittest.TestCase):
 
     def test_model_missing_keeps_the_app_wording(self):
         msg = (
-            "'Stable Diffusion 1.5 Inpainting' is not downloaded yet. Open Filters > AI > Generative "
+            "'Stable Diffusion 1.5 Inpainting' is not downloaded yet. Open Filters > OpenFill > Generative "
             "Fill Settings > Models and press Download."
         )
         self.assertEqual(describe_error(ModelMissing(msg)), f"A model file is missing on the backend: {msg}")
@@ -119,7 +120,7 @@ class ConnectionLostTests(unittest.TestCase):
             return "p1"
 
         def wait_for(self, *args, **kwargs):
-            from stable_boy.comfy_api import ComfyApiError
+            from openfill.comfy_api import ComfyApiError
 
             raise ComfyApiError("GET /history/p1 failed: <urlopen error [WinError 10061] refused>", self.status)
 
@@ -133,7 +134,7 @@ class ConnectionLostTests(unittest.TestCase):
             pass
 
     def run_with(self, client):
-        from stable_boy.backends.comfy import ComfyBackend
+        from openfill.backends.comfy import ComfyBackend
 
         backend_ = ComfyBackend("http://x", client=client, request_timeout=30)
         with self.assertRaises(BackendUnavailable) as ctx:
@@ -141,7 +142,7 @@ class ConnectionLostTests(unittest.TestCase):
         return str(ctx.exception)
 
     def test_server_gone_gives_plain_message(self):
-        from stable_boy.backends.comfy import CONNECTION_LOST
+        from openfill.backends.comfy import CONNECTION_LOST
 
         text = self.run_with(self.FakeClient(alive=False))
         self.assertEqual(text, CONNECTION_LOST)

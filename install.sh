@@ -1,5 +1,6 @@
 #!/bin/sh
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 # Installs the plug-in into the per-user GIMP 3 profile (Linux, Flatpak, macOS)
@@ -17,13 +18,13 @@
 # --link        symlink the repository folder instead of copying (development). Not
 #               recommended for Flatpak: the sandbox may not see the repository.
 # --uninstall   remove the plug-in (folder or symlink). The settings folder
-#               <profile>/stable-boy (config.json with the Hugging Face token, logs)
+#               <profile>/openfill (config.json with the Hugging Face token, logs)
 #               is kept unless --remove-config is given.
 set -eu
 
 REPO=$(cd "$(dirname "$0")" && pwd)
-SOURCE="$REPO/gimp-stable-boy"
-NAME="gimp-stable-boy"
+SOURCE="$REPO/gimp-openfill"
+NAME="gimp-openfill"
 LINK=0
 UNINSTALL=0
 REMOVE_CONFIG=0
@@ -103,7 +104,7 @@ $HOME/.var/app/org.gimp.GIMP/config/GIMP"
 fi
 
 TARGET="$PROFILE/plug-ins/$NAME"
-CONFIG_DIR="$PROFILE/stable-boy"
+CONFIG_DIR="$PROFILE/openfill"
 CONFIG="$CONFIG_DIR/config.json"
 echo "GIMP profile: $PROFILE"
 
@@ -129,7 +130,7 @@ if [ "$UNINSTALL" = 1 ]; then
   elif [ -d "$CONFIG_DIR" ]; then
     echo "Kept settings folder $CONFIG_DIR (holds config.json and the Hugging Face token; use --remove-config to delete it)"
   fi
-  echo "Done. Restart GIMP; the Filters > AI entries are gone. Models in the ComfyUI folder are not touched."
+  echo "Done. Restart GIMP; the Filters > OpenFill entries are gone. Models in the ComfyUI folder are not touched."
   exit 0
 fi
 
@@ -139,7 +140,7 @@ fi
 if [ "$FLATPAK" = 0 ] && [ "$(uname -s)" != "Darwin" ]; then
   if command -v python3 >/dev/null 2>&1; then
     if ! python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)' >/dev/null 2>&1; then
-      echo "warning: the python3 on PATH does not run or is older than 3.10; Stable Boy needs Python 3.10 or newer" >&2
+      echo "warning: the python3 on PATH does not run or is older than 3.10; OpenFill needs Python 3.10 or newer" >&2
     fi
   else
     echo "warning: python3 not found on PATH; GIMP needs it to run Python plug-ins" >&2
@@ -196,7 +197,7 @@ fi
 echo ""
 echo "Next steps:"
 echo "  1. Restart GIMP (plug-ins are registered at start-up)."
-echo "  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder."
+echo "  2. Open Filters > OpenFill > Generative Fill Settings... and check the ComfyUI folder."
 echo "  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active."
-echo "  4. Select an area of an image and run Filters > AI > Generative Fill..."
+echo "  4. Select an area of an image and run Filters > OpenFill > Generative Fill..."
 echo "To remove the plug-in later: sh install.sh --uninstall (add --remove-config to delete the settings too)."

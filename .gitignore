@@ -133,16 +133,16 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Stable Boy
+# OpenFill
 *.xcf
 docs/evidence/*.xcf
-gimp-stable-boy/stable_boy/tmp/
+gimp-openfill/openfill/tmp/
 *.marker
 
 # Tool caches
 .ruff_cache/
 
 # Never commit a GIMP profile config (it holds the Hugging Face token) or partial downloads
-**/stable-boy/config.json
+**/openfill/config.json
 *.part
 docs/evidence/daytime-2026-10-09/benchmark/*/

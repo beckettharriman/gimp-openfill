@@ -1,4 +1,5 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 # Installs the plug-in into the per-user GIMP 3 profile on Windows and writes a
@@ -12,7 +13,7 @@
 # -Link         creates a directory junction to the repo instead of copying (handy for development).
 # -ProfileDir   the GIMP profile folder itself (default: $env:GIMP3_DIRECTORY, else the newest
 #               %APPDATA%\GIMP\3.x). Use it to install into an isolated test profile.
-# -Uninstall    removes the plug-in folder or junction. The settings folder (<profile>\stable-boy,
+# -Uninstall    removes the plug-in folder or junction. The settings folder (<profile>\openfill,
 #               which holds config.json and the Hugging Face token) is kept unless -RemoveConfig.
 # -Model        downloads a catalog model with curl and verifies its sha256. A gated model needs a
 #               Hugging Face token: set $env:HF_TOKEN (preferred) or pass -HfToken.
@@ -32,8 +33,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 $repo = Split-Path -Parent $MyInvocation.MyCommand.Path
-$source = Join-Path $repo "gimp-stable-boy"
-$name = "gimp-stable-boy"
+$source = Join-Path $repo "gimp-openfill"
+$name = "gimp-openfill"
 $catalogPath = Join-Path $repo "models\catalog.json"
 $defaultComfy = "C:\AI\ComfyUI\ComfyUI_windows_portable"
 
@@ -176,7 +177,7 @@ if ($Model) {
             }
         }
     }
-    Write-Host "Done. Select the model in Filters > AI > Generative Fill Settings > Models (Set active)."
+    Write-Host "Done. Select the model in Filters > OpenFill > Generative Fill Settings > Models (Set active)."
     exit 0
 }
 
@@ -202,7 +203,7 @@ if ($ProfileDir) {
 }
 $pluginsDir = Join-Path $profileDir "plug-ins"
 $target = Join-Path $pluginsDir $name
-$configDir = Join-Path $profileDir "stable-boy"
+$configDir = Join-Path $profileDir "openfill"
 $configFile = Join-Path $configDir "config.json"
 Write-Host "GIMP profile: $profileDir"
 
@@ -225,7 +226,7 @@ if ($Uninstall) {
     } elseif (Test-Path -LiteralPath $configDir) {
         Write-Host "Kept settings folder $configDir (holds config.json and the Hugging Face token; use -RemoveConfig to delete it)"
     }
-    Write-Host "Done. Restart GIMP; the Filters > AI entries are gone. Models in the ComfyUI folder are not touched."
+    Write-Host "Done. Restart GIMP; the Filters > OpenFill entries are gone. Models in the ComfyUI folder are not touched."
     exit 0
 }
 
@@ -282,7 +283,7 @@ if ($ComfyDir -and -not (Test-Path -LiteralPath (Join-Path $ComfyDir "ComfyUI\ma
 Write-Host ""
 Write-Host "Next steps:"
 Write-Host "  1. Restart GIMP (plug-ins are registered at start-up)."
-Write-Host "  2. Open Filters > AI > Generative Fill Settings... and check the ComfyUI folder."
+Write-Host "  2. Open Filters > OpenFill > Generative Fill Settings... and check the ComfyUI folder."
 Write-Host "  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active."
-Write-Host "  4. Select an area of an image and run Filters > AI > Generative Fill..."
+Write-Host "  4. Select an area of an image and run Filters > OpenFill > Generative Fill..."
 Write-Host "To remove the plug-in later: install.ps1 -Uninstall (add -RemoveConfig to delete the settings too)."

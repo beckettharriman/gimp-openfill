@@ -1,4 +1,5 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 """ServerManager: messages, the port check, argument passing and log handling (no ComfyUI needed)."""
 
@@ -13,11 +14,11 @@ import warnings
 from pathlib import Path
 from unittest import mock
 
-from stable_boy import server
-from stable_boy.backend import BackendUnavailable, has_next_step
-from stable_boy.config import Paths, Settings
-from stable_boy.server import ServerManager, port_answers, strip_ansi
-from stable_boy.supervisor import build_parser
+from openfill import server
+from openfill.backend import BackendUnavailable, has_next_step
+from openfill.config import Paths, Settings
+from openfill.server import ServerManager, port_answers, strip_ansi
+from openfill.supervisor import build_parser
 
 # Verbatim tail of a ComfyUI log whose port was taken (evidence rob-port-in-use-offline).
 PORT_TAKEN_LOG = (
@@ -46,7 +47,7 @@ class ManagerCase(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self._tmp.cleanup)
-        self.paths = Paths(Path(self._tmp.name) / "stable-boy").ensure()
+        self.paths = Paths(Path(self._tmp.name) / "openfill").ensure()
         self.settings = Settings(url="http://127.0.0.1:8199", startup_timeout=240)
         self.manager = ServerManager(self.settings, self.paths)
 
@@ -62,7 +63,7 @@ class EnsureRunningTests(ManagerCase):
         text = str(ctx.exception)
         self.assertIn("ComfyUI is not running at http://127.0.0.1:8199", text)
         self.assertIn("Start backend automatically", text)
-        self.assertIn("Filters > AI > Generative Fill Settings", text)
+        self.assertIn("Filters > OpenFill > Generative Fill Settings", text)
         self.assertIn("Check backend", text)
 
 
@@ -95,7 +96,8 @@ class PortProbeTests(ManagerCase):
         text = str(ctx.exception)
         self.assertIn(f"Port {self.port} is used by another program (it is not ComfyUI)", text)
         self.assertIn(
-            "Close that program, or set a free port in the ComfyUI URL in Filters > AI > Generative Fill Settings", text
+            "Close that program, or set a free port in the ComfyUI URL in Filters > OpenFill > Generative Fill Settings",
+            text,
         )
         self.assertIn("http://127.0.0.1:8190", text)
 
@@ -199,7 +201,7 @@ class CancelAndWatcherTests(ManagerCase):
     """rob-cancel-starting-backend and rob-two-requests-first-gimp-exits."""
 
     def test_cancel_while_starting_returns_at_once(self):
-        from stable_boy.backend import GenerationCancelled
+        from openfill.backend import GenerationCancelled
 
         with (
             mock.patch.object(server.ComfyClient, "is_alive", return_value=False),

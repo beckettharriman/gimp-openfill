@@ -1,4 +1,4 @@
-# Design: Stable Boy 2 for GIMP 3
+# Design: OpenFill for GIMP 3
 
 Status: implemented, 2.0.0-beta.1 (first public beta). This note records what
 was built, why, and what was learned from the projects surveyed before the
@@ -10,7 +10,7 @@ see `docs/evidence/` and `CHANGELOG.md`.
 A Photoshop "Generative Fill" equivalent inside one GIMP 3 window:
 
 1. Select an area.
-2. `Filters > AI > Generative Fill...`, type a prompt, press OK.
+2. `Filters > OpenFill > Generative Fill...`, type a prompt, press OK.
 3. A new layer with a layer mask appears in the same image.
 
 The plug-in owns the whole backend lifecycle. The user never sees a terminal,
@@ -34,12 +34,12 @@ as the design starting point.
 ## Architecture
 
 ```
-gimp-stable-boy/gimp-stable-boy.py      GIMP entry point: Gimp.PlugIn subclass,
+gimp-openfill/gimp-openfill.py      GIMP entry point: Gimp.PlugIn subclass,
                                         five procedures, dialog wiring
-gimp-stable-boy/stable_boy/
+gimp-openfill/openfill/
   __init__.py        version string
   app.py             orchestration of fill, expand, text to image and removal
-  config.py          Settings dataclass, JSON load/save under Gimp.directory()/stable-boy
+  config.py          Settings dataclass, JSON load/save under Gimp.directory()/openfill
   log.py             file logger (one log per GIMP profile), token redaction
   png.py             pure-Python PNG encoder (RGB/RGBA/Gray 8-bit) and IHDR reader
   geometry.py        pure: Rect, context-region growth, working-size snapping,
@@ -113,7 +113,7 @@ can find no state file at the same moment, and the GIMP that started the
 backend may exit while the other still generates. Two pieces handle it:
 
 - **Start lock.** The supervisor creates `supervisor.lock` in the profile's
-  `stable-boy` folder exclusively, with its pid inside
+  `openfill` folder exclusively, with its pid inside
   (`supervisor.acquire_start_lock`), and holds it for its lifetime; a second
   supervisor that finds the lock held exits at once. A lock whose pid is dead
   or not a Python process is stale and taken over. Without it, two requests
@@ -314,8 +314,8 @@ ComfyUI picks `NORMAL_VRAM` on this GPU and offloads automatically; no
 
 ### Settings
 
-Stored as JSON at `<GIMP profile>/stable-boy/config.json` (`config.Settings`)
-and edited through `Filters > AI > Generative Fill Settings...`. An unreadable
+Stored as JSON at `<GIMP profile>/openfill/config.json` (`config.Settings`)
+and edited through `Filters > OpenFill > Generative Fill Settings...`. An unreadable
 file is moved aside as `config.json.corrupt-<time>` and defaults are used; on
 POSIX the file is written owner-only because it can hold the Hugging Face
 token. Every key:
@@ -343,7 +343,7 @@ token. Every key:
 | `quality` | `fast` | Model for scripts asking 'fast' or 'quality' (Connection) | legacy tiers for older scripts |
 | `checkpoint` / `sdxl_checkpoint` | `sd-v1-5-inpainting.ckpt` / `sd_xl_base_1.0.safetensors` | SD 1.5 / SDXL model file (Connection) | used by the legacy tiers |
 | `fooocus_head` / `fooocus_patch` | `fooocus_inpaint_head.pth` / `inpaint_v26.fooocus.patch` | Fooocus patch file (Connection) | SDXL only |
-| `debug` | false | Verbose log (Connection) | also `SB_DEBUG_DUMP=1` keeps the exact crop, mask and raw result |
+| `debug` | false | Verbose log (Connection) | also `OPENFILL_DEBUG_DUMP=1` keeps the exact crop, mask and raw result |
 | `denoise` | 1.0 | - | default Change amount for scripts |
 | `progress_window_x` / `_y` | -1 | - | remembered window position; -1 = top right of the image window |
 | `prompt_history` | empty | Recent prompts (Fill dialog) | JSON list, last 20, newest first |

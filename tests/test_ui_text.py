@@ -3,8 +3,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from stable_boy import ui_text as ut
-from stable_boy.backend import (
+from openfill import ui_text as ut
+from openfill.backend import (
     BackendUnavailable,
     GenerationCancelled,
     GenerationTimeout,
@@ -13,7 +13,7 @@ from stable_boy.backend import (
     WorkflowRejected,
     describe_error,
 )
-from stable_boy.config import Settings
+from openfill.config import Settings
 
 
 class HistoryTests(unittest.TestCase):
@@ -189,7 +189,7 @@ class ErrorWordingTests(unittest.TestCase):
             BackendUnavailable("ComfyUI did not come up at http://x within 240 s."),
             BackendUnavailable("could not download the result: boom"),
             ModelMissing(
-                "'FLUX' is not downloaded yet. Open Filters > AI > Generative Fill Settings > Models "
+                "'FLUX' is not downloaded yet. Open Filters > OpenFill > Generative Fill Settings > Models "
                 "and press Download."
             ),
             ModelMissing("unknown thing"),
@@ -230,7 +230,7 @@ class ErrorWordingTests(unittest.TestCase):
         self.assertIn("1 model,", ut.health_text(True, "", 1, False))
         bad = ut.health_text(False, "ComfyUI was not found at 'C:\\nope'.", 0, False)
         self.assertTrue(bad.startswith("Could not reach the backend: ComfyUI was not found"), bad)
-        self.assertIn("Next step: open Filters > AI > Generative Fill Settings", bad)
+        self.assertIn("Next step: open Filters > OpenFill > Generative Fill Settings", bad)
         generic = ut.health_text(False, "connection refused", 0, False)
         self.assertIn("Next step: check the backend folder", generic)
 
@@ -297,7 +297,7 @@ class ExpandDiscardRestoreTests(unittest.TestCase):
     def setUpClass(cls):
         import ast
 
-        src = Path(__file__).resolve().parents[1] / "gimp-stable-boy" / "gimp-stable-boy.py"
+        src = Path(__file__).resolve().parents[1] / "gimp-openfill" / "gimp-openfill.py"
         tree = ast.parse(src.read_text(encoding="utf-8"))
         node = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "_canvas_restore")
         namespace: dict = {}

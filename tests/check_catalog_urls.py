@@ -16,14 +16,14 @@ from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "gimp-stable-boy"))
-from stable_boy.catalog import load_catalog  # noqa: E402
-from stable_boy.downloads import token_allowed  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "gimp-openfill"))
+from openfill.catalog import load_catalog  # noqa: E402
+from openfill.downloads import token_allowed  # noqa: E402
 
 
 def head(url: str, token: str | None = None) -> tuple[int | None, str | None]:
     """HEAD ``url``; returns ``(status, size header)`` or ``(None, error text)``."""
-    req = Request(url, headers={"User-Agent": "gimp-stable-boy url check"}, method="HEAD")
+    req = Request(url, headers={"User-Agent": "gimp-openfill url check"}, method="HEAD")
     if token and token_allowed(url):
         req.add_unredirected_header("Authorization", f"Bearer {token}")
     try:

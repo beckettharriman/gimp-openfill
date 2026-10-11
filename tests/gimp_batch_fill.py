@@ -1,4 +1,5 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 """End-to-end check executed INSIDE a running GIMP by the python-fu-eval batch
 interpreter. It is not a unit test; it drives the registered procedure
@@ -11,12 +12,12 @@ non-interactively and records evidence.
 (Keep single quotes inside the -b string; shells strip the double ones.)
 
 Environment variables (all optional):
-    SB_REPO          repository root (default: C:\\repos\\gimp-stable-boy)
-    SB_TEST_IMAGE    input image (default: tests/data/test-scene.png)
-    SB_TEST_OUT      output directory (default: docs/evidence)
-    SB_TEST_PROMPT   prompt (default: "a large grey boulder on grass")
-    SB_TEST_QUIT     "1" to quit GIMP at the end (default "1")
-    SB_TEST_EXPAND   "1" to also run Generative Expand afterwards
+    OPENFILL_REPO          repository root (default: C:\\repos\\gimp-stable-boy)
+    OPENFILL_TEST_IMAGE    input image (default: tests/data/test-scene.png)
+    OPENFILL_TEST_OUT      output directory (default: docs/evidence)
+    OPENFILL_TEST_PROMPT   prompt (default: "a large grey boulder on grass")
+    OPENFILL_TEST_QUIT     "1" to quit GIMP at the end (default "1")
+    OPENFILL_TEST_EXPAND   "1" to also run Generative Expand afterwards
 """
 
 import json
@@ -31,13 +32,13 @@ gi.require_version("Gimp", "3.0")
 from gi.repository import Gimp, Gio
 
 # python-fu-eval runs this with exec(), so __file__ is not ours: the repo root
-# comes from SB_REPO or the default checkout location.
-REPO = os.environ.get("SB_REPO", r"C:\repos\gimp-stable-boy")
-IMAGE = os.environ.get("SB_TEST_IMAGE", os.path.join(REPO, "tests", "data", "test-scene.png"))
-OUT = os.environ.get("SB_TEST_OUT", os.path.join(REPO, "docs", "evidence"))
-PROMPT = os.environ.get("SB_TEST_PROMPT", "a large grey boulder on grass, photo")
-QUIT = os.environ.get("SB_TEST_QUIT", "1") == "1"
-EXPAND = os.environ.get("SB_TEST_EXPAND", "0") == "1"
+# comes from OPENFILL_REPO or the default checkout location.
+REPO = os.environ.get("OPENFILL_REPO", r"C:\repos\gimp-stable-boy")
+IMAGE = os.environ.get("OPENFILL_TEST_IMAGE", os.path.join(REPO, "tests", "data", "test-scene.png"))
+OUT = os.environ.get("OPENFILL_TEST_OUT", os.path.join(REPO, "docs", "evidence"))
+PROMPT = os.environ.get("OPENFILL_TEST_PROMPT", "a large grey boulder on grass, photo")
+QUIT = os.environ.get("OPENFILL_TEST_QUIT", "1") == "1"
+EXPAND = os.environ.get("OPENFILL_TEST_EXPAND", "0") == "1"
 SELECTION = (420, 300, 260, 200)  # x, y, w, h : the dark box in the test scene
 
 report = {
@@ -106,15 +107,15 @@ try:
         registered={
             n: pdb.procedure_exists(n)
             for n in (
-                "python-fu-stable-boy-generative-fill",
-                "python-fu-stable-boy-generative-expand",
-                "python-fu-stable-boy-text-to-image",
-                "python-fu-stable-boy-settings",
-                "python-fu-stable-boy-stop-backend",
+                "python-fu-openfill-generative-fill",
+                "python-fu-openfill-generative-expand",
+                "python-fu-openfill-text-to-image",
+                "python-fu-openfill-settings",
+                "python-fu-openfill-stop-backend",
             )
         },
     )
-    proc = pdb.lookup_procedure("python-fu-stable-boy-generative-fill")
+    proc = pdb.lookup_procedure("python-fu-openfill-generative-fill")
     step("menu", label=proc.get_menu_label(), paths=list(proc.get_menu_paths()))
 
     image = Gimp.file_load(Gimp.RunMode.NONINTERACTIVE, Gio.File.new_for_path(IMAGE))
@@ -133,7 +134,7 @@ try:
 
     t0 = time.time()
     status = run_procedure(
-        "python-fu-stable-boy-generative-fill",
+        "python-fu-openfill-generative-fill",
         image,
         image.get_layers(),
         prompt=PROMPT,
@@ -141,7 +142,7 @@ try:
         variations=1,
         strength=1.0,
         seed=12345,
-        model=os.environ.get("SB_TEST_MODEL", "fast"),
+        model=os.environ.get("OPENFILL_TEST_MODEL", "fast"),
     )
     step("generative-fill", status=str(status), seconds=round(time.time() - t0, 1), layers=describe_layers(image))
     export(image, os.path.join(OUT, "02-after-fill.png"))
@@ -150,7 +151,7 @@ try:
     if EXPAND:
         t0 = time.time()
         status = run_procedure(
-            "python-fu-stable-boy-generative-expand",
+            "python-fu-openfill-generative-expand",
             image,
             image.get_layers(),
             prompt="grass field under a blue sky, photo",
@@ -161,7 +162,7 @@ try:
             right=256,
             bottom=0,
             seed=7,
-            model=os.environ.get("SB_TEST_MODEL", "fast"),
+            model=os.environ.get("OPENFILL_TEST_MODEL", "fast"),
         )
         step(
             "generative-expand",
@@ -172,11 +173,11 @@ try:
         )
         export(image, os.path.join(OUT, "03-after-expand.png"))
 
-    if os.environ.get("SB_TEST_VARIATIONS", "0") == "1":
+    if os.environ.get("OPENFILL_TEST_VARIATIONS", "0") == "1":
         image.select_rectangle(Gimp.ChannelOps.REPLACE, 760, 60, 140, 140)  # the sun
         t0 = time.time()
         status = run_procedure(
-            "python-fu-stable-boy-generative-fill",
+            "python-fu-openfill-generative-fill",
             image,
             image.get_layers(),
             prompt="a hot air balloon in the sky, photo",
@@ -184,7 +185,7 @@ try:
             variations=3,
             strength=1.0,
             seed=99,
-            model=os.environ.get("SB_TEST_MODEL", "fast"),
+            model=os.environ.get("OPENFILL_TEST_MODEL", "fast"),
         )
         step(
             "generative-fill-variations",
@@ -194,11 +195,11 @@ try:
         )
         export(image, os.path.join(OUT, "04-after-variations.png"))
 
-    if os.environ.get("SB_TEST_TXT2IMG", "0") == "1":
+    if os.environ.get("OPENFILL_TEST_TXT2IMG", "0") == "1":
         Gimp.Selection.none(image)
         t0 = time.time()
         status = run_procedure(
-            "python-fu-stable-boy-text-to-image",
+            "python-fu-openfill-text-to-image",
             image,
             image.get_layers(),
             prompt="a small wooden cabin in a meadow, photo",
@@ -208,18 +209,18 @@ try:
             height=384,
             target="layer",
             seed=3,
-            model=os.environ.get("SB_TEST_MODEL", "fast"),
+            model=os.environ.get("OPENFILL_TEST_MODEL", "fast"),
         )
         step(
             "text-to-image-layer", status=str(status), seconds=round(time.time() - t0, 1), layers=describe_layers(image)
         )
         export(image, os.path.join(OUT, "05-after-txt2img.png"))
 
-    if os.environ.get("SB_TEST_SDXL", "0") == "1":
+    if os.environ.get("OPENFILL_TEST_SDXL", "0") == "1":
         image.select_rectangle(Gimp.ChannelOps.REPLACE, 80, 480, 300, 220)
         t0 = time.time()
         status = run_procedure(
-            "python-fu-stable-boy-generative-fill",
+            "python-fu-openfill-generative-fill",
             image,
             image.get_layers(),
             prompt="a wooden picnic table on grass, photo",
@@ -237,7 +238,7 @@ try:
         )
         export(image, os.path.join(OUT, "06-after-sdxl.png"))
 
-    idle_wait = int(os.environ.get("SB_TEST_IDLE_WAIT", "0"))
+    idle_wait = int(os.environ.get("OPENFILL_TEST_IDLE_WAIT", "0"))
     if idle_wait:
         step("idle-wait-start", seconds=idle_wait)
         time.sleep(idle_wait)

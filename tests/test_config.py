@@ -10,8 +10,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from stable_boy.config import Paths, Settings, comfy_layout, corrupt_backup_path
-from stable_boy.log import RedactingFilter, get_logger, redact
+from openfill.config import Paths, Settings, comfy_layout, corrupt_backup_path
+from openfill.log import RedactingFilter, get_logger, redact
 
 TOKEN = "hf_abcdefghijklmnopqrstuvwxyz0123456789"
 
@@ -139,7 +139,7 @@ class DamagedConfigTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "config.json"
             path.write_text("{ not json", encoding="utf-8")
-            with mock.patch("stable_boy.config.os.rename", side_effect=PermissionError(13, "Access is denied")):
+            with mock.patch("openfill.config.os.rename", side_effect=PermissionError(13, "Access is denied")):
                 s = Settings.load(path)
             self.assertIn("left untouched", s.load_problem)
             self.assertEqual(path.read_text(encoding="utf-8"), "{ not json")
@@ -192,7 +192,7 @@ class TokenStorageTests(unittest.TestCase):
 
     def test_logger_redacts_tokens(self):
         with tempfile.TemporaryDirectory() as tmp:
-            log = get_logger(Path(tmp) / "x.log", name="stable-boy-test-redact")
+            log = get_logger(Path(tmp) / "x.log", name="openfill-test-redact")
             stream = io.StringIO()
             extra = logging.StreamHandler(stream)
             log.addHandler(extra)
@@ -213,8 +213,22 @@ class PathsTests(unittest.TestCase):
     def test_layout(self):
         p = Paths.for_profile("/gimp/3.2")
         self.assertEqual(p.config.name, "config.json")
-        self.assertEqual(p.state.parent.name, "stable-boy")
+        self.assertEqual(p.state.parent.name, "openfill")
         self.assertEqual(p.temp, p.base / "tmp")
+
+    def test_old_config_folder_is_copied_once(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            old = Path(tmp) / "stable-boy"
+            old.mkdir()
+            (old / "config.json").write_text('{"steps": 31}', encoding="utf-8")
+            (old / "server-state.json").write_text("{}", encoding="utf-8")
+            paths = Paths.for_profile(tmp)
+            self.assertEqual(json.loads(paths.config.read_text(encoding="utf-8")), {"steps": 31})
+            self.assertFalse(paths.state.exists())
+            self.assertTrue((old / "config.json").exists())
+            paths.config.write_text('{"steps": 5}', encoding="utf-8")
+            Paths.for_profile(tmp)  # second run leaves the new folder alone
+            self.assertEqual(json.loads(paths.config.read_text(encoding="utf-8")), {"steps": 5})
 
 
 class ComfyLayoutTests(unittest.TestCase):

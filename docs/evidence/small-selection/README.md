@@ -6,7 +6,7 @@ near-black blob under the feathered mask; the button was only darkened.
 
 Reproduced here with synthetic scenes (dark knit, small bright button) at two
 image sizes, with `tests/gimp_batch_small_selection.py` driving a real GIMP
-instance, an empty prompt, and the debug dump (`SB_DEBUG_DUMP=1`) that keeps
+instance, an empty prompt, and the debug dump (`OPENFILL_DEBUG_DUMP=1`) that keeps
 the exact crop and mask sent to ComfyUI plus the raw result. Beckett's own
 crop was tested as well (at native and 20 % scale) but those files are not
 committed.

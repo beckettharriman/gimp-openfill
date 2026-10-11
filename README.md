@@ -1,14 +1,14 @@
-# Stable Boy 2 - Generative Fill for GIMP 3
+# OpenFill - Generative Fill for GIMP 3
 
 Select an area in GIMP, type what should be there, press Generate, and the
 result appears as a new layer with a soft layer mask in the same image.
-Stable Boy 2 brings a Photoshop-style **Generative Fill**, **Remove object**,
+OpenFill brings a Photoshop-style **Generative Fill**, **Remove object**,
 **Generative Expand** and **Text to Image** to GIMP 3, running local diffusion
 models through a ComfyUI backend that the plug-in installs models into,
 starts, keeps warm and shuts down by itself. No terminal, no browser tab, no
 second application, and nothing leaves the machine.
 
-Version 2.0.0-beta.1. Stable Boy 2 is a GIMP 3 rewrite of
+Version 2.0.0-beta.1. OpenFill is a GIMP 3 rewrite of
 [Stable Boy](https://github.com/thndrbrrr/gimp-stable-boy) by Torben
 Giesselmann (thndrbrrr), the GIMP 2.10 plug-in for the AUTOMATIC1111 WebUI.
 It keeps the name, the license and the idea; the code, the backend handling
@@ -20,9 +20,9 @@ and the UX are new.
 
 ## What it does
 
-Five entries under `Filters > AI` (GIMP sorts them alphabetically):
+Five entries under `Filters > OpenFill` (GIMP sorts them alphabetically):
 
-![Filters > AI menu with Generative Expand..., Generative Fill Settings..., Generative Fill..., Stop AI Backend and Text to Image...](docs/screenshots/filters-ai-menu.png)
+![Filters > OpenFill menu with Generative Expand..., Generative Fill Settings..., Generative Fill..., Stop AI Backend and Text to Image...](docs/screenshots/filters-ai-menu.png)
 
 | Entry | What happens |
 |---|---|
@@ -60,7 +60,7 @@ the user. It cites the original Stable Boy, which only ran on GIMP 2.10
 (Python 2, `gimpfu`) and expected an AUTOMATIC1111 server in a browser and a
 mask layer with a magic name. GIMP 3 removed that plug-in API entirely.
 
-Stable Boy 2 aims at the Photoshop flow: the selection is the mask, the result
+OpenFill aims at the Photoshop flow: the selection is the mask, the result
 is a non-destructive masked layer, and the backend lifecycle needs zero
 terminal work: models download from a dialog, the server starts hidden on the
 first request and stops when GIMP closes or after an idle timeout.
@@ -70,7 +70,7 @@ first request and stops when GIMP closes or after an idle timeout.
 A GIMP Python plug-in is a short-lived process: GIMP starts it for one
 procedure call and it exits when the call returns. It cannot keep a server
 warm or notice that GIMP closed. So the first request launches a small
-**supervisor** (`stable_boy/supervisor.py`, GIMP's `pythonw`, no console)
+**supervisor** (`openfill/supervisor.py`, GIMP's `pythonw`, no console)
 that starts ComfyUI hidden, ties it to a Windows **Job Object** with
 kill-on-close (the server can never outlive the supervisor, even after a
 crash), watches the GIMP process, and applies the idle timeout.
@@ -88,13 +88,13 @@ Per request the plug-in:
    resolution) and snaps it to the latent multiple;
 3. sends the crop and a **mask** grown and feathered in proportion to the
    selection as PNGs, builds a ComfyUI API **graph** in code
-   (`stable_boy/workflow.py`: SD 1.5 inpainting, SDXL + Fooocus inpaint
+   (`openfill/workflow.py`: SD 1.5 inpainting, SDXL + Fooocus inpaint
    patch, FLUX Fill, Qwen-Image-Edit, LaMa/MAT removal) and queues it;
 4. streams progress and preview frames over ComfyUI's websocket;
 5. scales the result back and inserts it as a layer whose mask is opaque over
    the selection and fades outward, in one undo group.
 
-Everything in `stable_boy/` except `gimp_io.py` and the GTK dialog modules is
+Everything in `openfill/` except `gimp_io.py` and the GTK dialog modules is
 plain Python with no GIMP dependency, which is what makes it unit-testable.
 Details, the graphs, and what was learned from krita-ai-diffusion and other
 GIMP plug-ins: [docs/design.md](docs/design.md).
@@ -137,13 +137,13 @@ Linux, Flatpak or macOS GIMP.
    sh install.sh
    ```
 
-   Both copy `gimp-stable-boy/` into the newest GIMP 3.x profile and write a
-   default `stable-boy/config.json`. Options: `-Link` / `--link` (junction or
+   Both copy `gimp-openfill/` into the newest GIMP 3.x profile and write a
+   default `openfill/config.json`. Options: `-Link` / `--link` (junction or
    symlink to the checkout, for development), `-ProfileDir` / `--profile-dir`
    (a specific profile; `GIMP3_DIRECTORY` is honoured too), `-Uninstall` /
    `--uninstall`, plus `-RemoveConfig` / `--remove-config` to delete the
    settings folder as well (it holds the Hugging Face token, if any).
-4. **Models.** Start GIMP, open `Filters > AI > Generative Fill Settings... >
+4. **Models.** Start GIMP, open `Filters > OpenFill > Generative Fill Settings... >
    Models`, press **Download** on a model and then **Set active**. Without
    GIMP: `install.ps1 -ListModels` and `install.ps1 -Model sd15-inpainting`
    (downloads with resume and verifies the sha256).
@@ -154,7 +154,7 @@ reuse the running server.
 ## Usage
 
 1. Open an image and select an area with any selection tool.
-2. `Filters > AI > Generative Fill...`. Type what should appear and press
+2. `Filters > OpenFill > Generative Fill...`. Type what should appear and press
    Enter (or **Generate**). The last prompt is pre-filled and selected, so
    typing replaces it; **Recent prompts** holds the last 20.
 3. To erase something, switch to **Remove object** and press Generate. Select
@@ -235,10 +235,10 @@ collapsed sections hold the rest:
   addresses, time limits, Extra ComfyUI options (for example `--lowvram`),
   files used by older scripts, Verbose log.
 
-Everything is stored in `<GIMP profile>/stable-boy/config.json`; an
+Everything is stored in `<GIMP profile>/openfill/config.json`; an
 unreadable file is moved aside and replaced by defaults. Every key with its
 default: [docs/design.md](docs/design.md#settings). Logs:
-`stable-boy.log` (plug-in and supervisor) and `comfyui.log` in the same
+`openfill.log` (plug-in and supervisor) and `comfyui.log` in the same
 folder.
 
 ## Performance
@@ -266,7 +266,7 @@ progress window. The most common ones:
 | "... auto-start is disabled" | Turn on **Start backend automatically**, or start ComfyUI yourself. |
 | "ComfyUI did not start at ... (gave up after N s)" | Try again (the first start can take a few minutes). Check the ComfyUI folder and Extra ComfyUI options; the message quotes the last lines of `comfyui.log`. |
 | "Port 8188 is used by another program (it is not ComfyUI)." | Close that program, or set a free port in the ComfyUI URL in Settings (for example `http://127.0.0.1:8190`). |
-| "ComfyUI stopped while it was generating (it crashed or was closed), so the image was not changed." | Run the command again to restart it; if it keeps happening, read `comfyui.log` in the `stable-boy` folder of your GIMP profile. |
+| "ComfyUI stopped while it was generating (it crashed or was closed), so the image was not changed." | Run the command again to restart it; if it keeps happening, read `comfyui.log` in the `openfill` folder of your GIMP profile. |
 | "Your settings file could not be read and was moved aside to '...config.json.corrupt-...'; defaults are in use." | Open Generative Fill Settings and set the backend folder and options again. The old file is kept next to the new one. |
 | "Generation was cancelled." / "The generation was stopped in ComfyUI ..." | Nothing in the image was changed. Run the command again. The second form means Cancel or Interrupt was used in ComfyUI itself. |
 | "Could not reach huggingface.co: ..." (model download) | Check the internet connection and any proxy or firewall, then press **Download** again; the part already downloaded resumes. |
@@ -277,11 +277,11 @@ progress window. The most common ones:
 | "Convert it with Image > Mode > RGB" | Indexed images are not supported; convert to RGB first. |
 | The fill shows sky or background instead of the prompt | Known SD 1.5 limitation on flat or small areas (see below). Use an SDXL model (**Advanced** > Model), a more specific prompt, or another seed. |
 | Visible seam or pale band | Keep **Hide old content before generating** on, make sure comfyui-inpaint-nodes is installed, raise Edge softness. |
-| Menu entries missing | Check `pluginrc` in the profile for `python-fu-stable-boy-generative-fill`; the folder must be `plug-ins/gimp-stable-boy/gimp-stable-boy.py`. Restart GIMP. |
-| Backend still running after GIMP closed | Should not happen (the supervisor watches GIMP). Use **Stop AI Backend**, and report it with `stable-boy.log`. |
+| Menu entries missing | Check `pluginrc` in the profile for `python-fu-openfill-generative-fill`; the folder must be `plug-ins/gimp-openfill/gimp-openfill.py`. Restart GIMP. |
+| Backend still running after GIMP closed | Should not happen (the supervisor watches GIMP). Use **Stop AI Backend**, and report it with `openfill.log`. |
 
 For a bug report, turn on **Verbose log**, reproduce, and attach
-`stable-boy.log`. Never attach `config.json`: it may hold your token.
+`openfill.log`. Never attach `config.json`: it may hold your token.
 
 ### Known limitations
 
@@ -382,6 +382,9 @@ in [SECURITY.md](SECURITY.md).
 
 ## Credits
 
+OpenFill is based on Stable Boy by Torben Giesselmann (GPL-3.0),
+https://github.com/thndrbrrr/gimp-stable-boy.
+
 - **Torben Giesselmann (thndrbrrr)** wrote the original Stable Boy for GIMP
   2.10 and the AUTOMATIC1111 integration this project started from.
 - [ComfyUI](https://github.com/comfyanonymous/ComfyUI) by comfyanonymous and
@@ -399,4 +402,4 @@ in [SECURITY.md](SECURITY.md).
 ## License
 
 GPL-3.0-or-later. See [COPYING](COPYING).
-Copyright (C) 2022 Torben Giesselmann, (C) 2026 Stable Boy contributors.
+Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman.

@@ -1,6 +1,6 @@
 # Performance
 
-This page records how fast Stable Boy is on real hardware and what the
+This page records how fast OpenFill is on real hardware and what the
 plug-in does to keep it fast. Every number below was measured on the machine
 in the Method table on 2026-10-09; nothing on this page is an estimate. Cells
 that say "not measured" were not measured. The raw data (per-call JSON, CSV,
@@ -27,7 +27,7 @@ How timings are taken:
   includes the plug-in process start, export, upload, queueing, sampling,
   download and layer insertion.
 - **Phase split.** The ComfyUI backend writes `timing:` lines to
-  `stable-boy.log` (`backends/comfy.py`): upload bytes and seconds, then
+  `openfill.log` (`backends/comfy.py`): upload bytes and seconds, then
   queue to first sampling step, first step to finished (called "sampling"
   below; it also contains the VAE decode, colour match and ComfyUI saving
   the result), and download. Export is the time from the plug-in's `fill:`
@@ -149,7 +149,7 @@ One fill driven through the real dialog in `gimp-3.2.exe` (Juggernaut XL v9,
 model already loaded. Two probes ran during the fill:
 
 - inside the plug-in, a 20 ms GLib timer on the plug-in's main loop
-  (`SB_PERF_STALL=1`, `runner._StallProbe`) records the longest gap between
+  (`OPENFILL_PERF_STALL=1`, `runner._StallProbe`) records the longest gap between
   two ticks while the job runs;
 - outside, `SendMessageTimeout(WM_NULL, 100 ms)` is sent to GIMP's image
   window every 50 ms.
@@ -189,13 +189,13 @@ same pixels); only time changes. Unit tests stay green.
 
 | Change | Before | After |
 |---|---|---|
-| **Faster crop encode.** `png.encode` now defaults to zlib level 1 instead of 6 (`stable_boy/png.py`). A 2048 x 2048 RGBA photo crop: | 1.14 s, 9.13 MB | 0.64 s, 9.38 MB (+3 %) |
+| **Faster crop encode.** `png.encode` now defaults to zlib level 1 instead of 6 (`openfill/png.py`). A 2048 x 2048 RGBA photo crop: | 1.14 s, 9.13 MB | 0.64 s, 9.38 MB (+3 %) |
 | Same, measured inside the plug-in: export + checks for a 2048 x 2048 context | 1.16 to 1.17 s | 0.63 to 0.68 s |
 | **Uploads named after their content.** The crop and mask are uploaded as `sb-<12 hex digits of SHA-256 of both>-image.png` / `-mask.png` instead of a random id (`backends/comfy.py`), so a second fill of the same region (another seed or prompt, which is how people re-roll) lets ComfyUI reuse the nodes that only depend on the image and mask. Queue to first step, SD 1.5, 1024 px: | 2.03 to 2.24 s (22 fills) | 0.75 to 0.87 s (re-runs with seeds 1235, 1236, 1237 and 1235 again) |
 | Same, Juggernaut XL v9, 1024 px | 6.18 to 6.27 s | 2.17 to 2.20 s |
 | Both changes together, whole call, SD 1.5, 1024 px | 10.8 to 10.9 s | 9.1 to 9.4 s |
 | Both changes together, whole call, Juggernaut XL v9, 1024 px | 25.1 to 25.3 s | 19.5 to 20.0 s |
-| **Fast "is ComfyUI running" check.** On Windows a refused connection to 127.0.0.1 is only reported after about 2 s of retries (2.04 s measured). `ComfyClient.is_alive` now first opens a TCP connection with a 0.5 s timeout when the server is on this machine and returns False at once when nothing listens (`stable_boy/comfy_api.py`); a running ComfyUI accepts within milliseconds even while busy. Cold start, fill call to supervisor launch: | 4.3 s, 5.0 s | 2.9 s |
+| **Fast "is ComfyUI running" check.** On Windows a refused connection to 127.0.0.1 is only reported after about 2 s of retries (2.04 s measured). `ComfyClient.is_alive` now first opens a TCP connection with a 0.5 s timeout when the server is on this machine and returns False at once when nothing listens (`openfill/comfy_api.py`); a running ComfyUI accepts within milliseconds even while busy. Cold start, fill call to supervisor launch: | 4.3 s, 5.0 s | 2.9 s |
 
 The first fill of a region still pays the full queue time (it has new
 content); an identical repeat (same region, same seed, same prompt) is not
@@ -238,42 +238,42 @@ What the code does to keep calls short and memory bounded:
   image size (the 1024 and 2048 px columns above are equal for that
   reason). Small selections are upscaled (at most 8x) so the model works
   at its native resolution. The result is scaled back in GIMP.
-  (`gimp-stable-boy/stable_boy/geometry.py`, `app.py`)
+  (`gimp-openfill/openfill/geometry.py`, `app.py`)
 - **PNG transfer through the API.** The crop and mask are read straight from
   GEGL buffers (`gimp_io.export_region_png`,
   `gimp_io.export_selection_mask_png`), encoded by a small stdlib PNG encoder
-  at zlib level 1 (`stable_boy/png.py`) and uploaded with `/upload/image`
+  at zlib level 1 (`openfill/png.py`) and uploaded with `/upload/image`
   under content-derived names; results come back from `/view`. No temporary
-  XCF, no GIMP export dialog, no base64 JSON. (`stable_boy/comfy_api.py`,
-  `stable_boy/backends/comfy.py`)
+  XCF, no GIMP export dialog, no base64 JSON. (`openfill/comfy_api.py`,
+  `openfill/backends/comfy.py`)
 - **Websocket progress.** Step progress and preview frames arrive over
-  ComfyUI's websocket (`stable_boy/websocket.py`, a stdlib RFC 6455 client
+  ComfyUI's websocket (`openfill/websocket.py`, a stdlib RFC 6455 client
   with a frame size limit); `/history` is polled once a second as a safety
-  net, and is the only signal when the websocket cannot connect. (`stable_boy/backends/comfy.py`,
+  net, and is the only signal when the websocket cannot connect. (`openfill/backends/comfy.py`,
   `comfy_api.ComfyClient.wait_for`)
 - **Preview throttling.** ComfyUI is started with `--preview-method taesd`
   (`supervisor.py`); the progress window admits at most one preview frame
   every 0.25 s (`progress.FrameThrottle`, used in `progress_window.py`) and
   scales it to 320 px on the long side, so previews never flood GTK's main loop.
 - **Worker thread.** Generation runs in a worker thread and GTK and GIMP calls
-  are marshalled to the main loop (`stable_boy/runner.py`), so the progress
+  are marshalled to the main loop (`openfill/runner.py`), so the progress
   window and Cancel stay responsive.
 - **Keep-warm with an idle timeout.** The supervisor keeps ComfyUI and the
   loaded model alive between plug-in calls, so only the first call pays the
   start-up and model load. It stops the server after `idle_timeout_minutes`
   (default 20) without a request and with an empty queue, and when GIMP
-  exits, to give the VRAM back. (`stable_boy/supervisor.py`,
-  `stable_boy/server.py`, `last_used` in `server-state.json`)
+  exits, to give the VRAM back. (`openfill/supervisor.py`,
+  `openfill/server.py`, `last_used` in `server-state.json`)
 - **Fast local health check.** `ComfyClient.is_alive` probes a local port
   with a 0.5 s TCP connect before the HTTP request, so a stopped local
   server is detected without Windows' 2 s refused-connection delay.
-  (`stable_boy/comfy_api.py`)
+  (`openfill/comfy_api.py`)
 - **Request time limit.** With `request_timeout` at 0 the limit is estimated
   per request from the steps, batch size and working size
   (`geometry.estimate_timeout`), so a large request is not cut off and a stuck one does
   not wait forever.
 - **Timing in the log.** Every ComfyUI fill writes its upload size and time,
-  queue to first step, sampling and download time to `stable-boy.log`
+  queue to first step, sampling and download time to `openfill.log`
   (`timing:` lines), so a slow call can be diagnosed from a user's log.
 
 ## Reading the numbers

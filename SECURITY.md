@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Security fixes go into the current Stable Boy 2 code for GIMP 3 (the
+Security fixes go into the current OpenFill code for GIMP 3 (the
 `gimp3-port` line and the releases made from it).
 
 ## Reporting a vulnerability

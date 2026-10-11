@@ -1,4 +1,5 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Model benchmark driver, executed INSIDE GIMP by the python-fu-eval batch
 interpreter (not a unit test). It runs one model over a list of benchmark
@@ -9,11 +10,11 @@ Image building, selections and the procedure call reuse the helpers of
 are produced afterwards by the launcher (system Python with numpy and PIL).
 
     set GIMP3_DIRECTORY=<isolated test profile>
-    set SB_BENCH_SPEC=<benchmark-spec.json>
-    set SB_BENCH_OUT=<output root>           (results go to <out>/<model>/<case>/)
-    set SB_BENCH_MODEL=<catalog model id>
-    set SB_BENCH_CASES=<id,id,...>           (optional; default every applicable case)
-    set SB_BENCH_DEADLINE=<epoch seconds>    (optional; no new case starts after it)
+    set OPENFILL_BENCH_SPEC=<benchmark-spec.json>
+    set OPENFILL_BENCH_OUT=<output root>           (results go to <out>/<model>/<case>/)
+    set OPENFILL_BENCH_MODEL=<catalog model id>
+    set OPENFILL_BENCH_CASES=<id,id,...>           (optional; default every applicable case)
+    set OPENFILL_BENCH_DEADLINE=<epoch seconds>    (optional; no new case starts after it)
     gimp-console-3.2.exe --new-instance --no-splash --console-messages ^
         --batch-interpreter python-fu-eval ^
         -b "exec(open(r'C:\\repos\\gimp-stable-boy\\tests\\gimp_batch_benchmark.py').read())"
@@ -23,7 +24,7 @@ gimp_batch_matrix.py: image, selection, proc, args) plus
 "op" (remove-small, remove-large, replace-into-empty, replace-object,
 material, damaged, expand-side, expand-all) and "families" (the model
 families it applies to: sd15, sdxl, flux, qwen_image, inpaint_model).
-The "model" argument is set from SB_BENCH_MODEL. A case already holding a
+The "model" argument is set from OPENFILL_BENCH_MODEL. A case already holding a
 gimp-report.json is skipped, so an interrupted run resumes where it stopped.
 """
 
@@ -33,17 +34,17 @@ import sys
 import time
 import traceback
 
-REPO = os.environ.get("SB_REPO", r"C:\repos\gimp-stable-boy")
-BENCH_SPEC = os.environ["SB_BENCH_SPEC"]
-BENCH_OUT = os.environ["SB_BENCH_OUT"]
-BENCH_MODEL = os.environ["SB_BENCH_MODEL"]
-BENCH_CASES = [s for s in os.environ.get("SB_BENCH_CASES", "").split(",") if s]
-DEADLINE = float(os.environ.get("SB_BENCH_DEADLINE", "0") or 0)
+REPO = os.environ.get("OPENFILL_REPO", r"C:\repos\gimp-stable-boy")
+BENCH_SPEC = os.environ["OPENFILL_BENCH_SPEC"]
+BENCH_OUT = os.environ["OPENFILL_BENCH_OUT"]
+BENCH_MODEL = os.environ["OPENFILL_BENCH_MODEL"]
+BENCH_CASES = [s for s in os.environ.get("OPENFILL_BENCH_CASES", "").split(",") if s]
+DEADLINE = float(os.environ.get("OPENFILL_BENCH_DEADLINE", "0") or 0)
 
 # Reuse the matrix helpers without running the matrix: execute its source up to
-# the module-level main() call. It reads SB_MATRIX_SPEC / SB_MATRIX_OUT at import.
-os.environ.setdefault("SB_MATRIX_SPEC", BENCH_SPEC)
-os.environ.setdefault("SB_MATRIX_OUT", BENCH_OUT)
+# the module-level main() call. It reads OPENFILL_MATRIX_SPEC / OPENFILL_MATRIX_OUT at import.
+os.environ.setdefault("OPENFILL_MATRIX_SPEC", BENCH_SPEC)
+os.environ.setdefault("OPENFILL_MATRIX_OUT", BENCH_OUT)
 _matrix_path = os.path.join(REPO, "tests", "gimp_batch_matrix.py")
 with open(_matrix_path, encoding="utf-8") as _fh:
     _source = _fh.read()
@@ -55,8 +56,8 @@ exec(compile(_source[:_cut], _matrix_path, "exec"), M)  # noqa: S102 - trusted r
 
 Gimp = M["Gimp"]
 PROFILE_DIR = Gimp.directory()
-PLUGIN_LOG = os.path.join(PROFILE_DIR, "stable-boy", "stable-boy.log")
-COMFY_LOG = os.path.join(PROFILE_DIR, "stable-boy", "comfyui.log")
+PLUGIN_LOG = os.path.join(PROFILE_DIR, "openfill", "openfill.log")
+COMFY_LOG = os.path.join(PROFILE_DIR, "openfill", "comfyui.log")
 TIMELINE = os.path.join(BENCH_OUT, "timeline.jsonl")
 
 
@@ -163,7 +164,7 @@ except Exception:  # noqa: BLE001
     traceback.print_exc()
 finally:
     timeline("quit", "-")
-    if os.environ.get("SB_TEST_QUIT", "1") == "1":
+    if os.environ.get("OPENFILL_TEST_QUIT", "1") == "1":
         q = Gimp.get_pdb().lookup_procedure("gimp-quit")
         cfg = q.create_config()
         cfg.set_property("force", True)

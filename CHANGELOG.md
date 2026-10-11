@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Renamed the project to OpenFill: menu Filters > OpenFill, plug-in
+  folder and entry script `gimp-openfill/gimp-openfill.py`, package
+  `openfill`, procedures `python-fu-openfill-*`, settings folder
+  `<profile>/openfill` with `openfill.log`, test variables `OPENFILL_*`.
+  Settings in `<profile>/stable-boy` are not migrated.
+- OpenFill is based on Stable Boy by Torben Giesselmann (GPL-3.0),
+  https://github.com/thndrbrrr/gimp-stable-boy.
+
 ## [2.0.0-beta.1] - 2026-10-09
 
 First public beta: model management from inside GIMP, a redesigned

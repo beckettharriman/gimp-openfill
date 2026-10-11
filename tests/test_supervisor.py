@@ -1,4 +1,5 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 """The supervisor's command line (it runs detached, so a parse error is otherwise invisible)."""
 
@@ -8,8 +9,8 @@ import os
 import unittest
 from pathlib import Path
 
-from stable_boy import supervisor
-from stable_boy.supervisor import build_parser
+from openfill import supervisor
+from openfill.supervisor import build_parser
 
 
 class ParserTests(unittest.TestCase):

@@ -1,4 +1,5 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Robustness driver, executed INSIDE GIMP by the python-fu-eval batch
 interpreter (not a unit test). One case per GIMP start: the launcher prepares
@@ -7,8 +8,8 @@ small synthetic image with a selection, calls Generative Fill
 non-interactively and records what the user would be left with.
 
     set GIMP3_DIRECTORY=<isolated robustness profile>
-    set SB_ROB_CASE=rob-backend-not-installed
-    set SB_ROB_OUT=<evidence folder for the case>
+    set OPENFILL_ROB_CASE=rob-backend-not-installed
+    set OPENFILL_ROB_OUT=<evidence folder for the case>
     gimp-console-3.2.exe --new-instance --no-splash --console-messages ^
         --batch-interpreter python-fu-eval ^
         -b "exec(open(r'C:\\repos\\gimp-stable-boy\\tests\\gimp_batch_robustness.py').read())"
@@ -17,8 +18,8 @@ The messages the plug-in shows with Gimp.message go to GIMP's stderr in
 console mode; the launcher captures that stream and merges it into
 report.json together with the process state after GIMP has exited.
 
-Outputs in SB_ROB_OUT: gimp-report.json (this script's part), before.png,
-after.png and plugin-log.txt (the stable-boy.log lines written during the
+Outputs in OPENFILL_ROB_OUT: gimp-report.json (this script's part), before.png,
+after.png and plugin-log.txt (the openfill.log lines written during the
 case).
 """
 
@@ -35,16 +36,16 @@ gi.require_version("Gimp", "3.0")
 gi.require_version("Gegl", "0.4")
 from gi.repository import Gegl, Gimp, Gio  # noqa: E402
 
-CASE = os.environ.get("SB_ROB_CASE", "rob-unnamed")
-OUT = os.environ["SB_ROB_OUT"]
-QUIT = os.environ.get("SB_TEST_QUIT", "1") == "1"
-PROC = os.environ.get("SB_ROB_PROC", "python-fu-stable-boy-generative-fill")
-WIDTH = int(os.environ.get("SB_ROB_W", "512"))
-HEIGHT = int(os.environ.get("SB_ROB_H", "384"))
-SELECTION = tuple(int(v) for v in os.environ.get("SB_ROB_SEL", "200,140,120,100").split(","))  # x, y, w, h
-VARIATIONS = int(os.environ.get("SB_ROB_VARIATIONS", "1"))
-HOLD = float(os.environ.get("SB_ROB_HOLD", "0"))  # seconds to stay open after the call (idle timeout)
-LOG_PATH = os.path.join(Gimp.directory(), "stable-boy", "stable-boy.log")
+CASE = os.environ.get("OPENFILL_ROB_CASE", "rob-unnamed")
+OUT = os.environ["OPENFILL_ROB_OUT"]
+QUIT = os.environ.get("OPENFILL_TEST_QUIT", "1") == "1"
+PROC = os.environ.get("OPENFILL_ROB_PROC", "python-fu-openfill-generative-fill")
+WIDTH = int(os.environ.get("OPENFILL_ROB_W", "512"))
+HEIGHT = int(os.environ.get("OPENFILL_ROB_H", "384"))
+SELECTION = tuple(int(v) for v in os.environ.get("OPENFILL_ROB_SEL", "200,140,120,100").split(","))  # x, y, w, h
+VARIATIONS = int(os.environ.get("OPENFILL_ROB_VARIATIONS", "1"))
+HOLD = float(os.environ.get("OPENFILL_ROB_HOLD", "0"))  # seconds to stay open after the call (idle timeout)
+LOG_PATH = os.path.join(Gimp.directory(), "openfill", "openfill.log")
 
 report = {
     "case": CASE,
@@ -192,15 +193,15 @@ def main():
     report["before"] = image_state(image)
     export_png(image, os.path.join(OUT, "before.png"))
     args = {
-        "prompt": os.environ.get("SB_ROB_PROMPT", "a red brick wall, photo"),
+        "prompt": os.environ.get("OPENFILL_ROB_PROMPT", "a red brick wall, photo"),
         "negative": "blurry",
         "variations": VARIATIONS,
         "strength": 1.0,
         "seed": 1234,
-        "model": os.environ.get("SB_ROB_MODEL", "fast"),
+        "model": os.environ.get("OPENFILL_ROB_MODEL", "fast"),
     }
     report["args"] = args
-    if os.environ.get("SB_ROB_WARMUP") == "1":
+    if os.environ.get("OPENFILL_ROB_WARMUP") == "1":
         # first fill starts the backend; the case's call then runs against a warm server
         t0 = time.monotonic()
         report["warmup"] = dict(zip(("status", "message"), run_procedure(image, image.get_layers(), args), strict=True))
@@ -213,13 +214,13 @@ def main():
         go = os.path.join(OUT, "go.txt")
         with open(os.path.join(OUT, "warm-done.txt"), "w", encoding="utf-8") as fh:
             fh.write(str(time.time()))
-        if os.environ.get("SB_ROB_WAIT_GO") == "1":
+        if os.environ.get("OPENFILL_ROB_WAIT_GO") == "1":
             t1 = time.time()
             while not os.path.exists(go) and time.time() - t1 < 120:
                 time.sleep(0.5)
-    step = os.environ.get("SB_ROB_CANCEL_STEP")
-    if step and os.environ.get("SB_TEST_CANCEL_FILE"):
-        with open(os.environ["SB_TEST_CANCEL_FILE"], "w", encoding="utf-8") as fh:
+    step = os.environ.get("OPENFILL_ROB_CANCEL_STEP")
+    if step and os.environ.get("OPENFILL_TEST_CANCEL_FILE"):
+        with open(os.environ["OPENFILL_TEST_CANCEL_FILE"], "w", encoding="utf-8") as fh:
             fh.write(step)
     report["call_started"] = time.time()
     with open(os.path.join(OUT, "call-started.txt"), "w", encoding="utf-8") as fh:

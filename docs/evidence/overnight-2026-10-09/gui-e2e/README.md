@@ -4,7 +4,7 @@ Real generations in a GUI GIMP 3.2.6 (`gimp-3.2.exe --new-instance`, isolated
 test profile, Windows 11, RTX 4070 Laptop, ComfyUI started hidden by the
 plug-in's supervisor). Every operation went through the INTERACTIVE procedure
 and its real dialog; only the user's input was scripted with the plug-in's
-test hooks (`SB_TEST_UI_FILE`):
+test hooks (`OPENFILL_TEST_UI_FILE`):
 
 - `type` / `press`: the prompt is typed into the prompt box and Return is
   delivered through GTK's key handling (Enter = Generate).
@@ -21,7 +21,7 @@ test hooks (`SB_TEST_UI_FILE`):
 Driver: `gui_e2e_driver.py` (this folder), run as
 
     set GIMP3_DIRECTORY=C:\AI\overnight-scratch\gimp-profile-test
-    set SB_TEST_UI_FILE=C:\AI\overnight-scratch\gui-e2e\ui-hooks.json
+    set OPENFILL_TEST_UI_FILE=C:\AI\overnight-scratch\gui-e2e\ui-hooks.json
     set SB_E2E_OUT=C:\AI\overnight-scratch\gui-e2e\run5
     set SB_E2E_TASKS=undo-probe,fill,expand
     gimp-3.2.exe --new-instance --no-splash --batch-interpreter python-fu-eval ^
@@ -29,7 +29,7 @@ Driver: `gui_e2e_driver.py` (this folder), run as
 
 While a procedure runs, a PowerShell watcher enumerates every top-level window
 of GIMP and its child processes every 0.5 s whose title starts with
-"Stable Boy - " or "Choose a variation" and logs `IsWindowVisible`, `IsIconic`
+"OpenFill - " or "Choose a variation" and logs `IsWindowVisible`, `IsIconic`
 and the rect per HWND (`windows.jsonl`); the first time a progress window is
 visible its screen area is copied with `CopyFromScreen` (what is on the
 monitor, not `PrintWindow`). Dialog and picker shots use the screenshot
@@ -61,7 +61,7 @@ typed and Return pressed. Log: `queued prompt ...
 (timeout 316s, 25 steps x 4)`, sampling 35.2 s, `fill: done, seed=1234, 4
 layer(s)`; 64 s for the whole call including a cold backend start (22 s).
 
-- Progress window: HWND 7473006 "Stable Boy - Generative Fill",
+- Progress window: HWND 7473006 "OpenFill - Generative Fill",
   `IsWindowVisible` = True in all 80 samples from 05:16:38 to 05:17:29, not
   iconic, rect x 1782..2184, y 984..1441 growing to 1542 (the monitor is
   2560 x 1600). `progress-window-on-screen.png` is the screen copy: "Generative
@@ -136,7 +136,7 @@ the same GIMP session). Label texts read from the dialog (`settings-steps.jsonl`
 (selection 215 x 185 at (155, 335)). Remove mode, Generate clicked
 (`remove-dialog.png`). Log: `fill: Remove object -> using mat-places512`,
 sampling 0.67 s, `fill: done, seed=1234, 1 layer(s)`; 9.3 s for the call. The
-progress window "Stable Boy - Object Removal" was visible (True in all 7
+progress window "OpenFill - Object Removal" was visible (True in all 7
 samples). Layer "Object Removal" above "Background". Result
 (`crop-before-after.png`): the handle is gone, the cup wall and saucer
 continue plausibly; a slightly soft patch where the saucer rim meets the cup on
@@ -144,7 +144,7 @@ the left.
 
 ## Fixes made during this run
 
-1. Expand Discard restores the canvas (`gimp-stable-boy.py`: `run_expand`,
+1. Expand Discard restores the canvas (`gimp-openfill.py`: `run_expand`,
    `_canvas_state`, `_canvas_restore`, `_after_insert`, `_pick_variation`).
    `run_expand` records the canvas size and the offsets of an existing layer
    before the expand and after it; `_canvas_restore` turns the difference into

@@ -1,4 +1,5 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 """End-to-end check of the model catalog features, executed INSIDE GIMP via
 python-fu-eval (see gimp_batch_fill.py for the command line). It downloads
@@ -8,11 +9,11 @@ custom node pack through the supervisor (backend restart), then switches back
 to SD 1.5 and runs a normal fill.
 
 Environment:
-    SB_REPO, SB_TEST_OUT, SB_TEST_IMAGE  as in gimp_batch_fill.py
-    SB_TEST_DOWNLOAD_ID   catalog id to download (default mat-places512)
-    SB_TEST_NODES_ID      catalog id whose nodes to install (default flux1-fill-dev-gguf-q4)
-    SB_TEST_SETTINGS      "1" to open the Settings dialog on the Models tab at the end
-                          (auto-closes after SB_TEST_AUTOCLOSE seconds, default 8)
+    OPENFILL_REPO, OPENFILL_TEST_OUT, OPENFILL_TEST_IMAGE  as in gimp_batch_fill.py
+    OPENFILL_TEST_DOWNLOAD_ID   catalog id to download (default mat-places512)
+    OPENFILL_TEST_NODES_ID      catalog id whose nodes to install (default flux1-fill-dev-gguf-q4)
+    OPENFILL_TEST_SETTINGS      "1" to open the Settings dialog on the Models tab at the end
+                          (auto-closes after OPENFILL_TEST_AUTOCLOSE seconds, default 8)
 """
 
 import hashlib
@@ -27,12 +28,12 @@ import gi
 gi.require_version("Gimp", "3.0")
 from gi.repository import Gimp, Gio
 
-REPO = os.environ.get("SB_REPO", r"C:\repos\gimp-stable-boy")
-sys.path.insert(0, os.path.join(REPO, "gimp-stable-boy"))
-IMAGE = os.environ.get("SB_TEST_IMAGE", os.path.join(REPO, "tests", "data", "test-scene.png"))
-OUT = os.environ.get("SB_TEST_OUT", os.path.join(REPO, "docs", "evidence", "models"))
-DOWNLOAD_ID = os.environ.get("SB_TEST_DOWNLOAD_ID", "mat-places512")
-NODES_ID = os.environ.get("SB_TEST_NODES_ID", "flux1-fill-dev-gguf-q4")
+REPO = os.environ.get("OPENFILL_REPO", r"C:\repos\gimp-stable-boy")
+sys.path.insert(0, os.path.join(REPO, "gimp-openfill"))
+IMAGE = os.environ.get("OPENFILL_TEST_IMAGE", os.path.join(REPO, "tests", "data", "test-scene.png"))
+OUT = os.environ.get("OPENFILL_TEST_OUT", os.path.join(REPO, "docs", "evidence", "models"))
+DOWNLOAD_ID = os.environ.get("OPENFILL_TEST_DOWNLOAD_ID", "mat-places512")
+NODES_ID = os.environ.get("OPENFILL_TEST_NODES_ID", "flux1-fill-dev-gguf-q4")
 SELECTION = (420, 300, 260, 200)
 os.makedirs(OUT, exist_ok=True)
 
@@ -55,7 +56,7 @@ def describe_layers(image):
 
 
 def run_fill(image, prompt, model):
-    proc = Gimp.get_pdb().lookup_procedure("python-fu-stable-boy-generative-fill")
+    proc = Gimp.get_pdb().lookup_procedure("python-fu-openfill-generative-fill")
     config = proc.create_config()
     config.set_property("run-mode", Gimp.RunMode.NONINTERACTIVE)
     config.set_property("image", image)
@@ -94,8 +95,8 @@ def wait_task(app, task_id, timeout=900):
 
 
 try:
-    from stable_boy import catalog as cat
-    from stable_boy.app import App
+    from openfill import catalog as cat
+    from openfill.app import App
 
     app = App()
     rows = app.model_rows()
@@ -157,7 +158,7 @@ try:
         tid = app.queue_node_install(NODES_ID)
         result3, _ = wait_task(app, tid, timeout=900)
         step("nodes-installed", result=result3, folder_exists=(app.custom_nodes_dir / nodes[0].folder).is_dir())
-        from stable_boy.comfy_api import ComfyClient
+        from openfill.comfy_api import ComfyClient
 
         client = ComfyClient(app.server.url())
         seen = False
@@ -177,12 +178,12 @@ try:
     final = {r["id"]: r["status"] for r in App().model_rows(App().server_model_files())}
     step("status-final", all=final)
 
-    if os.environ.get("SB_TEST_SETTINGS") == "1":
-        os.environ["SB_SETTINGS_TAB"] = "models"
-        os.environ.setdefault("SB_TEST_AUTOCLOSE", "8")
+    if os.environ.get("OPENFILL_TEST_SETTINGS") == "1":
+        os.environ["OPENFILL_SETTINGS_TAB"] = "models"
+        os.environ.setdefault("OPENFILL_TEST_AUTOCLOSE", "8")
         with open(os.path.join(OUT, "dialog-open.marker"), "w") as fh:
             fh.write(str(time.time()))
-        proc = Gimp.get_pdb().lookup_procedure("python-fu-stable-boy-settings")
+        proc = Gimp.get_pdb().lookup_procedure("python-fu-openfill-settings")
         config = proc.create_config()
         config.set_property("run-mode", Gimp.RunMode.INTERACTIVE)
         res = proc.run(config)
@@ -197,7 +198,7 @@ finally:
     report["finished"] = time.strftime("%Y-%m-%d %H:%M:%S")
     with open(os.path.join(OUT, "batch-report.json"), "w", encoding="utf-8") as fh:
         json.dump(report, fh, indent=2, default=str)
-    if os.environ.get("SB_TEST_QUIT", "1") == "1":
+    if os.environ.get("OPENFILL_TEST_QUIT", "1") == "1":
         q = Gimp.get_pdb().lookup_procedure("gimp-quit")
         cfg = q.create_config()
         cfg.set_property("force", True)

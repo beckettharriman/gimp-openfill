@@ -4,7 +4,7 @@
 import unittest
 from pathlib import Path
 
-from stable_boy import catalog as cat
+from openfill import catalog as cat
 
 CATALOG = Path(__file__).resolve().parent.parent / "models" / "catalog.json"
 
@@ -73,7 +73,7 @@ class DefaultsTests(unittest.TestCase):
         self.assertEqual(cat.suggest_active(inst, "flux1-fill-dev"), "realvisxl-v5")
 
     def test_qwen_is_flagged_as_needing_more_than_8gb(self):
-        from stable_boy import hardware as hw
+        from openfill import hardware as hw
 
         self.assertGreater(hw.OFFLOAD_FLOOR_GB["qwen_image"], 8.0)
 

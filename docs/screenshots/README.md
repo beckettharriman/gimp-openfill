@@ -8,7 +8,7 @@ variations), so the preview and thumbnails show the test scene, not a result.
 
 | File | Shows |
 |---|---|
-| `filters-ai-menu.png` | `Filters > AI` with Generative Expand..., Generative Fill Settings..., Generative Fill..., Stop AI Backend and Text to Image... (GIMP sorts them alphabetically). |
+| `filters-ai-menu.png` | `Filters > OpenFill` with Generative Expand..., Generative Fill Settings..., Generative Fill..., Stop AI Backend and Text to Image... (GIMP sorts them alphabetically). |
 | `fill-dialog.png` | Generative Fill in Fill with a prompt mode: the pre-filled prompt "a red door with brass handles", Recent prompts, the Enter / Shift+Enter hint, collapsed Advanced, "Selection: 260 x 200 px in a 1024 x 768 px image" and the shortcut tip. |
 | `fill-dialog-advanced.png` | The same dialog with Advanced open: Model, Avoid, Variations, Change amount, Seed. |
 | `fill-dialog-recent-prompts.png` | The Recent prompts menu. |

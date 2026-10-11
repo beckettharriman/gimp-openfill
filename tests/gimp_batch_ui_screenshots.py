@@ -1,17 +1,18 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Inside a GUI GIMP: open every Stable Boy window interactively and capture
+"""Inside a GUI GIMP: open every OpenFill window interactively and capture
 it, without ever generating, testing the backend or downloading.
 
 Launch (PowerShell, isolated profile, never the user's own GIMP):
 
     $env:GIMP3_DIRECTORY = 'C:\\AI\\overnight-scratch\\gimp-profile-ux'
-    $env:SB_TEST_UI_FILE = 'C:\\AI\\overnight-scratch\\ux-run\\ui-hooks.json'
+    $env:OPENFILL_TEST_UI_FILE = 'C:\\AI\\overnight-scratch\\ux-run\\ui-hooks.json'
     & 'C:\\Users\\...\\GIMP 3\\bin\\gimp-3.2.exe' --new-instance --no-splash `
         --batch-interpreter python-fu-eval `
         -b "exec(open(r'<repo>\\tests\\gimp_batch_ui_screenshots.py').read())"
 
-SB_TEST_UI_FILE must be set before GIMP starts: the plug-in processes are
+OPENFILL_TEST_UI_FILE must be set before GIMP starts: the plug-in processes are
 spawned by GIMP and inherit its environment, not this script's. This script
 rewrites that JSON file before each call (the plug-in re-reads it), so the
 hooks differ per dialog: ``autoclose`` answers Cancel after N seconds,
@@ -26,9 +27,9 @@ prompt box rectangle, status texts and editor state as JSON lines),
 (record the procedure config instead of generating). Further hooks used by
 the GUI end-to-end driver (docs/evidence/overnight-2026-10-09/gui-e2e):
 ``values`` (dialog start values), ``click`` ("generate"), ``picker_steps``
-(also after a real generation) and ``settings_steps`` / ``settings_out``. SB_TEST_MENU=1 also
-captures the Filters > AI menu (sends keys to this GIMP window only).
-SB_REPO is the checkout to use, SB_TEST_OUT the screenshot folder.
+(also after a real generation) and ``settings_steps`` / ``settings_out``. OPENFILL_TEST_MENU=1 also
+captures the Filters > OpenFill menu (sends keys to this GIMP window only).
+OPENFILL_REPO is the checkout to use, OPENFILL_TEST_OUT the screenshot folder.
 
 Each window is captured by a PowerShell helper (written next to the output)
 that finds the window by its exact title among windows of processes whose
@@ -49,11 +50,11 @@ import gi
 gi.require_version("Gimp", "3.0")
 from gi.repository import Gimp, Gio  # noqa: E402
 
-REPO = os.environ.get("SB_REPO", r"C:\repos\gimp-stable-boy")
-OUT = os.environ.get("SB_TEST_OUT", os.path.join(REPO, "docs", "screenshots"))
-HOOKS = os.environ.get("SB_TEST_UI_FILE", "")
-IMAGE = os.environ.get("SB_TEST_IMAGE", os.path.join(REPO, "tests", "data", "test-scene.png"))
-WORK = os.environ.get("SB_TEST_WORK", os.path.join(os.environ.get("TEMP", OUT), "stable-boy-ui-shots"))
+REPO = os.environ.get("OPENFILL_REPO", r"C:\repos\gimp-stable-boy")
+OUT = os.environ.get("OPENFILL_TEST_OUT", os.path.join(REPO, "docs", "screenshots"))
+HOOKS = os.environ.get("OPENFILL_TEST_UI_FILE", "")
+IMAGE = os.environ.get("OPENFILL_TEST_IMAGE", os.path.join(REPO, "tests", "data", "test-scene.png"))
+WORK = os.environ.get("OPENFILL_TEST_WORK", os.path.join(os.environ.get("TEMP", OUT), "openfill-ui-shots"))
 os.makedirs(OUT, exist_ok=True)
 os.makedirs(WORK, exist_ok=True)
 GIMP_PID = os.getppid()
@@ -153,7 +154,7 @@ if ($ClickCancel -eq 1) {
 }
 """
 
-# Optional (SB_TEST_MENU=1): open Filters > AI in the GIMP window with the
+# Optional (OPENFILL_TEST_MENU=1): open Filters > OpenFill in the GIMP window with the
 # keyboard and capture the screen area. Keys are sent only after checking
 # that the foreground window belongs to this GIMP; the screen must be
 # unlocked. "{UP} {UP} {RIGHT}" assumes AI is the second-to-last entry of
@@ -299,7 +300,7 @@ def capture(title, out_name, delays_ms="2500", screen=False, click_cancel=False)
 
 def set_hooks(**hooks):
     if not HOOKS:
-        raise RuntimeError("SB_TEST_UI_FILE must be set in the environment GIMP was started with")
+        raise RuntimeError("OPENFILL_TEST_UI_FILE must be set in the environment GIMP was started with")
     with open(HOOKS, "w", encoding="utf-8") as fh:
         json.dump(hooks, fh)
 
@@ -364,14 +365,14 @@ try:
     image.select_rectangle(Gimp.ChannelOps.REPLACE, 420, 300, 260, 200)
     Gimp.displays_flush()
     time.sleep(2)
-    if os.environ.get("SB_TEST_MENU") == "1":
+    if os.environ.get("OPENFILL_TEST_MENU") == "1":
         capture_menu("filters-ai-menu.png")
     fill, expand, txt = (
-        "python-fu-stable-boy-generative-fill",
-        "python-fu-stable-boy-generative-expand",
-        "python-fu-stable-boy-text-to-image",
+        "python-fu-openfill-generative-fill",
+        "python-fu-openfill-generative-expand",
+        "python-fu-openfill-text-to-image",
     )
-    settings = "python-fu-stable-boy-settings"
+    settings = "python-fu-openfill-settings"
 
     def set_prompt(text):
         return lambda config: config.set_property("prompt", text)
@@ -569,7 +570,7 @@ try:
     run_case(
         "progress",
         fill,
-        "Stable Boy - Generative Fill",
+        "OpenFill - Generative Fill",
         "progress-window-start.png",
         {"progress_demo": 11},
         image,
@@ -624,7 +625,7 @@ finally:
         json.dump(report, fh, indent=2, default=str)
     if HOOKS:
         set_hooks()
-    if os.environ.get("SB_TEST_QUIT", "1") == "1":
+    if os.environ.get("OPENFILL_TEST_QUIT", "1") == "1":
         q = Gimp.get_pdb().lookup_procedure("gimp-quit")
         cfg = q.create_config()
         cfg.set_property("force", True)

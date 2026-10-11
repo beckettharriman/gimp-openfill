@@ -1,4 +1,5 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 """No-model scene description used to augment prompts."""
 
@@ -7,9 +8,9 @@ import sys
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "gimp-stable-boy"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "gimp-openfill"))
 
-from stable_boy import caption  # noqa: E402
+from openfill import caption  # noqa: E402
 
 
 def buf(w, h, fn):

@@ -1,6 +1,6 @@
 # Security notes
 
-Stable Boy is a GIMP plug-in that starts a local ComfyUI server, downloads
+OpenFill is a GIMP plug-in that starts a local ComfyUI server, downloads
 model weights and installs ComfyUI custom node packs. This page describes what
 it trusts, what it checks, where it keeps data and how to report a problem.
 
@@ -53,7 +53,7 @@ machine who can read your home folder.
 
 The plug-in never kills a process by a pid read from a file. The supervisor
 only terminates the ComfyUI child it started itself (a Windows Job Object with
-kill-on-close ties that child to the supervisor). Filters > AI > Stop AI
+kill-on-close ties that child to the supervisor). Filters > OpenFill > Stop AI
 Backend writes a stop request into `server-state.json`
 (`server.ServerManager.request_stop`); the supervisor acts on it.
 
@@ -91,14 +91,14 @@ https://huggingface.co/settings/tokens if you think it leaked.
 
 ## What is stored where
 
-All plug-in state lives in `<GIMP profile>/stable-boy/` (for example
-`%APPDATA%\GIMP\3.2\stable-boy` on Windows, `~/.config/GIMP/3.2/stable-boy` on
+All plug-in state lives in `<GIMP profile>/openfill/` (for example
+`%APPDATA%\GIMP\3.2\openfill` on Windows, `~/.config/GIMP/3.2/openfill` on
 Linux):
 
 | File | Contents |
 | --- | --- |
 | `config.json` | settings, including the Hugging Face token |
-| `stable-boy.log` (+ `.1`, `.2`) | plug-in and supervisor log, rotated at 2 MB; prompts and file paths appear here, tokens do not |
+| `openfill.log` (+ `.1`, `.2`) | plug-in and supervisor log, rotated at 2 MB; prompts and file paths appear here, tokens do not |
 | `comfyui.log` | ComfyUI's output |
 | `server-state.json` | supervisor and ComfyUI pids, URL, status |
 | `tasks/`, `tasks-status.json`, `tasks-worker.json` | download and install queue and progress |
@@ -127,7 +127,7 @@ model hosts listed under "Live model search" and the download hosts.
 
 Every time the Models tab opens, the plug-in asks `huggingface.co` and
 `civitai.com` for current models (read-only API calls, user agent
-`gimp-stable-boy`, never your token) and caches the answers in
+`gimp-openfill`, never your token) and caches the answers in
 `hub-cache.json`. Responses are capped at 16 MB and a malformed answer only
 drops that item. Set `hub_search` to false in `config.json` to turn the search
 off, or `hub_civitai` to false to skip Civitai (no dialog option yet).

@@ -1,4 +1,5 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Inside GIMP: verify that a node-install task restarts a running backend and
 that the Settings dialog opens on the Models tab (for a screenshot).
@@ -20,9 +21,9 @@ import gi
 gi.require_version("Gimp", "3.0")
 from gi.repository import Gimp
 
-REPO = os.environ.get("SB_REPO", r"C:\repos\gimp-stable-boy")
-sys.path.insert(0, os.path.join(REPO, "gimp-stable-boy"))
-OUT = os.environ.get("SB_TEST_OUT", os.path.join(REPO, "docs", "evidence", "models"))
+REPO = os.environ.get("OPENFILL_REPO", r"C:\repos\gimp-stable-boy")
+sys.path.insert(0, os.path.join(REPO, "gimp-openfill"))
+OUT = os.environ.get("OPENFILL_TEST_OUT", os.path.join(REPO, "docs", "evidence", "models"))
 os.makedirs(OUT, exist_ok=True)
 report = {"started": time.strftime("%Y-%m-%d %H:%M:%S"), "gimp_pid": os.getpid(), "steps": []}
 
@@ -34,10 +35,10 @@ def step(name, **info):
 
 
 try:
-    from stable_boy import catalog as cat
-    from stable_boy.app import App
-    from stable_boy.comfy_api import ComfyClient
-    from stable_boy.config import comfy_layout
+    from openfill import catalog as cat
+    from openfill.app import App
+    from openfill.comfy_api import ComfyClient
+    from openfill.config import comfy_layout
 
     app = App()
     url = app.server.ensure_running(lambda f, t: None)
@@ -98,11 +99,11 @@ try:
         gguf_after=bool(client.object_info("UnetLoaderGGUF")) if client.is_alive(2.0) else None,
     )
 
-    os.environ["SB_SETTINGS_TAB"] = "models"
-    os.environ.setdefault("SB_TEST_AUTOCLOSE", "10")
+    os.environ["OPENFILL_SETTINGS_TAB"] = "models"
+    os.environ.setdefault("OPENFILL_TEST_AUTOCLOSE", "10")
     with open(os.path.join(OUT, "dialog-open.marker"), "w") as fh:
         fh.write(str(time.time()))
-    proc = Gimp.get_pdb().lookup_procedure("python-fu-stable-boy-settings")
+    proc = Gimp.get_pdb().lookup_procedure("python-fu-openfill-settings")
     config = proc.create_config()
     config.set_property("run-mode", Gimp.RunMode.INTERACTIVE)
     res = proc.run(config)
@@ -117,7 +118,7 @@ finally:
     report["finished"] = time.strftime("%Y-%m-%d %H:%M:%S")
     with open(os.path.join(OUT, "restart-report.json"), "w", encoding="utf-8") as fh:
         json.dump(report, fh, indent=2, default=str)
-    if os.environ.get("SB_TEST_QUIT", "1") == "1":
+    if os.environ.get("OPENFILL_TEST_QUIT", "1") == "1":
         q = Gimp.get_pdb().lookup_procedure("gimp-quit")
         cfg = q.create_config()
         cfg.set_property("force", True)

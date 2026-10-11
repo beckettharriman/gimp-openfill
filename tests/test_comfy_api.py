@@ -7,9 +7,9 @@ import time
 import unittest
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-from stable_boy.backend import InpaintRequest, ModelMissing, ModelSpec, OutOfMemory, Sampling, WorkflowRejected
-from stable_boy.backends.comfy import ComfyBackend
-from stable_boy.comfy_api import ComfyApiError, ComfyClient, ComfyExecutionError
+from openfill.backend import InpaintRequest, ModelMissing, ModelSpec, OutOfMemory, Sampling, WorkflowRejected
+from openfill.backends.comfy import ComfyBackend
+from openfill.comfy_api import ComfyApiError, ComfyClient, ComfyExecutionError
 
 
 class StubState:
@@ -113,7 +113,7 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == "/upload/image":
             name = body.split(b'filename="', 1)[1].split(b'"', 1)[0].decode()
             STATE.uploads.append((name, length))
-            self._send(200, {"name": name, "subfolder": "stable-boy", "type": "input"})
+            self._send(200, {"name": name, "subfolder": "openfill", "type": "input"})
         elif self.path == "/prompt":
             payload = json.loads(body)
             STATE.prompts.append(payload)
@@ -152,7 +152,7 @@ class ComfyClientTests(unittest.TestCase):
 
     def test_upload_and_queue_and_wait(self):
         ref = self.client.upload_image("m.png", b"\x89PNG....")
-        self.assertEqual(ref, "stable-boy/m.png")
+        self.assertEqual(ref, "openfill/m.png")
         self.assertEqual(STATE.uploads[0][0], "m.png")
         pid = self.client.queue_prompt({"a": {"class_type": "X", "inputs": {}}})
         self.assertEqual(pid, "pid-1")
@@ -264,9 +264,7 @@ class ComfyBackendTests(unittest.TestCase):
         self.assertEqual(result.seed, 1)
         self.assertEqual(len(STATE.uploads), 2)
         graph = STATE.prompts[0]["prompt"]
-        self.assertEqual(
-            graph["load_image"]["inputs"]["image"], "stable-boy/sb-{}-image.png".format(result.info["job"])
-        )
+        self.assertEqual(graph["load_image"]["inputs"]["image"], "openfill/sb-{}-image.png".format(result.info["job"]))
         self.assertEqual(graph["mask_grow"]["class_type"], "INPAINT_ExpandMask")
 
     def test_missing_model_is_translated(self):

@@ -1,8 +1,9 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 # Tool configuration only. The plug-in is not packaged: GIMP loads it straight
-# from the gimp-stable-boy folder and it has no pip dependencies.
+# from the gimp-openfill folder and it has no pip dependencies.
 
 [tool.ruff]
 line-length = 120
@@ -37,7 +38,7 @@ ignore = [
 "tests/gimp_batch_*.py" = ["E402"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["stable_boy"]
+known-first-party = ["openfill"]
 
 [tool.ruff.format]
 line-ending = "lf"

@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 from types import SimpleNamespace
 
-from stable_boy import catalog as cat
+from openfill import catalog as cat
 
 REPO = Path(__file__).resolve().parent.parent
 CATALOG = REPO / "models" / "catalog.json"
@@ -61,7 +61,7 @@ class ShippedCatalogTests(unittest.TestCase):
             self.assertIn("ComfyUI-GGUF", folders)
 
     def test_search_paths(self):
-        paths = cat.catalog_search_paths(REPO / "gimp-stable-boy")
+        paths = cat.catalog_search_paths(REPO / "gimp-openfill")
         self.assertEqual(paths[1], CATALOG)
 
 

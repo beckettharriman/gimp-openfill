@@ -5,8 +5,8 @@ import tempfile
 import unittest
 from types import SimpleNamespace
 
-from stable_boy import hardware as hwmod
-from stable_boy.catalog import FileSpec, load_catalog
+from openfill import hardware as hwmod
+from openfill.catalog import FileSpec, load_catalog
 
 GB = 1024**3
 

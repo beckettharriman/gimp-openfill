@@ -3,7 +3,7 @@ import json
 import struct
 import unittest
 
-from stable_boy import progress as pr
+from openfill import progress as pr
 
 
 class PreviewFrameTests(unittest.TestCase):

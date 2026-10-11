@@ -56,7 +56,7 @@ will be regenerated."
 ### Generative Expand
 
 - The four pixel boxes are no longer the main control. A canvas editor
-  (`stable_boy/ui_expand.py`, a `Gtk.DrawingArea`) shows a thumbnail of the
+  (`openfill/ui_expand.py`, a `Gtk.DrawingArea`) shows a thumbnail of the
   image (fits 360 px) inside a dashed frame for the new canvas. Dragging any
   of the eight handles (or anywhere along an edge) outward adds space; the new
   area is shaded blue and labelled with its size ("+256"); the pixel boxes and
@@ -114,7 +114,7 @@ Advanced holds only Seed.
 ### Texts
 
 Every text the generation dialogs, the Settings window, the variations picker
-and the progress window show now comes from `stable_boy/ui_text.py`
+and the progress window show now comes from `openfill/ui_text.py`
 (the Settings field tables `GENERAL_FIELDS`, `ADVANCED_FIELDS`,
 `CONNECTION_FIELDS` moved there; `dialogs.py` keeps the old names as
 aliases). Window titles are unchanged, so the screenshot script still finds
@@ -125,7 +125,7 @@ scheduler, denoise, node, workflow, checkpoint, latent, vae, comfy.
 
 ## Pure functions and tests
 
-`stable_boy/ui_expand.py` (no `gi` needed for these; `tests/test_ui_expand.py`,
+`openfill/ui_expand.py` (no `gi` needed for these; `tests/test_ui_expand.py`,
 27 tests):
 
 | Function | Does |
@@ -139,11 +139,11 @@ scheduler, denoise, node, workflow, checkpoint, latent, vae, comfy.
 | `drag_margins` | margins after dragging a handle by (dx, dy) screen px |
 | `ExpandState` | margins, preset and anchor kept consistent; one listener |
 
-`stable_boy/ui_text.py`: `selection_status`, `expand_status`,
+`openfill/ui_text.py`: `selection_status`, `expand_status`,
 `txt2img_status`, `prompt_free_warning`, `anchor_tip`, `picker_heading`
 (tests in `tests/test_ui_text.py`).
 
-## Test hooks (SB_TEST_UI_FILE JSON keys)
+## Test hooks (OPENFILL_TEST_UI_FILE JSON keys)
 
 Existing keys keep working (`autoclose`, `advanced`, `mode`, `values`,
 `type`, `press`, `click`, `open_recent`, `dry_run`, `fake_variations`,

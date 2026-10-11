@@ -1,11 +1,12 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Inside GIMP: run one Generative Fill so the floating progress window can be
 observed/captured from outside, and record the outcome. Launch twice:
 
-  normal run:   SB_TEST_OUT=.../progress-window/normal
-  cancel run:   SB_TEST_CANCEL_AT=0.3 (set in the launcher shell so the plug-in
-                process inherits it) and SB_TEST_OUT=.../progress-window/cancel
+  normal run:   OPENFILL_TEST_OUT=.../progress-window/normal
+  cancel run:   OPENFILL_TEST_CANCEL_AT=0.3 (set in the launcher shell so the plug-in
+                process inherits it) and OPENFILL_TEST_OUT=.../progress-window/cancel
 
 The report records the procedure status, the layers before/after, the
 ComfyUI queue state afterwards and the processes the plug-in left behind.
@@ -22,15 +23,15 @@ import gi
 gi.require_version("Gimp", "3.0")
 from gi.repository import Gimp, Gio
 
-REPO = os.environ.get("SB_REPO", r"C:\repos\gimp-stable-boy")
-sys.path.insert(0, os.path.join(REPO, "gimp-stable-boy"))
-IMAGE = os.environ.get("SB_TEST_IMAGE", os.path.join(REPO, "tests", "data", "test-scene.png"))
-OUT = os.environ.get("SB_TEST_OUT", os.path.join(REPO, "docs", "evidence", "progress-window"))
+REPO = os.environ.get("OPENFILL_REPO", r"C:\repos\gimp-stable-boy")
+sys.path.insert(0, os.path.join(REPO, "gimp-openfill"))
+IMAGE = os.environ.get("OPENFILL_TEST_IMAGE", os.path.join(REPO, "tests", "data", "test-scene.png"))
+OUT = os.environ.get("OPENFILL_TEST_OUT", os.path.join(REPO, "docs", "evidence", "progress-window"))
 os.makedirs(OUT, exist_ok=True)
 report = {
     "started": time.strftime("%Y-%m-%d %H:%M:%S"),
     "gimp_pid": os.getpid(),
-    "cancel_at": os.environ.get("SB_TEST_CANCEL_AT"),
+    "cancel_at": os.environ.get("OPENFILL_TEST_CANCEL_AT"),
     "steps": [],
 }
 
@@ -46,8 +47,8 @@ def layers(image):
 
 
 try:
-    from stable_boy.app import App
-    from stable_boy.comfy_api import ComfyClient
+    from openfill.app import App
+    from openfill.comfy_api import ComfyClient
 
     app = App()
     step(
@@ -64,7 +65,7 @@ try:
     before = layers(image)
     with open(os.path.join(OUT, "fill-started.marker"), "w") as fh:
         fh.write(str(time.time()))
-    proc = Gimp.get_pdb().lookup_procedure("python-fu-stable-boy-generative-fill")
+    proc = Gimp.get_pdb().lookup_procedure("python-fu-openfill-generative-fill")
     config = proc.create_config()
     config.set_property("run-mode", Gimp.RunMode.NONINTERACTIVE)
     config.set_property("image", image)
@@ -102,7 +103,7 @@ finally:
     report["finished"] = time.strftime("%Y-%m-%d %H:%M:%S")
     with open(os.path.join(OUT, "batch-report.json"), "w", encoding="utf-8") as fh:
         json.dump(report, fh, indent=2, default=str)
-    if os.environ.get("SB_TEST_QUIT", "1") == "1":
+    if os.environ.get("OPENFILL_TEST_QUIT", "1") == "1":
         q = Gimp.get_pdb().lookup_procedure("gimp-quit")
         cfg = q.create_config()
         cfg.set_property("force", True)

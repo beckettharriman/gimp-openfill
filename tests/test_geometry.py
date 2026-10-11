@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 import unittest
 
-from stable_boy import geometry as g
+from openfill import geometry as g
 
 
 class RectTests(unittest.TestCase):

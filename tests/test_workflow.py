@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 import unittest
 
-from stable_boy import geometry as g
-from stable_boy import png
-from stable_boy import workflow as w
-from stable_boy.backend import InpaintRequest, ModelSpec, Sampling, Txt2ImgRequest
+from openfill import geometry as g
+from openfill import png
+from openfill import workflow as w
+from openfill.backend import InpaintRequest, ModelSpec, Sampling, Txt2ImgRequest
 
 
 def _req(**overrides) -> InpaintRequest:
@@ -347,7 +347,7 @@ class TimeoutEstimateTests(unittest.TestCase):
     """Automatic request timeout of the ComfyUI backend (cold model loads)."""
 
     def _backend(self, last, root=None):
-        from stable_boy.backends import comfy
+        from openfill.backends import comfy
 
         class Client:
             def last_model_files(self):
@@ -367,7 +367,7 @@ class TimeoutEstimateTests(unittest.TestCase):
         self.assertGreaterEqual(fresh, 600)
 
     def test_unknown_history_counts_as_cold(self):
-        from stable_boy.comfy_api import ComfyApiError
+        from openfill.comfy_api import ComfyApiError
 
         model = ModelSpec(checkpoint="a.safetensors", arch="sd15")
         self.assertGreaterEqual(self._backend(ComfyApiError("down"))._estimate(25, 1, 1, model), 600)
@@ -376,7 +376,7 @@ class TimeoutEstimateTests(unittest.TestCase):
         import tempfile
         from pathlib import Path
 
-        from stable_boy.backends import comfy
+        from openfill.backends import comfy
 
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -390,7 +390,7 @@ class TimeoutEstimateTests(unittest.TestCase):
             self.assertEqual(comfy.model_bytes(None, {"a.safetensors"}), 0)
 
     def test_last_model_files_reads_the_latest_prompt(self):
-        from stable_boy.comfy_api import ComfyClient
+        from openfill.comfy_api import ComfyClient
 
         client = ComfyClient("http://127.0.0.1:1")
         graph = {

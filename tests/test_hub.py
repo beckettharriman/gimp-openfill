@@ -11,8 +11,8 @@ import unittest
 from pathlib import Path
 from urllib.error import URLError
 
-from stable_boy import catalog as cat
-from stable_boy import hardware, hub
+from openfill import catalog as cat
+from openfill import hardware, hub
 
 FIXTURES = json.loads((Path(__file__).resolve().parent / "data" / "hub-fixtures.json").read_text(encoding="utf-8"))
 RESPONSES = FIXTURES["responses"]

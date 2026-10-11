@@ -1,4 +1,5 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Performance driver, executed INSIDE GIMP by the python-fu-eval batch
 interpreter (not a unit test). It builds one photo-like test image, then runs
@@ -7,8 +8,8 @@ cutting the plug-in log lines that belong to it (the backend writes
 "timing:" lines with the upload, queue, sampling and download split).
 
     set GIMP3_DIRECTORY=<isolated test profile>
-    set SB_PERF_PLAN=<plan.json>
-    set SB_PERF_OUT=<output folder>
+    set OPENFILL_PERF_PLAN=<plan.json>
+    set OPENFILL_PERF_OUT=<output folder>
     gimp-console-3.2.exe --new-instance --no-splash --console-messages ^
         --batch-interpreter python-fu-eval ^
         -b "exec(open(r'C:\\repos\\gimp-stable-boy\\tests\\gimp_batch_perf.py').read())"
@@ -38,11 +39,11 @@ import gi
 gi.require_version("Gimp", "3.0")
 from gi.repository import Gimp, Gio  # noqa: E402
 
-PLAN = os.environ["SB_PERF_PLAN"]
-OUT = os.environ["SB_PERF_OUT"]
-QUIT = os.environ.get("SB_TEST_QUIT", "1") == "1"
-LOG_PATH = os.path.join(Gimp.directory(), "stable-boy", "stable-boy.log")
-PROC = "python-fu-stable-boy-generative-fill"
+PLAN = os.environ["OPENFILL_PERF_PLAN"]
+OUT = os.environ["OPENFILL_PERF_OUT"]
+QUIT = os.environ.get("OPENFILL_TEST_QUIT", "1") == "1"
+LOG_PATH = os.path.join(Gimp.directory(), "openfill", "openfill.log")
+PROC = "python-fu-openfill-generative-fill"
 
 
 def log_size():

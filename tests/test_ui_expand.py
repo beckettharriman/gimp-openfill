@@ -3,8 +3,8 @@
 
 import unittest
 
-from stable_boy import ui_expand as ue
-from stable_boy.ui_expand import Margins
+from openfill import ui_expand as ue
+from openfill.ui_expand import Margins
 
 
 class MarginTests(unittest.TestCase):

@@ -23,7 +23,7 @@ of `landscape.jpg` scaled to 2048 x 2048.
 - `batch-command.txt`: the exact command line and environment.
 - `plan.json`: the cases, in order.
 - `perf-results.jsonl`: one line per call from `tests/gimp_batch_perf.py`
-  (epoch start and end, wall time, status, and the `stable-boy.log` lines of
+  (epoch start and end, wall time, status, and the `openfill.log` lines of
   that call, including the `timing:` lines).
 - `phases.csv` / `phases.json`: per call, the context crop, working size,
   PNG sizes and the split into plug-in start, export + checks, upload, queue
@@ -42,6 +42,6 @@ of `landscape.jpg` scaled to 2048 x 2048.
   frames went into `docs/screenshots/generative-fill.gif`, and which idle
   stretches were cut).
 
-The main-loop stall probe inside the plug-in (`SB_PERF_STALL=1`) writes
-`perf: plug-in main loop max gap ...` to `stable-boy.log`; the values from
+The main-loop stall probe inside the plug-in (`OPENFILL_PERF_STALL=1`) writes
+`perf: plug-in main loop max gap ...` to `openfill.log`; the values from
 the eight GUI fills are quoted in performance.md.

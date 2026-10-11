@@ -3,7 +3,7 @@ import struct
 import unittest
 import zlib
 
-from stable_boy import png
+from openfill import png
 
 
 def _decode_idat(data: bytes) -> bytes:

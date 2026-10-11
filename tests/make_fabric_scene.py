@@ -7,8 +7,8 @@ import os
 import random
 import sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "gimp-stable-boy"))
-from stable_boy import png  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "gimp-openfill"))
+from openfill import png  # noqa: E402
 
 W = int(os.environ.get("FABRIC_W", "1600"))
 H = int(os.environ.get("FABRIC_H", "1200"))

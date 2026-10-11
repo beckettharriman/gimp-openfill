@@ -18,7 +18,7 @@ there.
 | Interpreter | `C:\AI\ComfyUI\ComfyUI_windows_portable\python_embeded\python.exe` (Python 3.13.14, torch 2.14.0+cu130) |
 | Start command (what the plug-in runs) | `python_embeded\python.exe -s ComfyUI\main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --dont-print-server` |
 | Port | 8188 (ComfyUI address in Settings > General > Connection and troubleshooting) |
-| Logs | `%APPDATA%\GIMP\3.2\stable-boy\comfyui.log` (server), `stable-boy.log` (plug-in and supervisor) |
+| Logs | `%APPDATA%\GIMP\3.2\openfill\comfyui.log` (server), `openfill.log` (plug-in and supervisor) |
 
 The official `run_nvidia_gpu.bat` passes `--windows-standalone-build`, which
 opens a browser tab. The plug-in deliberately omits it and adds
@@ -89,7 +89,7 @@ plus 1 point for the verified list and minus 1 when no checksum is
 published. Verified entries get the download numbers the search saw for
 their Hugging Face repository, so both kinds are ranked on the same scale.
 
-### Live search (`stable_boy/hub.py`)
+### Live search (`openfill/hub.py`)
 
 When the Models tab opens, a worker thread asks the two public APIs (standard
 library only, no account, no token sent):
@@ -126,7 +126,7 @@ first below 10 GB; Q5 from 10 GB; Q8_0 or Q6_K from 16 GB. Safetensors: the
 largest file that fits 1.6 x the graphics memory, else the smallest.
 
 At most eight candidates per family and source are kept. Responses are
-cached in `<profile>/stable-boy/hub-cache.json` for 24 hours (trimmed to the
+cached in `<profile>/openfill/hub-cache.json` for 24 hours (trimmed to the
 fields used). When the hubs cannot be reached, an older cached answer is
 used and the tab says so; without any cache the tab shows the verified list
 only. Settings `hub_search` (default on) and `hub_civitai` (default on)
@@ -134,14 +134,14 @@ in `config.json` turn the search or the Civitai part off.
 
 Run the search directly (prints the candidates, scores and fit verdicts):
 
-    cd gimp-stable-boy
-    python -m stable_boy.hub --models <ComfyUI>\ComfyUI\models [--record <folder>] [--out result.json]
+    cd gimp-openfill
+    python -m openfill.hub --models <ComfyUI>\ComfyUI\models [--record <folder>] [--out result.json]
 
 A real run on 2026-10-09 (53 requests, 4 s) found 35 candidates: SD 1.5
 inpainting 9, SDXL 14, FLUX Fill 5, Qwen-Image-Edit 7. The raw responses
 are in `docs/evidence/daytime-2026-10-09/catalog/`.
 
-### Fits this PC (`stable_boy/hardware.py`)
+### Fits this PC (`openfill/hardware.py`)
 
 The graphics card and its memory come from `nvidia-smi`, else from a running
 ComfyUI's `/system_stats`, else they are unknown; system memory and the free
@@ -196,7 +196,7 @@ not accepted yet, access still pending, key incomplete).
   in the tab; after the download the computed SHA-256 is written into
   `hub-selected.json`, so a later download or repair is verified against it.
 
-A live model is remembered in `<profile>/stable-boy/hub-selected.json` when
+A live model is remembered in `<profile>/openfill/hub-selected.json` when
 its Download button is pressed. The supervisor's task worker reads that file
 but re-validates every entry with the live rules (`catalog.parse_live_entries`):
 one file from a Hugging Face `resolve` URL or a Civitai download URL, into
@@ -288,7 +288,7 @@ cannot rebuild structured backgrounds.
 
 The plug-in picks the model itself unless one was set active by hand
 (Models tab, Set active) or chosen in a dialog. Each tier follows a fallback
-list and uses the first model that is installed (`stable_boy/catalog.py`,
+list and uses the first model that is installed (`openfill/catalog.py`,
 `TIER_PREFERENCE`). Scores are pass / notes / fail of 33 judged cases
 (`docs/evidence/daytime-2026-10-09/judge/`).
 

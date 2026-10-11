@@ -12,8 +12,8 @@ from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-from stable_boy import catalog, downloads, supervisor, ui_text
-from stable_boy.config import Settings
+from openfill import catalog, downloads, supervisor, ui_text
+from openfill.config import Settings
 
 PAYLOAD = bytes(range(256)) * 4096  # 1 MiB, deterministic
 SHA = hashlib.sha256(PAYLOAD).hexdigest()
@@ -518,7 +518,7 @@ class WorkerFixture(unittest.TestCase):
         (self.comfy / "ComfyUI" / "models").mkdir(parents=True)
         (self.comfy / "ComfyUI" / "custom_nodes").mkdir(parents=True)
         (self.comfy / "ComfyUI" / "main.py").write_text("")
-        self.profile = base / "stable-boy"
+        self.profile = base / "openfill"
         self.profile.mkdir()
         Settings(comfy_dir=str(self.comfy)).save(self.profile / "config.json")
         self.worker = supervisor.TaskWorker(

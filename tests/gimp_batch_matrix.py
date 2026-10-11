@@ -1,4 +1,5 @@
-# Stable Boy - generative fill for GIMP 3
+# OpenFill - generative fill for GIMP 3
+# Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Correctness matrix driver, executed INSIDE GIMP by the python-fu-eval batch
 interpreter (not a unit test). It reads a JSON spec of cases, and for each case
@@ -8,8 +9,8 @@ computed afterwards by the launcher (system Python with numpy), from the raw
 buffers this script dumps.
 
     set GIMP3_DIRECTORY=<isolated test profile>
-    set SB_MATRIX_SPEC=<spec.json>
-    set SB_MATRIX_OUT=<output root>
+    set OPENFILL_MATRIX_SPEC=<spec.json>
+    set OPENFILL_MATRIX_OUT=<output root>
     gimp-console-3.2.exe --new-instance --no-splash --console-messages ^
         --batch-interpreter python-fu-eval ^
         -b "exec(open(r'C:\\repos\\gimp-stable-boy\\tests\\gimp_batch_matrix.py').read())"
@@ -51,18 +52,18 @@ gi.require_version("Gimp", "3.0")
 gi.require_version("Gegl", "0.4")
 from gi.repository import Gegl, Gimp, Gio  # noqa: E402
 
-REPO = os.environ.get("SB_REPO", r"C:\repos\gimp-stable-boy")
-SPEC = os.environ["SB_MATRIX_SPEC"]
-OUT = os.environ["SB_MATRIX_OUT"]
-QUIT = os.environ.get("SB_TEST_QUIT", "1") == "1"
+REPO = os.environ.get("OPENFILL_REPO", r"C:\repos\gimp-stable-boy")
+SPEC = os.environ["OPENFILL_MATRIX_SPEC"]
+OUT = os.environ["OPENFILL_MATRIX_OUT"]
+QUIT = os.environ.get("OPENFILL_TEST_QUIT", "1") == "1"
 SCENE = os.path.join(REPO, "tests", "data", "test-scene.png")
 PROCS = {
-    "fill": "python-fu-stable-boy-generative-fill",
-    "expand": "python-fu-stable-boy-generative-expand",
-    "txt2img": "python-fu-stable-boy-text-to-image",
+    "fill": "python-fu-openfill-generative-fill",
+    "expand": "python-fu-openfill-generative-expand",
+    "txt2img": "python-fu-openfill-text-to-image",
 }
 TIMELINE = os.path.join(OUT, "timeline.jsonl")
-LOG_PATH = os.path.join(Gimp.directory(), "stable-boy", "stable-boy.log")
+LOG_PATH = os.path.join(Gimp.directory(), "openfill", "openfill.log")
 DRAWABLES = {}  # image id -> drawables to pass (set by setup ops)
 
 
@@ -565,7 +566,7 @@ def main():
     with open(SPEC, encoding="utf-8") as fh:
         spec = json.load(fh)
     os.makedirs(OUT, exist_ok=True)
-    only = [s for s in os.environ.get("SB_MATRIX_ONLY", "").split(",") if s]
+    only = [s for s in os.environ.get("OPENFILL_MATRIX_ONLY", "").split(",") if s]
     for case in spec["cases"]:
         if only and case["id"] not in only:
             continue
