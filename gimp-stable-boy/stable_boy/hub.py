@@ -234,10 +234,20 @@ class HubResult:
 # ------------------------------------------------------------------ cache ----
 
 
+def _valid_cache_item(url: object, item: object) -> bool:
+    """True for a ``{"t": number, "data": ...}`` record under a string key."""
+    if not isinstance(url, str) or not isinstance(item, dict) or "data" not in item:
+        return False
+    t = item.get("t")
+    return isinstance(t, (int, float)) and not isinstance(t, bool)
+
+
 class Cache:
     """URL -> decoded JSON with a fetch time, stored in one JSON file."""
 
-    def __init__(self, path: str | Path | None, max_age: float = CACHE_MAX_AGE, now: Callable[[], float] = time.time):
+    def __init__(
+        self, path: str | Path | None, max_age: float = CACHE_MAX_AGE, now: Callable[[], float] = time.time
+    ) -> None:
         self.path = Path(path) if path else None
         self.max_age = max_age
         self.now = now
@@ -246,17 +256,19 @@ class Cache:
         if self.path is not None:
             try:
                 loaded = json.loads(self.path.read_text(encoding="utf-8"))
-                if isinstance(loaded, dict) and loaded.get("version") == 1:
-                    self.data = {k: v for k, v in (loaded.get("responses") or {}).items() if isinstance(v, dict)}
-            except (OSError, ValueError):
+                responses = loaded.get("responses") if isinstance(loaded, dict) and loaded.get("version") == 1 else None
+                if isinstance(responses, dict):
+                    # keep every well-formed entry; one odd record must not drop the rest
+                    self.data = {k: v for k, v in responses.items() if _valid_cache_item(k, v)}
+            except (OSError, ValueError, RecursionError):
                 self.data = {}
 
     def get(self, url: str, fresh_only: bool = True) -> Any:
         """The cached response, or None (also when older than ``max_age`` and ``fresh_only``)."""
         item = self.data.get(url)
-        if not item:
+        if not _valid_cache_item(url, item):
             return None
-        if fresh_only and self.now() - float(item.get("t", 0)) > self.max_age:
+        if fresh_only and self.now() - float(item["t"]) > self.max_age:
             return None
         return item.get("data")
 
@@ -270,7 +282,7 @@ class Cache:
         if self.path is None or not self.dirty:
             return
         cutoff = self.now() - 7 * 86400
-        keep = {k: v for k, v in self.data.items() if float(v.get("t", 0)) >= cutoff}
+        keep = {k: v for k, v in self.data.items() if _valid_cache_item(k, v) and float(v["t"]) >= cutoff}
         try:
             self.path.parent.mkdir(parents=True, exist_ok=True)
             tmp = self.path.with_name(self.path.name + ".tmp")
@@ -313,7 +325,7 @@ class Fetcher:
             if len(body) > MAX_RESPONSE:
                 raise ValueError("response too large")
             data = json.loads(body.decode("utf-8"))
-        except (HTTPError, URLError, OSError, ValueError) as err:
+        except (HTTPError, URLError, OSError, ValueError, RecursionError) as err:
             if isinstance(err, HTTPError):
                 err.close()
             stale = self.cache.get(url, fresh_only=False)
@@ -378,7 +390,8 @@ def _trim(url: str, data: Any) -> Any:
         return {"items": items}
     if isinstance(data, dict) and "siblings" in data:  # Hugging Face model details
         keep = {k: data.get(k) for k in ("id", "author", "sha", "gated", "downloads", "lastModified", "tags")}
-        card = data.get("cardData") or {}
+        card = data.get("cardData")
+        card = card if isinstance(card, dict) else {}
         keep["cardData"] = {k: card.get(k) for k in ("license", "license_name", "license_link")}
         keep["siblings"] = [
             {"rfilename": s.get("rfilename"), "size": s.get("size"), "lfs": s.get("lfs")}
@@ -509,10 +522,11 @@ def _entry(
 ) -> dict[str, Any]:
     companions, nodes, models = _bundled_parts(base)
     is_gguf = main["name"].lower().endswith(".gguf")
+    folder = cat.live_folder(mid[:170])  # one folder per model: same file names never collide
     if fam.role == "checkpoint":
-        dest = f"checkpoints/{main['name']}"
+        dest = f"checkpoints/{folder}/{main['name']}"
     else:
-        dest = f"{'unet' if is_gguf else 'diffusion_models'}/{main['name']}"
+        dest = f"{'unet' if is_gguf else 'diffusion_models'}/{folder}/{main['name']}"
     main_file = {"role": fam.role, "url": main["url"], "dest": dest, "size": main["size"]}
     if main.get("sha256"):
         main_file["sha256"] = main["sha256"]
@@ -595,9 +609,13 @@ def hf_candidate(
     if "/" not in repo or excluded(repo, fam.exclude) or _bad_tags(fam, details.get("tags")):
         return None
     sha = str(details.get("sha") or "")
-    rev = sha if re.match(r"^[0-9a-f]{40}$", sha) else "main"
+    if not re.match(r"^[0-9a-f]{40}$", sha):
+        return None  # no commit to pin: a moving branch is not downloaded
+    rev = sha
     files = []
     for s in details.get("siblings") or []:
+        if not isinstance(s, dict):
+            continue
         path = str(s.get("rfilename") or "")
         name = path.rsplit("/", 1)[-1]
         folder = path.rsplit("/", 1)[0] if "/" in path else ""
@@ -607,7 +625,8 @@ def hf_candidate(
             continue
         if any(not is_safe_name(seg) for seg in path.split("/")):
             continue
-        lfs = s.get("lfs") or {}
+        lfs = s.get("lfs")
+        lfs = lfs if isinstance(lfs, dict) else {}
         size = lfs.get("size") or s.get("size")
         if not isinstance(size, int) or not fam.size_min <= size <= fam.size_max:
             continue
@@ -666,6 +685,8 @@ def hf_family(
         except HubError:
             continue
         for m in listing if isinstance(listing, list) else []:
+            if not isinstance(m, dict):
+                continue
             rid = str(m.get("id") or "")
             if stats is not None and rid:
                 stats[rid] = {"downloads": m.get("downloads") or 0, "updated": str(m.get("lastModified") or "")[:10]}
@@ -678,7 +699,12 @@ def hf_family(
             details = fetch.get(hf_details_url(repo))
         except HubError:
             return None
-        return hf_candidate(fam, details, base, hw) if isinstance(details, dict) else None
+        if not isinstance(details, dict):
+            return None
+        try:
+            return hf_candidate(fam, details, base, hw)
+        except (AttributeError, TypeError, ValueError, KeyError):
+            return None  # one odd repository must not remove every result
 
     with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
         return [e for e in pool.map(one, repos) if e]
@@ -704,7 +730,9 @@ def civitai_url(base_model: str, limit: int = 30, query: str = "") -> str:
 def _civitai_file(fam: Family, version: dict[str, Any]) -> dict[str, Any] | None:
     best = None
     for f in version.get("files") or []:
-        meta = f.get("metadata") or {}
+        if not isinstance(f, dict):
+            continue
+        meta = f.get("metadata") if isinstance(f.get("metadata"), dict) else {}
         name = str(f.get("name") or "")
         if f.get("type") != "Model" or meta.get("format") != "SafeTensor":
             continue
@@ -805,7 +833,10 @@ def civitai_family(fam: Family, fetch: Fetcher, base: cat.ModelEntry, now: float
             if not isinstance(item, dict) or item.get("id") in seen:
                 continue
             seen.add(item.get("id"))
-            entry = civitai_candidate(fam, item, base, now)
+            try:
+                entry = civitai_candidate(fam, item, base, now)
+            except (AttributeError, TypeError, ValueError, KeyError):
+                continue
             if entry:
                 out.append(entry)
     return out

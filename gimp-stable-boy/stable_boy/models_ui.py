@@ -44,8 +44,6 @@ from .dialogs import style  # noqa: E402
 if TYPE_CHECKING:
     from .app import App
 
-TOKEN_PAGE = cat.TOKEN_PAGE
-
 CSS = b"""
 .sb-models list, .sb-models list row { background-color: transparent; background-image: none; }
 .sb-models list row:hover, .sb-models list row:focus, .sb-models list row:selected,
@@ -203,9 +201,6 @@ class _AllRows:
         order = self.panel.display_order()
         return self.panel._widgets.get(order[index]) if 0 <= index < len(order) else None
 
-    def select_row(self, _row: object) -> None:
-        """Rows are not selectable any more; kept for callers of the old API."""
-
 
 class LoginPanel(Gtk.Box):
     """Step-by-step help for a model that needs a Hugging Face login; holds the key field."""
@@ -286,6 +281,7 @@ class ModelsPanel(Gtk.Box):
         self.set_border_width(12)
         self._server_files = None
         self._server_checked = 0.0
+        self._server_busy = False
         self._last_rows_refresh = 0.0
         self._rows: list[dict] = []
         self._widgets: dict[str, ModelRow] = {}
@@ -414,10 +410,6 @@ class ModelsPanel(Gtk.Box):
             self._headers[cat.SECTION_MORE].set_expanded(True)
         widget.primary.grab_focus()
 
-    def selected_id(self) -> str | None:
-        """Id of the row last selected or clicked, if any."""
-        return self._selected
-
     def _row(self, model_id: str) -> dict | None:
         for r in self._rows:
             if r["id"] == model_id:
@@ -449,21 +441,28 @@ class ModelsPanel(Gtk.Box):
 
         def work() -> None:
             hw = hardware.detect(models_root, comfy_url)
+            GLib.idle_add(self._hw_done, hw)  # the fit labels do not wait for the search
             result = None
             if search:
                 try:
                     result = hub.search(bundled, hw, hub.cache_path_for(base), sources=sources)
                 except Exception as err:  # noqa: BLE001 - the bundled list is always there
                     result = hub.HubResult(problems=[str(err)], offline=True)
-            GLib.idle_add(self._hub_done, hw, result)
+            GLib.idle_add(self._hub_done, result)
 
         threading.Thread(target=work, name="models-hub", daemon=True).start()
 
-    def _hub_done(self, hw: hardware.Hardware, result: hub.HubResult | None) -> bool:
+    def _hw_done(self, hw: hardware.Hardware) -> bool:
         if not self._alive:
-            return False  # the dialog was closed meanwhile
+            return False
         self._hw = hw
         _set_markup(self.hw_label, "This PC: " + (hw.summary() or "could not be checked"))
+        self._refresh_rows()
+        return False
+
+    def _hub_done(self, result: hub.HubResult | None) -> bool:
+        if not self._alive:
+            return False  # the dialog was closed meanwhile
         if result is not None:
             self._live = cat.parse_live_entries(result.entries, self._bundled)
             self._live_raw = {r["id"]: r for r in result.entries}
@@ -506,14 +505,37 @@ class ModelsPanel(Gtk.Box):
         cat.apply_repo_stats(rows, self._repo_stats)
         return rows
 
+    def _start_server_check(self) -> None:
+        """Ask the running server which model files it lists, off the GTK main loop
+        (a slow server could otherwise freeze the dialog for many seconds)."""
+        if self._server_busy:
+            return
+        self._server_busy = True
+
+        def work() -> None:
+            try:
+                files = self.app.server_model_files()
+            except Exception:  # noqa: BLE001
+                files = None
+            GLib.idle_add(self._server_done, files)
+
+        threading.Thread(target=work, name="models-server", daemon=True).start()
+
+    def _server_done(self, files: list[str] | None) -> bool:
+        self._server_busy = False
+        if not self._alive:
+            return False
+        changed = files != self._server_files
+        self._server_files = files
+        if changed:
+            self._refresh_rows()
+        return False
+
     def _refresh_rows(self, force: bool = False) -> None:
         now = time.monotonic()
         if now - self._server_checked > 15 or force:
             self._server_checked = now
-            try:
-                self._server_files = self.app.server_model_files()
-            except Exception:  # noqa: BLE001
-                self._server_files = None
+            self._start_server_check()
         self._rows = self.build_rows(self._server_files)
         self._maybe_activate()
         current = self.app.task_status().get("current") or {}
@@ -670,6 +692,8 @@ class ModelsPanel(Gtk.Box):
         entry = self._entry(model_id)
         if entry is None:
             return
+        if not entry.checksum_known and not self._confirm_unverified(entry):
+            return
         try:
             if not entry.verified:
                 raw = self._live_raw.get(model_id)
@@ -681,7 +705,6 @@ class ModelsPanel(Gtk.Box):
                 f"Downloading {entry.name}"
                 + (f" ({len(ids)} parts)" if len(ids) > 1 else "")
                 + ". It continues in the background even if you close this window."
-                + ("" if entry.checksum_known else " Its publisher lists no checksum; it is recorded after download.")
             )
             self._open_downloads_window()
         except cat.CatalogError as err:
@@ -690,6 +713,20 @@ class ModelsPanel(Gtk.Box):
             self._say(ui_text.with_next_step(str(err)))
         except OSError as err:
             self._say(ui_text.save_failed(str(self.app.paths.config), str(err)))
+
+    def _confirm_unverified(self, entry: cat.ModelEntry) -> bool:
+        """Ask before downloading a file whose publisher lists no SHA-256 checksum."""
+        dialog = Gtk.MessageDialog(
+            transient_for=self.get_toplevel(),
+            modal=True,
+            message_type=Gtk.MessageType.WARNING,
+            buttons=Gtk.ButtonsType.OK_CANCEL,
+            text="Download a file that cannot be checked?",
+        )
+        dialog.format_secondary_text(ui_text.unverified_download_question(entry.name))
+        answer = dialog.run()
+        dialog.destroy()
+        return answer == Gtk.ResponseType.OK
 
     def _set_active(self, model_id: str) -> None:
         try:

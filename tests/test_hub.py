@@ -107,6 +107,49 @@ class HelperTests(unittest.TestCase):
             self.assertIn(part, civ)
 
 
+class TolerantLoadingTests(unittest.TestCase):
+    def test_one_bad_cache_entry_does_not_drop_the_rest(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "c.json"
+            good = {"t": NOW, "data": {"a": 1}}
+            path.write_text(
+                json.dumps(
+                    {"version": 1, "responses": {"u1": good, "u2": {"t": "abc", "data": 1}, "u3": 5, "u4": {"t": 1}}}
+                ),
+                encoding="utf-8",
+            )
+            cache = hub.Cache(path, now=lambda: NOW)
+            self.assertEqual(cache.get("u1"), {"a": 1})
+            self.assertIsNone(cache.get("u2"))
+            self.assertEqual(set(cache.data), {"u1"})
+            path.write_text(json.dumps({"version": 1, "responses": [1, 2]}), encoding="utf-8")
+            self.assertEqual(hub.Cache(path).data, {})
+            path.write_text("[" * 100000, encoding="utf-8")
+            self.assertEqual(hub.Cache(path).data, {})
+
+    def test_odd_repository_shapes_do_not_abort_the_search(self):
+        bundled = cat.load_catalog()
+        flux = hub.FAMILY_SPECS["flux-fill"]
+        base = cat.by_id(bundled, flux.base_id)
+        details = response(first("YarvixPA/FLUX.1-Fill-dev-GGUF?"))
+        details["siblings"] = ["junk", *details["siblings"]]
+        for s in details["siblings"]:
+            if isinstance(s, dict):
+                s["lfs"] = "oops"
+        self.assertIsNotNone(hub.hf_candidate(flux, details, base, LAPTOP) or True)
+        trimmed = hub._trim("u", {"siblings": [], "cardData": ["x"], "id": "a/b"})
+        self.assertEqual(trimmed["cardData"]["license"], None)
+
+    def test_repository_without_a_commit_is_not_offered(self):
+        bundled = cat.load_catalog()
+        flux = hub.FAMILY_SPECS["flux-fill"]
+        base = cat.by_id(bundled, flux.base_id)
+        details = response(first("YarvixPA/FLUX.1-Fill-dev-GGUF?"))
+        self.assertIsNotNone(hub.hf_candidate(flux, details, base, LAPTOP))
+        details["sha"] = None
+        self.assertIsNone(hub.hf_candidate(flux, details, base, LAPTOP))
+
+
 class HuggingFaceMappingTests(unittest.TestCase):
     def setUp(self):
         self.bundled = cat.load_catalog()
@@ -119,7 +162,9 @@ class HuggingFaceMappingTests(unittest.TestCase):
         main = raw["files"][0]
         self.assertTrue(raw["id"].startswith("hf-YarvixPA--FLUX.1-Fill-dev-GGUF--"))
         self.assertEqual(main["role"], "unet")
-        self.assertEqual(main["dest"], "unet/flux1-fill-dev-Q4_K_S.gguf")  # Q4_K_M is not offered; next preference
+        self.assertTrue(
+            main["dest"].startswith("unet/hf-") and main["dest"].endswith("/flux1-fill-dev-Q4_K_S.gguf")
+        )  # Q4_K_M is not offered; next preference
         self.assertRegex(main["url"], r"^https://huggingface\.co/YarvixPA/FLUX\.1-Fill-dev-GGUF/resolve/[0-9a-f]{40}/")
         lfs = next(s for s in details["siblings"] if s["rfilename"] == "flux1-fill-dev-Q4_K_S.gguf")["lfs"]
         self.assertEqual(main["sha256"], lfs["sha256"])
@@ -143,7 +188,9 @@ class HuggingFaceMappingTests(unittest.TestCase):
         raw = hub.hf_candidate(self.flux, details, self.flux_base, hardware.Hardware(vram_bytes=24 * GB))
         self.assertTrue(raw["gated"])
         self.assertTrue(raw["files"][0]["gated"])
-        self.assertEqual(raw["files"][0]["dest"], "diffusion_models/flux1-fill-dev.safetensors")
+        self.assertEqual(
+            raw["files"][0]["dest"], f"diffusion_models/{cat.live_folder(raw['id'])}/flux1-fill-dev.safetensors"
+        )
         # the same file is on the verified list, so the live copy is dropped
         self.assertEqual(cat.parse_live_entries([raw], self.bundled), [])
 
@@ -176,7 +223,7 @@ class HuggingFaceMappingTests(unittest.TestCase):
             ],
         )
         raw = hub.hf_candidate(self.flux, nested, self.flux_base, LAPTOP)
-        self.assertEqual(raw["files"][0]["dest"], "unet/flux1-fill-dev-Q4_K_M.gguf")
+        self.assertEqual(raw["files"][0]["dest"], f"unet/{cat.live_folder(raw['id'])}/flux1-fill-dev-Q4_K_M.gguf")
         self.assertIn("/split_files/diffusion_models/", raw["files"][0]["url"])
         self.assertEqual(len(cat.parse_live_entries([raw], cat.load_catalog())), 1)
 

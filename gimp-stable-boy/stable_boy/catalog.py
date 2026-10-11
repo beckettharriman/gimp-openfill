@@ -23,6 +23,7 @@ Nothing is ever downloaded automatically. This module has no GIMP dependency.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import os
@@ -103,6 +104,11 @@ class FileSpec:
     def filename(self) -> str:
         """Base name of ``dest``."""
         return self.dest.replace("\\", "/").rsplit("/", 1)[-1]
+
+    @property
+    def loader_name(self) -> str:
+        """The name ComfyUI's loaders use: ``dest`` below its model folder (``/`` separators)."""
+        return self.dest.replace("\\", "/").partition("/")[2] or self.filename
 
     @property
     def subfolder(self) -> str:
@@ -359,6 +365,14 @@ def by_id(entries: Iterable[ModelEntry], model_id: str) -> ModelEntry:
 # ------------------------------------------------------------ live entries ----
 
 
+def live_folder(mid: str) -> str:
+    """The folder inside checkpoints/ or unet/ that holds one live model, so two hub
+    models with the same file name never share a destination."""
+    if len(mid) <= 60:
+        return mid
+    return mid[:47] + "-" + hashlib.sha1(mid.encode("utf-8")).hexdigest()[:12]  # noqa: S324 - a name, not security
+
+
 def _live_checks(raw: dict[str, Any], bundled: list[ModelEntry]) -> None:
     """The extra rules for a live entry (see the module docstring); raises CatalogError."""
     mid = raw.get("id")
@@ -374,7 +388,12 @@ def _live_checks(raw: dict[str, Any], bundled: list[ModelEntry]) -> None:
     page = raw.get("page", "")
     if not isinstance(page, str) or not page.startswith(LIVE_PAGE_PREFIXES):
         raise CatalogError(f"{where}: page must be on huggingface.co or civitai.com")
-    lic_url = (raw.get("license") or {}).get("url", "")
+    lic = raw.get("license") or {}
+    if not isinstance(lic, dict) or not all(isinstance(f, dict) for f in raw.get("files") or []):
+        raise CatalogError(f"{where}: license and files must be objects")
+    if not all(isinstance(n, dict) for n in raw.get("requires_nodes") or []):
+        raise CatalogError(f"{where}: requires_nodes must be objects")
+    lic_url = lic.get("url", "")
     if not isinstance(lic_url, str) or not lic_url.startswith("https://"):
         raise CatalogError(f"{where}: license url must be https")
     bundled_files = {(f.url, f.dest, f.size, f.sha256): f for e in bundled for f in e.files}
@@ -389,9 +408,12 @@ def _live_checks(raw: dict[str, Any], bundled: list[ModelEntry]) -> None:
         role, url, dest = fr.get("role"), str(fr.get("url") or ""), str(fr.get("dest") or "")
         if role not in LIVE_MAIN_DEST:
             raise CatalogError(f"{where}: the live file must be a checkpoint or a diffusion model")
-        folder, _, name = dest.replace("\\", "/").partition("/")
-        if folder not in LIVE_MAIN_DEST[role] or "/" in name:
-            raise CatalogError(f"{where}: {role} files go to {' or '.join(LIVE_MAIN_DEST[role])}/<file>")
+        folder, _, rest = dest.replace("\\", "/").partition("/")
+        sub, _, name = rest.rpartition("/")
+        if folder not in LIVE_MAIN_DEST[role] or sub != live_folder(mid) or not name:
+            raise CatalogError(
+                f"{where}: {role} files go to {' or '.join(LIVE_MAIN_DEST[role])}/{live_folder(mid)}/<file>"
+            )
         if not name.lower().endswith(LIVE_EXTENSIONS):
             raise CatalogError(f"{where}: only {', '.join(LIVE_EXTENSIONS)} files are taken from the hubs")
         hf = _HF_RESOLVE_RE.match(url)
@@ -423,14 +445,14 @@ def parse_live_entries(
     taken = {e.id for e in bundled}
     bundled_urls = {f.url.split("/resolve/", 1)[-1] for e in bundled for f in e.files}
     bundled_shas = {f.sha256 for e in bundled for f in e.files if f.sha256}
-    bundled_dests = {f.dest for e in bundled for f in e.files}
+    taken_dests = {f.dest.lower() for e in bundled for f in e.files}
     for raw in raws:
         try:
             if not isinstance(raw, dict):
                 raise CatalogError("not an object")
             _live_checks(raw, bundled)
             (entry,) = parse_catalog({"models": [raw]}, source=raw["source"], known_ids=taken)
-        except (CatalogError, KeyError, TypeError, ValueError) as err:
+        except (CatalogError, KeyError, TypeError, ValueError, AttributeError) as err:
             if problems is not None:
                 problems.append(str(err))
             continue
@@ -440,10 +462,11 @@ def parse_live_entries(
         if (
             main.url.split("/resolve/", 1)[-1] in bundled_urls
             or (main.sha256 and main.sha256 in bundled_shas)
-            or main.dest in bundled_dests
+            or main.dest.lower() in taken_dests
         ):
             continue  # the same file is already on the verified list
         taken.add(entry.id)
+        taken_dests.add(main.dest.lower())
         out.append(entry)
     return out
 
@@ -461,7 +484,7 @@ def hub_selected_path(base: str | Path) -> Path:
 def _read_selected(path: Path) -> list[dict[str, Any]]:
     try:
         data = json.loads(Path(path).read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+    except (OSError, ValueError, RecursionError):
         return []
     models = data.get("models") if isinstance(data, dict) else None
     return [m for m in models or [] if isinstance(m, dict)]
@@ -586,7 +609,8 @@ def install_status(
     seen = None
     if server_files is not None:
         names = set(server_files)
-        seen = all(f.filename in names for f in entry.files if f.role in ("checkpoint", "unet"))
+        names = {n.replace("\\", "/") for n in names}
+        seen = all(f.loader_name in names for f in entry.files if f.role in ("checkpoint", "unet"))
     return InstallStatus(not missing, missing, partial, missing_nodes, missing_models, seen)
 
 
@@ -626,7 +650,7 @@ def model_spec_for(entry: ModelEntry, catalog: Iterable[ModelEntry] = ()) -> Mod
     """Translate a catalog entry into the backend's ModelSpec."""
     if not entry.runnable:
         raise CatalogError(f"model '{entry.id}' is not a runnable model")
-    names = {f.role: f.filename for f in entry.files}
+    names = {f.role: f.loader_name for f in entry.files}
     spec = ModelSpec(checkpoint=names.get("checkpoint", ""), arch=entry.arch, template=entry.template or "")
     spec.unet = names.get("unet", "")
     spec.clip1 = names.get("clip1", "")
@@ -897,7 +921,6 @@ def build_sections(
 
 TOKEN_PAGE = "https://huggingface.co/settings/tokens"
 TOKEN_NEW_PAGE = "https://huggingface.co/settings/tokens/new?tokenType=read"
-JOIN_PAGE = "https://huggingface.co/join"
 
 
 def gated_steps(row: dict[str, Any]) -> list[tuple[str, str | None, str | None]]:

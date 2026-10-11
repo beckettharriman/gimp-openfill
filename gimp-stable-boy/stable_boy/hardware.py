@@ -178,6 +178,12 @@ def parse_system_stats(data: dict[str, Any]) -> tuple[str, int, int | None] | No
     if not isinstance(vram, (int, float)) or vram <= 0:
         return None
     name = str(best.get("name") or best.get("type") or "graphics card")
+    if str(best.get("type", "")).lower() == "mps" or name.startswith("mps"):
+        # Apple Silicon: ComfyUI reports the whole unified memory as video memory.
+        # Budget about 70% of it for the model and leave the rest as system memory.
+        total = int(vram)
+        vram = int(total * 0.7)
+        ram_bytes = total - vram
     # ComfyUI names CUDA devices "cuda:0 NVIDIA GeForce ... : cudaMallocAsync"
     if name.startswith(("cuda:", "xpu:", "mps")) and " " in name:
         name = name.split(" ", 1)[1]
@@ -185,14 +191,16 @@ def parse_system_stats(data: dict[str, Any]) -> tuple[str, int, int | None] | No
     return name, int(vram), ram_bytes
 
 
-def gpu_from_comfyui(url: str, opener: Callable[..., Any] = urlopen, timeout: float = 2.0):
+def gpu_from_comfyui(
+    url: str, opener: Callable[..., Any] = urlopen, timeout: float = 2.0
+) -> tuple[str, int, int | None] | None:
     """``parse_system_stats`` of the ComfyUI at ``url``, or None when it does not answer."""
     if not url:
         return None
     try:
         req = Request(url.rstrip("/") + "/system_stats", headers={"User-Agent": "gimp-stable-boy"})
         with opener(req, timeout=timeout) as resp:
-            return parse_system_stats(json.loads(resp.read().decode("utf-8")))
+            return parse_system_stats(json.loads(resp.read(1 << 20).decode("utf-8")))
     except Exception:  # noqa: BLE001 - a backend that is down or answers garbage is "unknown"
         return None
 

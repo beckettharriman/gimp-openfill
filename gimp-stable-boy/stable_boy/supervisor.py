@@ -42,6 +42,7 @@ from __future__ import annotations
 
 import argparse
 import ctypes
+import http.client
 import ipaddress
 import json
 import os
@@ -440,6 +441,8 @@ class TaskWorker:
                     self._finish(task, "error", f"unknown task type {task.get('type')}")
             except downloads.DownloadError as err:
                 self._finish(task, "cancelled" if err.code == "cancelled" else "error", str(err), code=err.code)
+            except (PermissionError, http.client.HTTPException) as err:
+                self._finish(task, "error", downloads.plain_os_message(err), code="network")
             except Exception as err:  # noqa: BLE001 - must never kill the worker
                 self._finish(task, "error", f"{type(err).__name__}: {err}")
             finally:
@@ -523,6 +526,7 @@ class TaskWorker:
 
     def _download(self, task: dict[str, Any]) -> None:
         files = self.checked_download_files(task)
+        live = catalog.by_id(self._catalog(), str(task.get("model_id") or "")).source != "bundled"
         total_all = sum(int(spec.size or 0) for spec, _ in files)
         done_before = 0
         results = []
@@ -553,7 +557,14 @@ class TaskWorker:
             token = self._token() if spec.gated or task.get("use_token") else None
             self.log(f"download {spec.url} -> {dest}")
             result = downloads.download_file(
-                spec.url, dest, spec.size, spec.sha256, token or None, progress, self.cancel_requested
+                spec.url,
+                dest,
+                spec.size,
+                spec.sha256,
+                token or None,
+                progress,
+                self.cancel_requested,
+                keep_existing=live,
             )
             recorded = False
             if not spec.sha256 and result.sha256:

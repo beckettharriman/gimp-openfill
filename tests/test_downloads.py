@@ -2,15 +2,17 @@
 """Resumable download logic against a local HTTP server that honours Range."""
 
 import hashlib
+import http.client
 import os
 import tempfile
 import threading
 import unittest
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-from stable_boy import catalog, downloads, supervisor
+from stable_boy import catalog, downloads, supervisor, ui_text
 from stable_boy.config import Settings
 
 PAYLOAD = bytes(range(256)) * 4096  # 1 MiB, deterministic
@@ -75,8 +77,11 @@ class Handler(BaseHTTPRequestHandler):
 
 def https_to_local(req, timeout=60.0):
     """Opener for tests: the URL says https (so the token rules apply) but the stub is plain http."""
-    req.full_url = req.full_url.replace("https://", "http://", 1)
-    return urlopen(req, timeout=timeout)
+    original = req.full_url
+    req.full_url = original.replace("https://", "http://", 1)
+    resp = urlopen(req, timeout=timeout)
+    resp.url = original  # as if the https request was answered directly
+    return resp
 
 
 class DownloadTests(unittest.TestCase):
@@ -178,6 +183,53 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(ctx.exception.code, "hash")
         self.assertFalse(self.dest.exists())
         self.assertFalse(downloads.part_path(self.dest).exists())
+
+    def test_https_to_http_redirect_is_refused(self):
+        with self.assertRaises(downloads.DownloadError) as ctx:
+            downloads.download_file(
+                self.https_url, self.dest, len(PAYLOAD), SHA, opener=lambda req, timeout=60.0: urlopen(self.url)
+            )
+        self.assertIn("unencrypted", str(ctx.exception))
+        self.assertFalse(self.dest.exists())
+
+    def test_keep_existing_never_deletes_a_foreign_file(self):
+        self.dest.parent.mkdir(parents=True, exist_ok=True)
+        self.dest.write_bytes(b"my own file")
+        with self.assertRaises(downloads.DownloadError) as ctx:
+            downloads.download_file(self.url, self.dest, len(PAYLOAD), SHA, keep_existing=True)
+        self.assertEqual(ctx.exception.code, "exists")
+        self.assertEqual(self.dest.read_bytes(), b"my own file")
+        downloads.download_file(self.url, self.dest, len(PAYLOAD), SHA)  # bundled entries still replace it
+        self.assertEqual(self.dest.read_bytes(), PAYLOAD)
+
+    def test_plain_messages_for_busy_server_and_dropped_connection(self):
+        def busy(req, timeout=60.0):
+            raise HTTPError(req.full_url, 429, "Too Many Requests", {}, None)
+
+        with self.assertRaises(downloads.DownloadError) as ctx:
+            downloads.download_file(self.url, self.dest, opener=busy)
+        self.assertIn("Wait a few minutes", str(ctx.exception))
+        self.assertIn("press Download again", ui_text.with_next_step(str(ctx.exception)))
+        self.assertNotIn("Verbose log", ui_text.with_next_step(str(ctx.exception)))
+
+        def cut(req, timeout=60.0):
+            raise http.client.IncompleteRead(b"x")
+
+        with self.assertRaises(downloads.DownloadError) as ctx:
+            downloads.download_file(self.url, self.dest, opener=cut)
+        self.assertEqual(ctx.exception.code, "network")
+        self.assertIn("Stop the AI backend", downloads.plain_os_message(PermissionError(13, "denied", "x.part")))
+
+    def test_civitai_auth_message_does_not_ask_for_a_hugging_face_token(self):
+        def denied(req, timeout=60.0):
+            raise HTTPError(req.full_url, 401, "Unauthorized", {}, None)
+
+        with self.assertRaises(downloads.DownloadError) as ctx:
+            downloads.download_file("https://civitai.com/api/download/models/1", self.dest, opener=denied)
+        self.assertEqual(ctx.exception.code, "auth")
+        self.assertNotIn("Hugging Face", str(ctx.exception))
+        self.assertNotIn("Verbose log", ui_text.with_next_step(str(ctx.exception)))
+        self.assertIn("Hugging Face", downloads.auth_message("https://huggingface.co/x", 401))
 
     def test_gated_without_token_and_with_token(self):
         State.gated = True
@@ -574,7 +626,7 @@ class SupervisorLiveEntryTests(WorkerFixture):
     and only with the strict live rules; a computed checksum is pinned afterwards."""
 
     LIVE_URL = "https://civitai.com/api/download/models/1759168"
-    LIVE_DEST = "checkpoints/juggernautXL_ragnarok.safetensors"
+    LIVE_DEST = f"checkpoints/{catalog.live_folder('civitai-133005-1759168-1659952')}/juggernautXL_ragnarok.safetensors"
 
     def _live_raw(self, sha256=None):
         base = catalog.by_id(self.entries, "sdxl-base")
@@ -616,7 +668,7 @@ class SupervisorLiveEntryTests(WorkerFixture):
         catalog.remember_live_entry(self.profile, self._live_raw(), self.entries)
         ((spec, dest),) = self.worker.checked_download_files(self._live_task())
         self.assertEqual(spec.size, len(PAYLOAD))  # from the remembered entry, not the task
-        self.assertEqual(dest, self.models_root / "checkpoints" / "juggernautXL_ragnarok.safetensors")
+        self.assertEqual(dest, self.models_root.joinpath(*self.LIVE_DEST.split("/")))
 
     def test_tampered_live_record_is_ignored(self):
         catalog.remember_live_entry(self.profile, self._live_raw(), self.entries)
@@ -630,7 +682,7 @@ class SupervisorLiveEntryTests(WorkerFixture):
         catalog.remember_live_entry(self.profile, self._live_raw(), self.entries)
         calls = []
 
-        def fake_download(url, dest, size, sha, token, progress, cancel):
+        def fake_download(url, dest, size, sha, token, progress, cancel, **_kw):
             calls.append((url, size, sha, token))
             Path(dest).parent.mkdir(parents=True, exist_ok=True)
             Path(dest).write_bytes(PAYLOAD)

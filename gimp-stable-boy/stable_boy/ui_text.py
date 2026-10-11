@@ -323,6 +323,8 @@ _NEXT_STEPS = (
     ("is not answering", ""),  # the A1111 message already says what to do
     ("stopped while it was generating", ""),  # backends/comfy.py CONNECTION_LOST says what to do
     ("ran out of memory", ""),  # describe_error already says what to do
+    ("press download again", ""),
+    ("only allows this download", ""),  # a download message that already says what to do
     (
         "timed out",
         'Next step: try a smaller selection or fewer variations, or raise "Generation time limit" '
@@ -339,6 +341,15 @@ _NEXT_STEPS = (
     ),
     ("not available", "Next step: open Filters > AI > Generative Fill Settings and press Check backend."),
 )
+
+
+def unverified_download_question(name: str) -> str:
+    """The question shown before downloading a model whose publisher lists no SHA-256 checksum."""
+    return (
+        f"{name} has no published checksum, so the plug-in cannot check that the file is the one the "
+        "publisher uploaded. It is downloaded as it arrives and its checksum is recorded afterwards, so "
+        "later downloads are checked. Only continue if you trust the publisher."
+    )
 
 
 INTERRUPTED_OUTSIDE = (

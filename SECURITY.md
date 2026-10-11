@@ -17,4 +17,6 @@ token or a full `config.json`; if a token was exposed, revoke it at
 https://huggingface.co/settings/tokens first.
 
 What the plug-in trusts, what it validates and where it stores data is
-described in [docs/security.md](docs/security.md).
+described in [docs/security.md](docs/security.md). That includes the live model
+search (Hugging Face and Civitai, `hub-cache.json`, `hub-selected.json`) and the
+checksum policy for models that publish no SHA-256.

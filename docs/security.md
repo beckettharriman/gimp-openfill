@@ -14,9 +14,10 @@ the user, so the plug-in does not try to defend against it.
 Not trusted, and checked:
 
 - **The network.** Model files and custom node repositories come from Hugging
-  Face and GitHub over https. A file is only accepted when its size and SHA-256
-  match the catalog; a custom node is only installed at the commit the catalog
-  pins.
+  Face, Civitai and GitHub over https. A file of the shipped catalog is only
+  accepted when its size and SHA-256 match; a custom node is only installed at
+  the commit the catalog pins. Live hub models (see "Live model search") follow
+  the hash policy below.
 - **Task and state files written while the plug-in is not looking.** The
   plug-in and its supervisor talk through JSON files in the profile
   (`tasks/*.json`, `server-state.json`, `tasks-status.json`). The supervisor
@@ -43,6 +44,8 @@ machine who can read your home folder.
 | Download task | `model_id` must be a catalog entry; each file's URL and destination must belong to it; size, sha256, `gated` and `optional` are taken from the catalog, never from the task; the models folder must be the one of the configured ComfyUI | `supervisor.TaskWorker.checked_download_files` |
 | Node install task | the custom_nodes folder and the Python interpreter must be the configured ComfyUI's; repo, folder and commit must match a catalog entry exactly | `supervisor.TaskWorker.checked_node_install` |
 | Remove task | only files of the named catalog entry, inside the configured models folder | `supervisor.TaskWorker._remove` |
+| Live (hub) entries | source is huggingface or civitai; the URL must be an https file URL on those hosts (Hugging Face URLs pinned to a commit); the main file is a .safetensors or .gguf with a known size, in its own folder `checkpoints/<id>/` or `unet/<id>/` so two models never share a file; companions and custom nodes must be copied verbatim from the shipped list; a malformed record is dropped, not fatal | `catalog._live_checks`, `catalog.parse_live_entries` |
+| Existing files | a live download never deletes or overwrites a file that is already at its destination and does not match; it stops and tells you to move it. Removing a model deletes only the files of that catalog entry | `downloads.download_file`, `supervisor.TaskWorker._remove` |
 | Downloaded data | written to `<file>.part`; Content-Length and the catalog size must agree before writing; a body longer than the catalog size is cut off and deleted; a resumed range must start at the expected byte; free disk space checked first; SHA-256 verified before the atomic rename onto the final name; a hash mismatch deletes the `.part` file | `downloads.download_file` |
 | Git checkout | `git clone -- <repo>`; after `git checkout <commit>` the plug-in verifies `git rev-parse HEAD` equals the pinned commit before running pip | `downloads.install_custom_node` |
 | Pids in state files | a pid only counts as a live supervisor or task worker when it is alive and its process image name (when it can be read) is a Python interpreter; the watched GIMP pid counts as gone when its image name changes (pid reuse), and other GIMPs registered for the same profile keep the backend alive | `supervisor.pid_is_python`, `supervisor.run_backend` |
@@ -100,6 +103,8 @@ Linux):
 | `server-state.json` | supervisor and ComfyUI pids, URL, status |
 | `tasks/`, `tasks-status.json`, `tasks-worker.json` | download and install queue and progress |
 | `models-cache.json` | model file names the server listed last |
+| `hub-cache.json` | answers of the Hugging Face and Civitai searches, kept up to 24 hours (stale answers up to 7 days when offline); no token, no personal data; unreadable or odd records are ignored one by one |
+| `hub-selected.json` | the live hub models you chose to download, re-validated by the live rules on every load; a malformed record is skipped, never fatal |
 | `tmp/` | debug dumps (only with debug enabled): the crop, mask and results sent to and received from the backend, and the prompt |
 
 Model files go to the configured ComfyUI folder (`<ComfyUI>/models/...`) and
@@ -115,7 +120,29 @@ ComfyUI is started listening on the host of the configured URL, by default
 authentication: if you change the URL to a LAN address or `0.0.0.0`, anyone on
 that network can queue work and read your generated images. The supervisor
 logs a warning when the listen address is not a loopback address. The
-plug-in's own HTTP and WebSocket clients connect to the configured URL only.
+plug-in's own HTTP and WebSocket clients connect to the configured URL, plus the
+model hosts listed under "Live model search" and the download hosts.
+
+## Live model search
+
+Every time the Models tab opens, the plug-in asks `huggingface.co` and
+`civitai.com` for current models (read-only API calls, user agent
+`gimp-stable-boy`, never your token) and caches the answers in
+`hub-cache.json`. Responses are capped at 16 MB and a malformed answer only
+drops that item. Set `hub_search` to false in `config.json` to turn the search
+off, or `hub_civitai` to false to skip Civitai (no dialog option yet).
+
+Hash policy for live models:
+
+- A Civitai file is only offered with a published SHA-256.
+- A Hugging Face file is only offered when the repository reports a commit; the
+  URL is pinned to that commit, never to `main`. Its SHA-256 comes from the
+  Hub's file listing.
+- When a Hugging Face file has no published SHA-256, it is still listed, marked
+  "unverified checksum", and the plug-in asks before downloading it. The bytes
+  are then accepted as they arrive (trust on first use) and the computed SHA-256
+  is recorded in `hub-selected.json`, so later downloads and repairs are verified.
+- A download that is redirected from https to http is refused.
 
 ## Reporting a vulnerability
 
