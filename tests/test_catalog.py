@@ -191,6 +191,9 @@ class ModelSpecTests(unittest.TestCase):
         self.assertEqual(cat.human_size(52602), "51 KB")
 
 
+LIVE_ID = "hf-someone--FLUX.1-Fill-dev-GGUF--flux1-fill-dev-Q5_K_S"
+
+
 def live_raw(**over):
     """A valid live entry: one Hugging Face GGUF plus the verified FLUX companions."""
     entries = cat.load_catalog(CATALOG)
@@ -209,7 +212,7 @@ def live_raw(**over):
         if f.role != "unet"
     ]
     raw = {
-        "id": "hf-someone--FLUX.1-Fill-dev-GGUF--flux1-fill-dev-Q5_K_S",
+        "id": LIVE_ID,
         "name": "someone/FLUX.1-Fill-dev-GGUF (Q5_K_S)",
         "tier": "quality",
         "capabilities": ["fill", "expand"],
@@ -229,7 +232,7 @@ def live_raw(**over):
                 "url": "https://huggingface.co/someone/FLUX.1-Fill-dev-GGUF/resolve/"
                 + "a" * 40
                 + "/flux1-fill-dev-Q5_K_S.gguf",
-                "dest": "unet/flux1-fill-dev-Q5_K_S.gguf",
+                "dest": f"unet/{cat.live_folder(LIVE_ID)}/flux1-fill-dev-Q5_K_S.gguf",
                 "size": 8_000_000_000,
                 "sha256": "c" * 64,
             },
@@ -265,9 +268,9 @@ class LiveEntryTests(unittest.TestCase):
         self.assertFalse(e.verified)
         self.assertTrue(e.checksum_known)
         self.assertTrue(e.gated)  # the FLUX VAE companion is gated
-        self.assertEqual(cat.live_main_file(e).dest, "unet/flux1-fill-dev-Q5_K_S.gguf")
+        self.assertEqual(cat.live_main_file(e).dest, f"unet/{LIVE_ID}/flux1-fill-dev-Q5_K_S.gguf")
         spec = cat.model_spec_for(e, [*self.bundled, e])
-        self.assertEqual((spec.unet, spec.clip2), ("flux1-fill-dev-Q5_K_S.gguf", "clip_l.safetensors"))
+        self.assertEqual((spec.unet, spec.clip2), (f"{LIVE_ID}/flux1-fill-dev-Q5_K_S.gguf", "clip_l.safetensors"))
 
     def test_main_file_rules(self):
         cases = {
@@ -281,6 +284,8 @@ class LiveEntryTests(unittest.TestCase):
             ),
             "folder": self.main_file(dest="custom_nodes/flux1-fill-dev-Q5_K_S.gguf"),
             "nested dest": self.main_file(dest="unet/sub/flux1-fill-dev-Q5_K_S.gguf"),
+            "bare dest": self.main_file(dest="unet/flux1-fill-dev-Q5_K_S.gguf"),
+            "other model's folder": self.main_file(dest="unet/hf-other/flux1-fill-dev-Q5_K_S.gguf"),
             "no size": self.main_file(size=None),
             "role": self.main_file(role="vae"),
             "optional main": self.main_file(optional=True),
@@ -308,6 +313,7 @@ class LiveEntryTests(unittest.TestCase):
     def test_civitai_url(self):
         raw = live_raw(id="civitai-1-2-3", source="civitai", page="https://civitai.com/models/1")
         raw["files"][0]["url"] = "https://civitai.com/api/download/models/2?type=Model&format=SafeTensor"
+        raw["files"][0]["dest"] = f"unet/{cat.live_folder('civitai-1-2-3')}/flux1-fill-dev-Q5_K_S.gguf"
         self.assertEqual(len(cat.parse_live_entries([raw], self.bundled)), 1)
         raw["files"][0]["url"] = "https://civitai.com/api/download/models/2/../x"
         self.refused(raw)
@@ -316,6 +322,43 @@ class LiveEntryTests(unittest.TestCase):
         same_sha = self.main_file(sha256=cat.by_id(self.bundled, "flux1-fill-dev-gguf-q4").files[0].sha256)
         self.assertEqual(cat.parse_live_entries([same_sha], self.bundled), [])
         self.assertEqual(len(cat.parse_live_entries([live_raw(), live_raw()], self.bundled)), 1)
+
+    def test_same_file_name_gets_its_own_folder(self):
+        other_id = "hf-other--FLUX.1-Fill-dev-GGUF--flux1-fill-dev-Q5_K_S"
+        other = live_raw(id=other_id)
+        other["files"][0]["dest"] = f"unet/{cat.live_folder(other_id)}/flux1-fill-dev-Q5_K_S.gguf"
+        other["files"][0]["sha256"] = "d" * 64
+        entries = cat.parse_live_entries([live_raw(), other], self.bundled)
+        self.assertEqual(len(entries), 2)
+        dests = {cat.live_main_file(e).dest for e in entries}
+        self.assertEqual(len(dests), 2)
+        # a case-only difference of a taken destination is refused too
+        clash = live_raw()
+        clash["id"] = "hf-someone--clash"
+        clash["files"][0]["dest"] = f"unet/{cat.live_folder(clash['id'])}/x.gguf"
+        clash["files"][0]["url"] = clash["files"][0]["url"].replace("flux1-fill-dev-Q5_K_S.gguf", "x.gguf")
+        self.assertEqual(len(cat.parse_live_entries([clash], self.bundled)), 1)
+
+    def test_long_ids_get_a_short_unique_folder(self):
+        a, b = "hf-" + "a" * 100, "hf-" + "a" * 99 + "b"
+        self.assertLessEqual(len(cat.live_folder(a)), 60)
+        self.assertNotEqual(cat.live_folder(a), cat.live_folder(b))
+
+    def test_malformed_records_do_not_raise(self):
+        for bad in (
+            live_raw(license="MIT"),
+            live_raw(files=["x"]),
+            live_raw(requires_nodes=["x"]),
+            live_raw(license=["x"]),
+        ):
+            self.refused(bad)
+        with tempfile.TemporaryDirectory() as tmp:
+            good = live_raw()
+            cat._write_selected(cat.hub_selected_path(tmp), [live_raw(license="MIT"), good, "junk"])
+            merged = cat.load_merged(path=CATALOG, base=tmp)
+            self.assertEqual(merged[-1].id, good["id"])
+            cat.hub_selected_path(tmp).write_text("[" * 100000, encoding="utf-8")
+            self.assertEqual(len(cat.load_merged(path=CATALOG, base=tmp)), len(self.bundled))
 
     def test_remember_merge_and_checksum(self):
         with tempfile.TemporaryDirectory() as tmp:

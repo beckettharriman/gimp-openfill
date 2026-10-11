@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import errno
 import hashlib
+import http.client
 import os
 import re
 import shutil
@@ -149,6 +150,37 @@ def network_message(url: str, err: BaseException) -> str:
     )
 
 
+def auth_message(url: str, code: int) -> str:
+    """Plain words for a 401/403, worded for the host that answered."""
+    host = (urlparse(url).hostname or "").lower()
+    if host.endswith("civitai.com"):
+        return (
+            f"HTTP {code}: Civitai only allows this download when signed in (or the model is early access). "
+            "Pick another model, or download it from its Civitai page into the models folder yourself."
+        )
+    return (
+        f"HTTP {code}: this file is gated. Accept the license on the model page "
+        "and enter a Hugging Face access token in the settings."
+    )
+
+
+def _in_use_message(path: Path, err: BaseException) -> str:
+    return (
+        f"{path.name} cannot be changed ({err.__class__.__name__}); another program, often the AI backend, "
+        "may be using it. Stop the AI backend, then press Download again."
+    )
+
+
+def plain_os_message(err: BaseException) -> str:
+    """Plain words for an error that escaped a download (file in use, dropped connection)."""
+    if isinstance(err, PermissionError):
+        return (
+            f"A file could not be changed ({err.filename or 'permission denied'}); another program, often the AI "
+            "backend, may be using it. Stop the AI backend, then press Download again."
+        )
+    return "The connection dropped during the download. Press Download again; the part already downloaded is kept."
+
+
 def part_path(dest: Path) -> Path:
     """The temporary ``<name>.part`` file a download is written to before the rename."""
     return dest.with_name(dest.name + ".part")
@@ -200,6 +232,7 @@ def download_file(
     min_free_bytes: int = 256 * 1024 * 1024,
     token_hosts: Iterable[str] = HF_TOKEN_HOSTS,
     _fresh_retry: bool = False,
+    keep_existing: bool = False,
 ) -> DownloadResult:
     """Download ``url`` to ``dest`` with resume (HTTP Range), verification and
     atomic rename. Raises :class:`DownloadError` with a user-facing ``code``.
@@ -208,14 +241,27 @@ def download_file(
     one of ``token_hosts``; it is never put in the URL and never forwarded on a
     redirect. Data goes to ``<dest>.part`` first; the size and the SHA-256 (when
     known) are checked before the ``.part`` file is renamed onto ``dest``.
+
+    A file already at ``dest`` that does not match is deleted and fetched again,
+    unless ``keep_existing`` is set (live hub entries): then it may be the user's
+    own file, so it is left alone and the download stops with an explanation.
     """
     dest = Path(dest)
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    if dest.is_file():
-        size_ok = expected_size is None or dest.stat().st_size == expected_size
-        if size_ok and (expected_sha256 is None or _sha256_of(dest, cancel) == expected_sha256):
-            return DownloadResult(dest, 0, expected_sha256, 0, skipped=True)
-        dest.unlink()  # wrong size or hash: start over
+    try:
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        if dest.is_file():
+            size_ok = expected_size is None or dest.stat().st_size == expected_size
+            if size_ok and (expected_sha256 is None or _sha256_of(dest, cancel) == expected_sha256):
+                return DownloadResult(dest, 0, expected_sha256, 0, skipped=True)
+            if keep_existing:
+                raise DownloadError(
+                    "exists",
+                    f"{dest.name} is already in {dest.parent} but it is not the file this model lists, so it was "
+                    "left alone. Move or delete it yourself, then press Download again.",
+                )
+            dest.unlink()  # wrong size or hash: start over
+    except PermissionError as err:
+        raise DownloadError("disk", _in_use_message(dest, err)) from err
 
     part = part_path(dest)
     offset = part.stat().st_size if part.is_file() else 0
@@ -233,20 +279,30 @@ def download_file(
     except HTTPError as err:
         err.close()  # release the connection; only the status code is used
         if err.code in (401, 403):
-            raise DownloadError(
-                "auth",
-                f"HTTP {err.code}: this file is gated. Accept the license on the model page "
-                "and enter a Hugging Face access token in the settings.",
-            ) from err
+            raise DownloadError("auth", auth_message(url, err.code)) from err
         if err.code == 404:
             raise DownloadError("notfound", f"HTTP 404: the file is no longer at {url}") from err
         if err.code == 416 and offset:
             # The partial file is already complete (or the server disagrees); verify below.
             resp = None
+        elif err.code == 429 or err.code >= 500:
+            host = urlparse(url).hostname or url
+            raise DownloadError(
+                "network",
+                f"{host} is busy or limiting downloads right now (HTTP {err.code}). Wait a few minutes, "
+                "then press Download again (a partly downloaded file is kept and resumes).",
+            ) from err
         else:
             raise DownloadError("network", f"HTTP {err.code} while fetching {url}") from err
-    except (URLError, OSError) as err:
+    except (URLError, OSError, http.client.HTTPException) as err:
         raise DownloadError("network", network_message(url, err)) from err
+    if resp is not None and url.startswith("https://"):
+        final = str(getattr(resp, "url", None) or (resp.geturl() if hasattr(resp, "geturl") else "") or url)
+        if not final.startswith("https://"):
+            resp.close()
+            raise DownloadError(
+                "network", "the server redirected the download to an unencrypted address, so it was refused."
+            )
 
     written = 0
     resumed_from = offset
@@ -309,6 +365,14 @@ def download_file(
                 if err.code == "size":
                     _unlink_quietly(part)  # oversized data is never resumable
                 raise
+            except http.client.HTTPException as err:
+                raise DownloadError(
+                    "network",
+                    "The connection dropped during the download. Press Download again; the part already "
+                    "downloaded is kept and resumes.",
+                ) from err
+            except PermissionError as err:
+                raise DownloadError("disk", _in_use_message(part, err)) from err
             except OSError as err:
                 if err.errno in (errno.ENOSPC, 28) or "No space" in str(err):
                     raise DownloadError(
@@ -342,6 +406,7 @@ def download_file(
                     min_free_bytes,
                     token_hosts,
                     _fresh_retry=True,
+                    keep_existing=keep_existing,
                 )
             raise DownloadError(
                 "hash",

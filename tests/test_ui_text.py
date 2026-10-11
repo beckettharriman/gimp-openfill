@@ -312,5 +312,14 @@ class ExpandDiscardRestoreTests(unittest.TestCase):
         self.assertIsNone(self.restore((800, 600, (0, 0), None), None))
 
 
+class DownloadWordingTests(unittest.TestCase):
+    def test_unverified_question_names_the_model(self):
+        self.assertIn("Some Model", ut.unverified_download_question("Some Model"))
+
+    def test_timeout_message_of_a_download_keeps_its_own_step(self):
+        msg = "Could not reach x: the connection timed out. Check it, then press Download again."
+        self.assertNotIn("Generation time limit", ut.with_next_step(msg))
+
+
 if __name__ == "__main__":
     unittest.main()

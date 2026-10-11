@@ -25,6 +25,17 @@ SYSTEM_STATS = {
 }
 
 
+class AppleMemoryTests(unittest.TestCase):
+    def test_unified_memory_is_budgeted(self):
+        data = {
+            "system": {"ram_total": 16 * GB},
+            "devices": [{"name": "mps", "type": "mps", "vram_total": 16 * GB}],
+        }
+        _name, vram, ram = hwmod.parse_system_stats(data)
+        self.assertEqual(vram, int(16 * GB * 0.7))
+        self.assertEqual(vram + ram, 16 * GB)
+
+
 def hw(vram_gb=None, ram_gb=32, disk_gb=400):
     return hwmod.Hardware(
         "Test GPU" if vram_gb else None,
