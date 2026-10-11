@@ -34,6 +34,13 @@ class DefaultsTests(unittest.TestCase):
         self.assertEqual(self.pick(allq[:2], "quality"), "juggernaut-xl-v9")
         self.assertEqual(self.pick(allq[:1], "quality"), "sdxl-base")
 
+    def test_expand_defaults(self):
+        both = ["dreamshaper-8-inpainting", "sd15-inpainting", "realvisxl-v5"]
+        for tier in ("fast", "quality"):
+            self.assertEqual(self.pick(both, tier, "expand"), "sd15-inpainting")
+            self.assertEqual(self.pick(both[:1] + both[2:], tier, "expand"), "dreamshaper-8-inpainting")
+        self.assertIsNone(self.pick(["realvisxl-v5", "juggernaut-xl-v9"], "quality", "expand"))
+
     def test_remove_order(self):
         self.assertEqual(self.pick(["mat-places512", "lama-big"], "remove"), "lama-big")
         self.assertEqual(self.pick(["mat-places512"], "remove"), "mat-places512")

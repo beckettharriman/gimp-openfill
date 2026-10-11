@@ -297,6 +297,7 @@ list and uses the first model that is installed (`stable_boy/catalog.py`,
 | Fast fill | DreamShaper 8 inpainting, then SD 1.5 inpainting | 7/10/16 against 7/7/19 |
 | Quality fill | RealVisXL V5, then Juggernaut XL v9, then SDXL base (with the Fooocus patch) | 9/1/23, 5/4/24, 7/0/25 |
 | Remove object, empty prompt | LaMa, then MAT | 5/3/25 against 3/3/27; MAT invents glyphs and figures |
+| Generative Expand (both tiers) | SD 1.5 inpainting, then DreamShaper 8 | 4 photos x 3 models x 25 % and 60 % per side, all sides: SD 1.5 best in 5 of 8 pairs, DreamShaper 2, RealVisXL 1 (it invents scenery); `docs/evidence/daytime-2026-10-09/expand-models/` |
 | Automatic active model | RealVisXL V5, DreamShaper 8, SD 1.5, Juggernaut, SDXL base | the most often acceptable fills |
 
 FLUX Fill and Qwen Edit are never chosen automatically; they are used only

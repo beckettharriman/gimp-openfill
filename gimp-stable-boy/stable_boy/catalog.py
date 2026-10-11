@@ -622,10 +622,13 @@ TIER_PREFERENCE: dict[str, tuple[str, ...]] = {
     "quality": QUALITY_PREFERENCE,
     "remove": REMOVE_PREFERENCE,
 }
-# Generative Expand per tier (re-benchmarked separately from fills).
+# Generative Expand per tier, re-benchmarked separately from fills (docs/models.md,
+# docs/evidence/daytime-2026-10-09/expand-models): SD 1.5 inpainting continued
+# the scene best, DreamShaper 8 was second, RealVisXL invented new scenery.
+EXPAND_SD15_FIRST = ("sd15-inpainting", "dreamshaper-8-inpainting")
 EXPAND_PREFERENCE: dict[str, tuple[str, ...]] = {
-    "fast": FAST_PREFERENCE,
-    "quality": FAST_PREFERENCE,
+    "fast": EXPAND_SD15_FIRST,
+    "quality": EXPAND_SD15_FIRST,
 }
 # The automatic active model (no model set active by hand): the Quality default
 # first, then the fills that were acceptable most often on the judged cases.
