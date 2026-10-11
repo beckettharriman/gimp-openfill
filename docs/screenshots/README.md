@@ -14,7 +14,8 @@ variations), so the preview and thumbnails show the test scene, not a result.
 | `fill-dialog-recent-prompts.png` | The Recent prompts menu. |
 | `fill-dialog-remove.png` | Remove object mode: "Erases the selection and continues the background. No prompt needed: just press Generate." |
 | `fill-dialog-removal-model-note.png` | The note shown when the active model only removes objects (MAT, LaMa). |
-| `expand-dialog.png` | Generative Expand: optional prompt, margin boxes around "your image", Wider / Taller / All sides. |
+| `expand-dialog.png` | Generative Expand: optional prompt, drag-to-expand canvas editor, ratio presets, anchor grid and pixel boxes. |
+| `expand-editor-huge.png` | Generative Expand with 4096 px on both sides: the "Over 25% per side" warning. |
 | `text-to-image-dialog.png` | Text to Image: prompt, Size, Result as. |
 | `progress-window-start.png` | Progress window at the first sampling step ("Generating, step 1 of 25", 9 %), before a remaining-time estimate exists. |
 | `progress-window.png` | Progress window during sampling: "Generating, step 12 of 25", 48 %, "Elapsed 0:09, about 0:10 left", preview, Cancel. |

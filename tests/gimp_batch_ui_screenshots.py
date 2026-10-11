@@ -543,13 +543,19 @@ try:
         image,
         setup=set_prompt("a lighthouse on a cliff at dusk, oil painting"),
     )
-    run_case("settings-general", settings, "Generative Fill Settings", "settings-general.png", {"autoclose": 7})
+    run_case(
+        "settings-general",
+        settings,
+        "Generative Fill Settings",
+        "settings-general.png",
+        {"autoclose": 7, "settings_steps": [[0.8, "tab", 0]]},
+    )
     run_case(
         "settings-advanced",
         settings,
         "Generative Fill Settings",
         "settings-general-advanced.png",
-        {"autoclose": 7, "advanced": True},
+        {"autoclose": 7, "advanced": True, "settings_steps": [[0.8, "tab", 0]]},
     )
     run_case(
         "settings-models",
