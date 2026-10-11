@@ -98,33 +98,46 @@ FLUX.1 Fill is opt-in: it matches RealVisXL on object fills but takes about four
 
 Generation runs in ComfyUI on your machine, listening on `127.0.0.1` only. A small supervisor starts it hidden, watches GIMP, and stops it after an idle timeout or when GIMP closes. The server is tied to the supervisor by Windows itself, so it can't be left running even after a crash. `Filters > OpenFill > Stop AI Backend` frees the graphics card right away.
 
-The network comes into it twice: when the Models tab searches Hugging Face and Civitai (no account, no token, and you can turn it off), and when you press Download. Every file is checked against its size and SHA-256 before it's used. The gated FLUX files need a free Hugging Face token; it stays in your GIMP profile and only ever goes to Hugging Face. No accounts, no telemetry, nothing that phones home: the only outbound requests are the ones above. Details in [docs/security.md](docs/security.md).
+The network comes into it twice: when the Models tab searches Hugging Face and Civitai (no account, no token, and you can turn it off), and when you press Download (a model, or ComfyUI itself when none is installed). Every file is checked against its size and SHA-256 before it's used. The gated FLUX files need a free Hugging Face token; it stays in your GIMP profile and only ever goes to Hugging Face. No accounts, no telemetry, nothing that phones home: the only outbound requests are the ones above. Details in [docs/security.md](docs/security.md).
 
 ## Install
 
+On Windows: install GIMP 3.2 (or newer), unzip OpenFill, double-click `Install OpenFill.cmd`, open GIMP, run `Filters > OpenFill > Generative Fill...` and press **Download ComfyUI** when asked.
+
+1. **GIMP 3.2.** Install it from [gimp.org](https://www.gimp.org/downloads/). You don't need to start it first.
+2. **OpenFill.** Download the OpenFill zip from the [Releases page](https://github.com/beckettharriman/gimp-openfill/releases) and unzip it anywhere.
+3. **Double-click `Install OpenFill.cmd`.** It copies the plug-in into your GIMP 3 profile and looks for a ComfyUI you may already have (the portable build, ComfyUI Desktop, Stability Matrix, Pinokio). Nothing is downloaded at this step and git is not needed.
+4. **Open GIMP, open an image, select an area and run `Filters > OpenFill > Generative Fill...`.** If no ComfyUI was found, a notice says "ComfyUI is required". It checks your graphics card, free disk space and port 8188 first, then **Download ComfyUI** fetches the official Windows portable build (about 2 GB, about 8 GB unpacked) into `%LOCALAPPDATA%\OpenFill\ComfyUI`, checks it against a published SHA-256, unpacks it with Windows' own `tar.exe`, adds the inpaint nodes at a pinned commit and OpenCV, and remembers the folder. "I already have ComfyUI" lets you pick a folder instead. You can change the install folder in the notice.
+5. **Download the starting models.** The model manager opens next: get LaMa (object removal, 0.2 GB) and DreamShaper 8 Inpainting (fill and expand, 2 GB). Then select some sky, type "hot air balloon", press Enter. The first request starts the backend, which takes about a minute; after that it's seconds.
+
+The download needs an NVIDIA card. Without one the notice says so and offers the download only as "very slow" (the processor does the work); for an AMD card it points to ComfyUI's AMD instructions, after which you choose "I already have ComfyUI".
+
+The same notice appears whenever you start Generative Fill, Remove or Expand and ComfyUI can't be found, instead of an error.
+
+If something goes wrong, every error message ends with what to do next, and the same advice shows in the progress window. For a bug report, turn on Verbose log in Settings, do it again, and attach the log file. Never attach `config.json`, it may hold your token.
+
+<details>
+<summary><b>Manual and advanced install</b></summary>
+
 You need GIMP 3.2 or newer and ComfyUI. OpenFill uses GIMP's own Python and needs no extra packages.
 
-**1. ComfyUI.** Download the portable build from the [ComfyUI releases](https://github.com/Comfy-Org/ComfyUI/releases) and extract it, for example to `C:\AI\ComfyUI`. Any other ComfyUI checkout works too; you point OpenFill at it in Settings.
+**ComfyUI.** Download the portable build from the [ComfyUI releases](https://github.com/Comfy-Org/ComfyUI/releases), extract it (Windows 10 and 11 can open `.7z` with `tar -xf`), and point OpenFill at the folder that holds `python_embeded` in `Filters > OpenFill > Generative Fill Settings`, or pass `-ComfyDir` to the installer. Any other ComfyUI checkout with a `venv` works too.
 
-**2. Inpaint nodes.** Clone [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes) into `ComfyUI\custom_nodes\`. For a cleaner seam on Generative Expand, also install OpenCV with ComfyUI's own Python:
+**Inpaint nodes.** Download the [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes) archive of the commit pinned in `models/catalog.json` into `ComfyUI\custom_nodes\` (the plug-in's Models tab and `install.ps1 -Model` do this for you, from the GitHub zip, without git). For a cleaner seam on Generative Expand, also install OpenCV with ComfyUI's own Python:
 
 ```powershell
 python_embeded\python.exe -s -m pip install opencv-python-headless
 ```
 
-**3. The plug-in.** Close GIMP. Grab the source zip from the [Releases page](https://github.com/beckettharriman/gimp-openfill/releases) or clone the repo, then from its folder:
+**The plug-in from a clone.** Close GIMP, then from the repository folder:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File install.ps1
 ```
 
-It copies the plug-in into your newest GIMP 3 profile and writes default settings.
+`install.ps1 -DetectComfy` lists the ComfyUI installs it can find. To build the release zip yourself: `python tools/make_release_zip.py`.
 
-**4. A model.** Start GIMP, open an image, select something and run `Filters > OpenFill > Generative Fill...`. With no model installed it opens the download manager. Pick one from Recommended for this PC and press Download.
-
-**5. Check it.** Select some sky, type "hot air balloon", press Enter. The first request starts the backend, which takes about a minute; after that it's seconds. The balloon should land on a new layer called `Generative Fill: hot air balloon`.
-
-If something goes wrong, every error message ends with what to do next, and the same advice shows in the progress window. For a bug report, turn on Verbose log in Settings, do it again, and attach the log file. Never attach `config.json`, it may hold your token.
+</details>
 
 <details>
 <summary><b>Linux, Flatpak and macOS</b></summary>
@@ -135,7 +148,7 @@ If something goes wrong, every error message ends with what to do next, and the 
 sh install.sh
 ```
 
-I've only run it against fake profiles on WSL Ubuntu and Git Bash, not a real Linux, Flatpak or macOS GIMP. If you try it, I'd like to hear how it went.
+I've only run it against fake profiles on WSL Ubuntu and Git Bash, not a real Linux, Flatpak or macOS GIMP. If you try it, I'd like to hear how it went. The Download ComfyUI button is Windows-only.
 
 </details>
 
@@ -146,6 +159,8 @@ I've only run it against fake profiles on WSL Ubuntu and Git Bash, not a real Li
 |---|---|---|
 | `-Link` | `--link` | Links the plug-in to your checkout instead of copying it, for development. |
 | `-ProfileDir <dir>` | `--profile-dir <dir>` | Installs into a specific GIMP profile. `GIMP3_DIRECTORY` works too. |
+| `-ComfyDir <dir>` | | Uses this ComfyUI instead of looking for one. |
+| `-DetectComfy` | | Lists the ComfyUI installs found on this PC. |
 | `-Uninstall` | `--uninstall` | Removes the plug-in. Keeps your settings and never touches models. |
 | `-RemoveConfig` | `--remove-config` | With uninstall, also deletes the settings folder (it holds the Hugging Face token, if any). |
 | `-ListModels`, `-Model <id>` | | Lists or downloads a model without opening GIMP, with resume and checksum. |

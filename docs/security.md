@@ -47,7 +47,8 @@ machine who can read your home folder.
 | Live (hub) entries | source is huggingface or civitai; the URL must be an https file URL on those hosts (Hugging Face URLs pinned to a commit); the main file is a .safetensors or .gguf with a known size, in its own folder `checkpoints/<id>/` or `unet/<id>/` so two models never share a file; companions and custom nodes must be copied verbatim from the shipped list; a malformed record is dropped, not fatal | `catalog._live_checks`, `catalog.parse_live_entries` |
 | Existing files | a live download never deletes or overwrites a file that is already at its destination and does not match; it stops and tells you to move it. Removing a model deletes only the files of that catalog entry | `downloads.download_file`, `supervisor.TaskWorker._remove` |
 | Downloaded data | written to `<file>.part`; Content-Length and the catalog size must agree before writing; a body longer than the catalog size is cut off and deleted; a resumed range must start at the expected byte; free disk space checked first; SHA-256 verified before the atomic rename onto the final name; a hash mismatch deletes the `.part` file | `downloads.download_file` |
-| Git checkout | `git clone -- <repo>`; after `git checkout <commit>` the plug-in verifies `git rev-parse HEAD` equals the pinned commit before running pip | `downloads.install_custom_node` |
+| Custom node install | new installs use the GitHub zip of the pinned commit: its comment must equal the commit, unsafe member paths and symbolic links are refused. An existing git clone is checked out at the pin and `git rev-parse HEAD` must equal it before pip runs | `downloads.install_node_from_zip`, `downloads.install_custom_node` |
+| ComfyUI setup manifest | the archive URL must be on the official ComfyUI GitHub releases, the name and folder plain names, the SHA-256 64 hex digits, pip packages pinned with `==`, nodes pinned like catalog nodes; the setup task's install folder must be absolute | `comfy_setup.parse_manifest`, `supervisor.TaskWorker._setup_comfy` |
 | Pids in state files | a pid only counts as a live supervisor or task worker when it is alive and its process image name (when it can be read) is a Python interpreter; the watched GIMP pid counts as gone when its image name changes (pid reuse), and other GIMPs registered for the same profile keep the backend alive | `supervisor.pid_is_python`, `supervisor.run_backend` |
 | WebSocket frames | at most 256 MB per frame; the client id is URL-encoded | `websocket.WebSocket`, `websocket.ws_url` |
 
@@ -58,11 +59,11 @@ Backend writes a stop request into `server-state.json`
 (`server.ServerManager.request_stop`); the supervisor acts on it.
 
 Every subprocess is started with an argument list, never through a shell:
-the supervisor and ComfyUI (`server.py`, `supervisor.py`), git and pip for
-node installs (`downloads.py`), and the file manager for "Open models folder"
+the supervisor and ComfyUI (`server.py`, `supervisor.py`), pip for node installs and
+Windows' `tar.exe` for unpacking ComfyUI (`downloads.py`, `comfy_setup.py`; git only for resetting an existing clone), and the file manager for "Open models folder"
 (`app.py`). Both installers quote every path; `install.ps1 -Model` validates
-the catalog destinations, URLs and node pins the same way and passes them to
-curl and git as separate arguments.
+the catalog destinations, URLs and node pins the same way and downloads the pinned GitHub zip of each node with
+curl as separate arguments.
 
 ## The Hugging Face token
 
@@ -112,6 +113,19 @@ custom node packs to `<ComfyUI>/custom_nodes/`. Uninstalling the plug-in
 (`install.ps1 -Uninstall`, `sh install.sh --uninstall`) keeps the settings
 folder unless `-RemoveConfig` / `--remove-config` is given, and never touches
 models.
+
+## What "Download ComfyUI" fetches
+
+The notice that appears when ComfyUI is missing downloads exactly these things, all listed in `models/comfy_setup.json` and none chosen by the task that asks for them:
+
+| What | From | How it is pinned and checked |
+| --- | --- | --- |
+| ComfyUI Windows portable build (NVIDIA, about 2 GB) | `https://github.com/comfyanonymous/ComfyUI/releases/download/<version>/...` (the URL must start with that prefix; the manifest is rejected otherwise) | Exact release version, size and SHA-256 (the digest GitHub publishes for the release asset) in the manifest. Size and hash are checked before the file is renamed from `.part`; a mismatch deletes it. |
+| Unpacking | Windows' own `System32\tar.exe` (bsdtar), run with an argument list, never through a shell and never the `tar` on PATH | The archive is verified first. Unpacked into a scratch folder next to the target, then moved into place. No extra extractor is downloaded. |
+| Inpaint nodes | `https://github.com/Acly/comfyui-inpaint-nodes/archive/<commit>.zip` (no git needed) | Full 40-character commit; the zip's comment must equal that commit; entries with absolute paths, `..`, drive letters or symbolic links are refused; a `.openfill-commit` marker records the pin. An existing git clone is reset to the pin with `git rev-parse HEAD` verified. |
+| OpenCV | `opencv-python-headless` from PyPI, installed with ComfyUI's own embedded Python | Exact version (`==`) in the manifest. pip's own TLS and PyPI metadata apply; the plug-in does not hash it. |
+
+The setup task runs in the supervisor, writes only below the install folder you chose (default `%LOCALAPPDATA%\OpenFill\ComfyUI`) and the plug-in's `config.json` (the `comfy_dir` setting, plus `--cpu` when you chose the processor-only route), and must be given an absolute folder. Before any of it, a pre-flight check reads the graphics card (`nvidia-smi`, then the Windows adapter list through PowerShell), the free space on the target drive, and whether port 8188 answers; none of that leaves the PC. Existing ComfyUI installs are found by looking in fixed folders and in the config files of ComfyUI Desktop and Stability Matrix; nothing is sent anywhere.
 
 ## Network exposure
 

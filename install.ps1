@@ -6,9 +6,13 @@
 # default config if none exists. Run from the repository root:
 #
 #   powershell -ExecutionPolicy Bypass -File install.ps1 [-GimpVersion 3.2] [-ProfileDir <dir>]
-#              [-ComfyDir C:\AI\ComfyUI\ComfyUI_windows_portable] [-Link]
+#              [-ComfyDir <folder of an existing ComfyUI>] [-Link]
 #   powershell -ExecutionPolicy Bypass -File install.ps1 -Uninstall [-RemoveConfig] [-ProfileDir <dir>]
 #   powershell -ExecutionPolicy Bypass -File install.ps1 -ListModels | -Model <id> [-ComfyDir <dir>]
+#   powershell -ExecutionPolicy Bypass -File install.ps1 -DetectComfy
+#
+# Most people just double-click "Install OpenFill.cmd". If no ComfyUI is found on this PC, the
+# plug-in offers to download one the first time you run Generative Fill.
 #
 # -Link         creates a directory junction to the repo instead of copying (handy for development).
 # -ProfileDir   the GIMP profile folder itself (default: $env:GIMP3_DIRECTORY, else the newest
@@ -27,6 +31,7 @@ param(
     [switch]$Uninstall,
     [switch]$RemoveConfig,
     [switch]$ListModels,
+    [switch]$DetectComfy,
     [string]$Model = "",
     [string]$HfToken = ""
 )
@@ -36,7 +41,21 @@ $repo = Split-Path -Parent $MyInvocation.MyCommand.Path
 $source = Join-Path $repo "gimp-openfill"
 $name = "gimp-openfill"
 $catalogPath = Join-Path $repo "models\catalog.json"
-$defaultComfy = "C:\AI\ComfyUI\ComfyUI_windows_portable"
+$setupPath = Join-Path $repo "models\comfy_setup.json"
+function Get-ConfiguredComfy {
+    # comfy_dir from the OpenFill config of the profile this script would install into, if any.
+    $dirs = @()
+    if ($ProfileDir) { $dirs += $ProfileDir } elseif ($env:GIMP3_DIRECTORY) { $dirs += $env:GIMP3_DIRECTORY }
+    else {
+        $dirs += @(Get-ChildItem -LiteralPath (Join-Path $env:APPDATA "GIMP") -Directory -ErrorAction SilentlyContinue |
+            Where-Object { $_.Name -match '^3\.\d+$' } | Sort-Object { [version]$_.Name } -Descending | ForEach-Object { $_.FullName })
+    }
+    foreach ($d in $dirs) {
+        $cfg = Read-JsonQuiet (Join-Path $d "openfill\config.json")
+        if ($cfg -and $cfg.comfy_dir -and (Test-ComfyFolder $cfg.comfy_dir)) { return [string]$cfg.comfy_dir }
+    }
+    return $null
+}
 
 function Fail([string]$Message) {
     [Console]::Error.WriteLine("error: $Message")
@@ -47,8 +66,109 @@ function Get-Catalog {
     (Get-Content -Raw -Encoding UTF8 $catalogPath | ConvertFrom-Json).models
 }
 
+function Test-ComfyFolder([string]$Dir) {
+    # The layouts the plug-in can start: the portable build, or a checkout with a venv.
+    if (-not $Dir -or -not (Test-Path -LiteralPath $Dir -PathType Container)) { return $false }
+    if ((Test-Path -LiteralPath (Join-Path $Dir "python_embeded\python.exe")) -and
+        (Test-Path -LiteralPath (Join-Path $Dir "ComfyUI\main.py"))) { return $true }
+    if (Test-Path -LiteralPath (Join-Path $Dir "main.py")) {
+        foreach ($v in "venv", ".venv", "env") {
+            if (Test-Path -LiteralPath (Join-Path $Dir "$v\Scripts\python.exe")) { return $true }
+        }
+    }
+    return $false
+}
+
+function Read-JsonQuiet([string]$Path) {
+    try { return (Get-Content -Raw -Encoding UTF8 -LiteralPath $Path | ConvertFrom-Json) } catch { return $null }
+}
+
+function Find-Comfy {
+    # Mirrors comfy_setup.detect_comfy in the plug-in: returns objects with Path and Source, best first.
+    $homeDir = $env:USERPROFILE
+    $appData = if ($env:APPDATA) { $env:APPDATA } else { Join-Path $homeDir "AppData\Roaming" }
+    $local = if ($env:LOCALAPPDATA) { $env:LOCALAPPDATA } else { Join-Path $homeDir "AppData\Local" }
+    $list = New-Object System.Collections.ArrayList
+    function Add-Cand($p, $src) { [void]$list.Add([pscustomobject]@{ Path = $p; Source = $src }) }
+    Add-Cand (Join-Path $local "OpenFill\ComfyUI\ComfyUI_windows_portable") "installed by OpenFill"
+    $fixed = if ($env:OPENFILL_NO_FIXED_ROOTS) { @() } else { @("C:\AI\ComfyUI", "C:\", "C:\ComfyUI") }
+    foreach ($r in ($fixed + @($homeDir, (Join-Path $homeDir "ComfyUI")))) { Add-Cand (Join-Path $r "ComfyUI_windows_portable") "portable folder" }
+    foreach ($f in "Downloads", "Desktop", "Documents") {
+        Add-Cand (Join-Path $homeDir "$f\ComfyUI_windows_portable") "portable folder"
+        Add-Cand (Join-Path $homeDir "$f\ComfyUI") "portable folder"
+    }
+    $desk = Read-JsonQuiet (Join-Path $appData "ComfyUI\config.json")
+    if ($desk -and $desk.basePath) { Add-Cand ([string]$desk.basePath) "ComfyUI Desktop" }
+    $libs = @((Join-Path $appData "StabilityMatrix"), (Join-Path $local "StabilityMatrix"))
+    foreach ($sf in "library.json", "settings.json") {
+        $sm = Read-JsonQuiet (Join-Path $appData "StabilityMatrix\$sf")
+        if ($sm) {
+            $lp = if ($sm.LibraryPath) { $sm.LibraryPath } else { $sm.libraryPath }
+            if ($lp) { $libs = @([string]$lp) + $libs }
+        }
+    }
+    foreach ($l in $libs) {
+        Add-Cand (Join-Path $l "Data\Packages\ComfyUI") "Stability Matrix"
+        Add-Cand (Join-Path $l "Packages\ComfyUI") "Stability Matrix"
+    }
+    $pino = @((Join-Path $homeDir "pinokio"))
+    if (-not $env:OPENFILL_NO_FIXED_ROOTS) { $pino += "C:\pinokio" }
+    foreach ($r in $pino) { Add-Cand (Join-Path $r "api\comfy.git\app") "Pinokio" }
+    $seen = @{}
+    foreach ($c in $list) {
+        foreach ($p in @($c.Path, (Join-Path $c.Path "ComfyUI_windows_portable"))) {
+            $key = $p.ToLowerInvariant()
+            if ($seen.ContainsKey($key)) { continue }
+            if (Test-ComfyFolder $p) { $seen[$key] = $true; [pscustomobject]@{ Path = $p; Source = $c.Source } }
+        }
+    }
+}
+
+function Get-ZipComment([string]$Path) {
+    # The archive GitHub builds for a commit carries that commit id as its zip comment.
+    $fs = [IO.File]::OpenRead($Path)
+    try {
+        $len = [math]::Min($fs.Length, 70000)
+        $buf = New-Object byte[] $len
+        [void]$fs.Seek(-$len, [IO.SeekOrigin]::End)
+        [void]$fs.Read($buf, 0, $len)
+    } finally { $fs.Dispose() }
+    for ($i = $len - 22; $i -ge 0; $i--) {
+        if ($buf[$i] -eq 0x50 -and $buf[$i + 1] -eq 0x4b -and $buf[$i + 2] -eq 5 -and $buf[$i + 3] -eq 6) {
+            $n = $buf[$i + 20] + 256 * $buf[$i + 21]
+            return [Text.Encoding]::ASCII.GetString($buf, $i + 22, $n)
+        }
+    }
+    return ""
+}
+
+function Install-NodeZip([string]$Repo, [string]$Commit, [string]$Folder, [string]$NodesDir) {
+    # No git needed: the GitHub zip of the pinned commit, checked against the pin, unpacked and moved into place.
+    $zip = Join-Path $NodesDir ".$Folder.zip"
+    $work = Join-Path $NodesDir ".$Folder.unpack"
+    New-Item -ItemType Directory -Force $NodesDir | Out-Null
+    if (Test-Path -LiteralPath $work) { Remove-Item -LiteralPath $work -Recurse -Force }
+    Write-Host "   download $Repo/archive/$Commit.zip"
+    & curl.exe -sS -L --retry 5 --retry-delay 5 --fail -o $zip "$Repo/archive/$Commit.zip"
+    if ($LASTEXITCODE -ne 0) { Fail "download failed for $Repo (curl exit $LASTEXITCODE)" }
+    try {
+        $comment = (Get-ZipComment $zip).Trim()
+        if ($comment -ne $Commit) { Fail "the archive for $Folder is for commit '$comment', expected $Commit" }
+        Expand-Archive -LiteralPath $zip -DestinationPath $work -Force
+        $inner = @(Get-ChildItem -LiteralPath $work -Directory)
+        if ($inner.Count -ne 1) { Fail "the archive for $Folder does not have a single top folder" }
+        Move-Item -LiteralPath $inner[0].FullName -Destination (Join-Path $NodesDir $Folder)
+        [IO.File]::WriteAllText((Join-Path (Join-Path $NodesDir $Folder) ".openfill-commit"), "$Commit`n")
+    } finally {
+        Remove-Item -LiteralPath $zip -Force -ErrorAction SilentlyContinue
+        if (Test-Path -LiteralPath $work) { Remove-Item -LiteralPath $work -Recurse -Force -ErrorAction SilentlyContinue }
+    }
+}
+
 function Get-ModelsRoot([string]$Dir) {
-    if (-not $Dir) { $Dir = $defaultComfy }
+    if (-not $Dir) { $Dir = Get-ConfiguredComfy }
+    if (-not $Dir) { $Dir = (Find-Comfy | Select-Object -First 1).Path }
+    if (-not $Dir) { Fail "No ComfyUI folder given or found. Pass -ComfyDir <folder>, or run Generative Fill in GIMP and press Download ComfyUI." }
     if (Test-Path -LiteralPath (Join-Path $Dir "ComfyUI\models")) { return (Join-Path $Dir "ComfyUI\models") }
     return (Join-Path $Dir "models")
 }
@@ -99,6 +219,13 @@ function Find-GimpExe {
 }
 
 # ---- headless model management (same catalog as the Models tab) ----
+if ($DetectComfy) {
+    $found = @(Find-Comfy)
+    if ($found.Count -eq 0) { Write-Host "No ComfyUI found on this PC." }
+    foreach ($c in $found) { "{0}  [{1}]" -f $c.Path, $c.Source }
+    exit 0
+}
+
 if ($ListModels) {
     $root = Get-ModelsRoot $ComfyDir
     foreach ($e in Get-Catalog) {
@@ -164,11 +291,7 @@ if ($Model) {
             $nodes = Join-Path (Split-Path -Parent $root) "custom_nodes"
             $target = Join-Path $nodes $n.folder
             if (-not (Test-Path -LiteralPath $target)) {
-                Write-Host "   git clone $($n.repo) @ $($n.commit)"
-                & git clone --quiet -- $n.repo $target
-                if ($LASTEXITCODE -ne 0) { Fail "git clone failed for $($n.repo)" }
-                & git -C $target checkout --quiet $n.commit
-                if ($LASTEXITCODE -ne 0) { Fail "git checkout $($n.commit) failed in $target" }
+                Install-NodeZip $n.repo $n.commit $n.folder $nodes
                 $py = Join-Path (Split-Path -Parent (Split-Path -Parent $root)) "python_embeded\python.exe"
                 if ((Test-Path -LiteralPath (Join-Path $target "requirements.txt")) -and (Test-Path -LiteralPath $py)) {
                     & $py -s -m pip install --no-warn-script-location -r (Join-Path $target "requirements.txt")
@@ -192,12 +315,16 @@ if ($ProfileDir) {
             Where-Object { $_.Name -match '^3\.\d+$' } | Sort-Object { [version]$_.Name } -Descending)
         if ($candidates.Count -eq 0) {
             if ($Uninstall) { Write-Host "No GIMP 3.x profile under $base; nothing to uninstall."; exit 0 }
-            if (Find-GimpExe) {
-                Fail "GIMP 3 is installed but has no profile under $base yet. Start GIMP once, close it, then re-run."
+            $exe = Find-GimpExe
+            if (-not $exe) {
+                Fail "GIMP 3 does not seem to be installed. Install GIMP 3.2 from https://www.gimp.org/downloads/, then double-click Install OpenFill.cmd again."
             }
-            Fail "GIMP 3 does not seem to be installed (no profile under $base). Install GIMP 3 from https://www.gimp.org/downloads/, start it once, then re-run."
+            # GIMP creates its profile folder the first time it starts; make it now so GIMP need not run first.
+            $GimpVersion = if ((Split-Path -Leaf $exe) -match 'gimp-(3\.\d+)') { $Matches[1] } else { "3.2" }
+            Write-Host "GIMP $GimpVersion has not been started yet; creating its profile folder."
+        } else {
+            $GimpVersion = $candidates[0].Name
         }
-        $GimpVersion = $candidates[0].Name
     }
     $profileDir = Join-Path $base $GimpVersion
 }
@@ -244,25 +371,26 @@ if ($Link) {
     Get-ChildItem -LiteralPath $target -Recurse -Directory -Filter "__pycache__" | Remove-Item -Recurse -Force
     New-Item -ItemType Directory -Force (Join-Path $target "models") | Out-Null
     Copy-Item -LiteralPath $catalogPath -Destination (Join-Path $target "models\catalog.json") -Force
-    Write-Host "Copied plug-in (with models\catalog.json) to $target"
+    Copy-Item -LiteralPath $setupPath -Destination (Join-Path $target "models\comfy_setup.json") -Force
+    Write-Host "Copied plug-in (with its model catalog and ComfyUI setup list) to $target"
 }
 
-# Default config (only if missing).
+# Default config (only if missing). comfy_dir is written only when a ComfyUI is given or found;
+# otherwise the plug-in offers to download one the first time you run Generative Fill.
 New-Item -ItemType Directory -Force $configDir | Out-Null
 if (-not (Test-Path -LiteralPath $configFile)) {
-    if (-not $ComfyDir) { $ComfyDir = $defaultComfy }
+    $found = $null
+    if (-not $ComfyDir) {
+        $found = Find-Comfy | Select-Object -First 1
+        if ($found) { $ComfyDir = $found.Path; Write-Host "Found ComfyUI ($($found.Source)): $ComfyDir" }
+    }
     $config = [ordered]@{
         backend = "comfyui"
-        comfy_dir = $ComfyDir
         url = "http://127.0.0.1:8188"
         autostart = $true
         idle_timeout_minutes = 20
-        checkpoint = "sd-v1-5-inpainting.ckpt"
-        sdxl_checkpoint = "sd_xl_base_1.0.safetensors"
-        fooocus_head = "fooocus_inpaint_head.pth"
-        fooocus_patch = "inpaint_v26.fooocus.patch"
-        quality = "fast"
     }
+    if ($ComfyDir) { $config["comfy_dir"] = $ComfyDir }
     # UTF-8 without BOM (Set-Content -Encoding UTF8 adds one on Windows PowerShell).
     [IO.File]::WriteAllText($configFile, (($config | ConvertTo-Json) + "`n"), (New-Object Text.UTF8Encoding $false))
     Write-Host "Wrote default config to $configFile"
@@ -276,14 +404,19 @@ if (-not (Test-Path -LiteralPath $configFile)) {
 if (-not (Find-GimpExe)) {
     Write-Warning "GIMP 3 was not found in the usual install folders. Install it from https://www.gimp.org/downloads/."
 }
-if ($ComfyDir -and -not (Test-Path -LiteralPath (Join-Path $ComfyDir "ComfyUI\main.py")) -and
-        -not (Test-Path -LiteralPath (Join-Path $ComfyDir "main.py"))) {
-    Write-Warning "ComfyUI not found at $ComfyDir. See docs/models.md for the backend setup."
+$haveComfy = $ComfyDir -and (Test-ComfyFolder $ComfyDir)
+if ($ComfyDir -and -not $haveComfy) {
+    Write-Warning "No ComfyUI was found at $ComfyDir. The plug-in will offer to download one."
 }
 Write-Host ""
-Write-Host "Next steps:"
-Write-Host "  1. Restart GIMP (plug-ins are registered at start-up)."
-Write-Host "  2. Open Filters > OpenFill > Generative Fill Settings... and check the ComfyUI folder."
-Write-Host "  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active."
-Write-Host "  4. Select an area of an image and run Filters > OpenFill > Generative Fill..."
+Write-Host "OpenFill is installed. Next steps:"
+Write-Host "  1. Start (or restart) GIMP; plug-ins are registered at start-up."
+Write-Host "  2. Open an image, select an area and run Filters > OpenFill > Generative Fill..."
+if ($haveComfy) {
+    Write-Host "  3. The first time, the model manager opens: download LaMa (object removal) and DreamShaper 8 Inpainting"
+    Write-Host "     (fill and expand), about 2.3 GB together, then run Generative Fill again."
+} else {
+    Write-Host "  3. ComfyUI is required and was not found: press Download ComfyUI when asked (about 2 GB, checked against a"
+    Write-Host "     published checksum), then download LaMa and DreamShaper 8 Inpainting (about 2.3 GB) in the model manager."
+}
 Write-Host "To remove the plug-in later: install.ps1 -Uninstall (add -RemoveConfig to delete the settings too)."

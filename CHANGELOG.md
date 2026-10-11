@@ -41,9 +41,25 @@ downloader, and fixes from an end-to-end test matrix run in a real GIMP 3.2.6
 - Windowless downloader in the supervisor: queue, HTTP Range resume, sha256
   verification, atomic rename, disk-space and gated (401/403) errors, cancel;
   a tasks-only supervisor mode when the backend is not running.
-- On-demand custom node installation (git clone at the pinned commit, pip
-  install with ComfyUI's Python) with confirmation and backend restart;
+- On-demand custom node installation (the GitHub zip of the pinned commit, no
+  git needed, checked against the pin; pip install with ComfyUI's Python) with confirmation and backend restart;
   ComfyUI-GGUF for the FLUX and Qwen tiers.
+- Installing on a PC with nothing set up: `Install OpenFill.cmd` (double-click)
+  runs `install.ps1`, which creates the GIMP profile folder if GIMP has not been
+  started yet and looks for an existing ComfyUI (portable folders, ComfyUI
+  Desktop, Stability Matrix, Pinokio; `install.ps1 -DetectComfy`). When
+  ComfyUI is missing, the first run and every Generative Fill, Remove or
+  Expand shows a short "ComfyUI is required" notice with **Download ComfyUI**
+  (size shown) and "I already have ComfyUI". Before the download it checks the
+  graphics card, free disk space and port 8188 and says plainly when there is
+  no NVIDIA card (processor-only is offered as very slow; AMD gets a link to
+  ComfyUI's AMD instructions). The download is a pinned, checksummed official
+  portable release (`models/comfy_setup.json`), unpacked with Windows' own
+  `tar.exe`, plus the inpaint nodes at their pinned commit and a pinned OpenCV,
+  run as a supervisor task with progress in the progress window.
+- `tools/make_release_zip.py` builds the release zip (plug-in, catalog,
+  setup list, installer scripts, README, COPYING; no tests or evidence).
+
 - Workflow templates selected by the active model: FLUX Fill (GGUF or fp8
   loaders), Qwen-Image-Edit, LaMa/MAT removal (prompt skipped), SDXL
   checkpoint swap for Juggernaut.

@@ -2,6 +2,9 @@
 """ComfyUI setup logic: manifest, detection, pre-flight, install sequence (network and tar mocked)."""
 
 import json
+import os
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -446,3 +449,59 @@ class SupervisorSetupTaskTests(unittest.TestCase):
         self.worker._setup_comfy(self.task())
         self.assertEqual(seen[0]["type"], "setup_comfy")
         self.assertAlmostEqual(seen[0]["fraction"], 0.275)
+
+
+@unittest.skipUnless(sys.platform == "win32", "install.ps1 is the Windows installer")
+class InstallScriptDetectTests(unittest.TestCase):
+    """install.ps1 -DetectComfy finds the same layouts as comfy_setup.detect_comfy."""
+
+    def run_detect(self, home: Path) -> str:
+        env = dict(os.environ)
+        env.update(
+            USERPROFILE=str(home),
+            APPDATA=str(home / "AppData" / "Roaming"),
+            LOCALAPPDATA=str(home / "AppData" / "Local"),
+            OPENFILL_NO_FIXED_ROOTS="1",
+        )
+        r = subprocess.run(
+            [
+                "powershell",
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                str(ROOT / "install.ps1"),
+                "-DetectComfy",
+            ],
+            capture_output=True,
+            text=True,
+            env=env,
+            timeout=120,
+        )
+        self.assertEqual(r.returncode, 0, r.stderr)
+        return r.stdout
+
+    def test_none_then_downloads_stability_matrix_and_desktop(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp)
+            self.assertIn("No ComfyUI found", self.run_detect(home))
+            make_portable(home / "Downloads" / "ComfyUI_windows_portable")
+            sm = home / "AppData" / "Roaming" / "StabilityMatrix" / "Data" / "Packages" / "ComfyUI"
+            (sm / "venv" / "Scripts").mkdir(parents=True)
+            (sm / "venv" / "Scripts" / "python.exe").write_bytes(b"")
+            (sm / "main.py").write_text("")
+            desk = make_portable(home / "Elsewhere")
+            cfg = home / "AppData" / "Roaming" / "ComfyUI" / "config.json"
+            cfg.parent.mkdir(parents=True)
+            cfg.write_text(json.dumps({"basePath": str(desk)}), encoding="utf-8")
+            out = self.run_detect(home)
+            self.assertIn("[portable folder]", out)
+            self.assertIn("[Stability Matrix]", out)
+            self.assertIn("[ComfyUI Desktop]", out)
+            expected = comfy_setup.detect_comfy(
+                {"APPDATA": str(home / "AppData" / "Roaming"), "LOCALAPPDATA": str(home / "AppData" / "Local")},
+                home,
+                fixed_roots=(),
+                pinokio_roots=(),
+            )
+            self.assertEqual(len(out.strip().splitlines()), len(expected))
