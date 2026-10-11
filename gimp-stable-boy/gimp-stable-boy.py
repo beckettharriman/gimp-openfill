@@ -234,8 +234,10 @@ def _model_options(
         catalog = cat.load_catalog(plugin_dir=Path(__file__).resolve().parent)
         root = cat.default_models_root(settings.comfy_dir)
         nodes = cat.default_custom_nodes_dir(settings.comfy_dir)
+        active_id = cat.effective_active(catalog, root, nodes, settings.active_model)
+        active_name = active_id or "none installed"
         for entry in catalog:
-            if entry.id == settings.active_model:
+            if entry.id == active_id:
                 active_name = entry.name
                 prompt_free = "remove" in entry.capabilities
                 continue
@@ -245,6 +247,8 @@ def _model_options(
                 continue
             installed = cat.install_status(entry, root, nodes, catalog).installed
             label = ui_text.model_option_label(entry.name, installed, False)
+            if cat.is_opt_in(entry) and cat.tier_label(entry):
+                label += f", {cat.tier_label(entry)}"  # FLUX: "Quality (slow)", only used when picked
             (installed_rows if installed else other_rows).append((entry.id, label))
     except Exception:  # noqa: BLE001 - the dropdown still offers the active model
         pass

@@ -42,6 +42,8 @@ from .runner import Runner
 from .server import ServerManager
 from .workflow import model_display_name
 
+# Model ids the old "fast"/"quality" choices meant without a catalog; with
+# one they resolve to the tier's installed default (catalog.TIER_PREFERENCE).
 LEGACY_CHOICES = {"fast": "sd15-inpainting", "quality": "sdxl-base"}
 MODEL_LIST_NODES = (
     ("CheckpointLoaderSimple", "ckpt_name"),
@@ -152,7 +154,14 @@ class App:
         """Map a dialog choice ('active', a legacy tier or a catalog id) to a model."""
         self.require_backend_install()
         choice = (choice or "active").strip()
-        model_id = self.settings.active_model if choice == "active" else LEGACY_CHOICES.get(choice, choice)
+        if choice == "active":
+            model_id = self.active_model_id()
+            if not model_id:
+                raise ModelMissing(self._no_default_message())
+        elif choice in LEGACY_CHOICES:
+            model_id = self.tier_model_id(choice)
+        else:
+            model_id = choice
         try:
             entry = cat.by_id(self.catalog, model_id)
         except cat.CatalogError:
@@ -225,6 +234,7 @@ class App:
 
     def model_rows(self, server_files: list[str] | None = None) -> list[dict]:
         self.require_backend_install()
+        active = self.active_model_id()
         rows = []
         for e in self.catalog:
             st = cat.install_status(e, self.models_root, self.custom_nodes_dir, self.catalog, server_files)
@@ -247,7 +257,7 @@ class App:
                     "uploader": e.uploader,
                     "gated": e.gated,
                     "runnable": e.runnable,
-                    "active": e.id == self.settings.active_model,
+                    "active": e.id == active,
                     "min_vram_gb": e.min_vram_gb,
                     "missing_nodes": st.missing_nodes,
                     "missing_models": st.missing_models,
@@ -282,6 +292,30 @@ class App:
     def has_model_for(self, operation: str) -> bool:
         """True when a downloaded model can run ``operation`` (fill, expand, txt2img, remove, edit)."""
         return bool(cat.runnable_installed(self.catalog, self.models_root, self.custom_nodes_dir, operation))
+
+    def installed_models(self, operation: str = "remove") -> list[cat.ModelEntry]:
+        """Installed models that can run ``operation`` ("remove" lists every runnable one)."""
+        return cat.runnable_installed(self.catalog, self.models_root, self.custom_nodes_dir, operation)
+
+    def active_model_id(self) -> str:
+        """The model a dialog's "active model" means: the one set active by hand,
+        else the automatic default among the installed models ("" for none)."""
+        return cat.effective_active(self.catalog, self.models_root, self.custom_nodes_dir, self.settings.active_model)
+
+    def tier_model_id(self, tier: str, operation: str = "fill") -> str:
+        """The installed default of ``tier`` (fast, quality, remove), else the
+        tier's first choice (so the error names the model to download)."""
+        best = cat.tier_default(self.installed_models(), tier, operation)
+        return best.id if best is not None else cat.TIER_PREFERENCE[tier][0]
+
+    def _no_default_message(self) -> str:
+        opt_in = [e for e in self.installed_models() if cat.is_opt_in(e)]
+        if opt_in:
+            return (
+                f"'{model_display_name(opt_in[0].name)}' is only used when you pick it: choose it in the Model "
+                f"list or press Set active in {SETTINGS_MENU} > Models."
+            )
+        return cat.NO_MODEL_MESSAGE
 
     def queue_download(self, model_id: str, include_dependencies: bool = True) -> list[str]:
         entry = cat.by_id(self.catalog, model_id)
@@ -390,7 +424,7 @@ class App:
         """An installed prompt-free removal model (LaMa/MAT), best first."""
         # LaMa first: on the judged removal cases it won 19 of 33 against MAT and
         # almost never invents an object; MAT invents glyphs and figures.
-        for mid in ("lama-big", "mat-places512"):
+        for mid in cat.REMOVE_PREFERENCE:
             try:
                 entry = cat.by_id(self.catalog, mid)
             except cat.CatalogError:
@@ -410,28 +444,43 @@ class App:
         except cat.CatalogError:
             return False
 
-    # Preferred SD 1.5 inpainting checkpoints for Generative Expand, best first.
-    EXPAND_SD15_PREFERENCE = ("dreamshaper-8-inpainting", "sd15-inpainting")
-
     def expand_model_for(
         self, entry: cat.ModelEntry | None, model: ModelSpec
     ) -> tuple[cat.ModelEntry | None, ModelSpec]:
-        """Generative Expand on the SDXL tier was acceptable in 0 of 5 benchmark
-        cases against 5 of 6 for SD 1.5 inpainting; until SDXL expand is
-        re-benchmarked an installed SD 1.5 inpainting checkpoint takes it."""
-        if model.arch != "sdxl":
+        """An SDXL model picked for Generative Expand hands the job to the
+        Quality tier's expand default (``catalog.EXPAND_PREFERENCE``) when that
+        is another installed model; docs/models.md has the numbers."""
+        if model.arch != "sdxl" or (entry is not None and entry.id in cat.EXPAND_PREFERENCE["quality"]):
             return entry, model
         try:
             installed = cat.runnable_installed(self.catalog, self.models_root, self.custom_nodes_dir, "expand")
         except Exception:  # noqa: BLE001 - keep the chosen model when the catalog cannot be read
             return entry, model
-        sd15 = [e for e in installed if e.arch == "sd15" and e.template != "inpaint_model"]
-        if not sd15:
+        best = cat.tier_default(installed, "quality", "expand")
+        if best is None or (entry is not None and best.id == entry.id):
             return entry, model
-        rank = {mid: i for i, mid in enumerate(self.EXPAND_SD15_PREFERENCE)}
-        best = min(sd15, key=lambda e: rank.get(e.id, len(rank)))
-        self.log.info("expand: SDXL model %s -> using SD 1.5 %s", entry.id if entry else model.checkpoint, best.id)
+        self.log.info("expand: SDXL model %s -> using %s", entry.id if entry else model.checkpoint, best.id)
         return best, cat.model_spec_for(best, self.catalog)
+
+    def removal_fallback(self, model_choice: str) -> str:
+        """Model for a removal (empty prompt or Remove object) when no LaMa/MAT
+        is installed: the chosen model, unless it is FLUX or Qwen (they repaint
+        the object they were asked to remove); then the Fast, else the Quality
+        default. Raises ModelMissing when only opt-in models are installed."""
+        try:
+            entry, _model = self.resolve_model(model_choice)
+        except ModelMissing:
+            return model_choice  # resolve_model reports the real problem again
+        if entry is None or not cat.is_opt_in(entry):
+            return model_choice
+        best = cat.removal_substitute(self.installed_models(), entry)
+        if best is None:
+            raise ModelMissing(
+                f"Removing an object needs LaMa (0.2 GB) or another fill model, not "
+                f"'{model_display_name(entry.name)}'. Download LaMa in {SETTINGS_MENU} > Models."
+            )
+        self.log.info("fill: removal not sent to %s -> using %s", entry.id, best.id)
+        return best.id
 
     def generative_fill(
         self,
@@ -462,6 +511,7 @@ class App:
                 self.log.info("fill: %s -> using %s", "Remove object" if remove else "empty prompt", removal.id)
                 model_choice = removal.id
             else:
+                model_choice = self.removal_fallback(model_choice)
                 self.log.info(
                     "fill: removal requested but no LaMa/MAT installed; using %s with a background prompt",
                     model_choice,

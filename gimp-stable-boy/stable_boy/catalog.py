@@ -634,13 +634,116 @@ def runnable_installed(
     return out
 
 
+# ------------------------------------------------------- default models ----
+# Per-operation defaults, best first, from the judged benchmark of 2026-10-09
+# (docs/models.md has the numbers). A tier falls back along its list to the
+# first installed model; models outside the lists are never picked for a tier.
+FAST_PREFERENCE = ("dreamshaper-8-inpainting", "sd15-inpainting")
+QUALITY_PREFERENCE = ("realvisxl-v5", "juggernaut-xl-v9", "sdxl-base")
+REMOVE_PREFERENCE = ("lama-big", "mat-places512")
+TIER_PREFERENCE: dict[str, tuple[str, ...]] = {
+    "fast": FAST_PREFERENCE,
+    "quality": QUALITY_PREFERENCE,
+    "remove": REMOVE_PREFERENCE,
+}
+# Generative Expand per tier, re-benchmarked separately from fills (docs/models.md,
+# docs/evidence/daytime-2026-10-09/expand-models): SD 1.5 inpainting continued
+# the scene best, DreamShaper 8 was second, RealVisXL invented new scenery.
+EXPAND_SD15_FIRST = ("sd15-inpainting", "dreamshaper-8-inpainting")
+EXPAND_PREFERENCE: dict[str, tuple[str, ...]] = {
+    "fast": EXPAND_SD15_FIRST,
+    "quality": EXPAND_SD15_FIRST,
+}
+# The automatic active model (no model set active by hand): the Quality default
+# first, then the fills that were acceptable most often on the judged cases.
+AUTO_ACTIVE_ORDER = ("realvisxl-v5", "dreamshaper-8-inpainting", "sd15-inpainting", "juggernaut-xl-v9", "sdxl-base")
+# Families that are only used when picked by hand: FLUX Fill is slow on 8 GB
+# (about 4x RealVisXL for the same results), Qwen Edit needs more than 8 GB.
+OPT_IN_ARCHS = ("flux", "qwen_image")
+# First run: the small starting set, then the quality upgrade.
+STARTER_SET = ("lama-big", "dreamshaper-8-inpainting")
+QUALITY_UPGRADE = "realvisxl-v5"
+OPT_IN_FAMILIES = ("flux-fill", "qwen-edit")
+FIRST_RUN_HINT = (
+    "Start with LaMa (object removal, 0.2 GB) and DreamShaper 8 Inpainting (fill and expand, 2 GB). "
+    "For better prompted fills add RealVisXL V5 (6.5 GB) later."
+)
+
+
+def is_opt_in(entry: ModelEntry) -> bool:
+    """True for models the plug-in never picks on its own (FLUX, Qwen)."""
+    return entry.arch in OPT_IN_ARCHS
+
+
+def tier_label(entry: ModelEntry) -> str:
+    """Short tier name for menus: Fast, Quality, Quality (slow), Edit or Removal."""
+    if entry.arch == "flux":
+        return "Quality (slow)"
+    return {"fast": "Fast", "quality": "Quality", "edit": "Edit", "removal": "Removal"}.get(entry.tier, "")
+
+
+def pick_preferred(installed: Iterable[ModelEntry], preference: Iterable[str]) -> ModelEntry | None:
+    """The first id of ``preference`` that is among ``installed``, or None."""
+    by = {e.id: e for e in installed}
+    for mid in preference:
+        if mid in by:
+            return by[mid]
+    return None
+
+
+def tier_default(installed: Iterable[ModelEntry], tier: str, operation: str = "fill") -> ModelEntry | None:
+    """Default model of ``tier`` (fast, quality, remove) for ``operation``
+    among ``installed``, following the tier's fallback list; None when none of
+    the listed models is installed. Opt-in models are never returned."""
+    table = EXPAND_PREFERENCE if operation == "expand" and tier in EXPAND_PREFERENCE else TIER_PREFERENCE
+    return pick_preferred([e for e in installed if not is_opt_in(e)], table.get(tier, ()))
+
+
+def removal_substitute(installed: Iterable[ModelEntry], entry: ModelEntry | None) -> ModelEntry | None:
+    """Model for a removal (empty prompt or Remove object) when no LaMa/MAT is
+    installed: ``entry`` itself unless it is opt-in (FLUX, Qwen repaint the
+    object they were asked to remove); then the Fast, else the Quality default.
+    None when only opt-in models are installed."""
+    if entry is not None and not is_opt_in(entry):
+        return entry
+    installed = list(installed)
+    return tier_default(installed, "fast") or tier_default(installed, "quality")
+
+
+def auto_active(installed: Iterable[ModelEntry]) -> ModelEntry | None:
+    """The model used when none was set active by hand: ``AUTO_ACTIVE_ORDER``,
+    then any other installed generative model, then a removal model. Never an
+    opt-in model (FLUX, Qwen)."""
+    usable = [e for e in installed if e.runnable and not is_opt_in(e)]
+    best = pick_preferred(usable, AUTO_ACTIVE_ORDER)
+    if best is not None:
+        return best
+    generative = [e for e in usable if "fill" in e.capabilities and e.template != "inpaint_model"]
+    if generative:
+        return generative[0]
+    return pick_preferred(usable, REMOVE_PREFERENCE) or (usable[0] if usable else None)
+
+
+def effective_active(
+    entries: Iterable[ModelEntry], models_root: Path, custom_nodes_dir: Path | None, active_id: str
+) -> str:
+    """The model id a dialog's "active model" means: ``active_id`` when one was
+    set by hand, else the automatic choice among the installed models ("" when
+    nothing usable is installed)."""
+    if active_id:
+        return active_id
+    best = auto_active(runnable_installed(entries, models_root, custom_nodes_dir, "remove"))
+    return best.id if best is not None else ""
+
+
 def suggest_active(installed: list[ModelEntry], active_id: str) -> str | None:
-    """A new active model id when the current one is not usable but another
-    installed model is (the first download becomes the active model); else None."""
-    if not installed or any(e.id == active_id for e in installed):
+    """A new active model id when the model set active by hand is no longer
+    usable but another installed model is; else None. With no model set by hand
+    (``active_id`` empty) the automatic choice applies and nothing is suggested."""
+    if not active_id or not installed or any(e.id == active_id for e in installed):
         return None
-    generative = [e for e in installed if "fill" in e.capabilities and e.template != "inpaint_model"]
-    return (generative or installed)[0].id
+    best = auto_active(installed)
+    return best.id if best is not None else None
 
 
 # -------------------------------------------------------------- model spec ----
@@ -819,9 +922,23 @@ def row_status(row: dict[str, Any], current: dict[str, Any] | None = None, pendi
     return ""
 
 
+def model_role(row: dict[str, Any]) -> str:
+    """Why a model is (or is not) suggested: starting set, quality upgrade, opt-in."""
+    if row["id"] in STARTER_SET:
+        return "recommended start"
+    if row["id"] == QUALITY_UPGRADE:
+        return "quality upgrade"
+    if row.get("family") == "flux-fill":
+        return "Quality (slow), used only when picked"
+    return ""
+
+
 def row_details(row: dict[str, Any]) -> str:
     """The small grey line under the name: size, license, fit, origin, checksum."""
     parts = [str(row.get("size") or "?")]
+    role = model_role(row)
+    if role:
+        parts.insert(0, role)
     if row.get("license"):
         parts.append(str(row["license"]))
     if not row.get("installed") and row.get("fit_label"):
@@ -864,8 +981,10 @@ def rank_score(row: dict[str, Any], now: float | None = None) -> float:
 
 
 def recommended(rows: list[dict[str, Any]], limit: int = 5, now: float | None = None) -> list[dict[str, Any]]:
-    """Up to ``limit`` (3 to 5) not-installed models for this PC: the best fitting
-    one per family first, then the next best overall. Too-big models never qualify."""
+    """Up to ``limit`` (3 to 5) not-installed models for this PC: the starting
+    set (LaMa, DreamShaper 8) and the quality upgrade (RealVisXL V5) first, in
+    that order, then the best fitting one per family, then the next best
+    overall. Too-big and opt-in (FLUX, Qwen) models never qualify."""
     candidates = [
         r
         for r in rows
@@ -873,10 +992,12 @@ def recommended(rows: list[dict[str, Any]], limit: int = 5, now: float | None = 
         and not r.get("installed")
         and not r.get("partial")
         and r.get("fit", "unknown") != "too_big"
+        and r.get("family") not in OPT_IN_FAMILIES
     ]
     ranked = sorted(candidates, key=lambda r: -rank_score(r, now))
-    picked: list[dict[str, Any]] = []
-    families: set[str] = set()
+    first = (*STARTER_SET, QUALITY_UPGRADE)
+    picked = [r for mid in first for r in candidates if r["id"] == mid]
+    families: set[str] = {r.get("family") or r["id"] for r in picked}
     for r in ranked:
         fam = r.get("family") or r["id"]
         if fam not in families:
@@ -887,7 +1008,9 @@ def recommended(rows: list[dict[str, Any]], limit: int = 5, now: float | None = 
             break
         if r not in picked:
             picked.append(r)
-    return sorted(picked[:limit], key=lambda r: -rank_score(r, now))
+    head = [r for r in picked if r["id"] in first]
+    rest = sorted((r for r in picked if r["id"] not in first), key=lambda r: -rank_score(r, now))
+    return (head + rest)[:limit]
 
 
 def build_sections(

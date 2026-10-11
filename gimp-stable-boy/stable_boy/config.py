@@ -93,7 +93,7 @@ class Settings:
     txt2img_width: int = 768
     txt2img_height: int = 512
     debug: bool = False
-    active_model: str = "sd15-inpainting"  # catalog id used when a dialog says "active"
+    active_model: str = ""  # catalog id set active by hand; "" = the automatic default (catalog.auto_active)
     hf_token: str = field(default="", repr=False)  # Hugging Face access token for gated files (local only)
     progress_window: bool = True  # floating progress/preview window
     progress_window_x: int = -1  # last position; -1 = top-right of the image window

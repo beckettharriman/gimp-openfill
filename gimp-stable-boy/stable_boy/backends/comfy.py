@@ -36,6 +36,11 @@ from ..geometry import estimate_timeout, seed_or_random
 # deadline moves to at least this many seconds after the last one: the
 # estimate only has to cover a silent stretch, not the whole job.
 ACTIVITY_EXTENSION = 180.0
+# FLUX and Qwen on a partly offloaded 8 GB card ran 87 to 151 s warm (median
+# 112 s); the old 134 to 166 s estimate cut 3 of 31 FLUX runs. Minimum timeout
+# for these families (any progress message still extends the deadline).
+SLOW_ARCHS = ("flux", "qwen_image")
+SLOW_MODEL_FLOOR = 240.0
 # Model folders searched for the size of a request's model files.
 MODEL_FOLDERS = ("checkpoints", "diffusion_models", "unet", "clip", "text_encoders", "vae", "inpaint")
 
@@ -277,7 +282,8 @@ class ComfyBackend(Backend):
             except (ComfyApiError, AttributeError, TypeError, ValueError):
                 cold = True  # unknown: allow for a load
         size = model_bytes(self.models_root, names)
-        timeout = estimate_timeout(steps, batch, pixels, model_bytes=size, cold=cold)
+        floor = SLOW_MODEL_FLOOR if model is not None and model.arch in SLOW_ARCHS else 120.0
+        timeout = estimate_timeout(steps, batch, pixels, floor=floor, model_bytes=size, cold=cold)
         if self.log:
             self.log.info(
                 "timeout estimate %.0f s (model files %.1f GB, %s)", timeout, size / 1e9, "cold" if cold else "warm"
