@@ -123,6 +123,12 @@ logs a warning when the listen address is not a loopback address. The
 plug-in's own HTTP and WebSocket clients connect to the configured URL, plus the
 model hosts listed under "Live model search" and the download hosts.
 
+## Telemetry
+
+None. OpenFill collects no usage data, sends no analytics or crash reports,
+and has no accounts. The only outbound requests are the ones listed under
+"Live model search" and the model downloads you start yourself.
+
 ## Live model search
 
 Every time the Models tab opens, the plug-in asks `huggingface.co` and

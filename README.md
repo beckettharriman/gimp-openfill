@@ -1,405 +1,180 @@
-# OpenFill - Generative Fill for GIMP 3
+<div align="center">
 
-Select an area in GIMP, type what should be there, press Generate, and the
-result appears as a new layer with a soft layer mask in the same image.
-OpenFill brings a Photoshop-style **Generative Fill**, **Remove object**,
-**Generative Expand** and **Text to Image** to GIMP 3, running local diffusion
-models through a ComfyUI backend that the plug-in installs models into,
-starts, keeps warm and shuts down by itself. No terminal, no browser tab, no
-second application, and nothing leaves the machine.
+# OpenFill
 
-Version 2.0.0-beta.1. OpenFill is a GIMP 3 rewrite of
-[Stable Boy](https://github.com/thndrbrrr/gimp-stable-boy) by Torben
-Giesselmann (thndrbrrr), the GIMP 2.10 plug-in for the AUTOMATIC1111 WebUI.
-It keeps the name, the license and the idea; the code, the backend handling
-and the UX are new.
+[![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](COPYING) ![GIMP 3.2](https://img.shields.io/badge/GIMP-3.2-444.svg) ![Windows tested](https://img.shields.io/badge/tested%20on-Windows-444.svg) ![Python + ComfyUI](https://img.shields.io/badge/built%20with-Python%20%2B%20ComfyUI-orange.svg) ![Local](https://img.shields.io/badge/100%25-local-30d158.svg) ![Beta](https://img.shields.io/badge/status-beta-e8a33d.svg)
 
-![Generative Fill in GIMP 3.2.6: select the sky, type "hot air balloon", watch the live preview, and the result lands as a new masked layer](docs/screenshots/generative-fill.gif)
+*Generative fill for GIMP 3, running on your own graphics card. Turns out you never needed a monthly subscription and someone else's server to put a hot air balloon in your own photo.*
 
-*Recorded from a real run with Juggernaut XL on an RTX 4070 Laptop (24 s, idle stretches trimmed). The dialog itself is shown below.*
+<img src="docs/screenshots/generative-fill.gif" width="720" alt="Selecting the sky in GIMP, typing hot air balloon, the live preview forming, and the result landing as a new masked layer">
 
-## What it does
+**Select an area, type what should be there, press Enter.**<br>
+The result lands on a new layer with a soft mask. Nothing leaves your computer.
 
-Five entries under `Filters > OpenFill` (GIMP sorts them alphabetically):
+</div>
 
-![Filters > OpenFill menu with Generative Expand..., Generative Fill Settings..., Generative Fill..., Stop AI Backend and Text to Image...](docs/screenshots/filters-ai-menu.png)
 
-| Entry | What happens |
+> [!IMPORTANT]
+> **Beta.** This is 2.0.0-beta.1, the first release of OpenFill. It works end to end on Windows with GIMP 3.2.6 and an 8 GB laptop GPU, which is what I build and test on. The Linux and macOS install script exists but hasn't been run against a real GIMP there. Most of the rough edges are in what the models draw, not in the plug-in; [Status](#status) lists them.
+
+OpenFill started as a GIMP 3 rewrite of [Stable Boy](https://github.com/thndrbrrr/gimp-stable-boy) by Torben Giesselmann.
+
+## Why I made this
+
+I moved to GIMP 3 as my Photoshop replacement, and the one thing I missed was Generative Fill. GIMP doesn't have one. People have been asking for it since 2023 ([GNOME/gimp#10086](https://gitlab.gnome.org/GNOME/gimp/-/issues/10086)). The plug-in that came closest, Stable Boy, was written for GIMP 2.10, wanted an AUTOMATIC1111 server open in a browser tab and a mask layer with a magic name, and GIMP 3 removed the plug-in API it was built on.
+
+So OpenFill does it the Photoshop way. The selection is the mask, the result is a layer you can paint on or delete, and the AI backend (ComfyUI) starts hidden on the first request, stays warm while you work, and shuts down when GIMP closes. No terminal, no browser tab, no second app to babysit.
+
+|  |  |
 |---|---|
-| **Generative Fill...** | Fills the selection from a prompt. The result is a new layer with a layer mask; 1 to 8 variations go into a layer group. **Change amount** below 1.0 keeps part of what is there (image-to-image). |
-| Generative Fill, **Remove object** | Erases the selection and continues the background, no prompt needed. An installed LaMa or MAT removal model is used automatically; otherwise the chosen model with a background prompt. |
-| **Generative Expand...** | Grows the canvas by the margins you enter (or **Wider**, **Taller**, **All sides**) and paints the new border. The image is untouched if generation fails. |
-| **Text to Image...** | Generates into a new layer (sized to the selection when there is one) or a new image. |
-| **Generative Fill Settings...** | Backend folder, autostart, idle timeout, progress window, **Check backend**, and the **Models** tab. |
-| **Stop AI Backend** | Shuts the managed ComfyUI process down to free the GPU. It starts again on the next request. |
+| **Fill with a prompt** | Select, type "a red door with brass handles", Enter. The fill lands on a new layer with a mask that fades at the edges. |
+| **Remove object** | Select the thing, switch to Remove object, Enter. No prompt. It erases the selection and continues the background. |
+| **Generative Expand** | Drag the canvas edges outward or pick a ratio, and it paints the new border. The prompt is optional. |
+| **Text to Image** | A new layer or a new image from a prompt, sized to the selection if there is one. |
 
-| Fill with a prompt | Remove object |
+Everything is under `Filters > OpenFill`. Results always go on new layers, in one undo step, so your existing layers are never painted over.
+
+## Keys
+
+| Key | Action |
 |---|---|
-| ![Fill mode](docs/screenshots/fill-dialog.png) | ![Remove mode: "Erases the selection and continues the background. No prompt needed: just press Generate."](docs/screenshots/fill-dialog-remove.png) |
+| `Enter` | Generate. |
+| `Shift+Enter` | New line in the prompt. |
+| `Escape` | Cancel. The image stays as it was. |
+| `1` to `9` | Pick a variation in the picker. |
 
-While it runs, a small always-on-top window shows the step, elapsed and
-remaining time, a live preview of the picture forming, and a **Cancel** button
-that leaves the image unchanged. With more than one variation, a picker opens
-afterwards:
+GIMP doesn't let a plug-in claim a shortcut of its own, but giving it one takes ten seconds: `Edit > Keyboard Shortcuts`, search "Generative Fill", click the shortcut column and press the keys. `Shift+Ctrl+G` is free in GIMP 3.2's defaults.
 
-| Progress window | Variations picker |
+## The dialogs
+
+|  |  |
 |---|---|
-| ![Progress window: "Generating, step 12 of 25", 48 %, elapsed 0:09, about 0:10 left, live preview, Cancel](docs/screenshots/progress-window.png) | ![Choose a variation: three thumbnails, Discard, Keep all, Keep selected](docs/screenshots/variations-picker.png) |
+| <img src="docs/screenshots/fill-dialog.png" alt="Generative Fill"> | <img src="docs/screenshots/fill-dialog-remove.png" alt="Remove object"> |
+| **Generative Fill.** Prompt, Recent prompts, what to avoid, the model and the number of variations are all on the first screen. Change amount and seed sit under Advanced. | **Remove object.** Same dialog, other tab. Nothing to type: it uses an installed removal model (LaMa or MAT) when there is one. |
+| <img src="docs/screenshots/expand-dialog.png" alt="Generative Expand"> | <img src="docs/screenshots/settings-models.png" alt="Models"> |
+| **Generative Expand.** Drag any edge of the thumbnail outward, or pick a ratio (1:1, 4:5, 3:2, 16:9 and the rest) and where the image sits on a 3x3 grid. It shows the new size as you drag. | **Models.** The download manager. What you have installed first, then Recommended for this PC, then the rest, from Hugging Face and Civitai. |
+| <img src="docs/screenshots/progress-window.png" alt="Progress"> | <img src="docs/screenshots/variations-picker.png" alt="Variations"> |
+| **Progress.** Floats over your image without stealing focus: the step, time left, a live preview of the picture forming, and Cancel. | **Variations.** Ask for up to eight and click through them. The ones you don't keep stay hidden in a layer group in case you change your mind. |
 
-The screenshots were captured in GIMP 3.2.6 on Windows by
-`tests/gimp_batch_ui_screenshots.py`; the progress window and the picker are
-driven by test hooks there (scripted steps, tinted copies as stand-in
-variations), not by a real generation. More screens: `docs/screenshots/`.
 
-## Why this exists
+## Models, and what fits your PC
 
-GIMP has no built-in generative fill. The request is
-[GNOME/gimp#10086](https://gitlab.gnome.org/GNOME/gimp/-/issues/10086), open
-since 2023: "as easy as Photoshop", with the plug-in handling the backend for
-the user. It cites the original Stable Boy, which only ran on GIMP 2.10
-(Python 2, `gimpfu`) and expected an AUTOMATIC1111 server in a browser and a
-mask layer with a magic name. GIMP 3 removed that plug-in API entirely.
+OpenFill doesn't ship a model. The first time you run it, it says so and opens the download manager. Nothing downloads until you press Download, and the first model that finishes becomes the active one.
 
-OpenFill aims at the Photoshop flow: the selection is the mask, the result
-is a non-destructive masked layer, and the backend lifecycle needs zero
-terminal work: models download from a dialog, the server starts hidden on the
-first request and stops when GIMP closes or after an idle timeout.
+The Recommended for this PC list is built from your graphics memory, free disk space, and a live search of Hugging Face and Civitai, ranked by whether it fits first, then by how many people download it, then by how recent it is.
 
-## How it works
+| Graphics memory | What you get |
+|---|---|
+| 2 GB and up | LaMa and MAT, the prompt-free removal models. Small (125 to 206 MB) and about 3 s per removal. |
+| 4 GB and up | Stable Diffusion 1.5 inpainting. Fast, but weak at drawing what you asked for in flat or small areas. |
+| 8 GB and up | DreamShaper 8, RealVisXL V5 and other SDXL models with the Fooocus inpaint patch, FLUX.1 Fill as a 4-bit GGUF (opt-in). Much better at following the prompt. |
+| 12 GB and up | Qwen-Image-Edit as a GGUF. |
+| 16 GB and up | FLUX.1 Fill at full size. |
+| No NVIDIA GPU | Stable Diffusion 1.5 can run on the CPU, but a fill takes minutes, not seconds, and you have to raise the generation time limit in Settings. I have not tested AMD or Apple GPUs. |
 
-A GIMP Python plug-in is a short-lived process: GIMP starts it for one
-procedure call and it exits when the call returns. It cannot keep a server
-warm or notice that GIMP closed. So the first request launches a small
-**supervisor** (`openfill/supervisor.py`, GIMP's `pythonw`, no console)
-that starts ComfyUI hidden, ties it to a Windows **Job Object** with
-kill-on-close (the server can never outlive the supervisor, even after a
-crash), watches the GIMP process, and applies the idle timeout.
-`server-state.json` in the profile is the only contract between plug-in runs
-and the supervisor. The supervisor also runs model downloads and custom-node
-installs so they continue after the dialog closes.
+A model that's too big for your machine is never recommended, because a model that has to spill out of graphics memory either crawls or crashes, and you'd find out after a 7 GB download. The search only takes single `.safetensors` or `.gguf` files with a known size, a published SHA-256 and a stated license, and never pickled `.ckpt` or `.bin` files, since those can run code when loaded. FLUX and Qwen are in the list but I haven't run them end to end on my machine. Every file, checksum and license is in [docs/models.md](docs/models.md).
 
-Per request the plug-in:
+How long it takes on my laptop (RTX 4070 Laptop, 8 GB, 20 steps, 2048 px photo):
 
-1. crops a **context region** around the selection (a margin proportional to
-   the selection, wider for removal), flattened over its mean colour where it
-   is transparent;
-2. scales it to the model's **working size** (for example 768 px for SD 1.5,
-   1024 px for SDXL; tiny selections are upscaled so the model works at full
-   resolution) and snaps it to the latent multiple;
-3. sends the crop and a **mask** grown and feathered in proportion to the
-   selection as PNGs, builds a ComfyUI API **graph** in code
-   (`openfill/workflow.py`: SD 1.5 inpainting, SDXL + Fooocus inpaint
-   patch, FLUX Fill, Qwen-Image-Edit, LaMa/MAT removal) and queues it;
-4. streams progress and preview frames over ComfyUI's websocket;
-5. scales the result back and inserts it as a layer whose mask is opaque over
-   the selection and fades outward, in one undo group.
+| | Time |
+|---|---|
+| First request of the session (backend start) | 31 to 38 s, about 45 s to the first result |
+| Fill, SD 1.5, 512 px selection | 8.4 to 8.7 s |
+| Fill, SDXL + Fooocus, 512 px selection | 20.6 to 22.1 s |
+| Remove object, LaMa or MAT | about 3 s |
 
-Everything in `openfill/` except `gimp_io.py` and the GTK dialog modules is
-plain Python with no GIMP dependency, which is what makes it unit-testable.
-Details, the graphs, and what was learned from krita-ai-diffusion and other
-GIMP plug-ins: [docs/design.md](docs/design.md).
+Which model is used by default for each job comes from a judged benchmark of 33 cases per model (pass / notes / fail, strict rubric):
 
-## Requirements
+| Job | Default | Result |
+|---|---|---|
+| Fast fill | DreamShaper 8 Inpainting | 7 / 10 / 16, ahead of SD 1.5 inpainting (7 / 7 / 19) |
+| Quality fill | RealVisXL V5 | 9 / 1 / 23, ahead of Juggernaut XL (5 / 4 / 24) and SDXL base (7 / 0 / 25) |
+| Remove object | LaMa | 5 / 3 / 25, ahead of MAT (3 / 3 / 27) |
+| Generative Expand | SD 1.5 inpainting, then DreamShaper 8 | best in 5 of 8 pairs; every model gets weaker beyond 25% per side |
 
-- GIMP 3.2 or newer. Tested with GIMP 3.2.6 on Windows 11. The plug-in uses
-  GIMP's bundled Python and needs no extra Python packages.
-- ComfyUI (tested with 0.39.0, Windows portable NVIDIA build) with
-  [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes).
-- An NVIDIA GPU; 8 GB of VRAM covers SD 1.5, SDXL and the removal models.
-  CPU-only works for SD 1.5 but is slow.
-- Disk: 4.3 GB for SD 1.5, 12.5 GB with the SDXL tier
-  ([docs/models.md](docs/models.md)).
+FLUX.1 Fill is opt-in: it matches RealVisXL on object fills but takes about four times as long (median 112 s here), so it is never chosen automatically. The full method and raw numbers are in [docs/performance.md](docs/performance.md) and [docs/models.md](docs/models.md).
 
-End-to-end generation has been tested on Windows only. `install.sh` was
-exercised on WSL Ubuntu and Git Bash with fake profiles (transcripts in
-`docs/evidence/overnight-2026-10-09/rob-fresh-install/`), not with a real
-Linux, Flatpak or macOS GIMP.
+## Nothing leaves your computer
+
+Generation runs in ComfyUI on your machine, listening on `127.0.0.1` only. A small supervisor starts it hidden, watches GIMP, and stops it after an idle timeout or when GIMP closes. The server is tied to the supervisor by Windows itself, so it can't be left running even after a crash. `Filters > OpenFill > Stop AI Backend` frees the graphics card right away.
+
+The network comes into it twice: when the Models tab searches Hugging Face and Civitai (no account, no token, and you can turn it off), and when you press Download. Every file is checked against its size and SHA-256 before it's used. The gated FLUX files need a free Hugging Face token; it stays in your GIMP profile and only ever goes to Hugging Face. No accounts, no telemetry, nothing that phones home: the only outbound requests are the ones above. Details in [docs/security.md](docs/security.md).
 
 ## Install
 
-1. **ComfyUI.** Download the portable build from the
-   [Comfy-Org/ComfyUI releases](https://github.com/Comfy-Org/ComfyUI/releases)
-   and extract it, for example to `C:\AI\ComfyUI` (so that
-   `C:\AI\ComfyUI\ComfyUI_windows_portable\ComfyUI\main.py` exists). Any other
-   ComfyUI checkout works; choose its folder in Settings.
-2. **Inpaint nodes.** `git clone https://github.com/Acly/comfyui-inpaint-nodes`
-   into `ComfyUI\custom_nodes\`. For a smoother Generative Expand seam also
-   install `opencv-python-headless` with ComfyUI's own Python
-   (`python_embeded\python.exe -s -m pip install opencv-python-headless`).
-3. **Plug-in.** Close GIMP, then from this repository:
+You need GIMP 3.2 or newer and ComfyUI. OpenFill uses GIMP's own Python and needs no extra packages.
 
-   ```powershell
-   # Windows
-   powershell -ExecutionPolicy Bypass -File install.ps1
-   ```
-   ```sh
-   # Linux, Flatpak (~/.var/app/org.gimp.GIMP/...), macOS
-   sh install.sh
-   ```
+**1. ComfyUI.** Download the portable build from the [ComfyUI releases](https://github.com/Comfy-Org/ComfyUI/releases) and extract it, for example to `C:\AI\ComfyUI`. Any other ComfyUI checkout works too; you point OpenFill at it in Settings.
 
-   Both copy `gimp-openfill/` into the newest GIMP 3.x profile and write a
-   default `openfill/config.json`. Options: `-Link` / `--link` (junction or
-   symlink to the checkout, for development), `-ProfileDir` / `--profile-dir`
-   (a specific profile; `GIMP3_DIRECTORY` is honoured too), `-Uninstall` /
-   `--uninstall`, plus `-RemoveConfig` / `--remove-config` to delete the
-   settings folder as well (it holds the Hugging Face token, if any).
-4. **Models.** Start GIMP, open `Filters > OpenFill > Generative Fill Settings... >
-   Models`, press **Download** on a model and then **Set active**. Without
-   GIMP: `install.ps1 -ListModels` and `install.ps1 -Model sd15-inpainting`
-   (downloads with resume and verifies the sha256).
+**2. Inpaint nodes.** Clone [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes) into `ComfyUI\custom_nodes\`. For a cleaner seam on Generative Expand, also install OpenCV with ComfyUI's own Python:
 
-The first request starts ComfyUI, which takes about a minute; later requests
-reuse the running server.
+```powershell
+python_embeded\python.exe -s -m pip install opencv-python-headless
+```
 
-## Usage
+**3. The plug-in.** Close GIMP. Grab the source zip from the [Releases page](https://github.com/beckettharriman/gimp-openfill/releases) or clone the repo, then from its folder:
 
-1. Open an image and select an area with any selection tool.
-2. `Filters > OpenFill > Generative Fill...`. Type what should appear and press
-   Enter (or **Generate**). The last prompt is pre-filled and selected, so
-   typing replaces it; **Recent prompts** holds the last 20.
-3. To erase something, switch to **Remove object** and press Generate. Select
-   the whole object with a little margin.
-4. The result is a layer named `Generative Fill: <prompt>` with a layer mask
-   above the active layer. Paint on the mask to refine the blend; delete the
-   layer to discard it.
+```powershell
+powershell -ExecutionPolicy Bypass -File install.ps1
+```
 
-**Advanced** (collapsed): Model (the active model first, then downloaded
-ones, then the rest), Avoid (negative prompt), Variations, Change amount, Seed
-(Random or a fixed number to repeat a result).
+It copies the plug-in into your newest GIMP 3 profile and writes default settings.
 
-Keys: Enter generates, Shift+Enter starts a new line, Escape cancels. In the
-variations picker, 1 to 9 pick a variation and Enter or Escape keep it.
+**4. A model.** Start GIMP, open an image, select something and run `Filters > OpenFill > Generative Fill...`. With no model installed it opens the download manager. Pick one from Recommended for this PC and press Download.
 
-**Give Generative Fill a shortcut.** GIMP does not let a plug-in claim a key,
-but it takes a few seconds:
+**5. Check it.** Select some sky, type "hot air balloon", press Enter. The first request starts the backend, which takes about a minute; after that it's seconds. The balloon should land on a new layer called `Generative Fill: hot air balloon`.
 
-1. `Edit > Keyboard Shortcuts`.
-2. Type "Generative Fill" in the search box.
-3. Click the Shortcut column of "Generative Fill..." and press the keys, for
-   example **Shift+Ctrl+G** (unused in GIMP 3.2's defaults). If GIMP reports
-   a conflict, pick another combination.
-4. Close the dialog; the shortcut is saved in your profile.
+If something goes wrong, every error message ends with what to do next, and the same advice shows in the progress window. For a bug report, turn on Verbose log in Settings, do it again, and attach the log file. Never attach `config.json`, it may hold your token.
 
-The same works for Generative Expand, Text to Image and the Settings.
+<details>
+<summary><b>Linux, Flatpak and macOS</b></summary>
 
-Scripts and batch mode can call the procedures through the PDB with
-`RunMode.NONINTERACTIVE`; `tests/gimp_batch_fill.py` is a complete example.
+`install.sh` finds the GIMP 3 profile on Linux, Flatpak (`~/.var/app/org.gimp.GIMP/...`) and macOS:
 
-## Models
+```sh
+sh install.sh
+```
 
-The Models tab lists every entry of `models/catalog.json`, downloaded ones
-first. One button per row follows the state (**Download**, **Downloading N% -
-Cancel**, **Resume download**, **Set active**, **Active**, **Install nodes**);
-the menu next to it opens the model page and license or deletes the files.
+I've only run it against fake profiles on WSL Ubuntu and Git Bash, not a real Linux, Flatpak or macOS GIMP. If you try it, I'd like to hear how it went.
 
-![Settings > Models tab](docs/screenshots/settings-models.png)
+</details>
 
-| Catalog id | Model | Tier | Download | Min. VRAM | License |
-|---|---|---|---|---|---|
-| `sd15-inpainting` | Stable Diffusion 1.5 Inpainting (default) | fast | 4.3 GB | 4 GB | CreativeML OpenRAIL-M |
-| `sdxl-base` | SDXL 1.0 Base + Fooocus inpaint patch | quality | 6.9 GB + patch | 8 GB | CreativeML OpenRAIL++-M |
-| `fooocus-inpaint-patch` | Fooocus inpaint head + v2.6 patch (helper for SDXL entries) | quality | 1.3 GB | - | OpenRAIL (repository tag) |
-| `juggernaut-xl-v9` | Juggernaut XL v9 + Fooocus patch | quality | 7.1 GB + patch | 8 GB | CreativeML OpenRAIL-M (repository tag) |
-| `flux1-fill-dev-gguf-q4` | FLUX.1 Fill [dev] GGUF Q4_0 + encoders + VAE | quality | 10.8 GB | 8 GB | FLUX.1 [dev] Non-Commercial; gated VAE |
-| `flux1-fill-dev` | FLUX.1 Fill [dev] safetensors | quality | 29.3 GB | 16 GB | FLUX.1 [dev] Non-Commercial; gated |
-| `qwen-image-edit-2511-gguf-q4` | Qwen-Image-Edit-2511 GGUF Q4_K_M | edit | 22.9 GB | 12 GB | Apache-2.0 |
-| `lama-big` | LaMa big-lama, prompt-free removal | removal | 206 MB | 2 GB | Apache-2.0 |
-| `mat-places512` | MAT Places512 fp16, prompt-free removal | removal | 125 MB | 2 GB | CC BY-NC 4.0 |
+<details>
+<summary><b>Install options</b></summary>
 
-Sizes are in decimal GB from the catalog. Every file has a size and a
-sha256 in the catalog and is verified before it is used. FLUX and Qwen need
-the ComfyUI-GGUF node pack, which the tab installs at a pinned commit after
-asking. Gated FLUX files need the license accepted on Hugging Face and a read
-token; the token field appears in the Models tab only when it matters and is
-stored only in the profile's `config.json`. Exact files, checksums, sources
-and the VRAM budget: [docs/models.md](docs/models.md). FLUX and Qwen are in
-the catalog but were not run end to end on the development machine.
+| `install.ps1` | `install.sh` | Does |
+|---|---|---|
+| `-Link` | `--link` | Links the plug-in to your checkout instead of copying it, for development. |
+| `-ProfileDir <dir>` | `--profile-dir <dir>` | Installs into a specific GIMP profile. `GIMP3_DIRECTORY` works too. |
+| `-Uninstall` | `--uninstall` | Removes the plug-in. Keeps your settings and never touches models. |
+| `-RemoveConfig` | `--remove-config` | With uninstall, also deletes the settings folder (it holds the Hugging Face token, if any). |
+| `-ListModels`, `-Model <id>` | | Lists or downloads a model without opening GIMP, with resume and checksum. |
 
-## Settings
+The scripts install the plug-in as `gimp-openfill/` and keep settings in `<GIMP profile>/openfill/config.json`. Settings from an older `stable-boy` folder are copied over on the first run.
 
-![Settings > General tab](docs/screenshots/settings-general.png)
+</details>
 
-The General tab holds only what a user needs: **AI backend folder** (with
-**Browse...**), **Start backend automatically**, **Idle timeout (minutes)**
-(0 keeps the backend until GIMP closes), **Show the floating progress
-window**, and **Check backend**, which starts the backend if needed and
-reports for example "Backend OK: 4 models, inpaint nodes installed." Two
-collapsed sections hold the rest:
+## Status
 
-- **Advanced generation**: Steps, Prompt strictness (CFG), Sampler,
-  Scheduler, Repaint margin and Edge softness (as a percentage of the
-  selection, with pixel limits), Hide old content before generating, working
-  sizes, Text to Image default size.
-- **Connection and troubleshooting**: backend (ComfyUI, or an AUTOMATIC1111
-  WebUI you start yourself with `--api`; that path is untested here),
-  addresses, time limits, Extra ComfyUI options (for example `--lowvram`),
-  files used by older scripts, Verbose log.
+Working on Windows with GIMP 3.2.6: Fill, Remove object, Expand, Text to Image, the download manager with live search, the progress window, variations, the backend starting and stopping itself. That's the machine I use. 25 failure scenarios (no backend, corrupt settings, port in use, ComfyUI killed mid-job, GIMP killed mid-job, no network, cancel at every stage) pass in a real GIMP, and the unit tests run on any Python 3.10 or newer.
 
-Everything is stored in `<GIMP profile>/openfill/config.json`; an
-unreadable file is moved aside and replaced by defaults. Every key with its
-default: [docs/design.md](docs/design.md#settings). Logs:
-`openfill.log` (plug-in and supervisor) and `comfyui.log` in the same
-folder.
+What the models still get wrong:
 
-## Performance
+- **SD 1.5 often ignores the prompt** on flat areas and small selections and just continues the background. Switch to an SDXL model in the dialog.
+- **Remove object struggles with big holes.** LaMa smears, MAT invents things (fake text, shapes that weren't there). Both are fine on small objects. LaMa is the default and works over large holes in overlapping windows, which helps, but very large holes are still weak.
+- **Generative Expand gets weaker beyond 25% per side.** The editor warns you; expand in rounds (the plug-in also splits large expansions itself). SD 1.5 inpainting continues a scene best, so OpenFill offers it when you pick another model, and respects your choice if you decline.
+- Fine textures like fabric come back softer in large fills.
 
-Measured timings (cold start, warm fills per model at 512, 1024 and 2048 px
-selections, memory over 20 fills, UI responsiveness) and the optimizations the
-plug-in already makes are in [docs/performance.md](docs/performance.md).
+Not tested yet: Linux and macOS GIMP, FLUX and Qwen end to end, and the AUTOMATIC1111 backend option. Next up: ControlNet and reference images, LoRA selection, and those tests.
 
-| Measurement (RTX 4070 Laptop 8 GB, 20 steps, 2048 px photo) | Value |
-|---|---|
-| Backend cold start (ComfyUI launch to ready) | 31 to 38 s (about 45 s to the first result) |
-| Warm fill, SD 1.5, 512 px selection | 8.4 to 8.7 s |
-| Warm fill, SDXL + Fooocus, 512 px selection | 20.6 to 22.1 s |
-| Remove object, MAT, 512 px selection | 2.9 to 3.3 s |
+The changes are in [CHANGELOG.md](CHANGELOG.md), and [CONTRIBUTING.md](CONTRIBUTING.md) covers the tests and running GIMP against a throwaway profile.
 
-## Troubleshooting
+## Where it came from
 
-Every error message names a next step, and the same advice appears in the
-progress window. The most common ones:
+OpenFill began as a port of [Stable Boy](https://github.com/thndrbrrr/gimp-stable-boy), Torben Giesselmann's GIMP 2.10 plug-in for the AUTOMATIC1111 WebUI. GIMP 3 threw out the plug-in API it was written against, so not much of the code survived, but the idea and the license did, and his name stays on it. The backend is [ComfyUI](https://github.com/comfyanonymous/ComfyUI). Acly's [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes) do the inpainting, and his [krita-ai-diffusion](https://github.com/Acly/krita-ai-diffusion) was the reference for how to build the graphs and manage the server. The model authors and their licenses are listed in [docs/models.md](docs/models.md).
 
-| Symptom or message | What to do |
-|---|---|
-| "Nothing is selected." | Select the area first. To regenerate the whole image use `Select > All`. |
-| "ComfyUI was not found at ..." | Settings > General > **AI backend folder** > **Browse...**; the folder must contain `ComfyUI\main.py` (portable) or `main.py` (checkout). |
-| "... auto-start is disabled" | Turn on **Start backend automatically**, or start ComfyUI yourself. |
-| "ComfyUI did not start at ... (gave up after N s)" | Try again (the first start can take a few minutes). Check the ComfyUI folder and Extra ComfyUI options; the message quotes the last lines of `comfyui.log`. |
-| "Port 8188 is used by another program (it is not ComfyUI)." | Close that program, or set a free port in the ComfyUI URL in Settings (for example `http://127.0.0.1:8190`). |
-| "ComfyUI stopped while it was generating (it crashed or was closed), so the image was not changed." | Run the command again to restart it; if it keeps happening, read `comfyui.log` in the `openfill` folder of your GIMP profile. |
-| "Your settings file could not be read and was moved aside to '...config.json.corrupt-...'; defaults are in use." | Open Generative Fill Settings and set the backend folder and options again. The old file is kept next to the new one. |
-| "Generation was cancelled." / "The generation was stopped in ComfyUI ..." | Nothing in the image was changed. Run the command again. The second form means Cancel or Interrupt was used in ComfyUI itself. |
-| "Could not reach huggingface.co: ..." (model download) | Check the internet connection and any proxy or firewall, then press **Download** again; the part already downloaded resumes. |
-| "not enough disk space on ...: the download needs ..." | Free up space on that drive, then press **Download** again. |
-| "... is not downloaded yet" / model missing | Settings > Models: **Download**, then **Set active**. |
-| "The GPU ran out of memory" | Smaller selection, one variation, SD 1.5, or `--lowvram` in Extra ComfyUI options. |
-| "The request timed out" | Smaller selection or fewer variations, or raise **Generation time limit** in Connection and troubleshooting (0 estimates it per request). |
-| "Convert it with Image > Mode > RGB" | Indexed images are not supported; convert to RGB first. |
-| The fill shows sky or background instead of the prompt | Known SD 1.5 limitation on flat or small areas (see below). Use an SDXL model (**Advanced** > Model), a more specific prompt, or another seed. |
-| Visible seam or pale band | Keep **Hide old content before generating** on, make sure comfyui-inpaint-nodes is installed, raise Edge softness. |
-| Menu entries missing | Check `pluginrc` in the profile for `python-fu-openfill-generative-fill`; the folder must be `plug-ins/gimp-openfill/gimp-openfill.py`. Restart GIMP. |
-| Backend still running after GIMP closed | Should not happen (the supervisor watches GIMP). Use **Stop AI Backend**, and report it with `openfill.log`. |
-
-For a bug report, turn on **Verbose log**, reproduce, and attach
-`openfill.log`. Never attach `config.json`: it may hold your token.
-
-### Known limitations
-
-- **SD 1.5 (Fast tier) prompt adherence.** On flat or featureless regions and
-  small selections it often continues the background instead of drawing the
-  prompt. An ablation on the exact crop the plug-in sent found no graph step
-  responsible (`docs/evidence/overnight-2026-10-09/sd15-prompt-ablation/`).
-  Use the Quality tier (an SDXL model under **Advanced** > Model).
-- The Quality tier can return a flat tinted area on some structured
-  backgrounds (a bare wall next to a facade) instead of the prompt.
-- Generative Expand on all sides at once fails on the Quality tier (a blurred
-  frame); expand one side at a time, or use SD 1.5.
-- Fine textures such as fabric come back softer in large fills and
-  expansions, which are generated below 1:1 resolution.
-- **Remove object** with MAT cannot rebuild structured backgrounds (window
-  frames behind an air conditioner).
-- Out-of-VRAM and disk-full handling is covered by unit tests only; neither
-  could be provoked on the 8 GB development machine.
-- Generative Expand's Discard removes the new layers but keeps the larger
-  canvas; `Edit > Undo` twice restores it.
-- AUTOMATIC1111, FLUX, Qwen and the Linux/macOS installs are implemented but
-  not verified end to end.
-
-## Testing and evidence
-
-- **Unit tests**: `python -m unittest discover -t . -s tests -v` (standard
-  library only, no GIMP). They cover geometry, graph building, the ComfyUI
-  client, websocket framing, PNG encoding, the catalog, resumable verified
-  downloads, the supervisor, config recovery and the dialog text logic.
-- **Lint**: `uv tool run ruff@0.14.0 check .` and `format --check .`,
-  configured in `pyproject.toml`.
-- **CI**: `.github/workflows/ci.yml` runs ruff and the unit tests on Python
-  3.10 and 3.12.
-- **GIMP batch harness**: `tests/gimp_batch_*.py` run inside a real GIMP
-  through the `python-fu-eval` batch interpreter and drive the registered
-  procedures non-interactively: fills, the case matrix, small selections,
-  model management, robustness (missing backend, corrupt config, busy port),
-  the progress window and the UI screenshots. Always with `--new-instance`.
-- **Isolated profile**: setting `GIMP3_DIRECTORY` to a scratch folder and
-  running `install.ps1 -Link` gives GIMP a throw-away profile, so a test run
-  never touches your real settings
-  ([CONTRIBUTING.md](CONTRIBUTING.md#isolated-profile-gimp3_directory)).
-- **Evidence**: `docs/evidence/<run>/<case-id>/` holds the exact command,
-  `report.json`, downscaled before/after images and the plug-in log lines;
-  the index of the 2026-10-09 run is
-  [docs/evidence/overnight-2026-10-09/README.md](docs/evidence/overnight-2026-10-09/README.md).
-
-**Synthetic matrix.** 64 cases (selections, image modes and sizes, every
-mode and tier, prompts) were scored visually in the deliberately blunt
-[quality ledger](docs/evidence/overnight-2026-10-09/quality-ledger.md): **11 PASS, 33 PASS-WITH-NOTES,
-20 FAIL**. 14 of the FAILs are model behaviour (SD 1.5 ignoring the prompt on
-flat sky or a 20 px selection, where the Quality tier draws it); the other 6
-are plug-in-side weaknesses still open (washed-out fine texture on offset or
-grouped layers, a too-short working crop on a 16:1 strip, `sel-feathered`,
-`sel-edge-bottom`). An A/B of pre-fill, colour matching and working size is
-recorded in the ledger's last section.
-
-**Real photos.** 28 remove, replace and extend cases on six Wikimedia
-Commons photographs (face, fabric, landscape, architecture, text, product)
-score **8 PASS, 10 PASS-WITH-NOTES, 10 FAIL** after the fixes they prompted
-(MAT working size, Quality-tier pre-fill, expand context band, PNG upload
-padding; A/B crops in [photo-ab](docs/evidence/overnight-2026-10-09/photo-ab/README.md)). Sources and
-selections: [photos-README.md](docs/evidence/overnight-2026-10-09/photos-README.md). The photos are CC0
-(five) and public domain (one NASA portrait); they are not stored in the
-repository.
-
-**Robustness**, verified end to end in GIMP 3.2.6 (`rob-*` folders, all
-PASS): backend folder missing, `config.json` missing or corrupt, autostart
-off with the backend down, port in use (an HTTP server, a silent listener,
-and offline), extra server options starting with a dash, ComfyUI killed
-mid-job, an external ComfyUI, a missing model (with and without a running
-server), two GIMP instances at once and the first one exiting mid-job,
-Cancel while starting, uploading, sampling and downloading, Interrupt from
-ComfyUI itself, GIMP killed mid-generation, the idle timeout, a corrupt
-`.part` file and downloads without network. Out-of-VRAM could not be
-provoked on 8 GB and disk-full is unit-tested only.
-
-## Security
-
-The plug-in runs a local server and downloads models and node packs, so it
-validates what it fetches: https only, catalog sizes and sha256 checked
-before an atomic rename, custom nodes only at the pinned full commit, task
-files re-validated against the catalog, the Hugging Face token sent only to
-Hugging Face hosts over https and redacted from logs, subprocesses started
-without a shell, and no code executed from the network beyond the pinned
-node packs and model files the catalog lists. Details:
-[docs/security.md](docs/security.md). Report problems privately as described
-in [SECURITY.md](SECURITY.md).
-
-## Roadmap
-
-- ControlNet and IP-Adapter reference images
-- LoRA selection
-- Smoke tests against real Linux, Flatpak and macOS GIMP builds
-- LaMa and FLUX tiers verified end to end (both are in the catalog; only MAT
-  and the SD 1.5 / SDXL models were run on the development machine), as the
-  longer-term answer to the SD 1.5 prompt-adherence limitation
-
-## Credits
-
-OpenFill is based on Stable Boy by Torben Giesselmann (GPL-3.0),
-https://github.com/thndrbrrr/gimp-stable-boy.
-
-- **Torben Giesselmann (thndrbrrr)** wrote the original Stable Boy for GIMP
-  2.10 and the AUTOMATIC1111 integration this project started from.
-- [ComfyUI](https://github.com/comfyanonymous/ComfyUI) by comfyanonymous and
-  Comfy-Org is the backend.
-- [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes) and
-  [krita-ai-diffusion](https://github.com/Acly/krita-ai-diffusion) by Acly
-  provided the inpaint nodes and the reference for the graph design and
-  server management.
-- Model authors: Runway and CompVis (SD 1.5 inpainting), Stability AI (SDXL),
-  lllyasviel (Fooocus inpaint), RunDiffusion (Juggernaut XL), Black Forest
-  Labs (FLUX.1), the Qwen team, advimman (LaMa), fenglinglwb (MAT), and the
-  quantizations by YarvixPA, city96 and unsloth. Licenses in
-  [docs/models.md](docs/models.md).
+Open, as in GPL and on your own machine. Fill, as in the thing everyone else rents you by the month.
 
 ## License
 
-GPL-3.0-or-later. See [COPYING](COPYING).
-Copyright (C) 2022 Torben Giesselmann, (C) 2026 Beckett Harriman.
+[GPL-3.0-or-later](COPYING) © 2022 Torben Giesselmann, © 2026 Beckett Harriman.

@@ -269,8 +269,8 @@ Which tier for what, from the 2026-10-09 evidence
 (`docs/evidence/overnight-2026-10-09/quality-ledger.md`): SD 1.5 often
 ignores the prompt on flat or featureless regions and small selections, where
 the SDXL tier draws it; the SDXL tier can leave a flat tinted area on
-some structured backgrounds and fails on all-sides expansion (expand one side
-at a time); MAT removes objects cleanly from texture and flat surfaces but
+some structured backgrounds; every model gets weaker when Generative Expand
+grows a side by more than 25 % (expand in rounds); MAT removes objects cleanly from texture and flat surfaces but
 cannot rebuild structured backgrounds.
 
 - **SD 1.5 inpainting** is a real inpainting UNet (9-channel input), loads
@@ -299,6 +299,10 @@ list and uses the first model that is installed (`openfill/catalog.py`,
 | Remove object, empty prompt | LaMa, then MAT | 5/3/25 against 3/3/27; MAT invents glyphs and figures |
 | Generative Expand (both tiers) | SD 1.5 inpainting, then DreamShaper 8 | 4 photos x 3 models x 25 % and 60 % per side, all sides: SD 1.5 best in 5 of 8 pairs, DreamShaper 2, RealVisXL 1 (it invents scenery); `docs/evidence/daytime-2026-10-09/expand-models/` |
 | Automatic active model | RealVisXL V5, DreamShaper 8, SD 1.5, Juggernaut, SDXL base | the most often acceptable fills |
+
+Generative Expand uses the model you pick. When the Expand default is
+installed and you picked another model, a question offers to switch; declining
+keeps your pick.
 
 FLUX Fill and Qwen Edit are never chosen automatically; they are used only
 when picked by hand. FLUX Fill (Q4) scored 5/5/18, ties RealVisXL on object

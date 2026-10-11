@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   folder and entry script `gimp-openfill/gimp-openfill.py`, package
   `openfill`, procedures `python-fu-openfill-*`, settings folder
   `<profile>/openfill` with `openfill.log`, test variables `OPENFILL_*`.
-  Settings in `<profile>/stable-boy` are not migrated.
+  Settings in `<profile>/stable-boy` are copied to `<profile>/openfill` on
+  the first run.
 - OpenFill is based on Stable Boy by Torben Giesselmann (GPL-3.0),
   https://github.com/thndrbrrr/gimp-stable-boy.
 
@@ -83,6 +84,21 @@ downloader, and fixes from an end-to-end test matrix run in a real GIMP 3.2.6
 
 ### Changed
 
+- Generative Expand renders all sides in one pass, splits large expansions
+  into rounds, and uses the model you pick. When the Expand default (SD 1.5
+  inpainting, then DreamShaper 8) is installed and you picked another model,
+  a short question offers to switch. The editor warns above 25 % growth per
+  side.
+- Default models per operation, from a judged benchmark of 33 cases per model:
+  Fast fill DreamShaper 8, Quality fill RealVisXL V5, Remove LaMa, Expand SD
+  1.5 inpainting. FLUX Fill stays opt-in and is never used for removal.
+- Fills below working scale or over large selections are tiled (a layout pass
+  first, then tiles); LaMa and MAT removal of large holes runs over
+  overlapping bands. Border pre-fill, grain matching and variation ranking
+  improve seams and sharpness.
+- The first-run download manager recommends LaMa and DreamShaper 8 and names
+  RealVisXL V5 as the upgrade.
+- Shorter shortcut hint in the Fill dialog.
 - The dialogs' Model field offers the active model, then downloaded catalog
   models, then the rest; the legacy fast/quality tiers remain for scripts.
 - Every error message ends with a plain next step (`ui_text.with_next_step`,
@@ -192,6 +208,16 @@ downloader, and fixes from an end-to-end test matrix run in a real GIMP 3.2.6
 
 ### Security
 
+- Catalog hardening from a security review: live-hub models get their own
+  folders (no more clashes on equal file names, and no file is deleted that no
+  entry owns), a download without a published SHA-256 asks first, damaged
+  `hub-selected.json` / `hub-cache.json` files no longer break commands or
+  discard results, Hugging Face files must be pinned to a commit, network
+  errors (401, 429, 5xx, interrupted downloads,
+  permission errors) get plain messages, and the model list no longer
+  freezes the interface.
+- docs/security.md states that there is no telemetry.
+
 - The Hugging Face token is sent only to Hugging Face hosts over https, never
   forwarded on redirects, and redacted from logs; `config.json` is saved
   owner-only on POSIX.
@@ -215,9 +241,8 @@ downloader, and fixes from an end-to-end test matrix run in a real GIMP 3.2.6
   Advanced > Model) for new content there.
 - The Quality tier can return a flat tinted area instead of the requested
   content on some structured backgrounds (`photo-architecture-replace`).
-- Generative Expand on all sides at once fails on the Quality tier (a blurred
-  frame, `photo-landscape-extend-all`); expand one side at a time, or use the
-  Fast tier.
+- Generative Expand gets weaker when a side grows by more than 25 %; the
+  editor shows a warning, and expanding in rounds gives the best results.
 - Fine textures (fabric) come back softer in large fills and expansions,
   which are generated below 1:1 resolution.
 - MAT cannot rebuild structured backgrounds such as window frames behind a
