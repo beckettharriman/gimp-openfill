@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "notes": [
+    "What 'Download ComfyUI' fetches. Everything is pinned: the portable archive by size and SHA-256 (the digest GitHub publishes for the release asset), the custom node by full commit id, the pip package by exact version.",
+    "The archive is a .7z; Windows' built-in tar.exe (bsdtar) unpacks it, so no extra extractor is downloaded."
+  ],
+  "comfyui": {
+    "version": "v0.39.0",
+    "release_page": "https://github.com/comfyanonymous/ComfyUI/releases/tag/v0.39.0",
+    "folder": "ComfyUI_windows_portable",
+    "unpacked_bytes": 9500000000,
+    "asset": {
+      "name": "ComfyUI_windows_portable_nvidia.7z",
+      "url": "https://github.com/comfyanonymous/ComfyUI/releases/download/v0.39.0/ComfyUI_windows_portable_nvidia.7z",
+      "size": 2003629308,
+      "sha256": "3dca347842ed1c6c833105fafb1669284685a3e54df41578d5f94bcc898ae039"
+    },
+    "amd_instructions": "https://github.com/comfyanonymous/ComfyUI#amd-gpus-windows-and-linux"
+  },
+  "nodes": [
+    {"repo": "https://github.com/Acly/comfyui-inpaint-nodes", "folder": "comfyui-inpaint-nodes", "commit": "5b7681746fe19e563113d27366ba85236bc1ba5b", "license": "GPL-3.0"}
+  ],
+  "pip": ["opencv-python-headless==5.0.0.93"]
+}

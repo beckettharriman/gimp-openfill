@@ -445,44 +445,93 @@ class NodeInstallTests(unittest.TestCase):
         def __init__(self, returncode=0, stdout="", stderr=""):
             self.returncode, self.stdout, self.stderr = returncode, stdout, stderr
 
-    def test_install_runs_clone_checkout_pip(self):
+    def _zip_bytes(self, comment=COMMIT, extra=None):
+        import io
+        import zipfile
+
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w") as zf:
+            zf.writestr(f"Repo-{COMMIT}/__init__.py", "x = 1\n")
+            zf.writestr(f"Repo-{COMMIT}/requirements.txt", "gguf\n")
+            for name in extra or []:
+                zf.writestr(name, "bad")
+            zf.comment = comment.encode()
+        return buf.getvalue()
+
+    def _install_zip(self, tmp, data, runner=None):
+        def fake_download(url, dest, **kw):
+            self.urls.append(url)
+            Path(dest).write_bytes(data)
+
+        self.urls = []
+        orig = downloads.download_file
+        downloads.download_file = fake_download
+        try:
+            return downloads.install_custom_node(
+                REPO, "Repo", COMMIT, Path(tmp), Path("py.exe"), runner=runner or (lambda c, **k: self.R())
+            )
+        finally:
+            downloads.download_file = orig
+
+    def test_new_install_uses_zip_not_git(self):
+        calls = []
+        with tempfile.TemporaryDirectory() as tmp:
+            target = self._install_zip(tmp, self._zip_bytes(), lambda c, **k: calls.append(c) or self.R())
+            self.assertEqual(self.urls, [f"{REPO}/archive/{COMMIT}.zip"])
+            self.assertTrue((target / "__init__.py").is_file())
+            self.assertEqual((target / ".openfill-commit").read_text().strip(), COMMIT)
+            self.assertEqual(calls[0][:4], ["py.exe", "-s", "-m", "pip"])
+            self.assertFalse(any("git" in str(c[0]).lower() for c in calls))
+            self.assertEqual([p.name for p in Path(tmp).iterdir()], ["Repo"])  # no temp leftovers
+            # second run: marker matches, nothing downloaded
+            self.urls.clear()
+            self._install_zip(tmp, b"")
+            self.assertEqual(self.urls, [])
+
+    def test_zip_for_another_commit_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(RuntimeError):
+            self._install_zip(tmp, self._zip_bytes(comment="0" * 40))
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertFalse((Path(tmp) / "Repo").exists())
+
+    def test_zip_with_path_traversal_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(RuntimeError):
+            self._install_zip(tmp, self._zip_bytes(extra=["../evil.py"]))
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertFalse((Path(tmp) / "Repo").exists())
+
+    def test_unmarked_existing_folder_is_not_overwritten(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "Repo").mkdir()
+            with self.assertRaises(RuntimeError):
+                self._install_zip(tmp, self._zip_bytes())
+
+    def test_existing_git_clone_is_reset_to_the_pin(self):
         calls = []
 
         def runner(cmd, **kw):
             calls.append(cmd)
             self.assertNotIn("shell", kw)
-            if cmd[1] == "clone":
-                target = Path(cmd[-1])
-                (target / ".git").mkdir(parents=True)
-                (target / "requirements.txt").write_text("gguf\n")
-            if "rev-parse" in cmd:
-                return self.R(stdout=COMMIT + "\n")
-            return self.R()
+            return self.R(stdout=COMMIT + "\n" if "rev-parse" in cmd else "")
 
         with tempfile.TemporaryDirectory() as tmp:
-            target = downloads.install_custom_node(REPO, "Repo", COMMIT, Path(tmp), Path("py.exe"), runner=runner)
-            self.assertEqual(target, Path(tmp) / "Repo")
-            self.assertEqual(calls[0][1:5], ["clone", "--quiet", "--", REPO])
-            self.assertIn("checkout", calls[2])
-            self.assertEqual(calls[2][-1], COMMIT)
-            self.assertIn("rev-parse", calls[3])
-            self.assertEqual(calls[4][:4], ["py.exe", "-s", "-m", "pip"])
-            # second run: no clone
-            calls.clear()
+            (Path(tmp) / "Repo" / ".git").mkdir(parents=True)
+            (Path(tmp) / "Repo" / "requirements.txt").write_text("gguf\n")
             downloads.install_custom_node(REPO, "Repo", COMMIT, Path(tmp), Path("py.exe"), runner=runner)
-            self.assertNotEqual(calls[0][1], "clone")
+        self.assertIn("checkout", calls[1])
+        self.assertEqual(calls[1][-1], COMMIT)
+        self.assertEqual(calls[3][:4], ["py.exe", "-s", "-m", "pip"])
 
     def test_wrong_head_stops_before_pip(self):
         calls = []
 
         def runner(cmd, **kw):
             calls.append(cmd)
-            if cmd[1] == "clone":
-                (Path(cmd[-1]) / ".git").mkdir(parents=True)
-                (Path(cmd[-1]) / "requirements.txt").write_text("x\n")
             return self.R(stdout="0" * 40 if "rev-parse" in cmd else "")
 
         with tempfile.TemporaryDirectory() as tmp, self.assertRaises(RuntimeError):
+            (Path(tmp) / "Repo" / ".git").mkdir(parents=True)
+            (Path(tmp) / "Repo" / "requirements.txt").write_text("x\n")
             downloads.install_custom_node(REPO, "Repo", COMMIT, Path(tmp), Path("py.exe"), runner=runner)
         self.assertFalse(any("pip" in c for c in calls))
 
@@ -501,6 +550,7 @@ class NodeInstallTests(unittest.TestCase):
 
     def test_failure_raises(self):
         with tempfile.TemporaryDirectory() as tmp, self.assertRaises(RuntimeError):
+            (Path(tmp) / "Repo" / ".git").mkdir(parents=True)
             downloads.install_custom_node(
                 REPO, "Repo", COMMIT, Path(tmp), Path("py.exe"), runner=lambda *a, **k: self.R(1, "", "boom")
             )

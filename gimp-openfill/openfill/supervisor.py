@@ -56,7 +56,7 @@ from typing import Any
 from urllib.request import urlopen
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from openfill import catalog, downloads  # noqa: E402
+from openfill import catalog, comfy_setup, downloads  # noqa: E402
 from openfill.config import Settings, comfy_layout  # noqa: E402
 from openfill.log import redact  # noqa: E402
 
@@ -435,10 +435,14 @@ class TaskWorker:
                     self._download(task)
                 elif task.get("type") == "install_nodes":
                     self._install_nodes(task)
+                elif task.get("type") == "setup_comfy":
+                    self._setup_comfy(task)
                 elif task.get("type") == "remove":
                     self._remove(task)
                 else:
                     self._finish(task, "error", f"unknown task type {task.get('type')}")
+            except comfy_setup.SetupError as err:
+                self._finish(task, "error", str(err), code="setup")
             except downloads.DownloadError as err:
                 self._finish(task, "cancelled" if err.code == "cancelled" else "error", str(err), code=err.code)
             except (PermissionError, http.client.HTTPException) as err:
@@ -609,6 +613,37 @@ class TaskWorker:
         self._finish(
             task, "done", "custom nodes installed" + (" and backend restarted" if self.on_restart_backend else "")
         )
+
+    def _setup_comfy(self, task: dict[str, Any]) -> None:
+        """Download and install the pinned ComfyUI (see comfy_setup.py), then save it as the ComfyUI folder."""
+        manifest = comfy_setup.load_manifest()
+        install_dir = Path(str(task.get("install_dir") or ""))
+        if not install_dir.is_absolute():
+            raise comfy_setup.SetupError(f"the install folder {str(install_dir)!r} is not an absolute path")
+        started = time.time()
+
+        def progress(state: str, done: int, total: int) -> None:
+            self._set_current(
+                task_id=task.get("id"),
+                type="setup_comfy",
+                state=state,
+                done=done,
+                total=total,
+                started=started,
+                step=comfy_setup.STATES.index(state) + 1,
+                steps=len(comfy_setup.STATES),
+                fraction=comfy_setup.overall_fraction(state, done, total),
+            )
+
+        comfy = comfy_setup.run_setup(
+            manifest, install_dir, progress, self.cancel_requested, self.log, popen=subprocess.Popen
+        )
+        settings = Settings.load(self.config_path, backup=False)
+        settings.comfy_dir = str(comfy)
+        if task.get("cpu") and "--cpu" not in settings.extra_server_args.split():
+            settings.extra_server_args = (settings.extra_server_args + " --cpu").strip()
+        settings.save(self.config_path)
+        self._finish(task, "done", f"ComfyUI is ready in {comfy}", comfy_dir=str(comfy))
 
     def _remove(self, task: dict[str, Any]) -> None:
         root = self._checked_models_root(task)

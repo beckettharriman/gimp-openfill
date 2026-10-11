@@ -18,7 +18,7 @@ import time
 from dataclasses import replace
 from pathlib import Path
 
-from . import caption, geometry, gimp_io, quality, workflow
+from . import caption, comfy_setup, geometry, gimp_io, hardware, quality, workflow
 from . import catalog as cat
 from .backend import (
     SETTINGS_MENU,
@@ -39,7 +39,7 @@ from .config import Paths, Settings, comfy_layout
 from .geometry import Rect
 from .log import get_logger
 from .runner import Runner
-from .server import ServerManager
+from .server import ServerManager, _split_host_port, port_answers
 from .workflow import model_display_name
 
 # Model ids the old "fast"/"quality" choices meant without a catalog; with
@@ -411,6 +411,52 @@ class App:
 
     def task_status(self) -> dict:
         return self.server.task_status()
+
+    # ComfyUI setup -------------------------------------------------------
+
+    def comfy_ready(self) -> bool:
+        """True when a ComfyUI folder is configured and usable, or a server already answers."""
+        if self.settings.backend != "comfyui" or comfy_layout(self.settings.comfy_dir) is not None:
+            return True
+        return ComfyClient(self.server.url(), timeout=3).is_alive(timeout=2.0)
+
+    def reload_settings(self) -> None:
+        """Re-read config.json (the setup task changes comfy_dir in another process)."""
+        fresh = Settings.load(self.paths.config, backup=False)
+        self.settings.__dict__.update(fresh.__dict__)
+
+    def use_comfy_dir(self, path: str) -> None:
+        """Make ``path`` the ComfyUI folder; raises ``BackendError`` when it holds no ComfyUI."""
+        if comfy_layout(path) is None:
+            raise BackendError(
+                f"No ComfyUI was found in '{path}'. Choose the folder that holds python_embeded and ComfyUI "
+                "(the unpacked ComfyUI_windows_portable folder)."
+            )
+        self.settings.comfy_dir = str(path)
+        self._save_settings()
+
+    def found_comfy(self) -> list[comfy_setup.Candidate]:
+        """ComfyUI installs already on this PC (see comfy_setup.detect_comfy)."""
+        return comfy_setup.detect_comfy()
+
+    def setup_preflight(self, install_dir: Path) -> tuple[comfy_setup.SetupManifest, comfy_setup.Preflight]:
+        """The pinned manifest and the pre-download checks for ``install_dir``."""
+        manifest = comfy_setup.load_manifest()
+        hw = hardware.detect(install_dir)
+        host, port = _split_host_port(self.settings.url)
+        return manifest, comfy_setup.preflight(
+            manifest,
+            hw,
+            comfy_setup.video_controller_names(),
+            hw.disk_free_bytes,
+            install_dir,
+            port,
+            port_answers(host, port, timeout=0.5),
+        )
+
+    def queue_comfy_setup(self, install_dir: Path, cpu: bool = False) -> str:
+        """Queue the download and install of the pinned ComfyUI as a background task."""
+        return self.server.queue_task({"type": "setup_comfy", "install_dir": str(install_dir), "cpu": bool(cpu)})
 
     # features ------------------------------------------------------------
 

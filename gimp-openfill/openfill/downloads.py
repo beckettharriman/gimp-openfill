@@ -19,6 +19,7 @@ import socket
 import subprocess
 import sys
 import time
+import zipfile
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
@@ -435,6 +436,63 @@ def git_executable() -> str:
     return "git"
 
 
+NODE_MARKER = ".openfill-commit"
+
+
+def _safe_zip_members(zf: zipfile.ZipFile) -> list[zipfile.ZipInfo]:
+    """Members of ``zf`` after refusing absolute paths, ``..``, drive letters and symlinks."""
+    out = []
+    for info in zf.infolist():
+        name = info.filename.replace("\\", "/")
+        parts = PurePosixPath(name).parts
+        if name.startswith("/") or ".." in parts or (parts and ":" in parts[0]):
+            raise RuntimeError(f"the archive holds an unsafe path: {info.filename!r}")
+        if (info.external_attr >> 16) & 0o170000 == 0o120000:
+            raise RuntimeError(f"the archive holds a symbolic link: {info.filename!r}")
+        out.append(info)
+    return out
+
+
+def install_node_from_zip(
+    repo: str,
+    folder: str,
+    commit: str,
+    custom_nodes_dir: Path,
+    cancel: CancelFn | None = None,
+    opener: Callable[..., Any] = urlopen,
+) -> Path:
+    """Install the GitHub zip archive of ``commit`` as ``custom_nodes_dir/folder`` (no git needed).
+
+    The archive of a commit carries that commit's id as its zip comment, which
+    is checked against the pin before anything is unpacked.
+    """
+    validate_node_spec(repo, folder, commit)
+    base = repo.rstrip("/")
+    base = base[:-4] if base.endswith(".git") else base
+    nodes = Path(custom_nodes_dir)
+    nodes.mkdir(parents=True, exist_ok=True)
+    zip_path = nodes / f".{folder}.zip"
+    work = nodes / f".{folder}.unpack"
+    shutil.rmtree(work, ignore_errors=True)
+    try:
+        download_file(f"{base}/archive/{commit}.zip", zip_path, cancel=cancel, opener=opener)
+        with zipfile.ZipFile(zip_path) as zf:
+            comment = zf.comment.decode("ascii", "replace").strip()
+            if comment != commit:
+                raise RuntimeError(f"the archive for {folder} is for commit {comment or 'unknown'}, expected {commit}")
+            members = _safe_zip_members(zf)
+            tops = {PurePosixPath(m.filename).parts[0] for m in members if m.filename.strip("/")}
+            if len(tops) != 1:
+                raise RuntimeError(f"the archive for {folder} does not have a single top folder")
+            zf.extractall(work, members)
+        shutil.move(str(work / tops.pop()), str(nodes / folder))
+        (nodes / folder / NODE_MARKER).write_text(commit + "\n", encoding="utf-8")
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
+        _unlink_quietly(zip_path)
+    return nodes / folder
+
+
 def install_custom_node(
     repo: str,
     folder: str,
@@ -443,36 +501,45 @@ def install_custom_node(
     python: Path,
     log: Callable[[str], None] | None = None,
     runner: Callable[..., Any] = subprocess.run,
+    cancel: CancelFn | None = None,
+    opener: Callable[..., Any] = urlopen,
 ) -> Path:
-    """Clone ``repo`` into ``custom_nodes_dir/folder`` at ``commit`` and install
-    its requirements with ``python``. Idempotent: an existing clone is reset to
-    the pinned commit.
+    """Install ``repo`` at ``commit`` into ``custom_nodes_dir/folder`` and its
+    requirements with ``python``. Idempotent.
 
-    Every command is an argument list (never a shell). ``repo``, ``folder`` and
-    ``commit`` are checked with :func:`validate_node_spec` first, and the
-    checked-out ``HEAD`` must equal ``commit`` before pip runs.
+    A new install uses the GitHub zip archive of the commit (no git needed). An
+    existing git clone is reset to the pinned commit (needs git). Every command
+    is an argument list (never a shell); ``repo``, ``folder`` and ``commit`` are
+    checked with :func:`validate_node_spec` first.
     """
     validate_node_spec(repo, folder, commit)
     log = log or (lambda _msg: None)
-    git = git_executable()
     target = Path(custom_nodes_dir) / folder
     kw: dict[str, Any] = {"capture_output": True, "text": True}
     if sys.platform == "win32":
         kw["creationflags"] = subprocess.CREATE_NO_WINDOW
-    if not (target / ".git").is_dir():
-        log(f"cloning {repo} -> {target}")
-        r = runner([git, "clone", "--quiet", "--", repo, str(target)], **kw)
+    marker = target / NODE_MARKER
+    if (target / ".git").is_dir():
+        git = git_executable()
+        log(f"checking out {commit}")
+        runner([git, "-C", str(target), "fetch", "--quiet", "origin"], **kw)  # best effort; offline is fine
+        r = runner([git, "-C", str(target), "checkout", "--quiet", commit], **kw)
         if r.returncode != 0:
-            raise RuntimeError(f"git clone failed: {r.stderr.strip() or r.stdout.strip()}")
-    log(f"checking out {commit}")
-    runner([git, "-C", str(target), "fetch", "--quiet", "origin"], **kw)  # best effort; offline is fine
-    r = runner([git, "-C", str(target), "checkout", "--quiet", commit], **kw)
-    if r.returncode != 0:
-        raise RuntimeError(f"git checkout {commit} failed: {r.stderr.strip() or r.stdout.strip()}")
-    r = runner([git, "-C", str(target), "rev-parse", "HEAD"], **kw)
-    head = (r.stdout or "").strip()
-    if r.returncode != 0 or head != commit:
-        raise RuntimeError(f"{folder} is at {head or 'an unknown commit'}, expected the pinned {commit}")
+            raise RuntimeError(f"git checkout {commit} failed: {r.stderr.strip() or r.stdout.strip()}")
+        r = runner([git, "-C", str(target), "rev-parse", "HEAD"], **kw)
+        head = (r.stdout or "").strip()
+        if r.returncode != 0 or head != commit:
+            raise RuntimeError(f"{folder} is at {head or 'an unknown commit'}, expected the pinned {commit}")
+    elif marker.is_file() and marker.read_text(encoding="utf-8").strip() == commit:
+        log(f"{folder} is already at {commit}")
+    elif target.exists():
+        raise RuntimeError(
+            f"{target} already exists but was not installed by OpenFill at the pinned commit. "
+            "Move or delete that folder, then try again."
+        )
+    else:
+        log(f"downloading {repo} @ {commit[:10]}")
+        install_node_from_zip(repo, folder, commit, Path(custom_nodes_dir), cancel, opener)
     req = target / "requirements.txt"
     if req.is_file():
         log(f"installing requirements with {python}")

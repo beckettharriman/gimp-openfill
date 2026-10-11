@@ -33,8 +33,9 @@ HUB_SELECTED_FILENAME = "hub-selected.json"
 
 def default_comfy_dir() -> str:
     """The ComfyUI folder assumed when the config does not name one."""
-    if sys.platform == "win32":
-        return r"C:\AI\ComfyUI\ComfyUI_windows_portable"
+    local = os.environ.get("LOCALAPPDATA")
+    if sys.platform == "win32" and local:
+        return str(Path(local) / "OpenFill" / "ComfyUI" / "ComfyUI_windows_portable")
     return str(Path.home() / "ComfyUI")
 
 
@@ -306,7 +307,7 @@ def comfy_layout(comfy_dir: str | Path) -> dict[str, Path] | None:
         candidates.append((root / "python_embeded" / "python.exe", root / "ComfyUI" / "main.py", root))
     main = root / "main.py"
     if main.exists():
-        for venv in ("venv", ".venv"):
+        for venv in ("venv", ".venv", "env"):
             for py in ("Scripts/python.exe", "bin/python3", "bin/python"):
                 exe = root / venv / py
                 if exe.exists():

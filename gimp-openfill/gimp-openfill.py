@@ -581,21 +581,27 @@ def _test_progress_demo(image: Gimp.Image | None, seconds: float) -> None:
 
 
 def _ensure_model(operation: str, run_mode: Gimp.RunMode, hooks: dict) -> bool:
-    """First run: when no downloaded model can do ``operation``, say so and open the download manager."""
+    """First run: without ComfyUI show the download notice; without a model that can do ``operation`` open the download manager."""
     if run_mode != Gimp.RunMode.INTERACTIVE or hooks.get("skip_model_check"):
         return True
     from openfill.app import App
 
     try:
         app = App()
-        if app.has_model_for(operation):
+        ready = app.comfy_ready()
+        if ready and app.has_model_for(operation):
             return True
     except Exception:  # noqa: BLE001 - the generation path reports backend problems itself
         return True
     from openfill import catalog as cat
     from openfill.models_ui import run_models_dialog
+    from openfill.ui_setup import ensure_comfy
 
     GimpUi.init("gimp-openfill")
+    if not ready and not ensure_comfy(app):
+        return False
+    if app.has_model_for(operation):
+        return True
     run_models_dialog(app, cat.NO_MODEL_MESSAGE)
     return app.has_model_for(operation)
 
