@@ -35,7 +35,35 @@ import sys
 import traceback
 from typing import TYPE_CHECKING
 
-import gi
+
+def _drop_console_window() -> None:
+    """Close the blank terminal window some GIMP installs open for Python plug-ins.
+
+    Those installs map Python plug-ins to python.exe (a console program)
+    instead of pythonw.exe, so Windows opens an empty terminal while the
+    plug-in runs. When this process is the console's only user (not started
+    from a terminal by hand), detach from it so the window closes."""
+    if sys.platform != "win32":
+        return
+    try:
+        import ctypes
+
+        kernel32 = ctypes.windll.kernel32
+        if not kernel32.GetConsoleWindow():
+            return
+        pids = (ctypes.c_uint32 * 4)()
+        if kernel32.GetConsoleProcessList(pids, 4) != 1:
+            return
+        kernel32.FreeConsole()
+        devnull = open(os.devnull, "w", encoding="utf-8")  # noqa: SIM115 - lives as long as the process
+        sys.stdout = sys.stderr = devnull
+    except Exception:  # noqa: BLE001 - cosmetic; never block the plug-in
+        pass
+
+
+_drop_console_window()
+
+import gi  # noqa: E402
 
 gi.require_version("Gimp", "3.0")
 gi.require_version("GimpUi", "3.0")
