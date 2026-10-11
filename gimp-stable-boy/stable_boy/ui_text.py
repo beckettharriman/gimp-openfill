@@ -247,6 +247,26 @@ def selection_status(selection: tuple[int, int] | None, image: tuple[int, int] |
     return f"Selection: {selection[0]} x {selection[1]} px"
 
 
+EXPAND_SOFT_LIMIT = 0.25
+EXPAND_OVER_LIMIT = "Over 25% per side: results get weaker. Expand in rounds for best results."
+
+
+def expand_over_limit(
+    image: tuple[int, int] | None, left: int, top: int, right: int, bottom: int, limit: float = EXPAND_SOFT_LIMIT
+) -> bool:
+    """True when any side grows by more than ``limit`` of the image size along
+    that axis (left/right against the width, top/bottom against the height)."""
+    if image is None:
+        return False
+    width, height = image
+    return max(left, right) > limit * width or max(top, bottom) > limit * height
+
+
+def expand_model_note(better: str) -> str:
+    """Question shown before an Expand with a model other than the Expand default."""
+    return f"{better} usually continues a scene better. Use it instead?"
+
+
 def expand_status(image: tuple[int, int] | None, left: int, top: int, right: int, bottom: int) -> str:
     """Readout under the Generative Expand editor, e.g.
     "New size: 2432 x 1440 px (+256 right)"."""

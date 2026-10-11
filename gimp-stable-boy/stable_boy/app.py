@@ -444,23 +444,17 @@ class App:
         except cat.CatalogError:
             return False
 
-    def expand_model_for(
-        self, entry: cat.ModelEntry | None, model: ModelSpec
-    ) -> tuple[cat.ModelEntry | None, ModelSpec]:
-        """An SDXL model picked for Generative Expand hands the job to the
-        Quality tier's expand default (``catalog.EXPAND_PREFERENCE``) when that
-        is another installed model; docs/models.md has the numbers."""
-        if model.arch != "sdxl" or (entry is not None and entry.id in cat.EXPAND_PREFERENCE["quality"]):
-            return entry, model
+    def expand_suggestion(self, model_choice: str) -> tuple[cat.ModelEntry, cat.ModelEntry] | None:
+        """(picked, better) when the Expand default is installed and is not the
+        model picked; None otherwise. The pick is always respected unless the
+        user agrees to the switch."""
+        entry, _model = self.resolve_model(model_choice)
         try:
             installed = cat.runnable_installed(self.catalog, self.models_root, self.custom_nodes_dir, "expand")
-        except Exception:  # noqa: BLE001 - keep the chosen model when the catalog cannot be read
-            return entry, model
-        best = cat.tier_default(installed, "quality", "expand")
-        if best is None or (entry is not None and best.id == entry.id):
-            return entry, model
-        self.log.info("expand: SDXL model %s -> using %s", entry.id if entry else model.checkpoint, best.id)
-        return best, cat.model_spec_for(best, self.catalog)
+        except Exception:  # noqa: BLE001 - no suggestion when the catalog cannot be read
+            return None
+        best = cat.expand_suggestion(installed, entry)
+        return (entry, best) if best is not None else None
 
     def removal_fallback(self, model_choice: str) -> str:
         """Model for a removal (empty prompt or Remove object) when no LaMa/MAT
@@ -743,7 +737,7 @@ class App:
         the previous one and only the last makes the requested variations.
         """
         self._check_image(image)
-        entry, model = self.expand_model_for(*self.resolve_model(model_choice))
+        entry, model = self.resolve_model(model_choice)
         rounds = geometry.expand_rounds(image.get_width(), image.get_height(), left, top, right, bottom)
         if len(rounds) == 1:
             return self._expand_round(image, prompt, negative, rounds[0], variations, seed, entry, model)

@@ -84,6 +84,15 @@ class StatusTextTests(unittest.TestCase):
             for word in ("cfg", "sampler", "scheduler", "denoise", "node", "workflow"):
                 self.assertNotIn(word, text.lower(), text)
 
+    def test_expand_over_limit(self):
+        self.assertFalse(ut.expand_over_limit((1000, 800), 250, 200, 250, 200))
+        self.assertTrue(ut.expand_over_limit((1000, 800), 251, 0, 0, 0))
+        self.assertTrue(ut.expand_over_limit((1000, 800), 0, 0, 0, 201))
+        self.assertFalse(ut.expand_over_limit((1000, 800), 0, 200, 0, 0))
+        self.assertFalse(ut.expand_over_limit(None, 999, 999, 999, 999))
+        self.assertIn("25%", ut.EXPAND_OVER_LIMIT)
+        self.assertIn("SD 1.5", ut.expand_model_note("SD 1.5 Inpainting"))
+
     def test_dialog_status_lines(self):
         self.assertIn("No selection", ut.selection_status(None, (100, 50)))
         self.assertIn("260 x 200", ut.selection_status((260, 200), (1024, 768)))

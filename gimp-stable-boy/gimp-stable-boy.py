@@ -641,6 +641,27 @@ def run_fill(
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
 
 
+def _ask_expand_switch(picked: str, better: str, hooks: dict) -> bool:
+    """Offer the Expand default instead of the picked model; True to switch."""
+    if "expand_switch" in hooks:  # test hook: answer without a dialog
+        return bool(hooks["expand_switch"])
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gtk
+
+    dialog = Gtk.MessageDialog(
+        modal=True,
+        message_type=Gtk.MessageType.QUESTION,
+        text="Use a different model for Expand?",
+    )
+    dialog.format_secondary_text(ui_text.expand_model_note(better))
+    dialog.add_button(f"Keep {picked}", Gtk.ResponseType.CANCEL)
+    dialog.add_button(f"Use {better}", Gtk.ResponseType.OK)
+    dialog.set_default_response(Gtk.ResponseType.OK)
+    answer = dialog.run()
+    dialog.destroy()
+    return answer == Gtk.ResponseType.OK
+
+
 def run_expand(
     procedure: Gimp.Procedure,
     run_mode: Gimp.RunMode,
@@ -665,6 +686,11 @@ def run_expand(
     before = _canvas_state(image)
     try:
         app = App(interactive=run_mode == Gimp.RunMode.INTERACTIVE)
+        model_choice = config.get_property("model")
+        if run_mode == Gimp.RunMode.INTERACTIVE:
+            suggestion = app.expand_suggestion(model_choice)
+            if suggestion and _ask_expand_switch(suggestion[0].name, suggestion[1].name, hooks):
+                model_choice = suggestion[1].id
         layers = app.generative_expand(
             image,
             config.get_property("prompt"),
@@ -675,7 +701,7 @@ def run_expand(
             config.get_property("bottom"),
             config.get_property("variations"),
             config.get_property("seed"),
-            config.get_property("model"),
+            model_choice,
         )
     except Exception as err:  # noqa: BLE001
         return _fail(procedure, err, app.log if app else None)

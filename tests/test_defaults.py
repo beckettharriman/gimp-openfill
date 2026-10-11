@@ -34,6 +34,16 @@ class DefaultsTests(unittest.TestCase):
         self.assertEqual(self.pick(allq[:2], "quality"), "juggernaut-xl-v9")
         self.assertEqual(self.pick(allq[:1], "quality"), "sdxl-base")
 
+    def test_expand_suggestion(self):
+        both = [self.by[i] for i in ("dreamshaper-8-inpainting", "sd15-inpainting", "realvisxl-v5")]
+        sug = cat.expand_suggestion(both, self.by["realvisxl-v5"])
+        self.assertEqual(sug.id, "sd15-inpainting")
+        self.assertEqual(cat.expand_suggestion(both, self.by["dreamshaper-8-inpainting"]).id, "sd15-inpainting")
+        self.assertIsNone(cat.expand_suggestion(both, self.by["sd15-inpainting"]))
+        no_default = [self.by["realvisxl-v5"]]
+        self.assertIsNone(cat.expand_suggestion(no_default, self.by["realvisxl-v5"]))
+        self.assertIsNone(cat.expand_suggestion(both, None))
+
     def test_expand_defaults(self):
         both = ["dreamshaper-8-inpainting", "sd15-inpainting", "realvisxl-v5"]
         for tier in ("fast", "quality"):

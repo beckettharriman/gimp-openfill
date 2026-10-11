@@ -721,6 +721,8 @@ class GenerationDialog(Gtk.Dialog):
         elif self.kind == "expand" and hasattr(self, "expand_state"):
             m, st = self.expand_state.margins, self.expand_state
             status = ui_text.expand_status((st.image_w, st.image_h), m.left, m.top, m.right, m.bottom)
+            if ui_text.expand_over_limit((st.image_w, st.image_h), m.left, m.top, m.right, m.bottom):
+                warnings.append(ui_text.EXPAND_OVER_LIMIT)
         elif self.kind == "txt2img" and hasattr(self, "auto_size"):
             auto = self.auto_size.get_active()
             self.width_spin.set_sensitive(not auto)

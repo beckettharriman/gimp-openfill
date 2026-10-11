@@ -699,6 +699,16 @@ def tier_default(installed: Iterable[ModelEntry], tier: str, operation: str = "f
     return pick_preferred([e for e in installed if not is_opt_in(e)], table.get(tier, ()))
 
 
+def expand_suggestion(installed: Iterable[ModelEntry], picked: ModelEntry | None) -> ModelEntry | None:
+    """The Expand default when it is installed and differs from the model the
+    user picked; None when there is nothing better to suggest (the pick is the
+    default, is unknown, or no default is installed)."""
+    best = tier_default(installed, "quality", "expand")
+    if best is None or picked is None or best.id == picked.id:
+        return None
+    return best
+
+
 def removal_substitute(installed: Iterable[ModelEntry], entry: ModelEntry | None) -> ModelEntry | None:
     """Model for a removal (empty prompt or Remove object) when no LaMa/MAT is
     installed: ``entry`` itself unless it is opt-in (FLUX, Qwen repaint the
