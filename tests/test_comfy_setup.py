@@ -356,7 +356,13 @@ class RunSetupTests(unittest.TestCase):
         with self.assertRaises(SetupError) as cm:
             self.go(popen=self.popen(rc=1))
         self.assertIn("Unpacking", str(cm.exception))
-        self.assertFalse((self.install / "ComfyUI_windows_portable").exists())
+        # the cut-short unpack is flagged, so the next run removes the partial folder and unpacks again
+        self.assertTrue((self.install / comfy_setup.UNPACK_MARKER).exists())
+        self.calls.clear()
+        comfy = self.go()
+        self.assertFalse((self.install / comfy_setup.UNPACK_MARKER).exists())
+        self.assertTrue(any(c[0] == "tar" for c in self.calls))
+        self.assertEqual(comfy, self.install / "ComfyUI_windows_portable")
 
     def test_cancel_during_unpack_kills_tar(self):
         with self.assertRaises(downloads.DownloadError) as cm:
@@ -505,3 +511,40 @@ class InstallScriptDetectTests(unittest.TestCase):
                 pinokio_roots=(),
             )
             self.assertEqual(len(out.strip().splitlines()), len(expected))
+
+
+class UnpackProgressTests(unittest.TestCase):
+    def test_folder_bytes_counts_nested_files_and_missing_is_zero(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "a" / "b").mkdir(parents=True)
+            (root / "a" / "x.bin").write_bytes(b"12345")
+            (root / "a" / "b" / "y.bin").write_bytes(b"123")
+            self.assertEqual(comfy_setup.folder_bytes(root), 8)
+            self.assertEqual(comfy_setup.folder_bytes(root / "nope"), 0)
+
+    def test_unpacking_fraction_follows_bytes(self):
+        lo, hi = comfy_setup.STATE_SPAN["unpacking"]
+        self.assertEqual(comfy_setup.overall_fraction("unpacking", 0, 100), lo)
+        self.assertAlmostEqual(comfy_setup.overall_fraction("unpacking", 50, 100), (lo + hi) / 2)
+        self.assertEqual(comfy_setup.overall_fraction("unpacking", 500, 100), hi)  # never past the span
+
+    def test_extract_calls_tick_while_waiting(self):
+        ticks = []
+        proc = FakeProc(lambda: None, hang=True)
+        calls = {"n": 0}
+
+        def cancel():
+            calls["n"] += 1
+            return calls["n"] >= 3
+
+        with self.assertRaises(downloads.DownloadError):
+            comfy_setup.extract_archive(
+                Path("a.7z"),
+                Path(tempfile.gettempdir()) / "openfill-test-x",
+                "tar.exe",
+                cancel,
+                lambda *a, **k: proc,
+                lambda: ticks.append(1),
+            )
+        self.assertEqual(len(ticks), 3)

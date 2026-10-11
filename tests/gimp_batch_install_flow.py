@@ -159,7 +159,7 @@ try:
     caps.append(
         ("model downloads", capture("OpenFill - Model downloads", "04-model-downloads.png", "5000,20000,40000"))
     )
-    caps.append(("fill dialog", capture("Generative Fill", "05-fill-dialog.png", "1500")))
+    caps.append(("fill dialog", capture("Generative Fill", "05-fill-dialog.png", "900")))
     caps.append(("fill progress", capture("OpenFill - Generative Fill", "06-fill-progress.png", "20000,60000,90000")))
     log_start = os.path.getsize(LOG_PATH) if os.path.exists(LOG_PATH) else 0
     time.sleep(8)  # the capture helpers compile their user32 bindings first
@@ -172,7 +172,7 @@ try:
             "setup_dump": dump,
             "setup_action": "download",
             "setup_delay": 4,
-            "models_download": ["lama-big", "dreamshaper-8-inpainting"],
+            "models_starter_button": True,
             "type": "hot air balloon",
             "press": "Return",
             "values": {"variations": 1, "seed": 1234, "remove": False},

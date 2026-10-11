@@ -38,6 +38,7 @@ GB = 1024**3
 # its unpacked copy, the two starting models and some room to work.
 NEED_FREE_BYTES = 12 * GB
 MIN_VRAM_GB = 4.0
+UNPACK_MARKER = ".openfill-unpacking"
 STATES = ("downloading", "verifying", "unpacking", "nodes", "packages")
 # Share of the overall progress bar each state covers (download and unpacking dominate).
 STATE_SPAN = {
@@ -430,8 +431,10 @@ def extract_archive(
     tar_exe: str | None = None,
     cancel: Callable[[], bool] | None = None,
     popen: Callable[..., Any] = subprocess.Popen,
+    tick: Callable[[], None] | None = None,
 ) -> None:
-    """Unpack ``archive`` into ``dest`` with bsdtar; cancellable. Raises :class:`SetupError`."""
+    """Unpack ``archive`` into ``dest`` with bsdtar; cancellable. ``tick`` is called about once a second.
+    Raises :class:`SetupError`."""
     tar_exe = tar_exe or system_tar()
     if not tar_exe:
         raise SetupError(
@@ -448,6 +451,8 @@ def extract_archive(
             _out, err = proc.communicate(timeout=1.0)
             break
         except subprocess.TimeoutExpired:
+            if tick:
+                tick()
             if cancel and cancel():
                 proc.kill()
                 proc.communicate()
@@ -459,10 +464,30 @@ def extract_archive(
 ProgressSetupFn = Callable[[str, int, int], None]  # state, done, total
 
 
+def folder_bytes(path: Path) -> int:
+    """Total size of the files below ``path`` (0 when it does not exist); used to show unpacking progress."""
+    total = 0
+    stack = [str(path)]
+    while stack:
+        try:
+            with os.scandir(stack.pop()) as entries:
+                for entry in entries:
+                    try:
+                        if entry.is_dir(follow_symlinks=False):
+                            stack.append(entry.path)
+                        else:
+                            total += entry.stat(follow_symlinks=False).st_size
+                    except OSError:
+                        continue
+        except OSError:
+            continue
+    return total
+
+
 def overall_fraction(state: str, done: int, total: int) -> float:
     """0..1 over the whole setup for a task status (``state``, bytes ``done`` of ``total``)."""
     lo, hi = STATE_SPAN.get(state, (0.0, 0.0))
-    inner = min(1.0, done / total) if total and state == "downloading" else 0.0
+    inner = min(1.0, done / total) if total and state in ("downloading", "unpacking") else 0.0
     return lo + (hi - lo) * inner
 
 
@@ -487,6 +512,9 @@ def run_setup(
     install_dir = Path(install_dir)
     comfy = comfy_dir_for(install_dir, manifest)
     install_dir.mkdir(parents=True, exist_ok=True)
+    if (install_dir / UNPACK_MARKER).exists():
+        shutil.rmtree(comfy, ignore_errors=True)  # an unpack that was cut short: start the folder over
+        (install_dir / UNPACK_MARKER).unlink()
     if comfy_layout(comfy) is None:
         archive = install_dir / ".download" / manifest.archive_name
         progress("downloading", 0, manifest.archive_size)
@@ -502,18 +530,26 @@ def run_setup(
         )
         progress("verifying", 1, 1)  # download_file checked size and SHA-256 before the rename
         log(f"{archive.name} verified")
-        unpack = install_dir / ".unpack"
-        shutil.rmtree(unpack, ignore_errors=True)
-        progress("unpacking", 0, 0)
-        log("unpacking with tar.exe")
-        extract_archive(archive, unpack, tar_exe, cancel, popen)
-        inner = unpack / manifest.folder
-        if not inner.is_dir():
-            raise SetupError(f"The archive did not hold a {manifest.folder} folder.")
+        # Unpack straight into place: renaming a freshly unpacked folder of ~30,000 files fails on
+        # Windows while the virus scanner still holds files in it. A marker file tells a later run
+        # that an unpack was cut short, so it starts that folder over.
+        marker = install_dir / UNPACK_MARKER
         if comfy.exists():
             shutil.rmtree(comfy, ignore_errors=True)  # a half-finished earlier attempt
-        os.replace(inner, comfy)
-        shutil.rmtree(unpack, ignore_errors=True)
+        marker.write_text("unpacking\n", encoding="utf-8")
+        progress("unpacking", 0, 0)
+        log("unpacking with tar.exe")
+        ticks = {"n": 0}
+
+        def unpack_tick() -> None:
+            ticks["n"] += 1
+            if ticks["n"] % 3 == 0 and manifest.unpacked_bytes:  # walking ~60,000 files is not free
+                progress("unpacking", folder_bytes(comfy), manifest.unpacked_bytes)
+
+        extract_archive(archive, install_dir, tar_exe, cancel, popen, unpack_tick)
+        if comfy_layout(comfy) is None:
+            raise SetupError(f"The archive did not hold a working {manifest.folder} folder.")
+        marker.unlink()
         try:
             archive.unlink()
         except OSError:

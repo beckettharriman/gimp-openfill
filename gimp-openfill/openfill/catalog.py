@@ -68,7 +68,7 @@ OPERATION_CAPABILITIES = {
     "edit": ("edit",),
     "remove": ("remove", "fill"),  # Remove object falls back to a prompt-led fill without LaMa/MAT
 }
-NO_MODEL_MESSAGE = "No AI model is installed yet. Open the download manager to get one."
+NO_MODEL_MESSAGE = "No AI model is installed yet. Download the two starting models below to begin."
 HUB_SELECTED_FILENAME = "hub-selected.json"
 
 # Live entries: where the main file may come from and where it may go.

@@ -393,7 +393,9 @@ class LiveEntryTests(unittest.TestCase):
 class FirstRunTests(unittest.TestCase):
     def test_runnable_installed_and_suggest_active(self):
         entries = cat.load_catalog(CATALOG)
-        self.assertEqual(cat.NO_MODEL_MESSAGE, "No AI model is installed yet. Open the download manager to get one.")
+        self.assertEqual(
+            cat.NO_MODEL_MESSAGE, "No AI model is installed yet. Download the two starting models below to begin."
+        )
         with tempfile.TemporaryDirectory() as tmp:
             root, nodes = Path(tmp) / "models", Path(tmp) / "custom_nodes"
             self.assertEqual(cat.runnable_installed(entries, root, nodes, "fill"), [])

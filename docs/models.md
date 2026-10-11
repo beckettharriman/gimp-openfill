@@ -38,9 +38,9 @@ install was required. ComfyUI-Manager was not needed and is not installed.
 
 The plug-in ships with no model. The first time Generative Fill, Expand,
 Text to Image or Remove object runs without a usable model, it says "No AI
-model is installed yet. Open the download manager to get one." and opens the
+model is installed yet. Download the two starting models below to begin." and opens the
 Models tab (the download manager). Nothing is ever downloaded until the user
-presses Download on a model; the first model that finishes downloading
+presses Download on a model (or the one button for the two starting models); the first model that finishes downloading
 becomes the active model.
 
 ### Families the plug-in can drive

@@ -29,7 +29,7 @@ RESP_USE_FOUND = 3
 
 STATE_TEXT = {
     "verifying": "Checking the download...",
-    "unpacking": "Unpacking ComfyUI. This takes a few minutes and has no progress bar...",
+    "unpacking": "Unpacking ComfyUI (a few minutes)...",
     "nodes": "Installing the inpaint nodes...",
     "packages": "Installing packages...",
 }
@@ -91,6 +91,8 @@ def progress_text(current: dict[str, Any]) -> tuple[float, str]:
     fraction = float(current.get("fraction") or comfy_setup.overall_fraction(state, done, total))
     if state == "downloading":
         return fraction, f"Downloading ComfyUI: {cat.human_size(done)} of {cat.human_size(total)}"
+    if state == "unpacking" and total:
+        return fraction, f"Unpacking ComfyUI: {cat.human_size(done)} of about {cat.human_size(total)}"
     return fraction, STATE_TEXT.get(state, "Getting ready...")
 
 

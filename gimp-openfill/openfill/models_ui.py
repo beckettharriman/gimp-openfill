@@ -310,6 +310,13 @@ class ModelsPanel(Gtk.Box):
             hint = Gtk.Label(label=cat.FIRST_RUN_HINT, xalign=0)  # the starting set and the quality upgrade
             hint.set_line_wrap(True)
             self.pack_start(hint, False, False, 0)
+            self._starters = [e for e in app.catalog if e.id in cat.STARTER_SET and e.source == "bundled"]
+            if self._starters:
+                size = sum(int(f.size or 0) for e in self._starters for f in e.files)
+                self.starter_button = Gtk.Button(label=f"Download both starting models ({cat.human_size(size)})")
+                self.starter_button.set_halign(Gtk.Align.START)
+                self.starter_button.connect("clicked", self._download_starters)
+                self.pack_start(self.starter_button, False, False, 0)
         self.hw_label = _grey("Checking this PC...")
         self.pack_start(self.hw_label, False, False, 0)
 
@@ -692,6 +699,14 @@ class ModelsPanel(Gtk.Box):
         except cat.CatalogError:
             return None
 
+    def _download_starters(self, button: Gtk.Button) -> None:
+        """One click for the starting set (LaMa and DreamShaper 8), skipping what is already installed."""
+        have = {m.id for m in self.app.installed_models()}
+        button.set_sensitive(False)
+        for entry in self._starters:
+            if entry.id not in have:
+                self._download(entry.id)
+
     def _download(self, model_id: str) -> None:
         entry = self._entry(model_id)
         if entry is None:
@@ -879,16 +894,24 @@ class ModelsPanel(Gtk.Box):
 
 
 def _apply_test_hooks(app: App, panel: ModelsPanel, dialog: Gtk.Dialog) -> None:
-    """Test hook ``models_download``: [model ids] pressed one after another, the dialog closes when they are installed."""
+    """Test hooks: ``models_starter_button`` presses the starting-set button, ``models_download`` ([ids])
+    presses those rows; the dialog closes once the models are installed (or a download failed)."""
     from .ui_setup import test_hooks
 
-    ids = list(test_hooks().get("models_download") or [])
+    hooks = test_hooks()
+    ids = list(hooks.get("models_download") or [])
+    use_button = bool(hooks.get("models_starter_button")) and getattr(panel, "starter_button", None) is not None
+    if use_button:
+        ids = list(cat.STARTER_SET)
     if not ids:
         return
 
     def press() -> bool:
-        for model_id in ids:
-            panel.primary_clicked(model_id)
+        if use_button:
+            panel.starter_button.clicked()
+        else:
+            for model_id in ids:
+                panel.primary_clicked(model_id)
         GLib.timeout_add(3000, check)
         return False
 

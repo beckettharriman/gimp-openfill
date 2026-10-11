@@ -8,7 +8,7 @@
     "version": "v0.39.0",
     "release_page": "https://github.com/comfyanonymous/ComfyUI/releases/tag/v0.39.0",
     "folder": "ComfyUI_windows_portable",
-    "unpacked_bytes": 9500000000,
+    "unpacked_bytes": 6700000000,
     "asset": {
       "name": "ComfyUI_windows_portable_nvidia.7z",
       "url": "https://github.com/comfyanonymous/ComfyUI/releases/download/v0.39.0/ComfyUI_windows_portable_nvidia.7z",
