@@ -22,7 +22,7 @@ class ReleaseZipTests(unittest.TestCase):
         self.tmp.cleanup()
 
     def test_single_top_folder_with_the_needed_files(self):
-        self.assertEqual({n.split("/")[0] for n in self.names}, {"OpenFill-9.9.9"})
+        self.assertEqual(self.zip.name, "openfill-9.9.9.zip")
         for need in (
             "Install OpenFill.cmd",
             "install.ps1",
@@ -33,7 +33,29 @@ class ReleaseZipTests(unittest.TestCase):
             "gimp-openfill/gimp-openfill.py",
             "gimp-openfill/openfill/comfy_setup.py",
         ):
-            self.assertIn(f"OpenFill-9.9.9/{need}", self.names)
+            self.assertIn(need, self.names)
+
+    def test_plugin_folder_is_complete_on_its_own(self):
+        for need in (
+            "gimp-openfill/gimp-openfill.py",
+            "gimp-openfill/openfill/__init__.py",
+            "gimp-openfill/models/catalog.json",
+            "gimp-openfill/models/comfy_setup.json",
+            "gimp-openfill/README.md",
+            "gimp-openfill/COPYING",
+        ):
+            self.assertIn(need, self.names)
+
+    def test_bundled_catalog_is_found_and_valid(self):
+        sys.path.insert(0, str(ROOT / "gimp-openfill"))
+        from openfill import catalog
+
+        with tempfile.TemporaryDirectory() as out:
+            with zipfile.ZipFile(self.zip) as zf:
+                zf.extractall(out)
+            plugin = Path(out) / "gimp-openfill"
+            self.assertEqual(catalog.catalog_search_paths(plugin)[0], plugin / "models" / "catalog.json")
+            self.assertTrue(catalog.load_catalog(plugin_dir=plugin))
 
     def test_no_tests_evidence_or_caches(self):
         for n in self.names:
@@ -42,7 +64,7 @@ class ReleaseZipTests(unittest.TestCase):
             self.assertNotIn("RESUME", n)
 
     def test_scripts_are_crlf(self):
-        data = zipfile.ZipFile(self.zip).read("OpenFill-9.9.9/Install OpenFill.cmd")
+        data = zipfile.ZipFile(self.zip).read("Install OpenFill.cmd")
         self.assertIn(b"\r\n", data)
         self.assertNotIn(b"\n", data.replace(b"\r\n", b""))
 

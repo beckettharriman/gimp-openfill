@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Standard GIMP install is now the headline: the release zip
+  (`openfill-<version>.zip`) holds a self-contained `gimp-openfill/` folder
+  (code, `models/catalog.json`, `models/comfy_setup.json`, README, COPYING)
+  that is copied into GIMP's plug-ins folder, with no script. Verified on an
+  empty profile with gimp-console: all procedures register. Settings are
+  created on first change; defaults apply until then. `Install OpenFill.cmd`
+  and `install.ps1` stay as the optional path (uninstall, link, model
+  downloads).
+
+### Changed
+
 - Renamed the project to OpenFill: menu Filters > OpenFill, plug-in
   folder and entry script `gimp-openfill/gimp-openfill.py`, package
   `openfill`, procedures `python-fu-openfill-*`, settings folder

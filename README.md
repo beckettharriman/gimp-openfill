@@ -102,13 +102,14 @@ The network comes into it twice: when the Models tab searches Hugging Face and C
 
 ## Install
 
-On Windows: install GIMP 3.2 (or newer), unzip OpenFill, double-click `Install OpenFill.cmd`, open GIMP, run `Filters > OpenFill > Generative Fill...` and press **Download ComfyUI** when asked.
+Install GIMP 3.2, drag one folder into GIMP's plug-ins folder, restart GIMP. No installer, no scripts.
 
 1. **GIMP 3.2.** Install it from [gimp.org](https://www.gimp.org/downloads/). You don't need to start it first.
-2. **OpenFill.** Download the OpenFill zip from the [Releases page](https://github.com/beckettharriman/gimp-openfill/releases) and unzip it anywhere.
-3. **Double-click `Install OpenFill.cmd`.** It copies the plug-in into your GIMP 3 profile and looks for a ComfyUI you may already have (the portable build, ComfyUI Desktop, Stability Matrix, Pinokio). Nothing is downloaded at this step and git is not needed.
-4. **Open GIMP, open an image, select an area and run `Filters > OpenFill > Generative Fill...`.** If no ComfyUI was found, a notice says "ComfyUI is required". It checks your graphics card, free disk space and port 8188 first, then **Download ComfyUI** fetches the official Windows portable build (about 2 GB, about 7 GB unpacked) into `%LOCALAPPDATA%\OpenFill\ComfyUI`, checks it against a published SHA-256, unpacks it with Windows' own `tar.exe`, adds the inpaint nodes at a pinned commit and OpenCV, and remembers the folder. "I already have ComfyUI" lets you pick a folder instead. You can change the install folder in the notice.
-5. **Download the starting models.** The model manager opens next: get LaMa (object removal, 0.2 GB) and DreamShaper 8 Inpainting (fill and expand, 2 GB). Then select some sky, type "hot air balloon", press Enter. The first request starts the backend, which takes about a minute; after that it's seconds.
+2. **Copy the plug-in folder.** Download `openfill-<version>.zip` from the [Releases page](https://github.com/beckettharriman/gimp-openfill/releases) and unzip it. Open GIMP's plug-ins folder (in GIMP: `Edit > Preferences > Folders > Plug-ins`, or paste `%APPDATA%\GIMP\3.2\plug-ins` into Explorer's address bar) and drag the `gimp-openfill` folder into it. The folder is complete on its own: code, model catalog, readme and licence. Nothing else is needed.
+3. **Restart GIMP, open an image, select an area and run `Filters > OpenFill > Generative Fill...`.** If no ComfyUI is found, a notice says "ComfyUI is required". It checks your graphics card, free disk space and port 8188 first, then **Download ComfyUI** fetches the official Windows portable build (about 2 GB, about 7 GB unpacked) into `%LOCALAPPDATA%\OpenFill\ComfyUI`, checks it against a published SHA-256, unpacks it with Windows' own `tar.exe`, adds the inpaint nodes at a pinned commit and OpenCV, and remembers the folder. "I already have ComfyUI" lets you pick a folder instead. Git is not needed.
+4. **Download the starting models.** The model manager opens next: get LaMa (object removal, 0.2 GB) and DreamShaper 8 Inpainting (fill and expand, 2 GB). Then select some sky, type "hot air balloon", press Enter. The first request starts the backend, which takes about a minute; after that it's seconds.
+
+Settings are created the first time you change one; until then the defaults are used.
 
 The download needs an NVIDIA card. Without one the notice says so and offers the download only as "very slow" (the processor does the work); for an AMD card it points to ComfyUI's AMD instructions, after which you choose "I already have ComfyUI".
 
@@ -118,6 +119,8 @@ If something goes wrong, every error message ends with what to do next, and the 
 
 <details>
 <summary><b>Manual and advanced install</b></summary>
+
+**Optional installer script.** The zip also holds `Install OpenFill.cmd` (a thin wrapper around `install.ps1`, which you can read). It does the same copy for you, looks for an existing ComfyUI (portable build, ComfyUI Desktop, Stability Matrix, Pinokio), and gives you `-Uninstall`, `-Link` and headless model downloads. Nothing in the drag-and-drop install above needs it.
 
 You need GIMP 3.2 or newer and ComfyUI. OpenFill uses GIMP's own Python and needs no extra packages.
 
