@@ -118,8 +118,9 @@ class FitTests(unittest.TestCase):
 
     def test_offload_needs_system_memory(self):
         e = entry("qwen_image", 12.0, (("unet", 13 * GB),))
-        self.assertEqual(hwmod.fit(e, hw(8, ram_gb=32)).level, hwmod.OFFLOAD)
-        verdict = hwmod.fit(e, hw(8, ram_gb=8))
+        self.assertEqual(hwmod.fit(e, hw(10, ram_gb=32)).level, hwmod.OFFLOAD)
+        self.assertEqual(hwmod.fit(e, hw(8, ram_gb=32)).level, hwmod.TOO_BIG)  # Qwen needs more than 8 GB
+        verdict = hwmod.fit(e, hw(10, ram_gb=6))
         self.assertEqual(verdict.level, hwmod.TOO_BIG)
         self.assertIn("system memory", verdict.reason)
 
@@ -150,8 +151,9 @@ class FitTests(unittest.TestCase):
         verdicts = {e.id: hwmod.fit(e, laptop).level for e in load_catalog()}
         self.assertEqual(verdicts["sd15-inpainting"], hwmod.COMFORTABLE)
         self.assertEqual(verdicts["lama-big"], hwmod.COMFORTABLE)
-        self.assertEqual(verdicts["qwen-image-edit-2511-gguf-q4"], hwmod.OFFLOAD)
-        self.assertNotIn(hwmod.TOO_BIG, verdicts.values())
+        self.assertEqual(verdicts["qwen-image-edit-2511-gguf-q4"], hwmod.TOO_BIG)  # needs more than 8 GB
+        self.assertEqual(verdicts["flux1-fill-dev"], hwmod.OFFLOAD)
+        self.assertEqual({k for k, v in verdicts.items() if v == hwmod.TOO_BIG}, {"qwen-image-edit-2511-gguf-q4"})
         tiny = hw(2, 8, 400)
         self.assertEqual(hwmod.fit(next(e for e in load_catalog() if e.id == "flux1-fill-dev"), tiny).level, "too_big")
 

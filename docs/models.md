@@ -284,6 +284,35 @@ cannot rebuild structured backgrounds.
 - **LaMa and MAT** are prompt-free removal models used by Remove object when
   installed. They run at a working size of at most 512 px.
 
+### Default model per operation
+
+The plug-in picks the model itself unless one was set active by hand
+(Models tab, Set active) or chosen in a dialog. Each tier follows a fallback
+list and uses the first model that is installed (`stable_boy/catalog.py`,
+`TIER_PREFERENCE`). Scores are pass / notes / fail of 33 judged cases
+(`docs/evidence/daytime-2026-10-09/judge/`).
+
+| Operation | Order | Why |
+|---|---|---|
+| Fast fill | DreamShaper 8 inpainting, then SD 1.5 inpainting | 7/10/16 against 7/7/19 |
+| Quality fill | RealVisXL V5, then Juggernaut XL v9, then SDXL base (with the Fooocus patch) | 9/1/23, 5/4/24, 7/0/25 |
+| Remove object, empty prompt | LaMa, then MAT | 5/3/25 against 3/3/27; MAT invents glyphs and figures |
+| Automatic active model | RealVisXL V5, DreamShaper 8, SD 1.5, Juggernaut, SDXL base | the most often acceptable fills |
+
+FLUX Fill and Qwen Edit are never chosen automatically; they are used only
+when picked by hand. FLUX Fill (Q4) scored 5/5/18, ties RealVisXL on object
+fills and takes about four times as long (median 112 s), so it is labelled
+"Quality (slow)". An empty prompt or Remove object is never sent to FLUX or
+Qwen (they repaint the object); without LaMa or MAT it goes to the Fast, then
+the Quality default. FLUX and Qwen get a request timeout of at least 240 s, and
+any progress message from the backend extends the deadline further. Qwen Edit
+needs more than 8 GB of graphics memory (one job took 664 s offloaded on an
+8 GB card), so the download manager marks it too big for 8 GB cards.
+
+The first-run download manager recommends LaMa (0.2 GB) and DreamShaper 8
+inpainting (2 GB) as the starting set and names RealVisXL V5 (6.5 GB) as the
+quality upgrade.
+
 ### Graphics memory budget (8 GB RTX 4070 Laptop)
 
 | Scenario | Working size | Peak graphics memory (observed/expected) |

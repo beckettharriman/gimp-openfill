@@ -457,7 +457,7 @@ class ViewModelTests(unittest.TestCase):
         ]
         rec = [r["id"] for r in cat.recommended(rows, 5, self.NOW)]
         self.assertEqual(rec[0], "sdxl-a")
-        self.assertEqual(set(rec), {"sdxl-a", "sd15-a", "qwen-a", "lama", "sdxl-b"})
+        self.assertEqual(set(rec), {"sdxl-a", "sd15-a", "lama", "sdxl-b"})  # qwen is opt-in
         self.assertEqual(len(cat.recommended(rows, 3, self.NOW)), 3)
 
     def test_rank_score(self):

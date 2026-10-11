@@ -311,6 +311,9 @@ class ModelsPanel(Gtk.Box):
             first.set_markup(f"<b>{GLib.markup_escape_text(intro)}</b>")
             first.set_line_wrap(True)
             self.pack_start(first, False, False, 0)
+            hint = Gtk.Label(label=cat.FIRST_RUN_HINT, xalign=0)  # the starting set and the quality upgrade
+            hint.set_line_wrap(True)
+            self.pack_start(hint, False, False, 0)
         self.hw_label = _grey("Checking this PC...")
         self.pack_start(self.hw_label, False, False, 0)
 
@@ -487,6 +490,7 @@ class ModelsPanel(Gtk.Box):
         """View-model rows for every known model (bundled, remembered and live)."""
         entries = self._entries()
         root, nodes = self.app.models_root, self.app.custom_nodes_dir
+        active = cat.effective_active(entries, root, nodes, self.app.settings.active_model)
         rows = []
         for e in entries:
             st = cat.install_status(e, root, nodes, entries, server_files)
@@ -496,7 +500,7 @@ class ModelsPanel(Gtk.Box):
                 cat.model_row(
                     e,
                     st,
-                    self.app.settings.active_model,
+                    active,
                     self._has_token(),
                     verdict,
                     cat.gated_files_missing(e, root),
