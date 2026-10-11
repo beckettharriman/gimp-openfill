@@ -60,12 +60,10 @@ class StatusTextTests(unittest.TestCase):
         self.assertEqual(ut.plain_step_text("Generating... step 12/25"), "Generating, step 12 of 25")
         self.assertEqual(
             ut.plain_step_text("Starting the AI backend... 14 s"),
-            "Starting the AI backend (first time takes about a minute), 14 s",
+            "Starting the AI backend, 14 s",
         )
         self.assertEqual(ut.plain_step_text("Downloading result..."), "Placing the result")
-        self.assertEqual(
-            ut.plain_step_text("Running node 7..."), "Loading the model and preparing (can take a while the first time)"
-        )
+        self.assertEqual(ut.plain_step_text("Running node 7..."), "Loading the model")
         self.assertEqual(ut.plain_step_text("Uploading selection..."), "Sending the selection to the AI backend")
         self.assertEqual(ut.plain_step_text("Downloading 1.0 GB of 2.0 GB"), "Downloading 1.0 GB of 2.0 GB")
         self.assertEqual(ut.plain_step_text(""), "")

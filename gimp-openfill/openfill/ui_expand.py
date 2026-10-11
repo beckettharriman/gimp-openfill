@@ -329,8 +329,15 @@ def _position_range(size: int, extent: int, limit: int) -> tuple[int, int]:
     return lowest, highest
 
 
-def _magnet(value: float, edges: tuple[int, ...], step: int) -> int:
-    """``value`` snapped to the photo edges when within ``step`` of one, else to a multiple of ``step``."""
+CENTER_MAGNET_PX = 12  # an edge drag snaps to the centre from this many screen pixels away
+CENTER_PULL = 0.06  # the frame snaps to the centre from this far away (share of the photo side)
+
+
+def _magnet(value: float, edges: tuple[int, ...], step: int, center: int | None = None, pull: int = 0) -> int:
+    """``value`` snapped to the centre when within ``pull`` of it, to the photo
+    edges when within ``step`` of one, else to a multiple of ``step``."""
+    if center is not None and abs(value - center) <= max(step, pull):
+        return center
     for edge in edges:
         if abs(value - edge) <= step:
             return edge
@@ -346,7 +353,9 @@ def move_frame(
     out = []
     for pos, delta, size, extent in ((x, dx, width, image_w), (y, dy, height, image_h)):
         lowest, highest = _position_range(size, extent, limit)
-        new = _magnet(pos + delta, (0, extent - size), step) if delta else pos
+        center = round((extent - size) / 2)
+        pull = round(extent * CENTER_PULL)
+        new = _magnet(pos + delta, (0, extent - size), step, center, pull) if delta else pos
         out.append(new if lowest > highest else max(lowest, min(highest, new)))
     return margins_of_frame(out[0], out[1], width, height, image_w, image_h)
 
@@ -548,6 +557,17 @@ def drag_margins(
     if "bottom" in handle:
         values["bottom"] = start.bottom + py
     moved = {side: clamp_margin(snap(v, step), limit) if v != getattr(start, side) else v for side, v in values.items()}
+    # Magnet to the centre: an edge dragged close to its opposite side's margin
+    # takes the same value, so the photo sits centred on that axis.
+    pull = CENTER_MAGNET_PX / scale
+    for side, opposite in (("left", "right"), ("right", "left"), ("top", "bottom"), ("bottom", "top")):
+        if (
+            side in handle
+            and opposite not in handle
+            and getattr(start, opposite)
+            and abs(values[side] - getattr(start, opposite)) <= pull
+        ):
+            moved[side] = getattr(start, opposite)
     return Margins(**{s: int(v) for s, v in moved.items()})
 
 

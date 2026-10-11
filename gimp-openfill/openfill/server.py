@@ -323,7 +323,9 @@ class ServerManager:
         env.pop("PYTHONPATH", None)
         kwargs["env"] = env
         if IS_WINDOWS:
-            flags = subprocess.CREATE_NO_WINDOW | subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+            # No DETACHED_PROCESS: Windows ignores CREATE_NO_WINDOW next to it, and a
+            # child without a (hidden) console opens a window for every console program it starts.
+            flags = subprocess.CREATE_NO_WINDOW | subprocess.CREATE_NEW_PROCESS_GROUP
             try:
                 subprocess.Popen(cmd, creationflags=flags | subprocess.CREATE_BREAKAWAY_FROM_JOB, **kwargs)
                 return

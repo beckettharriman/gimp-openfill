@@ -222,10 +222,10 @@ def _plain_step_text(raw: str) -> str:
         return f"Generating, step {m.group(1)} of {m.group(2)}"
     m = _START.search(raw)
     if m:
-        return f"Starting the AI backend (first time takes about a minute), {m.group(1)} s"
+        return f"Starting the AI backend, {m.group(1)} s"
     lowered = raw.lower()
     if lowered.startswith("starting the ai backend") or lowered.startswith("starting comfyui"):
-        return "Starting the AI backend (first time takes about a minute)"
+        return "Starting the AI backend"
     if lowered.startswith("waiting for the ai backend"):
         return "Waiting for the AI backend"
     if lowered.startswith("uploading"):
@@ -233,7 +233,7 @@ def _plain_step_text(raw: str) -> str:
     if lowered.startswith("submitting"):
         return "Preparing the generation"
     if lowered.startswith("running node"):
-        return "Loading the model and preparing (can take a while the first time)"
+        return "Loading the model"
     if lowered.startswith("downloading result") or lowered == "done":
         return "Placing the result"
     return raw

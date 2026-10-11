@@ -167,6 +167,15 @@ class DragTests(unittest.TestCase):
         self.assertEqual(ue.drag_margins(start, "right", 40, 0, 0), start)
 
 
+class MagnetTests(unittest.TestCase):
+    def test_edge_snaps_to_the_opposite_margin(self):
+        # 47 screen px at scale 0.25 = 188 image px, within 12 screen px of 200
+        self.assertEqual(ue.drag_margins(Margins(0, 0, 0, 200), "top", 0, -47, 0.25).top, 200)
+
+    def test_no_magnet_when_the_opposite_side_is_zero(self):
+        self.assertEqual(ue.drag_margins(Margins(), "top", 0, -10, 0.25).top, 40)
+
+
 class StateTests(unittest.TestCase):
     def test_initial_values(self):
         s = ue.ExpandState(1024, 768, Margins(256, 0, 256, 0))
@@ -250,7 +259,8 @@ class CropTests(unittest.TestCase):
         moved = ue.move_frame(start, 171, 0, 1024, 768)
         self.assertEqual(moved.canvas(1024, 768), start.canvas(1024, 768))
         self.assertEqual((moved.left, moved.right), (0, 342))
-        self.assertEqual(ue.move_frame(Margins(), 0, 20, 1024, 768).top, -24)
+        self.assertEqual(ue.move_frame(Margins(), 0, 70, 1024, 768).top, -72)
+        self.assertEqual(ue.move_frame(Margins(), 0, 30, 1024, 768).top, 0)  # centre magnet
 
     def test_move_stays_over_the_photo(self):
         start = Margins(100, 100, 100, 100)
