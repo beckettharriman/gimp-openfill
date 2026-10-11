@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 import struct
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -92,6 +92,44 @@ class Eta:
         else:
             self._estimate = 0.6 * self._estimate + 0.4 * remaining
         return max(0.0, self._estimate)
+
+
+class OverallProgress:
+    """One progress bar over several backend runs (the rounds of a large
+    Generative Expand).
+
+    ``weights`` is the relative cost of each round (for example the canvas
+    area); round ``i`` fills its share of the bar. The reported fraction never
+    goes backwards, and with more than one round the text names the round.
+    """
+
+    def __init__(self, weights: Sequence[float]) -> None:
+        cleaned = [max(0.0, float(w)) for w in weights] or [1.0]
+        if sum(cleaned) <= 0:
+            cleaned = [1.0] * len(cleaned)
+        total = sum(cleaned)
+        self.count = len(cleaned)
+        self._starts = [sum(cleaned[:i]) / total for i in range(self.count)]
+        self._shares = [w / total for w in cleaned]
+        self.index = 0
+        self._last = 0.0
+
+    def begin(self, index: int) -> None:
+        """Start round ``index`` (0-based)."""
+        self.index = max(0, min(self.count - 1, int(index)))
+
+    def update(self, fraction: float, text: str = "") -> tuple[float, str]:
+        """Map a round's (fraction, text) to the overall (fraction, text)."""
+        fraction = max(0.0, min(1.0, float(fraction)))
+        overall = self._starts[self.index] + self._shares[self.index] * fraction
+        self._last = max(self._last, min(1.0, overall))
+        if self.count > 1 and text:
+            text = f"{text} (part {self.index + 1} of {self.count})"
+        return self._last, text
+
+    def wrap(self, progress: Callable[[float, str], None]) -> Callable[[float, str], None]:
+        """A progress callback that reports the overall values to ``progress``."""
+        return lambda fraction, text="": progress(*self.update(fraction, text))
 
 
 def format_duration(seconds: float | None) -> str:

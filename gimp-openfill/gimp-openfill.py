@@ -468,7 +468,7 @@ def _canvas_state(image: Gimp.Image | None, layer: Gimp.Layer | None = None) -> 
 def _canvas_restore(before: tuple | None, after: tuple | None) -> tuple[int, int, int, int] | None:
     """The ``image.resize`` arguments that take the canvas from ``after`` back
     to ``before`` (None when the canvas did not change)."""
-    if before is None or after is None or before[:2] == after[:2]:
+    if before is None or after is None or (before[:2] == after[:2] and before[2] == after[2]):
         return None
     dx, dy = after[2][0] - before[2][0], after[2][1] - before[2][1]
     return (before[0], before[1], -dx, -dy)
@@ -482,12 +482,13 @@ def _after_insert(
     hooks: dict,
     log: logging.Logger | None = None,
     restore_canvas: tuple[int, int, int, int] | None = None,
-) -> None:
-    """INTERACTIVE only: the variations picker. Never fails the procedure."""
+) -> str:
+    """INTERACTIVE only: the variations picker; returns its outcome ("keep"
+    when there was none). Never fails the procedure."""
     if run_mode != Gimp.RunMode.INTERACTIVE:
-        return
+        return "keep"
     try:
-        _pick_variation(
+        return _pick_variation(
             image,
             layers,
             title,
@@ -695,7 +696,8 @@ def run_expand(
     try:
         app = App(interactive=run_mode == Gimp.RunMode.INTERACTIVE)
         model_choice = config.get_property("model")
-        if run_mode == Gimp.RunMode.INTERACTIVE:
+        grows = any(config.get_property(side) > 0 for side in ("left", "top", "right", "bottom"))
+        if run_mode == Gimp.RunMode.INTERACTIVE and grows:  # a pure crop generates nothing
             suggestion = app.expand_suggestion(model_choice)
             if suggestion and _ask_expand_switch(suggestion[0].name, suggestion[1].name, hooks):
                 model_choice = suggestion[1].id
@@ -714,7 +716,16 @@ def run_expand(
     except Exception as err:  # noqa: BLE001
         return _fail(procedure, err, app.log if app else None)
     restore = _canvas_restore(before, _canvas_state(image, before[3] if before else None))
-    _after_insert(run_mode, image, layers, "Generative Expand", hooks, app.log, restore_canvas=restore)
+    outcome = _after_insert(run_mode, image, layers, "Generative Expand", hooks, app.log, restore_canvas=restore)
+    if outcome != "discard":
+        # Cropped sides are removed for good: the layers are cut to the new canvas. Done after the
+        # picker, so Discard can still bring the whole image back.
+        try:
+            from openfill import gimp_io
+
+            gimp_io.clip_layers_to_canvas(image)
+        except Exception:  # noqa: BLE001 - the expand itself succeeded
+            app.log.warning("layers not cut to the canvas:\n%s", traceback.format_exc())
     return procedure.new_return_values(Gimp.PDBStatusType.SUCCESS, GLib.Error())
 
 
@@ -1011,8 +1022,8 @@ class OpenFill(Gimp.PlugIn):
             p.add_int_argument(
                 side,
                 f"_{side.capitalize()} (px)",
-                f"Pixels to add on the {side}",
-                0,
+                f"Pixels to add on the {side} (negative: crop that side)",
+                -4096,
                 4096,
                 256 if side in ("left", "right") else 0,
                 RW,

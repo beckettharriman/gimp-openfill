@@ -310,6 +310,33 @@ def resize_canvas(image: Gimp.Image, new_w: int, new_h: int, off_x: int, off_y: 
     image.resize(new_w, new_h, off_x, off_y)
 
 
+def clip_layers_to_canvas(image: Gimp.Image) -> None:
+    """Cut every layer to the canvas (after a crop), so nothing outside it is kept."""
+    from .geometry import clip_rect
+
+    width, height = image.get_width(), image.get_height()
+
+    def clip(layers: list) -> None:
+        for layer in layers:
+            if isinstance(layer, Gimp.GroupLayer):
+                clip(layer.get_children())
+                continue
+            offsets = layer.get_offsets()
+            x, y = int(offsets[-2]), int(offsets[-1])
+            lw, lh = layer.get_width(), layer.get_height()
+            rect = clip_rect(x, y, lw, lh, width, height)
+            if rect is None or (rect.x, rect.y, rect.width, rect.height) == (x, y, lw, lh):
+                continue
+            layer.resize(rect.width, rect.height, x - rect.x, y - rect.y)
+
+    image.undo_group_start()
+    try:
+        clip(image.get_layers())
+    finally:
+        image.undo_group_end()
+    Gimp.displays_flush()
+
+
 def new_image_from_pngs(images: list[bytes], base_name: str, temp_dir: Path | None) -> Gimp.Image:
     w, h, _, _ = png.read_header(images[0])
     image = Gimp.Image.new(w, h, Gimp.ImageBaseType.RGB)
@@ -340,7 +367,11 @@ class GimpProgress:
     """Adapter from the backend progress callback to GIMP's progress bar."""
 
     def __init__(self, title: str) -> None:
+        self.title = title
         Gimp.progress_init(title)
+
+    def restart(self) -> None:
+        Gimp.progress_init(self.title)
 
     def __call__(self, fraction: float, text: str) -> None:
         if text:

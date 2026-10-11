@@ -81,5 +81,54 @@ class ThrottleTests(unittest.TestCase):
         self.assertIn("...", pr.download_row({"model_id": "x"}))
 
 
+class OverallProgressTests(unittest.TestCase):
+    def test_single_round_is_passed_through(self):
+        o = pr.OverallProgress([5])
+        self.assertEqual(o.update(0.4, "Generating... step 4/10"), (0.4, "Generating... step 4/10"))
+
+    def test_rounds_fill_one_bar_by_weight(self):
+        o = pr.OverallProgress([1, 3])
+        o.begin(0)
+        self.assertAlmostEqual(o.update(0.0, "a")[0], 0.0)
+        self.assertAlmostEqual(o.update(1.0, "a")[0], 0.25)
+        o.begin(1)
+        self.assertAlmostEqual(o.update(0.0, "b")[0], 0.25)
+        self.assertAlmostEqual(o.update(0.5, "b")[0], 0.625)
+        self.assertAlmostEqual(o.update(1.0, "b")[0], 1.0)
+
+    def test_text_names_the_round_only_with_several(self):
+        o = pr.OverallProgress([1, 1, 1])
+        o.begin(1)
+        self.assertEqual(o.update(0.5, "Expanding...")[1], "Expanding... (part 2 of 3)")
+        self.assertEqual(o.update(0.5, "")[1], "")
+
+    def test_never_goes_backwards(self):
+        o = pr.OverallProgress([1, 1])
+        o.begin(0)
+        o.update(0.9, "x")
+        o.begin(1)
+        # a new round starts at its own 0.0, which is 0.5 overall: above the last value
+        self.assertGreaterEqual(o.update(0.0, "x")[0], 0.5)
+        o2 = pr.OverallProgress([1])
+        o2.update(0.8, "")
+        self.assertEqual(o2.update(0.2, "")[0], 0.8)
+
+    def test_bad_weights_and_indexes_are_tolerated(self):
+        o = pr.OverallProgress([0, 0])
+        o.begin(7)
+        self.assertEqual(o.index, 1)
+        self.assertAlmostEqual(o.update(1.0, "")[0], 1.0)
+        self.assertEqual(pr.OverallProgress([]).count, 1)
+        self.assertEqual(o.update(5.0, "")[0], 1.0)
+
+    def test_wrap_calls_the_progress_with_overall_values(self):
+        seen = []
+        o = pr.OverallProgress([1, 1])
+        report = o.wrap(lambda f, t: seen.append((round(f, 3), t)))
+        o.begin(1)
+        report(0.5, "Expanding...")
+        self.assertEqual(seen, [(0.75, "Expanding... (part 2 of 2)")])
+
+
 if __name__ == "__main__":
     unittest.main()

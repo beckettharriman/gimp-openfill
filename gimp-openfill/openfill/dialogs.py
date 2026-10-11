@@ -548,7 +548,7 @@ class GenerationDialog(Gtk.Dialog):
         linked.get_style_context().add_class("linked")
         self.preset_buttons: dict[str, Gtk.RadioButton] = {}
         group = None
-        for pid, label, _ratio in ui_expand.PRESETS:
+        for pid, label in ui_expand.RATIO_BUTTONS:
             button = Gtk.RadioButton.new_with_label_from_widget(group, label)
             group = group or button
             button.set_mode(False)
@@ -556,6 +556,18 @@ class GenerationDialog(Gtk.Dialog):
             linked.pack_start(button, False, False, 0)
             self.preset_buttons[pid] = button
         ratio_row.pack_start(linked, False, False, 0)
+        turn = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+        turn.get_style_context().add_class("linked")
+        self.orientation_buttons: dict[bool, Gtk.RadioButton] = {}
+        group = None
+        for portrait, label in ((False, ui_text.LABEL_LANDSCAPE), (True, ui_text.LABEL_PORTRAIT)):
+            button = Gtk.RadioButton.new_with_label_from_widget(group, label)
+            group = group or button
+            button.set_mode(False)
+            button.connect("toggled", self._orientation_toggled, portrait)
+            turn.pack_start(button, False, False, 0)
+            self.orientation_buttons[portrait] = button
+        ratio_row.pack_start(turn, False, False, 0)
         box.pack_start(ratio_row, False, False, 0)
 
         lower = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18)
@@ -580,7 +592,10 @@ class GenerationDialog(Gtk.Dialog):
         spins = Gtk.Grid(column_spacing=8, row_spacing=6)
         self.margin_spins: dict[str, Gtk.SpinButton] = {}
         for index, side in enumerate(("left", "right", "top", "bottom")):
-            spin = _spin(0, ui_expand.MAX_MARGIN, getattr(self.expand_state.margins, side), ui_expand.SNAP)
+            spin = _spin(
+                -ui_expand.MAX_MARGIN, ui_expand.MAX_MARGIN, getattr(self.expand_state.margins, side), ui_expand.SNAP
+            )
+            spin.set_tooltip_text(ui_text.SPIN_TIP)
             spin.set_width_chars(5)
             spin.set_activates_default(True)
             spin.connect("value-changed", self._spin_changed, side)
@@ -673,13 +688,19 @@ class GenerationDialog(Gtk.Dialog):
         """Show the editor state in the preset buttons, anchor grid and spins."""
         if not hasattr(self, "margin_spins"):
             return
+        from . import ui_expand
+
         state = self.expand_state
         self._syncing = True
         try:
             for side, spin in self.margin_spins.items():
+                spin.set_range(*state.side_range(side))
                 if int(spin.get_value()) != getattr(state.margins, side):
                     spin.set_value(getattr(state.margins, side))
-            self.preset_buttons[state.preset].set_active(True)
+            self.preset_buttons[ui_expand.ratio_button(state.preset)].set_active(True)
+            self.orientation_buttons[state.portrait].set_active(True)
+            for button in self.orientation_buttons.values():
+                button.set_sensitive(ui_expand.has_orientation(state.preset))
             self.anchor_buttons[state.anchor].set_active(True)
         finally:
             self._syncing = False
@@ -688,7 +709,11 @@ class GenerationDialog(Gtk.Dialog):
 
     def _preset_toggled(self, button: Gtk.RadioButton, preset: str) -> None:
         if button.get_active() and not self._syncing:
-            self.expand_state.apply_preset(preset)
+            self.expand_state.apply_ratio(preset)
+
+    def _orientation_toggled(self, button: Gtk.RadioButton, portrait: bool) -> None:
+        if button.get_active() and not self._syncing:
+            self.expand_state.set_portrait(portrait)
 
     def _anchor_toggled(self, button: Gtk.RadioButton, anchor: str) -> None:
         if button.get_active() and not self._syncing:

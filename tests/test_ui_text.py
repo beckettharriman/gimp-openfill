@@ -329,5 +329,28 @@ class DownloadWordingTests(unittest.TestCase):
         self.assertNotIn("Generation time limit", ut.with_next_step(msg))
 
 
+class ExpandCropTextTests(unittest.TestCase):
+    def test_status_with_a_crop(self):
+        self.assertEqual(
+            ut.expand_status((1000, 800), -62, 0, -62, 0), "New size: 876 x 800 px (-62 left, -62 right cropped)"
+        )
+        self.assertEqual(
+            ut.expand_status((1000, 800), -100, 0, 300, 0), "New size: 1200 x 800 px (+300 right, -100 left cropped)"
+        )
+
+    def test_over_limit_counts_only_expanded_sides(self):
+        self.assertFalse(ut.expand_over_limit((1000, 800), -900, -700, 100, 100))
+        self.assertTrue(ut.expand_over_limit((1000, 800), -100, 0, 300, 0))
+
+    def test_part_suffix_survives_the_plain_text(self):
+        self.assertEqual(
+            ut.plain_step_text("Generating... step 5/20 (part 2 of 3)"), "Generating, step 5 of 20 (part 2 of 3)"
+        )
+        self.assertEqual(ut.plain_step_text("Generating... step 5/20"), "Generating, step 5 of 20")
+        self.assertEqual(
+            ut.plain_step_text("Uploading (part 1 of 2)"), "Sending the selection to the AI backend (part 1 of 2)"
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

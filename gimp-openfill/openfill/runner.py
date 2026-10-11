@@ -167,6 +167,11 @@ class Runner:
 
     # run ------------------------------------------------------------------
 
+    def next_round(self) -> None:
+        """Between the rounds of one operation: the window and the preview stay
+        as they are; only GIMP's own progress bar is started again."""
+        self.status.restart()
+
     def run(self, job: Job) -> object:
         """Execute ``job(progress, preview, cancel)``; return its result or raise."""
         if self.window is None:

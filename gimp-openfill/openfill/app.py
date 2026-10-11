@@ -38,6 +38,7 @@ from .comfy_api import ComfyApiError, ComfyClient
 from .config import Paths, Settings, comfy_layout
 from .geometry import Rect
 from .log import get_logger
+from .progress import OverallProgress
 from .runner import Runner
 from .server import ServerManager, _split_host_port, port_answers
 from .workflow import model_display_name
@@ -775,25 +776,60 @@ class App:
         seed: int,
         model_choice: str,
     ) -> list:
-        """Grow the canvas by the given margins and generate the new area.
+        """Crop and/or grow the canvas by the given margins and generate the new area.
 
-        Every growing side is rendered in the same pass, with the whole canvas
-        as context. Large expansions run in rounds (``geometry.expand_rounds``),
-        each again all sides at once; each round reads the visible result of
-        the previous one and only the last makes the requested variations.
+        A negative margin crops that side (the canvas shrinks; the layers are
+        cut to it later, see ``gimp_io.clip_layers_to_canvas``); a positive one
+        adds space that is generated. Every growing side is rendered in the
+        same pass, with the kept image as context. Large expansions run in
+        rounds (``geometry.expand_rounds``), each again all sides at once; each
+        round reads the visible result of the previous one and only the last
+        makes the requested variations. All rounds share one progress window.
         """
         self._check_image(image)
+        width, height = image.get_width(), image.get_height()
+        margins = geometry.fit_expand_margins((left, top, right, bottom), width, height)
+        if margins != (left, top, right, bottom):
+            self.log.info("expand: margins %s limited to %s", (left, top, right, bottom), margins)
+        if not any(margins):
+            raise ValueError("Nothing to do: all four margins are zero.")
+        crop, grow = geometry.split_crop_grow(margins)
+        kept_w, kept_h = width - crop[0] - crop[2], height - crop[1] - crop[3]
+        if not any(grow):  # crop only: nothing to generate
+            self.log.info("expand: crop only %s", crop)
+            image.undo_group_start()
+            try:
+                gimp_io.resize_canvas(image, kept_w, kept_h, -crop[0], -crop[1])
+            finally:
+                image.undo_group_end()
+            return []
         entry, model = self.resolve_model(model_choice)
-        rounds = geometry.expand_rounds(image.get_width(), image.get_height(), left, top, right, bottom)
-        if len(rounds) == 1:
-            return self._expand_round(image, prompt, negative, rounds[0], variations, seed, entry, model)
-        self.log.info("expand: margins=%s in %d rounds: %s", (left, top, right, bottom), len(rounds), rounds)
+        rounds = geometry.expand_rounds(kept_w, kept_h, *grow)
+        canvases = geometry.round_canvases(kept_w, kept_h, rounds)
+        tracker = OverallProgress([w * h for w, h in canvases])
+        self.log.info("expand: margins=%s in %d round(s): %s", margins, len(rounds), rounds)
+        runner = Runner(
+            self,
+            "Generative Expand",
+            model_display_name(entry.name) if entry else model.checkpoint,
+            interactive=self.interactive,
+        )
         layers: list = []
         image.undo_group_start()
         try:
-            for index, margins in enumerate(rounds):
+            for index, round_margins in enumerate(rounds):
+                tracker.begin(index)
+                if index:
+                    runner.next_round()
                 count = variations if index == len(rounds) - 1 else 1
-                layers = self._expand_round(image, prompt, negative, margins, count, seed, entry, model)
+                this_crop = crop if index == 0 else (0, 0, 0, 0)
+                layers = self._expand_round(
+                    image, prompt, negative, round_margins, this_crop, count, seed, entry, model, runner, tracker
+                )
+            runner.done(f"Canvas is now {image.get_width()} x {image.get_height()}")
+        except BaseException as err:
+            runner.fail(err)
+            raise
         finally:
             image.undo_group_end()
         return layers
@@ -804,15 +840,27 @@ class App:
         prompt: str,
         negative: str,
         margins: tuple[int, int, int, int],
+        crop: tuple[int, int, int, int],
         variations: int,
         seed: int,
         entry: cat.ModelEntry | None,
         model: ModelSpec,
+        runner: Runner,
+        tracker: OverallProgress,
     ) -> list:
-        """One expand pass: all margins at once."""
+        """One expand pass: all margins at once. ``crop`` (left, top, right,
+        bottom) is cut off in the same canvas resize and is not part of the context."""
         left, top, right, bottom = margins
         profile = self.profile_for(model)
-        plan = geometry.plan_expand(image.get_width(), image.get_height(), left, top, right, bottom, profile)
+        plan = geometry.plan_expand(
+            image.get_width() - crop[0] - crop[2],
+            image.get_height() - crop[1] - crop[3],
+            left,
+            top,
+            right,
+            bottom,
+            profile,
+        )
         ws = geometry.working_size(plan.context.width, plan.context.height, profile)
         mp = geometry.mask_params(
             plan.fill_rect,
@@ -843,7 +891,7 @@ class App:
         # Read the context from the unresized image (new-canvas coordinates shifted
         # back by the offset; pixels outside the image come back transparent) so a
         # backend failure leaves the image untouched. The canvas grows only on success.
-        source_rect = plan.context.translate(-plan.offset_x, -plan.offset_y)
+        source_rect = plan.context.translate(crop[0] - plan.offset_x, crop[1] - plan.offset_y)
         image_png = gimp_io.export_region_png(image, source_rect, transparent_outside=True)
         mask_pixels = geometry.mask_for_expand(plan)
         mask_png = gimp_io.mask_png_from_bytes(plan.context, mask_pixels)
@@ -863,38 +911,29 @@ class App:
             feather=mp.blur_work,
             prefill=True,
         )
-        runner = Runner(
-            self,
-            "Generative Expand",
-            model_display_name(entry.name) if entry else model.checkpoint,
-            interactive=self.interactive,
-        )
-        try:
-            result = runner.run(
-                lambda progress, preview, cancel: self.backend(progress, cancel).outpaint(
-                    request, progress, preview, cancel
-                )
+        result = runner.run(
+            lambda progress, preview, cancel: self.backend(progress, cancel).outpaint(
+                request, tracker.wrap(progress), preview, cancel
             )
-            self.server.touch()
-            image.undo_group_start()
-            try:
-                gimp_io.resize_canvas(image, plan.new_width, plan.new_height, plan.offset_x, plan.offset_y)
-                layers = gimp_io.insert_results(
-                    image,
-                    result.images,
-                    plan.context,
-                    _layer_name("Generative Expand", prompt),
-                    float(mp.feather_image),
-                    self.paths.temp,
-                    mask_pixels=mask_pixels,
-                )
-            finally:
-                image.undo_group_end()
-        except BaseException as err:
-            runner.fail(err)
-            raise
-        runner.done(f"Canvas is now {plan.new_width} x {plan.new_height}")
-        self.log.info("expand: done, seed=%s, %d layer(s)", result.seed, len(layers))
+        )
+        self.server.touch()
+        image.undo_group_start()
+        try:
+            gimp_io.resize_canvas(
+                image, plan.new_width, plan.new_height, plan.offset_x - crop[0], plan.offset_y - crop[1]
+            )
+            layers = gimp_io.insert_results(
+                image,
+                result.images,
+                plan.context,
+                _layer_name("Generative Expand", prompt),
+                float(mp.feather_image),
+                self.paths.temp,
+                mask_pixels=mask_pixels,
+            )
+        finally:
+            image.undo_group_end()
+        self.log.info("expand: round done, seed=%s, %d layer(s)", result.seed, len(layers))
         return layers
 
     def text_to_image(

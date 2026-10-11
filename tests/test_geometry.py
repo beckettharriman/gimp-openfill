@@ -332,6 +332,43 @@ class FillPolicyTests(unittest.TestCase):
         self.assertEqual(g.flatten_over_mean(bytes(8)), bytes([128, 128, 128, 255]) * 2)
 
 
+class ExpandCropTests(unittest.TestCase):
+    def test_split_crop_grow(self):
+        self.assertEqual(g.split_crop_grow((-10, 20, 0, -5)), ((10, 0, 0, 5), (0, 20, 0, 0)))
+
+    def test_fit_expand_margins_limits_and_keeps_the_photo(self):
+        fit = g.fit_expand_margins
+        self.assertEqual(fit((256, 0, 256, 0), 1000, 800), (256, 0, 256, 0))
+        self.assertEqual(fit((9999, -9999, 0, 0), 1000, 800), (4096, -736, 0, 0))
+        self.assertEqual(fit((-600, 0, -600, 0), 1000, 800), (-336, 0, -600, 0))
+        self.assertEqual(fit((-600, 0, -600, 0), 1000, 800, previous=(-600, 0, 0, 0)), (-600, 0, -336, 0))
+        self.assertEqual(fit((-30, 0, 0, 0), 40, 40), (0, 0, 0, 0))  # a photo under 64 px is kept whole
+
+    def test_batch_margins_are_clamped_not_rejected(self):
+        # procedure arguments run through fit_expand_margins: huge crops give way, nothing raises
+        out = g.fit_expand_margins((-4096, -4096, -4096, -4096), 1920, 1080)
+        self.assertGreaterEqual(1920 + out[0] + out[2], 64)
+        self.assertGreaterEqual(1080 + out[1] + out[3], 64)
+
+    def test_round_canvases_follow_each_round(self):
+        rounds = g.expand_rounds(1000, 800, 500, 0, 500, 0)
+        canvases = g.round_canvases(1000, 800, rounds)
+        self.assertEqual(canvases[-1], (2000, 800))
+        self.assertEqual([c[0] for c in canvases], sorted(c[0] for c in canvases))
+
+    def test_rounds_use_the_cropped_photo(self):
+        # 2000 px photo cropped to 1000, then 400 px added: 40 % of the kept width needs two rounds
+        self.assertEqual(len(g.expand_rounds(1000, 800, 400, 0, 0, 0)), 2)
+        self.assertEqual(len(g.expand_rounds(2000, 800, 400, 0, 0, 0)), 1)
+
+    def test_clip_rect(self):
+        self.assertEqual(g.clip_rect(0, 0, 100, 100, 100, 100), g.Rect(0, 0, 100, 100))
+        self.assertEqual(g.clip_rect(-20, -10, 100, 100, 80, 60), g.Rect(0, 0, 80, 60))
+        self.assertEqual(g.clip_rect(30, 40, 100, 100, 80, 60), g.Rect(30, 40, 50, 20))
+        self.assertIsNone(g.clip_rect(80, 0, 10, 10, 80, 60))
+        self.assertIsNone(g.clip_rect(-50, 0, 50, 10, 80, 60))
+
+
 if __name__ == "__main__":
     unittest.main()
 

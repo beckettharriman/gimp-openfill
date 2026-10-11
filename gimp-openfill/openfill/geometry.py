@@ -8,6 +8,7 @@ No GIMP imports. Every function here is unit-tested under system Python.
 
 from __future__ import annotations
 
+import math
 import random
 from dataclasses import dataclass, replace
 
@@ -309,6 +310,64 @@ def _rounds_fit(width: int, height: int, rounds: list[tuple[int, int, int, int]]
             return False
         width, height = width + left + right, height + top + bottom
     return True
+
+
+# Smallest part of the photo that must stay inside the Expand frame (px), and
+# the range of one margin: Generative Expand also crops (negative margins).
+EXPAND_MIN_KEEP = 64
+EXPAND_LIMIT = 4096
+
+
+def fit_expand_margins(
+    margins: tuple[int, int, int, int],
+    image_w: int,
+    image_h: int,
+    previous: tuple[int, int, int, int] | None = None,
+    limit: int = EXPAND_LIMIT,
+    min_keep: int = EXPAND_MIN_KEEP,
+) -> tuple[int, int, int, int]:
+    """Margins (left, top, right, bottom; negative = crop) limited to +-``limit``
+    and so that at least ``min_keep`` px of the photo (all of it when it is
+    smaller) stay in the frame on each axis. Where crops are too deep, the
+    sides that differ from ``previous`` give way first."""
+    values = [int(max(-limit, min(limit, math.floor(m + 0.5)))) for m in margins]
+    for extent, a, b in ((image_w, 0, 2), (image_h, 1, 3)):
+        keep = min(min_keep, max(1, extent))
+        excess = keep - (extent - max(0, -values[a]) - max(0, -values[b]))
+        if excess <= 0:
+            continue
+        order = sorted((a, b), key=lambda i: 0 if previous is not None and previous[i] != values[i] else 1)
+        for i in order:
+            cut = min(excess, max(0, -values[i]))
+            values[i] += cut
+            excess -= cut
+    return values[0], values[1], values[2], values[3]
+
+
+def split_crop_grow(
+    margins: tuple[int, int, int, int],
+) -> tuple[tuple[int, int, int, int], tuple[int, int, int, int]]:
+    """(crop, grow): the pixels cut off and the pixels added on each side."""
+    return tuple(max(0, -m) for m in margins), tuple(max(0, m) for m in margins)  # type: ignore[return-value]
+
+
+def round_canvases(image_w: int, image_h: int, rounds: list[tuple[int, int, int, int]]) -> list[tuple[int, int]]:
+    """Canvas size after each expand round."""
+    out = []
+    for left, top, right, bottom in rounds:
+        image_w += left + right
+        image_h += top + bottom
+        out.append((image_w, image_h))
+    return out
+
+
+def clip_rect(x: int, y: int, width: int, height: int, canvas_w: int, canvas_h: int) -> Rect | None:
+    """The part of a layer rectangle inside the canvas; None when nothing is."""
+    x1, y1 = max(0, x), max(0, y)
+    x2, y2 = min(canvas_w, x + width), min(canvas_h, y + height)
+    if x2 <= x1 or y2 <= y1:
+        return None
+    return Rect(x1, y1, x2 - x1, y2 - y1)
 
 
 def mask_for_expand(plan: ExpandPlan) -> bytes:

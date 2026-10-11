@@ -49,10 +49,13 @@ TIP_CHANGE = "1.0 replaces the selection; lower keeps more of it."
 TIP_SEED = "The same number repeats a result."
 
 EMPTY_PROMPT = "Type a prompt, or choose Remove object."
-EXPAND_NOTHING = "Drag an edge outward to add space."
+EXPAND_NOTHING = "Drag an edge outward to add space, or inward to crop."
 
 LABEL_RATIO = "Ratio"
 LABEL_ANCHOR = "Image at"
+SPIN_TIP = "Pixels to add on this side. A negative value crops it."
+LABEL_LANDSCAPE = "Landscape"
+LABEL_PORTRAIT = "Portrait"
 SIDE_LABELS = {"left": "Left", "top": "Top", "right": "Right", "bottom": "Bottom"}
 
 LABEL_SIZE = "Size"
@@ -198,9 +201,20 @@ _STEP = re.compile(r"step\s+(\d+)\s*/\s*(\d+)", re.I)
 _START = re.compile(r"Starting the AI backend\.\.\.\s*(\d+)\s*s", re.I)
 
 
+_PART = re.compile(r"\s*\(part \d+ of \d+\)$")
+
+
 def plain_step_text(text: str) -> str:
-    """Translate backend progress texts into plain sentences for the progress window."""
+    """Translate backend progress texts into plain sentences for the progress window.
+    A trailing "(part 2 of 3)" (several expand rounds in one window) is kept."""
     raw = (text or "").strip()
+    part = _PART.search(raw)
+    if part:
+        return plain_step_text(raw[: part.start()]) + " " + part.group(0).strip()
+    return _plain_step_text(raw)
+
+
+def _plain_step_text(raw: str) -> str:
     if not raw:
         return raw
     m = _STEP.search(raw)
@@ -269,19 +283,23 @@ def expand_model_note(better: str) -> str:
 
 def expand_status(image: tuple[int, int] | None, left: int, top: int, right: int, bottom: int) -> str:
     """Readout under the Generative Expand editor, e.g.
-    "New size: 2432 x 1440 px (+256 right)"."""
+    "New size: 2432 x 1440 px (+256 right)". Negative margins crop:
+    "New size: 900 x 768 px (-62 left, -62 right cropped)"."""
     if image is None:
         return ""
-    sides = {"left": max(0, left), "top": max(0, top), "right": max(0, right), "bottom": max(0, bottom)}
-    width, height = image[0] + sides["left"] + sides["right"], image[1] + sides["top"] + sides["bottom"]
-    added = [(name, value) for name, value in sides.items() if value]
-    if not added:
+    sides = {"left": left, "top": top, "right": right, "bottom": bottom}
+    width, height = image[0] + left + right, image[1] + top + bottom
+    added = [(name, value) for name, value in sides.items() if value > 0]
+    cut = [(name, -value) for name, value in sides.items() if value < 0]
+    if not added and not cut:
         return f"New size: {width} x {height} px. {EXPAND_NOTHING}"
     if len(added) == 4 and len(set(sides.values())) == 1:
-        detail = f"+{added[0][1]} each side"
+        parts = [f"+{added[0][1]} each side"]
     else:
-        detail = ", ".join(f"+{value} {name}" for name, value in added)
-    return f"New size: {width} x {height} px ({detail})"
+        parts = [f"+{value} {name}" for name, value in added]
+    if cut:
+        parts.append(", ".join(f"-{value} {name}" for name, value in cut) + " cropped")
+    return f"New size: {width} x {height} px ({', '.join(parts)})"
 
 
 def txt2img_status(
