@@ -241,6 +241,7 @@ class MiscTests(unittest.TestCase):
 
     def test_timeout_has_floor(self):
         self.assertGreaterEqual(g.estimate_timeout(1, 1, 1000), 120)
+        self.assertGreaterEqual(g.estimate_timeout(28, 1, 1024 * 1024, floor=240.0), 240)
         self.assertGreater(g.estimate_timeout(50, 4, 1024 * 1024), g.estimate_timeout(10, 1, 1024 * 1024))
 
     def test_timeout_covers_a_cold_model_load(self):
