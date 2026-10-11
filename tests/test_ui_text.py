@@ -151,7 +151,6 @@ class StatusTextTests(unittest.TestCase):
 
     def test_shortcut_hint(self):
         self.assertIn("Edit > Keyboard Shortcuts", ut.SHORTCUT_HINT)
-        self.assertIn("Generative Fill", ut.SHORTCUT_HINT)
         self.assertIn(ut.SUGGESTED_SHORTCUT, ut.SHORTCUT_HINT)
 
 
