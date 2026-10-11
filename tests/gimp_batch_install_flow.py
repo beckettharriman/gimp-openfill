@@ -9,7 +9,7 @@ ComfyUI is configured: the "ComfyUI is required" notice appears, the test hook
 ``setup_action`` answers Download ComfyUI (no synthetic mouse input: the PC may
 be in use), the setup task runs in the supervisor, the
 model manager opens and the starting models download (the test hook
-``models_download`` presses their buttons), then a real fill and a real
+``models_starter_button`` presses the one button for both), then a real fill and a real
 removal run. Every window is captured as it appears.
 
 Environment (set before GIMP starts): GIMP3_DIRECTORY, OPENFILL_TEST_UI_FILE

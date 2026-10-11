@@ -1,0 +1,25 @@
+2026-10-11 16:12:50,128 INFO  [23744 openfill] launching task worker: C:\Users\becke\AppData\Local\Programs\GIMP 3\bin\pythonw.exe C:\AI\overnight-scratch\gimp-profile-fresh\plug-ins\gimp-openfill\openfill\supervisor.py --mode tasks --base C:\AI\overnight-scra
+2026-10-11 16:12:50,155 INFO  [23744 openfill] queued task 1791749570126-setup_comfy (setup_comfy)
+2026-10-11 16:12:50 INFO  [7236 supervisor] task worker started (no backend)
+2026-10-11 16:14:51 INFO  [7236 supervisor] ComfyUI_windows_portable_nvidia.7z verified
+2026-10-11 16:14:51 INFO  [7236 supervisor] unpacking with tar.exe
+2026-10-11 16:17:07 INFO  [7236 supervisor] downloading https://github.com/Acly/comfyui-inpaint-nodes @ 5b7681746f
+2026-10-11 16:17:08 INFO  [7236 supervisor] installing opencv-python-headless==5.0.0.93
+2026-10-11 16:17:15 INFO  [7236 supervisor] task 1791749570126-setup_comfy done: ComfyUI is ready in C:\AI\overnight-scratch\fresh-comfy\ComfyUI_windows_portable
+2026-10-11 16:17:20,703 INFO  [23744 openfill] queued task 1791749840701-download (download)
+2026-10-11 16:17:20,729 INFO  [23744 openfill] queued task 1791749840727-download (download)
+2026-10-11 16:17:21 INFO  [7236 supervisor] download https://github.com/Sanster/models/releases/download/add_big_lama/big-lama.pt -> C:\AI\overnight-scratch\fresh-comfy\ComfyUI_windows_portable\ComfyUI\models\inpaint\big-lama.pt
+2026-10-11 16:17:34 INFO  [7236 supervisor] task 1791749840701-download done: 1 file(s) ready
+2026-10-11 16:17:34 INFO  [7236 supervisor] download https://huggingface.co/Lykon/DreamShaper/resolve/main/DreamShaper_8_INPAINTING.inpainting.safetensors -> C:\AI\overnight-scratch\fresh-comfy\ComfyUI_windows_portable\ComfyUI\models\checkpoints\DreamShaper_8_
+2026-10-11 16:19:42 INFO  [7236 supervisor] task 1791749840727-download done: 1 file(s) ready
+2026-10-11 16:19:46 INFO  [13988 supervisor] starting backend: C:\AI\overnight-scratch\fresh-comfy\ComfyUI_windows_portable\python_embeded\python.exe -s C:\AI\overnight-scratch\fresh-comfy\ComfyUI_windows_portable\ComfyUI\main.py --listen 127.0.0.1 --port 8188
+2026-10-11 16:19:46 INFO  [13988 supervisor] backend pid 21608, job object ok
+2026-10-11 16:19:46 INFO  [13988 supervisor] watching gimp pid 28140 (gimp-3.2.exe)
+2026-10-11 16:19:46 INFO  [7236 supervisor] task worker exiting
+2026-10-11 16:19:48 INFO  [13988 supervisor] adopted task processing (standalone worker is gone)
+2026-10-11 16:21:02,554 INFO  [23744 openfill] backend ready at http://127.0.0.1:8188 after 76 s
+2026-10-11 16:21:15,099 INFO  [23744 openfill] fill: done, seed=1234, 1 layer(s)
+2026-10-11 16:21:30,882 INFO  [28624 openfill] fill: Remove object -> using lama-big
+2026-10-11 16:21:36,291 INFO  [28624 openfill] fill: done, seed=1234, 1 layer(s)
+2026-10-11 16:21:42 INFO  [13988 supervisor] shutting down: GIMP (pid 28140) is gone
+2026-10-11 16:21:42 INFO  [13988 supervisor] backend terminated

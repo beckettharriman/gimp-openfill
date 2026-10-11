@@ -1,0 +1,50 @@
+{
+  "started": "2026-10-11 16:12:29",
+  "gimp_pid": 28140,
+  "profile": "C:\\AI\\overnight-scratch\\gimp-profile-fresh",
+  "steps": [
+    {
+      "step": "photo open",
+      "t": 4.5,
+      "selection": [
+        420,
+        90,
+        480,
+        300
+      ]
+    },
+    {
+      "step": "flow started",
+      "t": 12.6
+    },
+    {
+      "step": "fill procedure returned",
+      "t": 525.2,
+      "status": "3",
+      "seconds": 512.6
+    },
+    {
+      "step": "remove procedure returned",
+      "t": 546.4,
+      "status": "3",
+      "seconds": 8.8
+    }
+  ],
+  "captures": {
+    "notice": "saved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\01-notice.png 1019x326 printwindow=True rect=266,266,1037,335 foreground=False",
+    "setup progress": "saved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\02-setup-progress.png 384x257 printwindow=True rect=2156,48,402,266 foreground=False\nsaved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\02-setup-progress-1.png 384x257 printwindow=True rect=2156,48,402,266 foreground=False\nsaved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\02-setup-progress-2.png 384x257 printwindow=True rect=2156,48,402,266 foreground=False\nsaved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\02-setup-progress-3.png 384x257 printwindow=True rect=2156,48,402,266 foreground=False\nsaved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\02-setup-progress-4.png 384x282 printwindow=True rect=2156,48,402,291 foreground=False\nsaved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\02-setup-progress-5.png 384x257 printwindow=True rect=2156,48,402,266 foreground=False\nsaved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\02-setup-progress-6.png 384x257 printwindow=True rect=2156,48,402,266 foreground=False\nEMPTY RECT: OpenFill - Setting up ComfyUI",
+    "model manager": "saved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\03-model-manager.png 764x717 printwindow=True rect=342,342,782,726 foreground=False\nsaved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\03-model-manager-1.png 764x767 printwindow=True rect=342,342,782,776 foreground=False",
+    "model downloads": "saved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\04-model-downloads.png 384x338 printwindow=True rect=2156,48,402,347 foreground=False\nsaved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\04-model-downloads-1.png 645x313 printwindow=True rect=2156,48,663,322 foreground=False\nsaved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\04-model-downloads-2.png 655x313 printwindow=True rect=2156,48,673,322 foreground=False",
+    "fill dialog": "saved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\05-fill-dialog.png 644x524 printwindow=True rect=311,235,662,533 foreground=False",
+    "fill progress": "saved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\06-fill-progress.png 384x448 printwindow=True rect=1408,48,402,457 foreground=False\nsaved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\06-fill-progress-1.png 384x448 printwindow=True rect=1408,48,402,457 foreground=False\nsaved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\06-fill-progress-2.png 384x523 printwindow=True rect=1408,48,402,532 foreground=False"
+  },
+  "fill_layers": [
+    "Generative Fill: hot air balloon",
+    "Background"
+  ],
+  "capture_remove": "saved C:\\AI\\overnight-scratch\\day\\install\\run4\\raw\\07-remove-dialog.png 644x524 printwindow=True rect=311,235,662,533 foreground=True",
+  "remove_layers": [
+    "Object Removal",
+    "Background"
+  ]
+}
