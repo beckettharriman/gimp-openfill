@@ -465,6 +465,34 @@ def _canvas_state(image: Gimp.Image | None, layer: Gimp.Layer | None = None) -> 
         return None
 
 
+def _layer_ids(image: Gimp.Image | None) -> set[int]:
+    try:
+        return {layer.get_id() for layer in image.get_layers()}
+    except Exception:  # noqa: BLE001
+        return set()
+
+
+def _undo_partial_expand(image: Gimp.Image | None, before: tuple | None, before_ids: set[int], log) -> None:  # noqa: ANN001
+    """Remove the layers an interrupted expand added and give the canvas back its old size."""
+    if image is None:
+        return
+    try:
+        image.undo_group_start()
+        try:
+            for layer in image.get_layers():
+                if layer.get_id() not in before_ids:
+                    image.remove_layer(layer)
+            restore = _canvas_restore(before, _canvas_state(image, before[3] if before else None))
+            if restore is not None:
+                image.resize(*restore)
+        finally:
+            image.undo_group_end()
+        Gimp.displays_flush()
+    except Exception:  # noqa: BLE001 - best effort; the error itself is still reported
+        if log is not None:
+            log.error("could not undo the partial expand: %s", traceback.format_exc())
+
+
 def _canvas_restore(before: tuple | None, after: tuple | None) -> tuple[int, int, int, int] | None:
     """The ``image.resize`` arguments that take the canvas from ``after`` back
     to ``before`` (None when the canvas did not change)."""
@@ -693,6 +721,7 @@ def run_expand(
 
     app = None
     before = _canvas_state(image)
+    before_ids = _layer_ids(image)
     try:
         app = App(interactive=run_mode == Gimp.RunMode.INTERACTIVE)
         model_choice = config.get_property("model")
@@ -714,6 +743,9 @@ def run_expand(
             model_choice,
         )
     except Exception as err:  # noqa: BLE001
+        # Cancelled or failed part-way: earlier rounds already grew the canvas
+        # and added layers. Put the image back the way it was.
+        _undo_partial_expand(image, before, before_ids, app.log if app else None)
         return _fail(procedure, err, app.log if app else None)
     restore = _canvas_restore(before, _canvas_state(image, before[3] if before else None))
     outcome = _after_insert(run_mode, image, layers, "Generative Expand", hooks, app.log, restore_canvas=restore)
