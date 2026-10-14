@@ -8,8 +8,8 @@
 
 <img src="docs/screenshots/generative-fill.gif" width="720" alt="Selecting the sky in GIMP, typing hot air balloon, the live preview forming, and the result landing as a new masked layer">
 
-**Select an area, type what should be there, press Enter.**<br>
-The result lands on a new layer with a soft mask. Nothing leaves your computer.
+**Remove objects, fill a selection from a prompt, and expand the canvas, all inside GIMP.**<br>
+Every result lands on its own layer with a soft mask. Nothing leaves your computer.
 
 </div>
 
@@ -17,33 +17,20 @@ The result lands on a new layer with a soft mask. Nothing leaves your computer.
 > [!IMPORTANT]
 > **Beta.** This is 2.0.0-beta.1, the first release of OpenFill. It works end to end on Windows with GIMP 3.2.6 and an 8 GB laptop GPU, which is what I build and test on. The Linux and macOS install script exists but hasn't been run against a real GIMP there. Most of the rough edges are in what the models draw, not in the plug-in; [Status](#status) lists them.
 
-OpenFill started as a GIMP 3 rewrite of [Stable Boy](https://github.com/thndrbrrr/gimp-stable-boy) by Torben Giesselmann.
-
 ## Why I made this
 
-I moved to GIMP 3 as my Photoshop replacement, and the one thing I missed was Generative Fill. GIMP doesn't have one. People have been asking for it since 2023 ([GNOME/gimp#10086](https://gitlab.gnome.org/GNOME/gimp/-/issues/10086)). The plug-in that came closest, Stable Boy, was written for GIMP 2.10, wanted an AUTOMATIC1111 server open in a browser tab and a mask layer with a magic name, and GIMP 3 removed the plug-in API it was built on.
+I moved to GIMP 3 as my Photoshop replacement, and the one thing I missed was Generative Fill. GIMP doesn't have one. People have been asking for it since 2023 ([GNOME/gimp#10086](https://gitlab.gnome.org/GNOME/gimp/-/issues/10086)). The plug-in that came closest, [Stable Boy](https://github.com/thndrbrrr/gimp-stable-boy), was written for GIMP 2.10 and is no longer maintained, so it never caught up with newer generative models.
 
-So OpenFill does it the Photoshop way. The selection is the mask, the result is a layer you can paint on or delete, and the AI backend (ComfyUI) starts hidden on the first request, stays warm while you work, and shuts down when GIMP closes. No terminal, no browser tab, no second app to babysit.
+OpenFill is meant to feel familiar and easy to use, especially if you're coming from Photoshop. The selection is the mask, the result is a layer you can paint on or delete, and the AI backend (ComfyUI) starts hidden, stays warm while you work, and shuts down when GIMP closes. No terminal, no browser tab, no second app to babysit.
 
 |  |  |
 |---|---|
 | **Fill with a prompt** | Select, type "a red door with brass handles", Enter. The fill lands on a new layer with a mask that fades at the edges. |
-| **Remove object** | Select the thing, switch to Remove object, Enter. No prompt. It erases the selection and continues the background. |
+| **Remove object** | Select, switch to Remove object, Enter. No prompt. It erases the selection and continues the background. |
 | **Generative Expand** | Drag the canvas edges outward or pick a ratio, and it paints the new border. The prompt is optional. |
 | **Text to Image** | A new layer or a new image from a prompt, sized to the selection if there is one. |
 
 Everything is under `Filters > OpenFill`. Results always go on new layers, in one undo step, so your existing layers are never painted over.
-
-## Keys
-
-| Key | Action |
-|---|---|
-| `Enter` | Generate. |
-| `Shift+Enter` | New line in the prompt. |
-| `Escape` | Cancel. The image stays as it was. |
-| `1` to `9` | Pick a variation in the picker. |
-
-GIMP doesn't let a plug-in claim a shortcut of its own, but giving it one takes ten seconds: `Edit > Keyboard Shortcuts`, search "Generative Fill", click the shortcut column and press the keys. `Shift+Ctrl+G` is free in GIMP 3.2's defaults.
 
 ## The dialogs
 
@@ -59,7 +46,7 @@ GIMP doesn't let a plug-in claim a shortcut of its own, but giving it one takes 
 
 ## Models, and what fits your PC
 
-OpenFill doesn't ship a model. The first time you run it, it says so and opens the download manager. Nothing downloads until you press Download, and the first model that finishes becomes the active one.
+OpenFill doesn't ship a model. The first time you run it, it says so and opens the download manager, where you download and manage all your models in one place without leaving GIMP.
 
 The Recommended for this PC list is built from your graphics memory, free disk space, and a live search of Hugging Face and Civitai, ranked by whether it fits first, then by how many people download it, then by how recent it is.
 
