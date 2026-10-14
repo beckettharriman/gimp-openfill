@@ -17,9 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   created on first change; defaults apply until then. `Install OpenFill.cmd`
   and `install.ps1` stay as the optional path (uninstall, link, model
   downloads).
-
-### Changed
-
+- Generative Expand crops and expands in one frame: dragging an edge inward
+  past the photo crops that side, ratio buttons (Original, 1:1, 5:4, 4:3, 3:2,
+  16:9, Custom) with a Landscape/Portrait switch keep the frame's ratio while
+  it is moved or resized, and the anchor grid snaps it. Several expand rounds
+  share one progress window and one overall progress bar.
 - Renamed the project to OpenFill: menu Filters > OpenFill, plug-in
   folder and entry script `gimp-openfill/gimp-openfill.py`, package
   `openfill`, procedures `python-fu-openfill-*`, settings folder
@@ -28,6 +30,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the first run.
 - OpenFill is based on Stable Boy by Torben Giesselmann (GPL-3.0),
   https://github.com/thndrbrrr/gimp-stable-boy.
+
+### Fixed
+
+- A cancelled or failed multi-round Generative Expand removes the layers
+  earlier rounds added and restores the canvas.
+- Windows: OpenFill detaches from the blank terminal window GIMP opens when
+  it runs Python plug-ins, and its child processes run without a window.
+- Installing custom nodes no longer fails when a folder on PATH cannot be read
+  (WinError 448, for example a junction from a package manager); that folder
+  is skipped while looking for git.
 
 ## [2.0.0-beta.1] - 2026-10-09
 
