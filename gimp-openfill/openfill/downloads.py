@@ -423,15 +423,23 @@ def download_file(
 # ---------------------------------------------------------- custom nodes ----
 
 
+def _is_file(p: Path) -> bool:
+    """``p.is_file()``, but False for a PATH entry Windows refuses to read (WinError 448 and the like)."""
+    try:
+        return p.is_file()
+    except OSError:
+        return False
+
+
 def git_executable() -> str:
     """Path of ``git`` (PATH first, then the default Git for Windows locations)."""
     for name in ("git", "git.exe"):
         for d in os.environ.get("PATH", "").split(os.pathsep):
             p = Path(d) / name
-            if p.is_file():
+            if _is_file(p):
                 return str(p)
     for p in (r"C:\Program Files\Git\cmd\git.exe", r"C:\Program Files\Git\bin\git.exe"):
-        if Path(p).is_file():
+        if _is_file(Path(p)):
             return p
     return "git"
 

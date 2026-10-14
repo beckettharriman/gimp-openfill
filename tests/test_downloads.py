@@ -506,6 +506,24 @@ class NodeInstallTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 self._install_zip(tmp, self._zip_bytes())
 
+    def test_unreadable_path_entry_is_skipped(self):
+        from unittest import mock
+
+        real_is_file = Path.is_file
+
+        def is_file(p):
+            if "bad" in str(p):
+                raise OSError(448, "The path cannot be traversed because it contains an untrusted mount point")
+            return real_is_file(p)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            good = Path(tmp) / "good"
+            good.mkdir()
+            (good / "git").write_text("")
+            path = os.pathsep.join([str(Path(tmp) / "bad"), str(good)])
+            with mock.patch.dict(os.environ, {"PATH": path}), mock.patch.object(Path, "is_file", is_file):
+                self.assertEqual(downloads.git_executable(), str(good / "git"))
+
     def test_existing_git_clone_is_reset_to_the_pin(self):
         calls = []
 
