@@ -4,13 +4,12 @@
 
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](COPYING) ![GIMP 3.2](https://img.shields.io/badge/GIMP-3.2-444.svg) ![Windows tested](https://img.shields.io/badge/tested%20on-Windows-444.svg) ![Python + ComfyUI](https://img.shields.io/badge/built%20with-Python%20%2B%20ComfyUI-orange.svg) ![Local](https://img.shields.io/badge/100%25-local-30d158.svg) ![Beta](https://img.shields.io/badge/status-beta-e8a33d.svg)
 
-*Generative fill for GIMP 3, running on your own graphics card.*
+*Generative fill for GIMP 3, running on your own graphics card. You own the whole pipeline, nothing leaves your computer.*
 
 <img src="docs/screenshots/openfill-demo.gif" width="720" alt="In GIMP, Generative Expand turns a 4:3 landscape photo of a car on a mountain road into a 3:4 portrait with no prompt, then the car is lassoed and Remove object erases it, leaving the empty road"><br>
 <sub>A real recording of OpenFill in GIMP 3.2.6 on Linux (RTX 2070 Max-Q, 8 GB): Generative Expand from 4:3 to 3:4 with no prompt, then Remove object on the car.</sub>
 
 **Remove objects, fill a selection from a prompt, and expand the canvas, all inside GIMP.**<br>
-Every result lands on its own layer with a soft mask. Nothing leaves your computer.
 
 </div>
 
@@ -35,20 +34,20 @@ Everything is under `Filters > OpenFill`. Results always go on new layers, in on
 
 ## Nothing leaves your computer
 
-Generation runs in ComfyUI on your machine, listening on `127.0.0.1` only. A small supervisor starts it hidden, watches GIMP, and stops it after an idle timeout or when GIMP closes. The server is tied to the supervisor by Windows itself, so it can't be left running even after a crash. `Filters > OpenFill > Stop AI Backend` frees the graphics card right away.
+Generation runs in ComfyUI on your machine, listening on `127.0.0.1` only. A small supervisor starts it hidden, watches GIMP, and stops it after an idle timeout or when GIMP closes. `Filters > OpenFill > Stop AI Backend` frees the graphics card right away.
 
 The network comes into it twice: when the Models tab searches Hugging Face and Civitai (no account, no token, and you can turn it off), and when you press Download (a model, or ComfyUI itself when none is installed). Every file is checked against its size and SHA-256 before it's used. The gated FLUX files need a free Hugging Face token; it stays in your GIMP profile and only ever goes to Hugging Face. No accounts, no telemetry, nothing that phones home: the only outbound requests are the ones above. Details in [docs/security.md](docs/security.md).
 
 ## The dialogs
 
-|  |  |
-|---|---|
-| <img src="docs/screenshots/fill-dialog.png" alt="Generative Fill"> | <img src="docs/screenshots/fill-dialog-remove.png" alt="Remove object"> |
-| **Generative Fill.** Prompt, Recent prompts, what to avoid, the model and the number of variations are all on the first screen. Change amount and seed sit under Advanced. | **Remove object.** Same dialog, other tab. Nothing to type: it uses an installed removal model (LaMa or MAT) when there is one. |
-| <img src="docs/screenshots/expand-dialog.png" alt="Generative Expand"> | <img src="docs/screenshots/settings-models.png" alt="Models"> |
-| **Generative Expand.** Drag any edge of the thumbnail outward, or pick a ratio (1:1, 4:5, 3:2, 16:9 and the rest) and where the image sits on a 3x3 grid. It shows the new size as you drag. | **Models.** The download manager. What you have installed first, then Recommended for this PC, then the rest, from Hugging Face and Civitai. |
-| <img src="docs/screenshots/progress-window.png" alt="Progress"> | <img src="docs/screenshots/variations-picker.png" alt="Variations"> |
-| **Progress.** Floats over your image without stealing focus: the step, time left, a live preview of the picture forming, and Cancel. | **Variations.** Ask for up to eight and click through them. The ones you don't keep stay hidden in a layer group in case you change your mind. |
+|                                                                                                                                                                                              |                                                                                                                                                |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img src="docs/screenshots/fill-dialog.png" alt="Generative Fill">                                                                                                                                     | <img src="docs/screenshots/fill-dialog-remove.png" alt="Remove object">                                                                                  |
+| **Generative Fill.** Prompt, Recent prompts, what to avoid, the model and the number of variations are all on the first screen. Change amount and seed sit under Advanced.                   | **Remove object.** Same dialog, other tab. Nothing to type: it uses an installed removal model (LaMa or MAT) when there is one.                |
+| <img src="docs/screenshots/expand-dialog.png" alt="Generative Expand">                                                                                                                                 | <img src="docs/screenshots/settings-models.png" alt="Models">                                                                                            |
+| **Generative Expand.** Drag any edge of the thumbnail outward, or pick a ratio (1:1, 4:5, 3:2, 16:9 and the rest) and where the image sits on a 3x3 grid. It shows the new size as you drag. | **Models.** The download manager. What you have installed first, then Recommended for this PC, then the rest, from Hugging Face and Civitai.   |
+| <img src="docs/screenshots/progress-window.png" alt="Progress">                                                                                                                                        | <img src="docs/screenshots/variations-picker.png" alt="Variations">                                                                                      |
+| **Progress.** Floats over your image without stealing focus: the step, time left, a live preview of the picture forming, and Cancel.                                                         | **Variations.** Ask for up to eight and click through them. The ones you don't keep stay hidden in a layer group in case you change your mind. |
 
 
 ## Models, and what fits your PC
