@@ -47,40 +47,18 @@ Everything is under `Filters > OpenFill`. Results always go on new layers, in on
 
 ## Models, and what fits your PC
 
-OpenFill doesn't ship a model. The first time you run it, it says so and opens the download manager, where you download and manage all your models in one place without leaving GIMP.
+OpenFill doesn't ship a model. On first run it opens the download manager, where you get and manage models without leaving GIMP. Its Recommended for this PC list only shows models that fit your graphics memory and free disk space, so you never find out after a 7 GB download that a model is too big.
 
-The Recommended for this PC list is built from your graphics memory, free disk space, and a live search of Hugging Face and Civitai, ranked by whether it fits first, then by how many people download it, then by how recent it is.
+| Job | Default model | Graphics memory | Time |
+|---|---|---|---|
+| Remove object | LaMa (MAT also available) | 2 GB | about 3 s |
+| Fast fill | DreamShaper 8 Inpainting | 4 GB | about 9 s |
+| Quality fill | RealVisXL V5 with the Fooocus inpaint patch | 8 GB | about 21 s |
+| Generative Expand | SD 1.5 Inpainting, then DreamShaper 8 | 4 GB | |
 
-| Graphics memory | What you get |
-|---|---|
-| 2 GB and up | LaMa and MAT, the prompt-free removal models. Small (125 to 206 MB) and about 3 s per removal. |
-| 4 GB and up | Stable Diffusion 1.5 inpainting. Fast, but weak at drawing what you asked for in flat or small areas. |
-| 8 GB and up | DreamShaper 8, RealVisXL V5 and other SDXL models with the Fooocus inpaint patch, FLUX.1 Fill as a 4-bit GGUF (opt-in). Much better at following the prompt. |
-| 12 GB and up | Qwen-Image-Edit as a GGUF. |
-| 16 GB and up | FLUX.1 Fill at full size. |
-| No NVIDIA GPU | Stable Diffusion 1.5 can run on the CPU, but a fill takes minutes, not seconds, and you have to raise the generation time limit in Settings. I have not tested AMD or Apple GPUs. |
+Times are for a 512 px selection on an RTX 4070 Laptop (8 GB); the first request of a session adds about 35 s while the backend starts. FLUX.1 Fill (8 GB as a GGUF, 16 GB full size) and Qwen-Image-Edit (12 GB) are opt-in and much slower. Without an NVIDIA card, SD 1.5 runs on the CPU in minutes rather than seconds; AMD and Apple GPUs are untested.
 
-A model that's too big for your machine is never recommended, because a model that has to spill out of graphics memory either crawls or crashes, and you'd find out after a 7 GB download. The search only takes single `.safetensors` or `.gguf` files with a known size, a published SHA-256 and a stated license, and never pickled `.ckpt` or `.bin` files, since those can run code when loaded. FLUX and Qwen are in the list but I haven't run them end to end on my machine. Every file, checksum and license is in [docs/models.md](docs/models.md).
-
-How long it takes on my laptop (RTX 4070 Laptop, 8 GB, 20 steps, 2048 px photo):
-
-| | Time |
-|---|---|
-| First request of the session (backend start) | 31 to 38 s, about 45 s to the first result |
-| Fill, SD 1.5, 512 px selection | 8.4 to 8.7 s |
-| Fill, SDXL + Fooocus, 512 px selection | 20.6 to 22.1 s |
-| Remove object, LaMa or MAT | about 3 s |
-
-Which model is used by default for each job comes from a judged benchmark of 33 cases per model (pass / notes / fail, strict rubric):
-
-| Job | Default | Result |
-|---|---|---|
-| Fast fill | DreamShaper 8 Inpainting | 7 / 10 / 16, ahead of SD 1.5 inpainting (7 / 7 / 19) |
-| Quality fill | RealVisXL V5 | 9 / 1 / 23, ahead of Juggernaut XL (5 / 4 / 24) and SDXL base (7 / 0 / 25) |
-| Remove object | LaMa | 5 / 3 / 25, ahead of MAT (3 / 3 / 27) |
-| Generative Expand | SD 1.5 inpainting, then DreamShaper 8 | best in 5 of 8 pairs; every model gets weaker beyond 25% per side |
-
-FLUX.1 Fill is opt-in: it matches RealVisXL on object fills but takes about four times as long (median 112 s here), so it is never chosen automatically. The full method and raw numbers are in [docs/performance.md](docs/performance.md) and [docs/models.md](docs/models.md).
+The defaults come from a judged benchmark of 33 cases per model. Every download is checked against a published SHA-256, and the live Hugging Face and Civitai search never offers pickled `.ckpt` or `.bin` files, since those can run code when loaded. Details in [docs/models.md](docs/models.md) and [docs/performance.md](docs/performance.md).
 
 ## Nothing leaves your computer
 
