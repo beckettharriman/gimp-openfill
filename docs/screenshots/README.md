@@ -26,6 +26,11 @@ variations), so the preview and thumbnails show the test scene, not a result.
 | `settings-models.png` | Settings, Models tab: downloaded models first, the active model tagged, one primary button per row (Active, Set active, Downloaded), Open models folder. |
 | `settings-models-token.png` | The Models tab scrolled to "AVAILABLE TO DOWNLOAD" with the gated FLUX.1 Fill GGUF entry, the Hugging Face token field, Save token and Get a token. |
 
-Planned: `generative-fill.gif`, a screen recording of a complete fill (select,
-prompt, progress, result layer). The README uses `fill-dialog.png` as its
-hero image until the recording is committed.
+`openfill-demo.gif` (the README hero, 960 x 600, 20 fps, 17.2 s, loops) is a
+screen recording of GIMP 3.2.6 (Flatpak, PhotoGIMP layout) on Linux with an RTX
+2070 Max-Q: Filters > OpenFill > Generative Expand turns a 1448 x 1086 photo into
+1448 x 1931 (4:3 to 3:4, no prompt, Stable Diffusion 1.5 Inpainting, two
+rounds), then a lasso around the car and Generative Fill > Remove object (LaMa)
+erase it. Every frame is a captured frame. The waits are sped up (about 30 s of
+expand and 4 s of removal), the clicks run at about 1.8 times real speed, and
+the pointer is drawn larger than the system cursor.

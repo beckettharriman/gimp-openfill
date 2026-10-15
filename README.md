@@ -6,7 +6,8 @@
 
 *Generative fill for GIMP 3, running on your own graphics card. Turns out you never needed a monthly subscription and someone else's server to put a hot air balloon in your own photo.*
 
-<img src="docs/screenshots/generative-fill.gif" width="720" alt="Selecting the sky in GIMP, typing hot air balloon, the live preview forming, and the result landing as a new masked layer">
+<img src="docs/screenshots/openfill-demo.gif" width="720" alt="In GIMP, Generative Expand turns a 4:3 landscape photo of a car on a mountain road into a 3:4 portrait with no prompt, then the car is lassoed and Remove object erases it, leaving the empty road"><br>
+<sub>A real recording of OpenFill in GIMP 3.2.6 on Linux (RTX 2070 Max-Q, 8 GB): Generative Expand from 4:3 to 3:4 with no prompt, then Remove object on the car. The waits for generation are sped up.</sub>
 
 **Remove objects, fill a selection from a prompt, and expand the canvas, all inside GIMP.**<br>
 Every result lands on its own layer with a soft mask. Nothing leaves your computer.
