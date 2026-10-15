@@ -16,7 +16,7 @@ Every result lands on its own layer with a soft mask. Nothing leaves your comput
 
 
 > [!IMPORTANT]
-> **Beta.** This is 2.0.0-beta.1, the first release of OpenFill. It works end to end on Windows with GIMP 3.2.6 and an 8 GB laptop GPU, which is what I build and test on. The Linux and macOS install script exists but hasn't been run against a real GIMP there. Most of the rough edges are in what the models draw, not in the plug-in; [Status](#status) lists them.
+> **Beta.** This is 2.0.0-beta.1, the first release of OpenFill. It works end to end on Windows with GIMP 3.2.6 and an 8 GB laptop GPU, which is what I build and test on. It also runs end to end on Linux (GIMP 3.2.6 Flatpak on Fedora, RTX 2070 Max-Q), where the demo above was recorded. macOS hasn't been tried. Most of the rough edges are in what the models draw, not in the plug-in; [Status](#status) lists them.
 
 ## Why I made this
 
@@ -139,7 +139,7 @@ powershell -ExecutionPolicy Bypass -File install.ps1
 sh install.sh
 ```
 
-I've only run it against fake profiles on WSL Ubuntu and Git Bash, not a real Linux, Flatpak or macOS GIMP. If you try it, I'd like to hear how it went. The Download ComfyUI button is Windows-only.
+Tested on Fedora with the GIMP 3.2.6 Flatpak: the Flatpak keeps its profile in `~/.config/GIMP/3.2`, which the script finds, and Generative Fill starts ComfyUI from inside the sandbox and stops it when GIMP closes. Start GIMP once before running the script so the profile exists, and pass `--comfy-dir` with your ComfyUI folder (one with a `venv`). Inside the Flatpak the graphics card is only detected once ComfyUI has started, so the first Recommended for this PC list can miss it. The Download ComfyUI button is Windows-only, and macOS is untested; if you try it, I'd like to hear how it went.
 
 </details>
 
