@@ -4,10 +4,10 @@
 
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](COPYING) ![GIMP 3.2](https://img.shields.io/badge/GIMP-3.2-444.svg) ![Windows tested](https://img.shields.io/badge/tested%20on-Windows-444.svg) ![Python + ComfyUI](https://img.shields.io/badge/built%20with-Python%20%2B%20ComfyUI-orange.svg) ![Local](https://img.shields.io/badge/100%25-local-30d158.svg) ![Beta](https://img.shields.io/badge/status-beta-e8a33d.svg)
 
-*Generative fill for GIMP 3, running on your own graphics card. Turns out you never needed a monthly subscription and someone else's server to put a hot air balloon in your own photo.*
+*Generative fill for GIMP 3, running on your own graphics card.*
 
 <img src="docs/screenshots/openfill-demo.gif" width="720" alt="In GIMP, Generative Expand turns a 4:3 landscape photo of a car on a mountain road into a 3:4 portrait with no prompt, then the car is lassoed and Remove object erases it, leaving the empty road"><br>
-<sub>A real recording of OpenFill in GIMP 3.2.6 on Linux (RTX 2070 Max-Q, 8 GB): Generative Expand from 4:3 to 3:4 with no prompt, then Remove object on the car. The waits for generation are sped up.</sub>
+<sub>A real recording of OpenFill in GIMP 3.2.6 on Linux (RTX 2070 Max-Q, 8 GB): Generative Expand from 4:3 to 3:4 with no prompt, then Remove object on the car.</sub>
 
 **Remove objects, fill a selection from a prompt, and expand the canvas, all inside GIMP.**<br>
 Every result lands on its own layer with a soft mask. Nothing leaves your computer.
@@ -16,20 +16,20 @@ Every result lands on its own layer with a soft mask. Nothing leaves your comput
 
 
 > [!IMPORTANT]
-> **Beta.** This is 2.0.0-beta.1, the first release of OpenFill. It works end to end on Windows with GIMP 3.2.6 and an 8 GB laptop GPU, which is what I build and test on. It also runs end to end on Linux (GIMP 3.2.6 Flatpak on Fedora, RTX 2070 Max-Q), where the demo above was recorded. macOS hasn't been tried. Most of the rough edges are in what the models draw, not in the plug-in; [Status](#status) lists them.
+> **Beta.** This is an early release of OpenFill. It works end to end on Windows with GIMP 3.2.6 and an 8 GB laptop GPU, which is what I build and test on. It also runs end to end on Linux (GIMP 3.2.6 Flatpak on Fedora, RTX 2070 Max-Q), where the demo above was recorded. macOS hasn't been tried. Most of the rough edges are in what the models draw, not in the plug-in; [Status](#status) lists them.
 
 ## Why I made this
 
-I moved to GIMP 3 as my Photoshop replacement, and the one thing I missed was Generative Fill. GIMP doesn't have one. People have been asking for it since 2023 ([GNOME/gimp#10086](https://gitlab.gnome.org/GNOME/gimp/-/issues/10086)). The plug-in that came closest, [Stable Boy](https://github.com/thndrbrrr/gimp-stable-boy), was written for GIMP 2.10 and is no longer maintained, so it never caught up with newer generative models.
+I moved to GIMP 3 as my Photoshop replacement after paying Adobe an outrageously expensive cancellation fee. GIMP turned out to be a great alternative, but Adobe's AI image editing tools had become part of my workflow and I wasn't ready to give them up, so I made OpenFill. It's meant to feel familiar and easy to use, especially if you're coming from Photoshop. The selection is the mask, the result is a layer you can paint on or delete, and the AI backend (ComfyUI) starts hidden, stays warm while you work, and shuts down when GIMP closes. No terminal, no browser tab, no second app to babysit.
 
-OpenFill is meant to feel familiar and easy to use, especially if you're coming from Photoshop. The selection is the mask, the result is a layer you can paint on or delete, and the AI backend (ComfyUI) starts hidden, stays warm while you work, and shuts down when GIMP closes. No terminal, no browser tab, no second app to babysit.
+Here's what you get:
 
-|  |  |
-|---|---|
+|                        |                                                                                                                         |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | **Fill with a prompt** | Select, type "a red door with brass handles", Enter. The fill lands on a new layer with a mask that fades at the edges. |
-| **Remove object** | Select, switch to Remove object, Enter. No prompt. It erases the selection and continues the background. |
-| **Generative Expand** | Drag the canvas edges outward or pick a ratio, and it paints the new border. The prompt is optional. |
-| **Text to Image** | A new layer or a new image from a prompt, sized to the selection if there is one. |
+| **Remove object**      | Select, switch to Remove object, Enter. No prompt. It erases the selection and continues the background.                |
+| **Generative Expand**  | Drag the canvas edges outward or pick a ratio, and it paints the new border. The prompt is optional.                    |
+| **Text to Image**      | A new layer or a new image from a prompt, sized to the selection if there is one.                                       |
 
 Everything is under `Filters > OpenFill`. Results always go on new layers, in one undo step, so your existing layers are never painted over.
 
