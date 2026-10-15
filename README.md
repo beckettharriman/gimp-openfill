@@ -33,6 +33,12 @@ Here's what you get:
 
 Everything is under `Filters > OpenFill`. Results always go on new layers, in one undo step, so your existing layers are never painted over.
 
+## Nothing leaves your computer
+
+Generation runs in ComfyUI on your machine, listening on `127.0.0.1` only. A small supervisor starts it hidden, watches GIMP, and stops it after an idle timeout or when GIMP closes. The server is tied to the supervisor by Windows itself, so it can't be left running even after a crash. `Filters > OpenFill > Stop AI Backend` frees the graphics card right away.
+
+The network comes into it twice: when the Models tab searches Hugging Face and Civitai (no account, no token, and you can turn it off), and when you press Download (a model, or ComfyUI itself when none is installed). Every file is checked against its size and SHA-256 before it's used. The gated FLUX files need a free Hugging Face token; it stays in your GIMP profile and only ever goes to Hugging Face. No accounts, no telemetry, nothing that phones home: the only outbound requests are the ones above. Details in [docs/security.md](docs/security.md).
+
 ## The dialogs
 
 |  |  |
@@ -60,98 +66,92 @@ Times are for a 512 px selection on an RTX 4070 Laptop (8 GB); the first request
 
 The defaults come from a judged benchmark of 33 cases per model. Every download is checked against a published SHA-256, and the live Hugging Face and Civitai search never offers pickled `.ckpt` or `.bin` files, since those can run code when loaded. Details in [docs/models.md](docs/models.md) and [docs/performance.md](docs/performance.md).
 
-## Nothing leaves your computer
-
-Generation runs in ComfyUI on your machine, listening on `127.0.0.1` only. A small supervisor starts it hidden, watches GIMP, and stops it after an idle timeout or when GIMP closes. The server is tied to the supervisor by Windows itself, so it can't be left running even after a crash. `Filters > OpenFill > Stop AI Backend` frees the graphics card right away.
-
-The network comes into it twice: when the Models tab searches Hugging Face and Civitai (no account, no token, and you can turn it off), and when you press Download (a model, or ComfyUI itself when none is installed). Every file is checked against its size and SHA-256 before it's used. The gated FLUX files need a free Hugging Face token; it stays in your GIMP profile and only ever goes to Hugging Face. No accounts, no telemetry, nothing that phones home: the only outbound requests are the ones above. Details in [docs/security.md](docs/security.md).
-
 ## Install
 
-Install GIMP 3.2, drag one folder into GIMP's plug-ins folder, restart GIMP. No installer, no scripts.
-
-1. **GIMP 3.2.** Install it from [gimp.org](https://www.gimp.org/downloads/). You don't need to start it first.
-2. **Copy the plug-in folder.** Download `openfill-<version>.zip` from the [Releases page](https://github.com/beckettharriman/gimp-openfill/releases) and unzip it. Open GIMP's plug-ins folder (in GIMP: `Edit > Preferences > Folders > Plug-ins`, or paste `%APPDATA%\GIMP\3.2\plug-ins` into Explorer's address bar) and drag the `gimp-openfill` folder into it. The folder is complete on its own: code, model catalog, readme and licence. Nothing else is needed.
-3. **Restart GIMP, open an image, select an area and run `Filters > OpenFill > Generative Fill...`.** If no ComfyUI is found, a notice says "ComfyUI is required". It checks your graphics card, free disk space and port 8188 first, then **Download ComfyUI** fetches the official Windows portable build (about 2 GB, about 7 GB unpacked) into `%LOCALAPPDATA%\OpenFill\ComfyUI`, checks it against a published SHA-256, unpacks it with Windows' own `tar.exe`, adds the inpaint nodes at a pinned commit and OpenCV, and remembers the folder. "I already have ComfyUI" lets you pick a folder instead. Git is not needed.
-4. **Download the starting models.** The model manager opens next: get LaMa (object removal, 0.2 GB) and DreamShaper 8 Inpainting (fill and expand, 2 GB). Then select some sky, type "hot air balloon", press Enter. The first request starts the backend, which takes about a minute; after that it's seconds.
-
-Settings are created the first time you change one; until then the defaults are used.
-
-The download needs an NVIDIA card. Without one the notice says so and offers the download only as "very slow" (the processor does the work); for an AMD card it points to ComfyUI's AMD instructions, after which you choose "I already have ComfyUI".
-
-The same notice appears whenever you start Generative Fill, Remove or Expand and ComfyUI can't be found, instead of an error.
-
-If something goes wrong, every error message ends with what to do next, and the same advice shows in the progress window. For a bug report, turn on Verbose log in Settings, do it again, and attach the log file. Never attach `config.json`, it may hold your token.
+1. **Install [GIMP 3.2](https://www.gimp.org/downloads/).**
+2. **Add the plug-in.** Download `openfill-<version>.zip` from the [Releases page](https://github.com/beckettharriman/gimp-openfill/releases), unzip it, and drag the `gimp-openfill` folder into GIMP's plug-ins folder (`Edit > Preferences > Folders > Plug-ins`; on Windows that's `%APPDATA%\GIMP\3.2\plug-ins`).
+3. **Restart GIMP and run `Filters > OpenFill > Generative Fill...`.** If ComfyUI isn't found, **Download ComfyUI** sets it up for you (Windows with an NVIDIA card, about 2 GB), or **I already have ComfyUI** lets you pick an existing install.
+4. **Get the starting models** when the model manager opens: LaMa (object removal, 0.2 GB) and DreamShaper 8 Inpainting (fill and expand, 2 GB). The first request starts the backend in about a minute; after that it's seconds.
 
 <details>
-<summary><b>Manual and advanced install</b></summary>
+<summary><b>What Download ComfyUI does</b></summary>
 
-**Optional installer script.** The zip also holds `Install OpenFill.cmd` (a thin wrapper around `install.ps1`, which you can read). It does the same copy for you, looks for an existing ComfyUI (portable build, ComfyUI Desktop, Stability Matrix, Pinokio), and gives you `-Uninstall`, `-Link` and headless model downloads. Nothing in the drag-and-drop install above needs it.
+It checks your graphics card, free disk space and port 8188 first, then fetches the official Windows portable build (about 2 GB, about 7 GB unpacked) into `%LOCALAPPDATA%\OpenFill\ComfyUI`, checks it against a published SHA-256, unpacks it with Windows' own `tar.exe`, adds the inpaint nodes at a pinned commit and OpenCV, and remembers the folder. Git is not needed.
+
+Without an NVIDIA card the notice says so and offers the download only as "very slow" (the processor does the work). For an AMD card it points to ComfyUI's AMD instructions, after which you choose "I already have ComfyUI". The same notice appears, instead of an error, whenever you start Fill, Remove or Expand and ComfyUI can't be found.
+
+</details>
+
+<details>
+<summary><b>If something goes wrong</b></summary>
+
+Every error message ends with what to do next, and the same advice shows in the progress window. For a bug report, turn on Verbose log in Settings, do it again, and attach the log file. Never attach `config.json`, it may hold your token. Settings are created the first time you change one; until then the defaults are used.
+
+</details>
+
+<details>
+<summary><b>Manual install on Windows</b></summary>
 
 You need GIMP 3.2 or newer and ComfyUI. OpenFill uses GIMP's own Python and needs no extra packages.
 
-**ComfyUI.** Download the portable build from the [ComfyUI releases](https://github.com/Comfy-Org/ComfyUI/releases), extract it (Windows 10 and 11 can open `.7z` with `tar -xf`), and point OpenFill at the folder that holds `python_embeded` in `Filters > OpenFill > Generative Fill Settings`, or pass `-ComfyDir` to the installer. Any other ComfyUI checkout with a `venv` works too.
-
-**Inpaint nodes.** Download the [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes) archive of the commit pinned in `models/catalog.json` into `ComfyUI\custom_nodes\` (the plug-in's Models tab and `install.ps1 -Model` do this for you, from the GitHub zip, without git). For a cleaner seam on Generative Expand, also install OpenCV with ComfyUI's own Python:
-
-```powershell
-python_embeded\python.exe -s -m pip install opencv-python-headless
-```
-
-**The plug-in from a clone.** Close GIMP, then from the repository folder:
+**Installer script.** The zip also holds `Install OpenFill.cmd` (a thin wrapper around `install.ps1`, which you can read). It does the same copy for you, looks for an existing ComfyUI (portable build, ComfyUI Desktop, Stability Matrix, Pinokio), and gives you `-Uninstall`, `-Link` and headless model downloads. From a clone, close GIMP and run:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File install.ps1
 ```
 
-`install.ps1 -DetectComfy` lists the ComfyUI installs it can find. To build the release zip yourself: `python tools/make_release_zip.py`.
+**ComfyUI by hand.** Download the portable build from the [ComfyUI releases](https://github.com/Comfy-Org/ComfyUI/releases), extract it (Windows 10 and 11 can open `.7z` with `tar -xf`), and point OpenFill at the folder that holds `python_embeded` in `Filters > OpenFill > Generative Fill Settings`. Any other ComfyUI checkout with a `venv` works too. Add the [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes) at the commit pinned in `models/catalog.json` (the Models tab does this for you), and for a cleaner seam on Generative Expand, OpenCV:
+
+```powershell
+python_embeded\python.exe -s -m pip install opencv-python-headless
+```
+
+To build the release zip yourself: `python tools/make_release_zip.py`.
 
 </details>
 
 <details>
 <summary><b>Linux, Flatpak and macOS</b></summary>
 
-`install.sh` finds the GIMP 3 profile on Linux, Flatpak (`~/.var/app/org.gimp.GIMP/...`) and macOS:
+`install.sh` finds the GIMP 3 profile on Linux, Flatpak and macOS. Start GIMP once first so the profile exists, then:
 
 ```sh
-sh install.sh
+sh install.sh --comfy-dir ~/ComfyUI
 ```
 
-Tested on Fedora with the GIMP 3.2.6 Flatpak: the Flatpak keeps its profile in `~/.config/GIMP/3.2`, which the script finds, and Generative Fill starts ComfyUI from inside the sandbox and stops it when GIMP closes. Start GIMP once before running the script so the profile exists, and pass `--comfy-dir` with your ComfyUI folder (one with a `venv`). Inside the Flatpak the graphics card is only detected once ComfyUI has started, so the first Recommended for this PC list can miss it. The Download ComfyUI button is Windows-only, and macOS is untested; if you try it, I'd like to hear how it went.
+Tested on Fedora with the GIMP 3.2.6 Flatpak (its profile is in `~/.config/GIMP/3.2`): Generative Fill starts ComfyUI from inside the sandbox and stops it when GIMP closes. Point `--comfy-dir` at a ComfyUI checkout with a `venv`. Inside the Flatpak the graphics card is only detected once ComfyUI has started, so the first Recommended for this PC list can miss it. The Download ComfyUI button is Windows-only, and macOS is untested; if you try it, I'd like to hear how it went.
 
 </details>
 
 <details>
-<summary><b>Install options</b></summary>
+<summary><b>Install script options</b></summary>
 
 | `install.ps1` | `install.sh` | Does |
 |---|---|---|
 | `-Link` | `--link` | Links the plug-in to your checkout instead of copying it, for development. |
 | `-ProfileDir <dir>` | `--profile-dir <dir>` | Installs into a specific GIMP profile. `GIMP3_DIRECTORY` works too. |
-| `-ComfyDir <dir>` | | Uses this ComfyUI instead of looking for one. |
+| `-ComfyDir <dir>` | `--comfy-dir <dir>` | Uses this ComfyUI instead of looking for one. |
 | `-DetectComfy` | | Lists the ComfyUI installs found on this PC. |
 | `-Uninstall` | `--uninstall` | Removes the plug-in. Keeps your settings and never touches models. |
 | `-RemoveConfig` | `--remove-config` | With uninstall, also deletes the settings folder (it holds the Hugging Face token, if any). |
 | `-ListModels`, `-Model <id>` | | Lists or downloads a model without opening GIMP, with resume and checksum. |
 
-The scripts install the plug-in as `gimp-openfill/` and keep settings in `<GIMP profile>/openfill/config.json`. Settings from an older `stable-boy` folder are copied over on the first run.
+The plug-in installs as `gimp-openfill/` and keeps settings in `<GIMP profile>/openfill/config.json`. Settings from an older `stable-boy` folder are copied over on the first run.
 
 </details>
 
 ## Status
 
-Working on Windows with GIMP 3.2.6: Fill, Remove object, Expand, Text to Image, the download manager with live search, the progress window, variations, the backend starting and stopping itself. That's the machine I use. 25 failure scenarios (no backend, corrupt settings, port in use, ComfyUI killed mid-job, GIMP killed mid-job, no network, cancel at every stage) pass in a real GIMP, and the unit tests run on any Python 3.10 or newer.
+Works end to end on Windows and on Linux (GIMP 3.2.6, including the Flatpak): fill, remove, expand, text to image, the model manager, variations, and the backend starting and stopping itself. On Windows, 25 failure scenarios (no backend, corrupt settings, port in use, ComfyUI or GIMP killed mid-job, no network, cancel at every stage) pass in a real GIMP, and the unit tests run on any Python 3.10 or newer.
 
-What the models still get wrong:
+Where the models still fall short:
 
-- **SD 1.5 often ignores the prompt** on flat areas and small selections and just continues the background. Switch to an SDXL model in the dialog.
-- **Remove object struggles with big holes.** LaMa smears, MAT invents things (fake text, shapes that weren't there). Both are fine on small objects. LaMa is the default and works over large holes in overlapping windows, which helps, but very large holes are still weak.
-- **Generative Expand gets weaker beyond 25% per side.** The editor warns you; expand in rounds (the plug-in also splits large expansions itself). SD 1.5 inpainting continues a scene best, so OpenFill offers it when you pick another model, and respects your choice if you decline.
+- **SD 1.5 often ignores the prompt** on flat areas and small selections. Pick an SDXL model in the dialog.
+- **Remove object struggles with very large holes.** LaMa smears and MAT invents shapes; both are fine on small objects.
+- **Generative Expand gets weaker beyond 25% per side.** Expand in rounds; OpenFill also splits large expansions itself.
 - Fine textures like fabric come back softer in large fills.
 
-Not tested yet: Linux and macOS GIMP, FLUX and Qwen end to end, and the AUTOMATIC1111 backend option. Next up: ControlNet and reference images, LoRA selection, and those tests.
-
-The changes are in [CHANGELOG.md](CHANGELOG.md), and [CONTRIBUTING.md](CONTRIBUTING.md) covers the tests and running GIMP against a throwaway profile.
+Not tested yet: macOS, FLUX and Qwen end to end, and the AUTOMATIC1111 backend. Next up: ControlNet and reference images, and LoRA selection. Changes are in [CHANGELOG.md](CHANGELOG.md); [CONTRIBUTING.md](CONTRIBUTING.md) covers the tests.
 
 ## Where it came from
 
