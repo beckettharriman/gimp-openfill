@@ -126,7 +126,7 @@ Tested end to end on a MacBook Air M3 (16 GB, macOS 14.7) with GIMP 3.2.6: fill,
 3. **Install the plug-in.** From the unzipped release or a clone: `sh install.sh`. It finds `~/ComfyUI` by itself (otherwise add `--comfy-dir <folder>`).
 4. **Restart GIMP** and run `Filters > OpenFill > Generative Fill...`; download LaMa and DreamShaper 8 Inpainting when the model manager opens.
 
-On an M3 with 16 GB, a 512 px fill with DreamShaper 8 takes about 50 s once warm (25 steps at about 2 s each), Remove object with LaMa about 4 s, and the first request of a session another 20 to 70 s while ComfyUI loads. Intel Macs are untested.
+On an M3 with 16 GB, a 512 px fill with DreamShaper 8 takes about 50 s once warm (25 steps at about 2 s each), Remove object with LaMa about 4 s, and the first request of a session another 20 to 70 s while ComfyUI loads. A selection larger than about 700 px is filled in tiles, which costs several minutes per tile pass on a Mac (a 1040 x 800 px fill on a 4000 x 3000 photo took about 14 minutes); fill large areas in a few smaller pieces. Intel Macs are untested.
 
 GIMP's own Python can only be started by GIMP on macOS, so OpenFill runs its background helper (the supervisor that starts and stops ComfyUI and does the downloads) with ComfyUI's Python. OpenFill's windows show up in the Dock as "Python"; that is how GIMP runs Python plug-ins on macOS.
 
