@@ -43,6 +43,18 @@ from .runner import Runner
 from .server import ServerManager, _split_host_port, port_answers
 from .workflow import model_display_name
 
+NO_OPENCV_MESSAGE = (
+    "ComfyUI has no OpenCV, so this result started from a plain colour instead of the surrounding "
+    "picture and may not blend in (Generative Expand shows it most). "
+)
+NO_OPENCV_INSTALLING = (
+    "OpenFill is now installing OpenCV into ComfyUI in the background (about 50 MB); run the same "
+    "operation again in a minute for a better result."
+)
+NO_OPENCV_MANUAL = (
+    "Install it into ComfyUI's Python (pip install opencv-python-headless), then run the same operation again."
+)
+
 # Model ids the old "fast"/"quality" choices meant without a catalog; with
 # one they resolve to the tier's installed default (catalog.TIER_PREFERENCE).
 LEGACY_CHOICES = {"fast": "sd15-inpainting", "quality": "sdxl-base"}
@@ -82,6 +94,7 @@ class App:
     def __init__(self, interactive: bool = True) -> None:
         # interactive=False (scripts, batch): no progress window, so a failure never waits for a click
         self.interactive = interactive
+        self._opencv_noted = False
         self.paths = Paths.for_profile(gimp_io.profile_dir()).ensure()
         self.settings = Settings.load(self.paths.config)
         self.log = get_logger(self.paths.log, debug=self.settings.debug)
@@ -383,6 +396,31 @@ class App:
         }
         return self.server.queue_task(task)
 
+    def queue_opencv_install(self) -> str | None:
+        """Queue the pinned OpenCV for ComfyUI's interpreter, unless it is already queued or running."""
+        layout = comfy_layout(self.settings.comfy_dir) if self.settings.comfy_dir else None
+        packages = list(comfy_setup.load_manifest().pip)
+        if layout is None or not packages:
+            return None
+        current = self.server.task_status().get("current") or {}
+        if current.get("type") == "install_pip" or any(
+            t.get("type") == "install_pip" for t in self.server.pending_tasks()
+        ):
+            return None
+        return self.server.queue_task({"type": "install_pip", "python": str(layout["python"]), "packages": packages})
+
+    def _after_generation(self, result) -> None:
+        """Tell the user, once per run, when the result was made without OpenCV, and fix that."""
+        if result.info.get("prefill_fallback") != "no-opencv" or self._opencv_noted:
+            return
+        self._opencv_noted = True  # once per run: a multi-round expand falls back in every round
+        try:
+            queued = self.queue_opencv_install()
+        except (OSError, ValueError) as err:
+            self.log.warning("could not queue the OpenCV install: %s", err)
+            queued = None
+        gimp_io.message(NO_OPENCV_MESSAGE + (NO_OPENCV_INSTALLING if queued else NO_OPENCV_MANUAL))
+
     def nodes_to_install(self, model_id: str) -> list[cat.NodeSpec]:
         entry = cat.by_id(self.catalog, model_id)
         return [n for n in entry.requires_nodes if not (self.custom_nodes_dir / n.folder).is_dir()]
@@ -682,6 +720,7 @@ class App:
                 )
             )
             self.server.touch()
+            self._after_generation(result)
             self._debug_dump("fill", request, result, ctx)
             layers = gimp_io.insert_results(
                 image,
@@ -918,6 +957,7 @@ class App:
             )
         )
         self.server.touch()
+        self._after_generation(result)
         image.undo_group_start()
         try:
             gimp_io.resize_canvas(

@@ -474,6 +474,8 @@ class TaskWorker:
                     self._download(task)
                 elif task.get("type") == "install_nodes":
                     self._install_nodes(task)
+                elif task.get("type") == "install_pip":
+                    self._install_pip(task)
                 elif task.get("type") == "setup_comfy":
                     self._setup_comfy(task)
                 elif task.get("type") == "remove":
@@ -646,12 +648,52 @@ class TaskWorker:
                 started=time.time(),
             )
             downloads.install_custom_node(n.repo, n.folder, n.commit, nodes_dir, python, self.log)
+        self._ensure_opencv(python, task)
         if self.on_restart_backend and task.get("restart_backend", True):
             self._set_current(state="restarting backend")
             self.on_restart_backend()
         self._finish(
             task, "done", "custom nodes installed" + (" and backend restarted" if self.on_restart_backend else "")
         )
+
+    def _ensure_opencv(self, python: Path, task: dict[str, Any]) -> None:
+        """Install the pinned OpenCV next to the inpaint nodes when ComfyUI cannot import it.
+
+        The nodes' border pre-fill (navier-stokes / telea) needs it; without it fills and
+        Generative Expand start from a flat colour. A ComfyUI set up by hand on macOS or
+        Linux usually lacks it. Best effort: the nodes work without it.
+        """
+        packages = comfy_setup.load_manifest().pip
+        if not packages or downloads.has_module(python, "cv2"):
+            return
+        self._set_current(task_id=task.get("id"), type=task.get("type"), file="OpenCV", state="installing")
+        try:
+            downloads.install_pip_packages(python, packages, self.log)
+        except RuntimeError as err:
+            self.log(f"could not install OpenCV: {err}", "WARNING")
+
+    def checked_pip_install(self, task: dict[str, Any]) -> Path:
+        """The ComfyUI interpreter of a pip task, validated: only the configured ComfyUI's
+        interpreter and only the pinned packages of comfy_setup.json. Raises ``ValueError``."""
+        comfy_dir = self._comfy_dir()
+        layout = comfy_layout(comfy_dir)
+        python = Path(str(task.get("python") or ""))
+        if layout is None or not same_path(python, layout["python"]):
+            raise ValueError(f"task interpreter {python} is not the ComfyUI interpreter of {comfy_dir}")
+        if list(task.get("packages") or []) != list(comfy_setup.load_manifest().pip):
+            raise ValueError("only the pinned packages of comfy_setup.json can be installed")
+        return python
+
+    def _install_pip(self, task: dict[str, Any]) -> None:
+        python = self.checked_pip_install(task)
+        self._set_current(
+            task_id=task.get("id"), type="install_pip", file="OpenCV", state="installing", started=time.time()
+        )
+        if downloads.has_module(python, "cv2"):
+            self._finish(task, "done", "OpenCV is already installed")
+            return
+        downloads.install_pip_packages(python, task["packages"], self.log)
+        self._finish(task, "done", "OpenCV installed")
 
     def _setup_comfy(self, task: dict[str, Any]) -> None:
         """Download and install the pinned ComfyUI (see comfy_setup.py), then save it as the ComfyUI folder."""

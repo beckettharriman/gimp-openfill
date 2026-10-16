@@ -4,15 +4,18 @@
 import hashlib
 import http.client
 import os
+import sys
 import tempfile
 import threading
 import unittest
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+from types import SimpleNamespace
+from unittest import mock
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-from openfill import catalog, downloads, supervisor, ui_text
+from openfill import catalog, comfy_setup, downloads, supervisor, ui_text
 from openfill.config import Settings
 
 PAYLOAD = bytes(range(256)) * 4096  # 1 MiB, deterministic
@@ -803,3 +806,113 @@ class OrphanedTaskTests(WorkerFixture):
         self.assertEqual(self.worker.requeue_orphans(), ["1-download.json"])
         self.assertEqual([p.name for p in self.worker.pending()], ["1-download.json", "2-download.json"])
         self.assertEqual(self.worker.requeue_orphans(), [])
+
+
+def _ran(rc=0, out="", err=""):
+    return SimpleNamespace(returncode=rc, stdout=out, stderr=err)
+
+
+class PipTests(unittest.TestCase):
+    def test_pip_is_used_as_is_when_present(self):
+        calls = []
+        cmd = downloads.pip_install_command("py", runner=lambda c, **k: calls.append(c) or _ran())
+        self.assertEqual(cmd, ["py", "-s", "-m", "pip", "install", "--no-warn-script-location"])
+        self.assertEqual(calls, [["py", "-s", "-m", "pip", "--version"]])
+
+    def test_venv_without_pip_gets_it_from_ensurepip(self):
+        calls = []
+
+        def runner(c, **_k):
+            calls.append(c)
+            return _ran(1 if c[-1] == "--version" else 0)
+
+        downloads.pip_install_command("py", runner=runner)
+        self.assertEqual(calls[1], ["py", "-s", "-m", "ensurepip", "--upgrade"])
+
+    def test_no_pip_and_no_ensurepip_says_so(self):
+        with self.assertRaises(RuntimeError) as cm:
+            downloads.pip_install_command("py", runner=lambda c, **k: _ran(1, err="No module named ensurepip"))
+        self.assertIn("ensurepip", str(cm.exception))
+
+    def test_install_pip_packages(self):
+        calls = []
+        downloads.install_pip_packages(
+            "py", ["opencv-python-headless==5.0.0.93"], runner=lambda c, **k: calls.append(c) or _ran()
+        )
+        self.assertEqual(calls[-1][-1], "opencv-python-headless==5.0.0.93")
+        with self.assertRaises(RuntimeError):
+            downloads.install_pip_packages(
+                "py", ["x==1"], runner=lambda c, **k: _ran(1 if "x==1" in c else 0, err="no")
+            )
+        calls.clear()
+        downloads.install_pip_packages("py", [], runner=lambda c, **k: calls.append(c) or _ran())
+        self.assertEqual(calls, [])
+
+    def test_has_module(self):
+        self.assertTrue(downloads.has_module("py", "cv2", runner=lambda c, **k: _ran(0)))
+        self.assertFalse(downloads.has_module("py", "cv2", runner=lambda c, **k: _ran(1)))
+        self.assertFalse(downloads.has_module(sys.executable, "no_such_module_here"))
+        self.assertTrue(downloads.has_module(sys.executable, "json"))
+        with self.assertRaises(ValueError):
+            downloads.has_module("py", "os; import evil")
+
+
+class PipTaskTests(WorkerFixture):
+    def _task(self, **over):
+        task = {
+            "type": "install_pip",
+            "python": str(self.comfy / "python_embeded" / "python.exe"),
+            "packages": list(comfy_setup.load_manifest().pip),
+        }
+        task.update(over)
+        return task
+
+    def test_only_the_comfy_interpreter_and_the_pinned_packages(self):
+        self.assertEqual(self.worker.checked_pip_install(self._task()).name, "python.exe")
+        for over in ({"python": "/usr/bin/evil"}, {"packages": ["evil==1"]}, {"packages": []}):
+            with self.assertRaises(ValueError, msg=over):
+                self.worker.checked_pip_install(self._task(**over))
+
+    def test_install_runs_pip_only_when_cv2_is_missing(self):
+        with (
+            mock.patch.object(downloads, "has_module", return_value=True),
+            mock.patch.object(downloads, "install_pip_packages") as pip,
+            mock.patch.object(self.worker, "_finish") as finish,
+        ):
+            self.worker._install_pip(self._task(id="t"))
+        pip.assert_not_called()
+        self.assertIn("already", finish.call_args[0][2])
+        with (
+            mock.patch.object(downloads, "has_module", return_value=False),
+            mock.patch.object(downloads, "install_pip_packages") as pip,
+            mock.patch.object(self.worker, "_finish") as finish,
+        ):
+            self.worker._install_pip(self._task(id="t"))
+        pip.assert_called_once()
+        self.assertEqual(finish.call_args[0][1], "done")
+
+    def test_node_install_also_brings_opencv(self):
+        with (
+            mock.patch.object(downloads, "install_custom_node"),
+            mock.patch.object(downloads, "has_module", return_value=False),
+            mock.patch.object(downloads, "install_pip_packages") as pip,
+            mock.patch.object(self.worker, "_finish"),
+        ):
+            self.worker._install_nodes(
+                {
+                    "type": "install_nodes",
+                    "custom_nodes_dir": str(self.comfy / "ComfyUI" / "custom_nodes"),
+                    "python": str(self.comfy / "python_embeded" / "python.exe"),
+                    "nodes": [{"repo": REPO, "folder": "comfyui-inpaint-nodes", "commit": COMMIT}],
+                    "restart_backend": False,
+                }
+            )
+        pip.assert_called_once()
+        self.assertIn("opencv-python-headless==5.0.0.93", pip.call_args[0][1])
+
+    def test_failed_opencv_install_does_not_fail_the_nodes(self):
+        with (
+            mock.patch.object(downloads, "has_module", return_value=False),
+            mock.patch.object(downloads, "install_pip_packages", side_effect=RuntimeError("offline")),
+        ):
+            self.worker._ensure_opencv(Path("py"), {"id": "t", "type": "install_nodes"})

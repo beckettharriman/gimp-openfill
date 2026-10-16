@@ -225,6 +225,18 @@ fi
 HAVE_COMFY=0
 if [ -n "$COMFY_DIR" ] && comfy_usable "$COMFY_DIR"; then
   HAVE_COMFY=1
+  # Fill and Generative Expand continue the picture into the new area with OpenCV; without it they
+  # start from a flat colour. OpenFill installs it itself when it sets up its inpaint nodes.
+  for py in "$COMFY_DIR"/venv/bin/python3 "$COMFY_DIR"/.venv/bin/python3 "$COMFY_DIR"/env/bin/python3 \
+      "$COMFY_DIR"/venv/bin/python "$COMFY_DIR"/.venv/bin/python "$COMFY_DIR"/env/bin/python; do
+    if [ -x "$py" ]; then
+      if ! "$py" -s -c "import cv2" >/dev/null 2>&1; then
+        echo "note: ComfyUI's Python has no OpenCV. OpenFill installs it by itself when a fill first needs it;"
+        echo "      to do it now: \"$py\" -m pip install opencv-python-headless"
+      fi
+      break
+    fi
+  done
 elif [ -n "$COMFY_DIR" ]; then
   echo "warning: no usable ComfyUI at $COMFY_DIR (it needs main.py and a venv folder)." >&2
 fi

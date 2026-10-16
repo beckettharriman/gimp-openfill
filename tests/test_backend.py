@@ -151,3 +151,54 @@ class ConnectionLostTests(unittest.TestCase):
 
     def test_server_still_up_keeps_detail(self):
         self.assertIn("/history", self.run_with(self.FakeClient(alive=True)))
+
+
+class NoOpenCvFallbackTests(unittest.TestCase):
+    """Without OpenCV on the server the fill is redone with the neutral pre-fill, and the result says so."""
+
+    def _inpaint(self, errors):
+        from types import SimpleNamespace
+        from unittest import mock
+
+        from openfill import workflow
+        from openfill.backends.comfy import ComfyBackend
+
+        client = SimpleNamespace(
+            object_info=lambda _n: {"x": 1}, upload_image=lambda name, _data: name, interrupt=None, clear_queue=None
+        )
+        backend_ = ComfyBackend("http://x", client=client)
+        request = SimpleNamespace(
+            model=SimpleNamespace(uses_fooocus=False),
+            sampling=SimpleNamespace(seed=1, steps=20, batch=1),
+            image_png=b"i",
+            mask_png=b"m",
+            mode="expand",
+            prefill_mode="navier-stokes",
+            work_width=512,
+            work_height=512,
+        )
+        runs = []
+
+        def run(*_a, **_k):
+            runs.append(request.prefill_mode)
+            if errors:
+                raise errors.pop(0)
+            return [b"png"]
+
+        with (
+            mock.patch.object(workflow, "probe_safe_png", side_effect=lambda d: d),
+            mock.patch.object(workflow, "build_fill", return_value={}),
+            mock.patch.object(backend_, "_run", side_effect=run),
+        ):
+            result = backend_.inpaint(request)
+        return result, runs
+
+    def test_missing_cv2_is_flagged(self):
+        result, runs = self._inpaint([backend.WorkflowRejected("No module named 'cv2'")])
+        self.assertEqual(runs, ["navier-stokes", "neutral"])
+        self.assertEqual(result.info.get("prefill_fallback"), "no-opencv")
+
+    def test_normal_result_has_no_flag(self):
+        result, runs = self._inpaint([])
+        self.assertEqual(runs, ["navier-stokes"])
+        self.assertNotIn("prefill_fallback", result.info)

@@ -551,7 +551,61 @@ def install_custom_node(
     req = target / "requirements.txt"
     if req.is_file():
         log(f"installing requirements with {python}")
-        r = runner([str(python), "-s", "-m", "pip", "install", "--no-warn-script-location", "-r", str(req)], **kw)
+        r = runner([*pip_install_command(python, log, runner), "-r", str(req)], **kw)
         if r.returncode != 0:
             raise RuntimeError(f"pip install failed: {(r.stderr or r.stdout).strip()[-800:]}")
     return target
+
+
+def _quiet_kw() -> dict[str, Any]:
+    kw: dict[str, Any] = {"capture_output": True, "text": True}
+    if sys.platform == "win32":
+        kw["creationflags"] = subprocess.CREATE_NO_WINDOW
+    return kw
+
+
+def pip_install_command(
+    python: str | Path, log: Callable[[str], None] | None = None, runner: Callable[..., Any] = subprocess.run
+) -> list[str]:
+    """``python -m pip install`` as an argument list, after making sure ``python`` has pip.
+
+    A venv made with ``uv venv`` (or ``python -m venv --without-pip``) has no pip;
+    ``ensurepip`` installs the copy that ships with Python, offline.
+    """
+    log = log or (lambda _msg: None)
+    kw = _quiet_kw()
+    if runner([str(python), "-s", "-m", "pip", "--version"], **kw).returncode != 0:
+        log(f"{python} has no pip; installing it with ensurepip")
+        r = runner([str(python), "-s", "-m", "ensurepip", "--upgrade"], **kw)
+        if r.returncode != 0:
+            raise RuntimeError(
+                f"{python} has no pip, and ensurepip could not add it: {(r.stderr or r.stdout or '').strip()[-400:]}"
+            )
+    return [str(python), "-s", "-m", "pip", "install", "--no-warn-script-location"]
+
+
+def has_module(python: str | Path, module: str, runner: Callable[..., Any] = subprocess.run) -> bool:
+    """``python`` can import ``module`` (a plain dotted name)."""
+    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.]*", module):
+        raise ValueError(f"not a module name: {module!r}")
+    try:
+        return runner([str(python), "-s", "-c", f"import {module}"], timeout=120, **_quiet_kw()).returncode == 0
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def install_pip_packages(
+    python: str | Path,
+    packages: Iterable[str],
+    log: Callable[[str], None] | None = None,
+    runner: Callable[..., Any] = subprocess.run,
+) -> None:
+    """Install the pinned ``packages`` into ``python``'s environment; raises RuntimeError on failure."""
+    packages = list(packages)
+    if not packages:
+        return
+    log = log or (lambda _msg: None)
+    log(f"installing {', '.join(packages)} with {python}")
+    r = runner([*pip_install_command(python, log, runner), *packages], **_quiet_kw())
+    if r.returncode != 0:
+        raise RuntimeError(f"pip install failed: {(r.stderr or r.stdout or '').strip()[-800:]}")
