@@ -218,3 +218,45 @@ class CancelAndWatcherTests(ManagerCase):
     def test_no_registration_without_a_managed_backend(self):
         self.manager.touch()
         self.assertFalse((self.paths.base / "watchers").exists())
+
+
+class HelperPythonTests(unittest.TestCase):
+    """macOS: GIMP.app's Python has a launch constraint, so helpers run on another interpreter."""
+
+    GIMP_PY = "/Applications/GIMP.app/Contents/MacOS/python3"
+
+    def test_other_platforms_keep_the_plug_in_interpreter(self):
+        for platform in ("win32", "linux"):
+            self.assertEqual(
+                server.helper_python(r"C:\GIMP\bin\pythonw.exe", platform, "/c/venv/bin/python3"),
+                r"C:\GIMP\bin\pythonw.exe",
+            )
+
+    def test_macos_outside_an_app_bundle_keeps_it(self):
+        self.assertEqual(server.helper_python("/opt/homebrew/bin/python3", "darwin", None), "/opt/homebrew/bin/python3")
+
+    def test_macos_uses_comfyui_python(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            venv_py = Path(tmp) / "venv" / "bin" / "python3"
+            venv_py.parent.mkdir(parents=True)
+            venv_py.write_text("")
+            self.assertEqual(server.helper_python(self.GIMP_PY, "darwin", venv_py), str(venv_py))
+
+    def test_macos_falls_back_to_path_python_outside_the_bundle(self):
+        seen = {}
+
+        def which(name, path=None):
+            seen["path"] = path
+            return "/opt/homebrew/bin/python3"
+
+        path_env = os.pathsep.join(["/Applications/GIMP.app/Contents/MacOS", "/opt/homebrew/bin", "/usr/bin"])
+        got = server.helper_python(self.GIMP_PY, "darwin", "/missing/venv/bin/python3", which, path_env)
+        self.assertEqual(got, "/opt/homebrew/bin/python3")
+        self.assertNotIn("GIMP.app", seen["path"])
+
+    def test_macos_without_any_other_python_keeps_it(self):
+        self.assertEqual(server.helper_python(self.GIMP_PY, "darwin", None, lambda *a, **k: None, ""), self.GIMP_PY)
+
+    def test_in_app_bundle(self):
+        self.assertTrue(server.in_app_bundle(self.GIMP_PY))
+        self.assertFalse(server.in_app_bundle("/Users/me/ComfyUI/venv/bin/python3"))

@@ -14,6 +14,7 @@ import json
 import logging
 import os
 import re
+import shutil
 import socket
 import subprocess
 import sys
@@ -66,6 +67,35 @@ def _hidden_python() -> str:
             if candidate.exists():
                 return str(candidate)
     return str(exe)
+
+
+def in_app_bundle(path: str | Path) -> bool:
+    """``path`` lies inside a macOS ``.app`` bundle (``GIMP.app/Contents/...``)."""
+    return any(part.endswith(".app") for part in Path(path).parts)
+
+
+def helper_python(
+    executable: str,
+    platform: str,
+    comfy_python: str | Path | None,
+    which: Callable[..., str | None] = shutil.which,
+    path_env: str | None = None,
+) -> str:
+    """Interpreter for the supervisor and task worker.
+
+    On macOS, GIMP signs the Python in GIMP.app with a launch constraint: only
+    GIMP may start it, and the kernel kills it when a plug-in does
+    ("Launch Constraint Violation"). There the helpers run on ComfyUI's own
+    Python (the supervisor needs only the standard library), else on the first
+    python3 on PATH outside an app bundle. Everywhere else: ``executable``.
+    """
+    if platform != "darwin" or not in_app_bundle(executable):
+        return executable
+    if comfy_python and Path(comfy_python).exists() and not in_app_bundle(comfy_python):
+        return str(comfy_python)
+    path_env = os.environ.get("PATH", "") if path_env is None else path_env
+    outside = os.pathsep.join(d for d in path_env.split(os.pathsep) if d and not in_app_bundle(d))
+    return which("python3", path=outside) or executable
 
 
 class ServerManager:
@@ -182,7 +212,7 @@ class ServerManager:
             raise BackendUnavailable(port_in_use_message(host, port))
         gimp_pid = os.getppid()
         cmd = [
-            _hidden_python(),
+            self._helper_python(),
             str(Path(__file__).with_name("supervisor.py")),
             "--mode",
             "backend",
@@ -238,7 +268,7 @@ class ServerManager:
         if self.task_worker_alive():
             return
         cmd = [
-            _hidden_python(),
+            self._helper_python(),
             str(Path(__file__).with_name("supervisor.py")),
             "--mode",
             "tasks",
@@ -299,6 +329,11 @@ class ServerManager:
         """Where the supervisor's stderr goes (argument errors, crashes before its own log is open)."""
         return self.paths.base / SUPERVISOR_STDERR_FILENAME
 
+    def _helper_python(self) -> str:
+        """See :func:`helper_python`; ComfyUI's interpreter comes from the configured folder."""
+        layout = comfy_layout(self.settings.comfy_dir) if self.settings.comfy_dir else None
+        return helper_python(_hidden_python(), sys.platform, layout["python"] if layout else None)
+
     def _spawn_detached(self, cmd: list[str]) -> None:
         """Start ``cmd`` detached and hidden; its stderr is appended to :attr:`supervisor_stderr_log`."""
         try:
@@ -321,6 +356,8 @@ class ServerManager:
         }
         env = dict(os.environ)
         env.pop("PYTHONPATH", None)
+        if cmd and cmd[0] != _hidden_python():
+            env.pop("PYTHONHOME", None)  # GIMP's Python home breaks any other interpreter
         kwargs["env"] = env
         if IS_WINDOWS:
             # No DETACHED_PROCESS: Windows ignores CREATE_NO_WINDOW next to it, and a
