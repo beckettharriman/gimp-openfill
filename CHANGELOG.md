@@ -33,6 +33,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- macOS: the supervisor and the task worker start. GIMP 3.2 signs the
+  Python in GIMP.app with a launch constraint, so the kernel killed them
+  when the plug-in started them with its own interpreter; the backend never
+  started and the Models tab never downloaded. They now run on ComfyUI's
+  Python (or a python3 on PATH outside the app bundle), without GIMP's
+  PYTHONHOME.
+- macOS: GIMP processes are recognised (libproc), so the backend stops when
+  GIMP closes even if its pid is reused.
+- macOS and Linux: the "ComfyUI is required" notice no longer offers the
+  Windows-only download; it links ComfyUI's install steps for the platform.
+  A checkout in `~/ComfyUI` and Stability Matrix on macOS are found.
+- The release zip ships `install.sh` and keeps `gimp-openfill.py`
+  executable; unzipped on macOS or Linux, GIMP skipped the plug-in.
+- `install.sh` writes the same minimal config as `install.ps1` (no
+  outdated SD 1.5 and SDXL defaults), finds an existing ComfyUI and prints
+  the current next steps.
 - A cancelled or failed multi-round Generative Expand removes the layers
   earlier rounds added and restores the canvas.
 - Windows: OpenFill detaches from the blank terminal window GIMP opens when

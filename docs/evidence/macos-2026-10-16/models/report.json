@@ -1,0 +1,118 @@
+{
+  "steps": [
+    {
+      "step": "start",
+      "models_root": "~/ComfyUI/models",
+      "comfy_dir": "~/ComfyUI",
+      "comfy_ready": true,
+      "time": "00:06:01"
+    },
+    {
+      "step": "nodes-needed",
+      "model": "lama-big",
+      "nodes": [
+        [
+          "comfyui-inpaint-nodes",
+          "5b7681746fe19e563113d27366ba85236bc1ba5b"
+        ]
+      ],
+      "time": "00:06:01"
+    },
+    {
+      "step": "nodes-installed",
+      "model": "lama-big",
+      "result": {
+        "state": "timeout"
+      },
+      "time": "01:18:12"
+    },
+    {
+      "step": "download-queued",
+      "model": "lama-big",
+      "ids": [
+        "1792127892639-download"
+      ],
+      "time": "01:18:12"
+    },
+    {
+      "step": "download-finished",
+      "model": "lama-big",
+      "result": {
+        "task_id": "1792127892639-download",
+        "type": "download",
+        "model_id": "lama-big",
+        "state": "done",
+        "message": "1 file(s) ready",
+        "finished": 1792127894.215432,
+        "files": [
+          {
+            "dest": "inpaint/big-lama.pt",
+            "sha256": "344c77bbcb158f17dd143070d1e789f38a66c04202311ae3a258ef66667a9ea9",
+            "verified": true,
+            "sha256_recorded": false,
+            "skipped": true,
+            "resumed_from": 0
+          }
+        ]
+      },
+      "time": "01:18:14"
+    },
+    {
+      "step": "nodes-needed",
+      "model": "dreamshaper-8-inpainting",
+      "nodes": [],
+      "time": "01:18:14"
+    },
+    {
+      "step": "download-queued",
+      "model": "dreamshaper-8-inpainting",
+      "ids": [
+        "1792127894656-download"
+      ],
+      "time": "01:18:14"
+    },
+    {
+      "step": "download-finished",
+      "model": "dreamshaper-8-inpainting",
+      "result": {
+        "task_id": "1792127894656-download",
+        "type": "download",
+        "model_id": "dreamshaper-8-inpainting",
+        "state": "done",
+        "message": "1 file(s) ready",
+        "finished": 1792127898.146691,
+        "files": [
+          {
+            "dest": "checkpoints/DreamShaper_8_INPAINTING.inpainting.safetensors",
+            "sha256": "ac84e05d5039d7a8aea3ced335ac7c56da6d3c6816465651f928b137c3a7b24a",
+            "verified": true,
+            "sha256_recorded": false,
+            "skipped": true,
+            "resumed_from": 0
+          }
+        ]
+      },
+      "time": "01:18:18"
+    },
+    {
+      "step": "statuses",
+      "rows": {
+        "sd15-inpainting": "Available",
+        "sdxl-base": "Available",
+        "fooocus-inpaint-patch": "Available",
+        "juggernaut-xl-v9": "Available",
+        "flux1-fill-dev-gguf-q4": "Needs token",
+        "flux1-fill-dev": "Needs token",
+        "qwen-image-edit-2511-gguf-q4": "Available",
+        "lama-big": "Installed",
+        "mat-places512": "Available",
+        "realistic-vision-v6-inpainting": "Available",
+        "dreamshaper-8-inpainting": "Installed",
+        "realvisxl-v5": "Available"
+      },
+      "active": "dreamshaper-8-inpainting",
+      "time": "01:18:18"
+    }
+  ],
+  "ok": true
+}

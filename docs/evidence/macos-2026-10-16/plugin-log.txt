@@ -1,0 +1,40 @@
+2026-10-16 00:15:35,395 INFO  [26342 openfill] fill: done, seed=1, 1 layer(s)
+2026-10-16 00:15:37,376 INFO  [26390 openfill] timing: upload image=164788 mask=4564 bytes in 0.012 s
+2026-10-16 00:15:43,993 WARNING [26390 openfill] server has no OpenCV; retrying with neutral pre-fill
+2026-10-16 00:19:16,444 INFO  [26390 openfill] timing: queue->first step 18.029 s, sampling 194.418 s, download 848993 bytes in 0.012 s
+2026-10-16 00:19:17,928 INFO  [26390 openfill] fill: done, seed=99, 3 layer(s)
+2026-10-16 00:19:21,148 INFO  [26677 openfill] timing: upload image=240341 mask=7578 bytes in 0.019 s
+2026-10-16 00:19:21,435 WARNING [26677 openfill] server has no OpenCV; retrying with neutral pre-fill
+2026-10-16 00:22:14,314 INFO  [26677 openfill] timing: queue->first step 15.883 s, sampling 156.993 s, download 571681 bytes in 0.012 s
+2026-10-16 00:23:40,275 INFO  [26886 openfill] timing: queue->first step 9.218 s, sampling 71.883 s, download 633058 bytes in 0.010 s
+2026-10-16 00:23:45,126 INFO  [27013 openfill] timing: upload image=87089 mask=2365 bytes in 0.010 s
+2026-10-16 00:23:45,250 WARNING [27013 openfill] server has no OpenCV; retrying with neutral pre-fill
+2026-10-16 00:24:33,271 INFO  [27013 openfill] timing: queue->first step 5.966 s, sampling 41.998 s, download 61081 bytes in 0.049 s
+2026-10-16 00:24:33,523 INFO  [27013 openfill] fill: done, seed=2, 1 layer(s)
+2026-10-16 00:24:37,743 ERROR [27100 openfill] procedure failed: Nothing is selected. Select the area to fill first (for example with the Rectangle or Free Select tool), then run Generative Fill again. To regenerate the whole image, use Select > All. Next step: try again. If it happens again, turn on "Verbose log" in Filters > OpenFill > Generative Fill Settings and keep openfill.log for a bug report.
+2026-10-16 00:25:56,760 INFO  [27586 openfill] launching supervisor (gimp pid 27467): ~/ComfyUI/venv/bin/python3 ~/Library/Application Support/GIMP/3.2/plug-ins/gimp-openfill/openfill/supervisor.py --mode backend --python ~/ComfyUI/venv/bin/python3 --main ~/ComfyUI/main.py --cwd ~/ComfyUI --host 127.0.0.1 --port 8188 --base ~/Library/Application Support/GIMP/3.2/openfill --config ~/Library/Application Support/GIMP/3.2/openfill/config.json --watch-pid 27467 --idle-minutes 20
+2026-10-16 00:26:17,900 INFO  [27586 openfill] timing: upload image=34318 mask=4087 bytes in 0.037 s
+2026-10-16 00:27:23,697 INFO  [27586 openfill] timing: queue->first step 13.558 s, sampling 52.231 s, download 215110 bytes in 0.003 s
+2026-10-16 00:27:24,232 INFO  [27586 openfill] fill: done, seed=12345, 1 layer(s)
+2026-10-16 00:27:25,815 INFO  [27941 openfill] timing: upload image=177302 mask=4087 bytes in 0.005 s
+2026-10-16 00:28:22,040 INFO  [27941 openfill] timing: queue->first step 5.476 s, sampling 50.739 s, download 200376 bytes in 0.008 s
+2026-10-16 00:28:22,314 INFO  [27941 openfill] fill: done, seed=7, 1 layer(s)
+2026-10-16 00:28:24,142 INFO  [27975 openfill] timing: upload image=115863 mask=3764 bytes in 0.006 s
+2026-10-16 00:28:26,455 INFO  [27975 openfill] timing: queue->first step 1.845 s, sampling 0.463 s, download 81939 bytes in 0.001 s
+2026-10-16 00:28:26,666 INFO  [27975 openfill] fill: done, seed=1, 1 layer(s)
+2026-10-16 00:28:28,613 INFO  [27980 openfill] timing: upload image=163503 mask=4564 bytes in 0.012 s
+2026-10-16 00:31:54,932 INFO  [27980 openfill] timing: queue->first step 17.188 s, sampling 189.099 s, download 798389 bytes in 0.018 s
+2026-10-16 00:31:56,202 INFO  [27980 openfill] fill: done, seed=99, 3 layer(s)
+2026-10-16 00:31:59,509 INFO  [28317 openfill] timing: upload image=243482 mask=7578 bytes in 0.015 s
+2026-10-16 00:35:07,112 INFO  [28317 openfill] timing: queue->first step 9.342 s, sampling 178.219 s, download 467945 bytes in 0.030 s
+2026-10-16 00:36:58,037 INFO  [28942 openfill] timing: queue->first step 6.973 s, sampling 95.447 s, download 633360 bytes in 0.005 s
+2026-10-16 00:37:04,373 INFO  [29207 openfill] timing: upload image=86916 mask=2365 bytes in 0.010 s
+2026-10-16 00:38:05,652 INFO  [29207 openfill] timing: queue->first step 5.264 s, sampling 56.006 s, download 61142 bytes in 0.003 s
+2026-10-16 00:38:05,960 INFO  [29207 openfill] fill: done, seed=2, 1 layer(s)
+2026-10-16 00:38:11,512 ERROR [29380 openfill] procedure failed: Nothing is selected. Select the area to fill first (for example with the Rectangle or Free Select tool), then run Generative Fill again. To regenerate the whole image, use Select > All. Next step: try again. If it happens again, turn on "Verbose log" in Filters > OpenFill > Generative Fill Settings and keep openfill.log for a bug report.
+2026-10-16 00:43:06,813 INFO  [31547 openfill] launching supervisor (gimp pid 31253): ~/ComfyUI/venv/bin/python3 ~/Library/Application Support/GIMP/3.2/plug-ins/gimp-openfill/openfill/supervisor.py --mode backend --python ~/ComfyUI/venv/bin/python3 --main ~/ComfyUI/main.py --cwd ~/ComfyUI --host 127.0.0.1 --port 8188 --base ~/Library/Application Support/GIMP/3.2/openfill --config ~/Library/Application Support/GIMP/3.2/openfill/config.json --watch-pid 31253 --idle-minutes 20
+2026-10-16 00:43:29,484 INFO  [31547 openfill] timing: upload image=34318 mask=4087 bytes in 0.014 s
+2026-10-16 00:45:09,991 INFO  [31547 openfill] timing: queue->first step 19.549 s, sampling 80.884 s, download 188117 bytes in 0.038 s
+2026-10-16 00:45:11,503 INFO  [31547 openfill] fill: done, seed=3881606804, 1 layer(s)
+2026-10-16 01:20:30,125 WARNING [33041 openfill] port 8188 on 127.0.0.1 is taken by a program that is not ComfyUI
+2026-10-16 01:20:30,126 ERROR [33041 openfill] procedure failed: The AI backend is not available: Port 8188 is used by another program (it is not ComfyUI). Close that program, or set a free port in the ComfyUI URL in Filters > OpenFill > Generative Fill Settings (for example http://127.0.0.1:8190).
