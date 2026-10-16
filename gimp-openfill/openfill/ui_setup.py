@@ -10,6 +10,7 @@ steps) lives in ``comfy_setup``; this module only draws it.
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -142,9 +143,13 @@ class _Notice(Gtk.Dialog):
         self.download = self.add_button("Download ComfyUI", RESP_DOWNLOAD)
         self.add_button("I already have ComfyUI...", RESP_HAVE)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        self.set_default_response(RESP_DOWNLOAD)
+        self.set_default_response(RESP_DOWNLOAD if sys.platform == "win32" else RESP_HAVE)
         self.refresh()
         self.show_all()
+        if sys.platform != "win32":
+            # The download is the Windows build; the checks say how to install ComfyUI here instead.
+            row.hide()
+            self.download.hide()
 
     def refresh(self) -> None:
         self.folder_label.set_text(f"It will be installed in {self.install_dir}")

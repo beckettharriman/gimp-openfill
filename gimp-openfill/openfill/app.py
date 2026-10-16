@@ -431,7 +431,8 @@ class App:
         if comfy_layout(path) is None:
             raise BackendError(
                 f"No ComfyUI was found in '{path}'. Choose the folder that holds python_embeded and ComfyUI "
-                "(the unpacked ComfyUI_windows_portable folder)."
+                "(the unpacked ComfyUI_windows_portable folder), or a ComfyUI checkout that holds main.py "
+                "and a venv (or .venv) folder."
             )
         self.settings.comfy_dir = str(path)
         self._save_settings()
