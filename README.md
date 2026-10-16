@@ -7,8 +7,6 @@
 *Generative fill for GIMP 3, running on your own graphics card. You own the whole pipeline, nothing leaves your computer.*
 
 <img src="docs/screenshots/openfill-demo.gif" width="720" alt="In GIMP, Generative Expand turns a 4:3 landscape photo of a car on a mountain road into a 3:4 portrait with no prompt, then the car is lassoed and Remove object erases it, leaving the empty road"><br>
-<sub>A real recording of OpenFill in GIMP 3.2.6 on Linux (RTX 2070 Max-Q, 8 GB): Generative Expand from 4:3 to 3:4 with no prompt, then Remove object on the car.</sub>
-
 **Remove objects, fill a selection from a prompt, and expand the canvas, all inside GIMP.**<br>
 
 </div>
