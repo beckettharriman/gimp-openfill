@@ -4,7 +4,7 @@
 
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](COPYING) ![GIMP 3.2](https://img.shields.io/badge/GIMP-3.2-444.svg) ![Windows tested](https://img.shields.io/badge/tested%20on-Windows-444.svg) ![Python + ComfyUI](https://img.shields.io/badge/built%20with-Python%20%2B%20ComfyUI-orange.svg) ![Local](https://img.shields.io/badge/100%25-local-30d158.svg) ![Beta](https://img.shields.io/badge/status-beta-e8a33d.svg)
 
-*Generative fill for GIMP 3, running on your own graphics card. You own the whole pipeline, nothing leaves your computer.*
+*Generative fill, expand and object removal for GIMP 3, running on your graphics card. You own the whole pipeline, nothing leaves your computer.*
 
 <img src="docs/screenshots/openfill-demo.gif" width="720" alt="In GIMP, Generative Expand turns a 4:3 landscape photo of a car on a mountain road into a 3:4 portrait with no prompt, then the car is lassoed and Remove object erases it, leaving the empty road"><br>
 **Remove objects, fill a selection from a prompt, and expand the canvas, all inside GIMP.**<br>
