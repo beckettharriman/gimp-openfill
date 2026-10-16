@@ -89,6 +89,8 @@ class Settings:
     scene_caption: bool = False
     # Add noise to a fill that is cleaner than the grain around it.
     grain_match: bool = True
+    # Remove the faint outline a fill leaves on smooth areas (quality.seam_field).
+    seam_correction: bool = True
     # Order several variations best first by cheap quality metrics.
     rank_variations: bool = True
     max_side_sd15: int = 768

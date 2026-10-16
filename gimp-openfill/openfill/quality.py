@@ -312,3 +312,184 @@ def _normal_quantile(p: float) -> float:
         * q
         / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1)
     )
+
+
+# ------------------------------------------------------- seam correction ----
+
+# A generated fill often comes back a few levels lighter or tinted against the
+# original right at the selection edge (VAE round trip, colour match over the
+# whole context). On textured areas that hides; on a smooth sky or wall the
+# layer's outline shows as a faint rectangle. The correction measures the
+# difference just outside the selection, where the visible layer should equal
+# the original, and spreads it smoothly over the fill: only a low-frequency
+# offset, so the generated detail is untouched.
+
+SEAM_SIDE = 256  # analysis resolution (longer side)
+SEAM_CELL = 8  # analysis pixels per offset cell
+SEAM_MAX_OFFSET = 24  # larger differences are content, not drift: left alone
+SEAM_MAX_SPREAD = 10  # cells whose difference varies more than this are texture: ignored
+SEAM_MIN_OFFSET = 1.5  # below this nothing is visible: no change
+
+
+@dataclass(frozen=True)
+class SeamField:
+    """Per-channel offsets on a coarse grid; ``block`` full-size pixels per grid cell."""
+
+    width: int  # grid size
+    height: int
+    block: int
+    offsets: tuple[tuple[float, ...], ...]  # per grid cell (row-major): one offset per colour channel
+
+
+def _median(values: list[float]) -> float:
+    s = sorted(values)
+    n = len(s)
+    return s[n // 2] if n % 2 else 0.5 * (s[n // 2 - 1] + s[n // 2])
+
+
+def seam_field(
+    width: int,
+    height: int,
+    original: bytes,
+    layer: bytes,
+    mask: bytes,
+    channels: int = 4,
+    band: int = 24,
+    side: int = SEAM_SIDE,
+    original_rect: tuple[int, int, int, int] | None = None,
+) -> SeamField | None:
+    """Offsets that make ``layer`` meet ``original`` at the selection edge, or None when nothing needs fixing.
+
+    ``original`` and ``layer`` are 8-bit interleaved buffers of the same context
+    (``channels`` each), ``mask`` the selection (one byte per pixel) and
+    ``band`` how far the visible layer reaches beyond the selection, in pixels.
+
+    With ``original_rect`` (x0, y0, x1, y1: where ``original`` holds real pixels,
+    Generative Expand's old image) ``mask`` is the generated area instead: the
+    difference is measured where it overlaps the old image, and the offsets
+    spread over the whole generated area.
+    """
+    step = max(1, math.ceil(max(width, height) / side))
+    sw, sh = len(range(0, width, step)), len(range(0, height, step))
+    colours = min(3, channels)
+
+    def small(data: bytes, ch: int) -> list[bytes]:
+        rows = []
+        stride = width * ch
+        for y in range(0, height, step):
+            row = data[y * stride : (y + 1) * stride]
+            rows.append([row[c::ch][::step] for c in range(ch)])
+        return rows
+
+    so, sl, sm = small(original, channels), small(layer, channels), small(mask, 1)
+    flat_mask = b"".join(r[0] for r in sm)
+    if original_rect is None:
+        dist = signed_distance(sw, sh, flat_mask)
+        reach = max(1, round(band / step))
+    else:
+        # Measured: generated pixels over the old image (distance 1); shown: anything generated
+        # (distance 0); the rest: nothing (a distance beyond reach).
+        x0, y0, x1, y1 = original_rect
+        reach = 1
+        dist = [
+            (1 if x0 <= x * step < x1 and y0 <= y * step < y1 and flat_mask[y * sw + x] >= 128 else 0)
+            if flat_mask[y * sw + x]
+            else 2
+            for y in range(sh)
+            for x in range(sw)
+        ]
+    cell = SEAM_CELL
+    gw, gh = math.ceil(sw / cell), math.ceil(sh / cell)
+    samples: dict[int, list[list[float]]] = {}
+    for y in range(sh):
+        o_row, l_row = so[y], sl[y]
+        for x in range(sw):
+            d = dist[y * sw + x]
+            if not 1 <= d <= reach:
+                continue
+            key = (y // cell) * gw + x // cell
+            per = samples.setdefault(key, [[] for _ in range(colours)])
+            for c in range(colours):
+                per[c].append(o_row[c][x] - l_row[c][x])
+    known: list[tuple[float, float, tuple[float, ...]]] = []
+    for key, per in samples.items():
+        if len(per[0]) < 4:
+            continue
+        meds = tuple(_median(v) for v in per)
+        spread = max(_median([abs(a - m) for a in v]) for v, m in zip(per, meds, strict=True))
+        if spread > SEAM_MAX_SPREAD or max(abs(m) for m in meds) > SEAM_MAX_OFFSET:
+            continue
+        known.append((key % gw + 0.5, key // gw + 0.5, meds))
+    if not known or max(max(abs(m) for m in k[2]) for k in known) < SEAM_MIN_OFFSET:
+        return None
+    # Cells the layer shows (inside the selection or within reach of it); the rest stays at zero.
+    shown = [False] * (gw * gh)
+    for y in range(sh):
+        for x in range(sw):
+            if dist[y * sw + x] <= reach:
+                shown[(y // cell) * gw + x // cell] = True
+    offsets = []
+    for gy in range(gh):
+        for gx in range(gw):
+            if not shown[gy * gw + gx]:
+                offsets.append((0.0,) * colours)
+                continue
+            # Shepard interpolation (inverse squared distance) between the measured edge cells.
+            acc = [0.0] * colours
+            total = 0.0
+            exact = None
+            for kx, ky, meds in known:
+                d2 = (kx - gx - 0.5) ** 2 + (ky - gy - 0.5) ** 2
+                if d2 < 1e-6:
+                    exact = meds
+                    break
+                w = 1.0 / d2
+                total += w
+                for c in range(colours):
+                    acc[c] += w * meds[c]
+            offsets.append(tuple(exact) if exact else tuple(a / total for a in acc))
+    return SeamField(gw, gh, step * cell, tuple(offsets))
+
+
+def apply_seam_field(data: bytes, width: int, height: int, channels: int, field: SeamField) -> bytes:
+    """``data`` with the field's offsets added to its colour channels (bilinear between cells, alpha untouched)."""
+    colours = min(3, channels)
+    block = field.block
+    # Offsets at a resolution of ``fine`` pixels: smooth enough that neighbouring
+    # blocks differ by at most a level, cheap enough for pure Python.
+    fine = max(1, block // 4)
+    fw, fh = math.ceil(width / fine), math.ceil(height / fine)
+    span = 2 * SEAM_MAX_OFFSET + 1
+    table = bytes(max(0, min(255, v + k - SEAM_MAX_OFFSET)) for v in range(256) for k in range(span))
+
+    def at(gx: float, gy: float, c: int) -> float:
+        gx = min(max(gx - 0.5, 0.0), field.width - 1.0)
+        gy = min(max(gy - 0.5, 0.0), field.height - 1.0)
+        x0, y0 = int(gx), int(gy)
+        x1, y1 = min(x0 + 1, field.width - 1), min(y0 + 1, field.height - 1)
+        fx, fy = gx - x0, gy - y0
+        o = field.offsets
+        top = o[y0 * field.width + x0][c] * (1 - fx) + o[y0 * field.width + x1][c] * fx
+        bottom = o[y1 * field.width + x0][c] * (1 - fx) + o[y1 * field.width + x1][c] * fx
+        return top * (1 - fy) + bottom * fy
+
+    out = bytearray(data)
+    stride = width * channels
+    for fy in range(fh):
+        gy = (fy * fine + fine / 2) / block
+        rows = range(fy * fine, min(height, (fy + 1) * fine))
+        for c in range(colours):
+            cells = [
+                max(0, min(span - 1, round(at((fx * fine + fine / 2) / block, gy, c)) + SEAM_MAX_OFFSET))
+                for fx in range(fw)
+            ]
+            if all(k == SEAM_MAX_OFFSET for k in cells):
+                continue
+            line = b"".join(bytes((k,)) * fine for k in cells)[:width]
+            for y in rows:
+                start = y * stride + c
+                values = data[start : start + stride : channels]
+                out[start : start + stride : channels] = bytes(
+                    map(table.__getitem__, map(int.__add__, map(span.__mul__, values), line))
+                )
+    return bytes(out)

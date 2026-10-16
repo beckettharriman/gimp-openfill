@@ -175,3 +175,74 @@ class GrainTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def _sky(w, h, tint=(0, 0, 0), box=None, texture=0, seed=0):
+    """RGBA gradient 'sky'; inside ``box`` (x0, y0, x1, y1) ``tint`` is added, plus optional noise."""
+    rnd = random.Random(seed)
+    out = bytearray()
+    for y in range(h):
+        for x in range(w):
+            inside = box and box[0] <= x < box[2] and box[1] <= y < box[3]
+            px = [90 + y // 4, 150 + y // 6, 220 - y // 8]
+            for c in range(3):
+                v = px[c] + (tint[c] if inside else 0) + (rnd.randint(-texture, texture) if inside and texture else 0)
+                out.append(max(0, min(255, v)))
+            out.append(255)
+    return bytes(out)
+
+
+def _rect_mask(w, h, box):
+    return bytes(255 if box[0] <= x < box[2] and box[1] <= y < box[3] else 0 for y in range(h) for x in range(w))
+
+
+class SeamCorrectionTest(unittest.TestCase):
+    W, H = 160, 120
+    SEL = (50, 40, 110, 80)  # the selection
+    LAYER = (42, 32, 118, 88)  # the generated area the layer shows: the selection grown by 8
+
+    def _px(self, data, x, y):
+        o = (y * self.W + x) * 4
+        return tuple(data[o : o + 3])
+
+    def test_tinted_fill_is_brought_back_to_the_original(self):
+        original = _sky(self.W, self.H)
+        layer = _sky(self.W, self.H, tint=(6, -5, 8), box=self.LAYER)
+        mask = _rect_mask(self.W, self.H, self.SEL)
+        field = quality.seam_field(self.W, self.H, original, layer, mask, 4, band=8, side=self.W)
+        self.assertIsNotNone(field)
+        fixed = quality.apply_seam_field(layer, self.W, self.H, 4, field)
+        for x, y in ((45, 60), (80, 35), (80, 60), (115, 85)):
+            for a, b in zip(self._px(fixed, x, y), self._px(original, x, y), strict=True):
+                self.assertLessEqual(abs(a - b), 2, (x, y))
+        self.assertEqual(fixed[3::4], layer[3::4])  # alpha untouched
+
+    def test_matching_fill_is_left_alone(self):
+        original = _sky(self.W, self.H)
+        mask = _rect_mask(self.W, self.H, self.SEL)
+        self.assertIsNone(quality.seam_field(self.W, self.H, original, original, mask, 4, band=8, side=self.W))
+
+    def test_content_and_texture_are_not_mistaken_for_drift(self):
+        original = _sky(self.W, self.H)
+        mask = _rect_mask(self.W, self.H, self.SEL)
+        object_ = _sky(self.W, self.H, tint=(80, -60, -90), box=self.LAYER)  # a red object, not a tint
+        self.assertIsNone(quality.seam_field(self.W, self.H, original, object_, mask, 4, band=8, side=self.W))
+        grass = _sky(self.W, self.H, box=self.LAYER, texture=60, seed=3)
+        self.assertIsNone(quality.seam_field(self.W, self.H, original, grass, mask, 4, band=8, side=self.W))
+
+    def test_expand_strip_is_matched_to_the_old_image(self):
+        # Old image: x < 120; the expand mask covers x >= 112 (an 8 px overlap); the strip came back tinted.
+        original = _sky(self.W, self.H)
+        strip = (112, 0, self.W, self.H)
+        layer = _sky(self.W, self.H, tint=(-7, 4, -9), box=strip)
+        mask = _rect_mask(self.W, self.H, strip)
+        field = quality.seam_field(
+            self.W, self.H, original, layer, mask, 4, band=0, side=self.W, original_rect=(0, 0, 120, self.H)
+        )
+        self.assertIsNotNone(field)
+        fixed = quality.apply_seam_field(layer, self.W, self.H, 4, field)
+        for x, y in ((115, 20), (140, 60), (155, 110)):
+            for a, b in zip(self._px(fixed, x, y), self._px(original, x, y), strict=True):
+                self.assertLessEqual(abs(a - b), 2, (x, y))
+        for x, y in ((60, 60), (100, 10)):  # the old image is not touched
+            self.assertEqual(self._px(fixed, x, y), self._px(layer, x, y))

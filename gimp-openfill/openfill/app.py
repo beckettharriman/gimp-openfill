@@ -734,6 +734,8 @@ class App:
         except BaseException as err:
             runner.fail(err)
             raise
+        if self.settings.seam_correction and not model.prompt_free:
+            self._correct_seams(image, layers, ctx, image_rgba, mask_raw, layer_grow)
         if self.settings.grain_match and not model.prompt_free:
             self._match_grain(image, layers, ctx, image_rgba, mask_raw, result.seed)
         if len(layers) > 1 and self.settings.rank_variations:
@@ -741,6 +743,47 @@ class App:
         runner.done(f"Added layer: {layers[0].get_name()}" if layers else "Done")
         self.log.info("fill: done, seed=%s, %d layer(s)", result.seed, len(layers))
         return layers
+
+    def _correct_seams(
+        self,
+        image,
+        layers: list,
+        ctx: Rect,
+        image_rgba: bytes,
+        mask_raw: bytes,
+        band: int,
+        original_rect: tuple[int, int, int, int] | None = None,
+        kind: str = "fill",
+    ) -> None:
+        """Remove the faint outline a fill leaves on smooth areas: the layer's low-frequency
+        colour difference to the original just outside the selection, spread over the fill
+        (``quality.seam_field``). Cosmetic: any failure keeps the layer as it came."""
+        try:
+            started = time.monotonic()
+            image.undo_group_start()
+            try:
+                for index, layer in enumerate(layers):
+                    if (layer.get_width(), layer.get_height()) != (ctx.width, ctx.height):
+                        continue
+                    pixels = gimp_io.layer_rgba(layer)
+                    field = quality.seam_field(
+                        ctx.width, ctx.height, image_rgba, pixels, mask_raw, 4, band=band, original_rect=original_rect
+                    )
+                    if field is None:
+                        self.log.info(
+                            "%s: layer %d meets the original at the edge; no seam correction", kind, index + 1
+                        )
+                        continue
+                    largest = max(max(abs(v) for v in cell) for cell in field.offsets)
+                    gimp_io.set_layer_rgba(layer, quality.apply_seam_field(pixels, ctx.width, ctx.height, 4, field))
+                    self.log.info(
+                        "%s: seam corrected on layer %d (largest offset %.1f levels)", kind, index + 1, largest
+                    )
+            finally:
+                image.undo_group_end()
+            self.log.info("%s: seam correction in %.2f s", kind, time.monotonic() - started)
+        except Exception as err:  # noqa: BLE001 - cosmetic; never lose the result
+            self.log.warning("%s: seam correction skipped: %s", kind, err)
 
     def _match_grain(self, image, layers: list, ctx: Rect, image_rgba: bytes, mask_raw: bytes, seed: int) -> None:
         """Generated fills come back cleaner than a grainy photo. Measure the
@@ -891,6 +934,7 @@ class App:
         """One expand pass: all margins at once. ``crop`` (left, top, right,
         bottom) is cut off in the same canvas resize and is not part of the context."""
         left, top, right, bottom = margins
+        old_width, old_height = image.get_width(), image.get_height()
         profile = self.profile_for(model)
         plan = geometry.plan_expand(
             image.get_width() - crop[0] - crop[2],
@@ -932,7 +976,7 @@ class App:
         # back by the offset; pixels outside the image come back transparent) so a
         # backend failure leaves the image untouched. The canvas grows only on success.
         source_rect = plan.context.translate(crop[0] - plan.offset_x, crop[1] - plan.offset_y)
-        image_png = gimp_io.export_region_png(image, source_rect, transparent_outside=True)
+        image_png, image_rgba = gimp_io.export_region(image, source_rect, transparent_outside=True)
         mask_pixels = geometry.mask_for_expand(plan)
         mask_png = gimp_io.mask_png_from_bytes(plan.context, mask_pixels)
         request = InpaintRequest(
@@ -974,6 +1018,15 @@ class App:
             )
         finally:
             image.undo_group_end()
+        if self.settings.seam_correction and not model.prompt_free:
+            # Where the old image's pixels are, in context coordinates (the crop is not part of it).
+            old_rect = (
+                crop[0] - source_rect.x,
+                crop[1] - source_rect.y,
+                old_width - crop[2] - source_rect.x,
+                old_height - crop[3] - source_rect.y,
+            )
+            self._correct_seams(image, layers, plan.context, image_rgba, mask_pixels, 0, old_rect, "expand")
         self.log.info("expand: round done, seed=%s, %d layer(s)", result.seed, len(layers))
         return layers
 
