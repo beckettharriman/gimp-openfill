@@ -1,0 +1,450 @@
+{
+  "started": "2026-10-16 03:06:21",
+  "gimp_pid": 24307,
+  "cases": [
+    {
+      "case": "01-fill-prompt",
+      "procedure": "python-fu-openfill-generative-fill",
+      "args": {
+        "prompt": "a large grey boulder on grass, photo",
+        "negative": "blurry, text",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 12345,
+        "model": "active"
+      },
+      "status": "3",
+      "error": "",
+      "seconds": 84.2,
+      "layers_before": 1,
+      "layers": [
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Background",
+          "mask": false,
+          "group": false
+        }
+      ],
+      "size": [
+        1024,
+        768
+      ]
+    },
+    {
+      "case": "02-fill-again-warm",
+      "procedure": "python-fu-openfill-generative-fill",
+      "args": {
+        "prompt": "a small red wooden shed, photo",
+        "negative": "blurry",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 7,
+        "model": "active"
+      },
+      "status": "3",
+      "error": "",
+      "seconds": 57.4,
+      "layers_before": 2,
+      "layers": [
+        {
+          "name": "Generative Fill: a small red wooden shed, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Background",
+          "mask": false,
+          "group": false
+        }
+      ],
+      "size": [
+        1024,
+        768
+      ]
+    },
+    {
+      "case": "03-remove-object",
+      "procedure": "python-fu-openfill-generative-fill",
+      "args": {
+        "prompt": "",
+        "negative": "",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 1,
+        "model": "active",
+        "remove": true
+      },
+      "status": "3",
+      "error": "",
+      "seconds": 5.1,
+      "layers_before": 3,
+      "layers": [
+        {
+          "name": "Object Removal",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a small red wooden shed, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Background",
+          "mask": false,
+          "group": false
+        }
+      ],
+      "size": [
+        1024,
+        768
+      ]
+    },
+    {
+      "case": "04-fill-variations-3",
+      "procedure": "python-fu-openfill-generative-fill",
+      "args": {
+        "prompt": "a wooden picnic table on grass, photo",
+        "negative": "blurry",
+        "variations": 3,
+        "strength": 1.0,
+        "seed": 99,
+        "model": "active"
+      },
+      "status": "3",
+      "error": "",
+      "seconds": 209.7,
+      "layers_before": 4,
+      "layers": [
+        {
+          "name": "Generative Fill: a wooden picnic table on grass, photo",
+          "mask": false,
+          "group": true
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (1) #1"
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (2) #1"
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (3)"
+        },
+        {
+          "name": "Object Removal",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a small red wooden shed, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Background",
+          "mask": false,
+          "group": false
+        }
+      ],
+      "size": [
+        1024,
+        768
+      ]
+    },
+    {
+      "case": "05-expand-right-256",
+      "procedure": "python-fu-openfill-generative-expand",
+      "args": {
+        "prompt": "",
+        "negative": "blurry",
+        "variations": 1,
+        "left": 0,
+        "top": 0,
+        "right": 256,
+        "bottom": 0,
+        "seed": 7,
+        "model": "active"
+      },
+      "status": "3",
+      "error": "",
+      "seconds": 148.5,
+      "layers_before": 5,
+      "layers": [
+        {
+          "name": "Generative Expand",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a wooden picnic table on grass, photo",
+          "mask": false,
+          "group": true
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (1) #1"
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (2) #1"
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (3)"
+        },
+        {
+          "name": "Object Removal",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a small red wooden shed, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Background",
+          "mask": false,
+          "group": false
+        }
+      ],
+      "size": [
+        1280,
+        768
+      ]
+    },
+    {
+      "case": "06-text-to-image-layer",
+      "procedure": "python-fu-openfill-text-to-image",
+      "args": {
+        "prompt": "a small wooden cabin in a meadow, photo",
+        "negative": "blurry",
+        "variations": 1,
+        "width": 512,
+        "height": 384,
+        "target": "layer",
+        "seed": 3,
+        "model": "active"
+      },
+      "status": "3",
+      "error": "",
+      "seconds": 75.6,
+      "layers_before": 6,
+      "layers": [
+        {
+          "name": "Text to Image: a small wooden cabin in a meadow, photo",
+          "mask": false,
+          "group": false
+        },
+        {
+          "name": "Generative Expand",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a wooden picnic table on grass, photo",
+          "mask": false,
+          "group": true
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (1) #1"
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (2) #1"
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (3)"
+        },
+        {
+          "name": "Object Removal",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a small red wooden shed, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Background",
+          "mask": false,
+          "group": false
+        }
+      ],
+      "size": [
+        1280,
+        768
+      ]
+    },
+    {
+      "case": "07-tiny-selection",
+      "procedure": "python-fu-openfill-generative-fill",
+      "args": {
+        "prompt": "a bird",
+        "negative": "",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 2,
+        "model": "active"
+      },
+      "status": "3",
+      "error": "",
+      "seconds": 47.0,
+      "layers_before": 7,
+      "layers": [
+        {
+          "name": "Generative Fill: a bird",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Text to Image: a small wooden cabin in a meadow, photo",
+          "mask": false,
+          "group": false
+        },
+        {
+          "name": "Generative Expand",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a wooden picnic table on grass, photo",
+          "mask": false,
+          "group": true
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (1) #1"
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (2) #1"
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (3)"
+        },
+        {
+          "name": "Object Removal",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a small red wooden shed, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Background",
+          "mask": false,
+          "group": false
+        }
+      ],
+      "size": [
+        1280,
+        768
+      ]
+    },
+    {
+      "case": "08-fill-without-selection",
+      "procedure": "python-fu-openfill-generative-fill",
+      "args": {
+        "prompt": "a bird",
+        "negative": "",
+        "variations": 1,
+        "strength": 1.0,
+        "seed": 2,
+        "model": "active"
+      },
+      "status": "0",
+      "error": "Nothing is selected. Select the area to fill first (for example with the Rectangle or Free Select tool), then run Generative Fill again. To regenerate the whole image, use Select > All.",
+      "seconds": 1.1,
+      "layers_before": 8,
+      "layers": [
+        {
+          "name": "Generative Fill: a bird",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Text to Image: a small wooden cabin in a meadow, photo",
+          "mask": false,
+          "group": false
+        },
+        {
+          "name": "Generative Expand",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a wooden picnic table on grass, photo",
+          "mask": false,
+          "group": true
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (1) #1"
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (2) #1"
+        },
+        {
+          "name": "  Generative Fill: a wooden picnic table on grass, photo (3)"
+        },
+        {
+          "name": "Object Removal",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a small red wooden shed, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Generative Fill: a large grey boulder on grass, photo",
+          "mask": true,
+          "group": false
+        },
+        {
+          "name": "Background",
+          "mask": false,
+          "group": false
+        }
+      ],
+      "size": [
+        1280,
+        768
+      ]
+    }
+  ],
+  "ok": true,
+  "finished": "2026-10-16 03:17:05"
+}
