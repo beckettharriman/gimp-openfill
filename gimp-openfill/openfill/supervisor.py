@@ -166,6 +166,16 @@ def process_name(pid: int) -> str | None:
             return Path(buf.value).name.lower()
         finally:
             k32.CloseHandle(handle)
+    if sys.platform == "darwin":
+        # macOS has no /proc; libproc gives the executable path.
+        try:
+            libproc = ctypes.CDLL("/usr/lib/libproc.dylib")
+            buf = ctypes.create_string_buffer(4096)  # PROC_PIDPATHINFO_MAXSIZE
+            if libproc.proc_pidpath(pid, buf, ctypes.sizeof(buf)) <= 0:
+                return None
+            return Path(os.fsdecode(buf.value)).name.lower() or None
+        except (OSError, AttributeError):
+            return None
     try:
         return Path(os.readlink(f"/proc/{pid}/exe")).name.lower()
     except OSError:

@@ -86,6 +86,13 @@ class StartLockAndWatcherTests(unittest.TestCase):
         self.assertTrue(supervisor.acquire_start_lock(lock))
         self.assertEqual(lock.read_text(encoding="utf-8"), str(os.getpid()))
 
+    def test_process_name_of_this_process(self):
+        # Windows, /proc (Linux) and libproc (macOS) must all name the running interpreter.
+        name = supervisor.process_name(os.getpid())
+        self.assertIsNotNone(name)
+        self.assertIn("python", name)
+        self.assertIsNone(supervisor.process_name(999999))
+
     def test_live_watchers(self):
         folder = self.base / supervisor.WATCHERS_DIRNAME
         folder.mkdir()
