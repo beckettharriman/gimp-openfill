@@ -44,6 +44,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - macOS and Linux: the "ComfyUI is required" notice no longer offers the
   Windows-only download; it links ComfyUI's install steps for the platform.
   A checkout in `~/ComfyUI` and Stability Matrix on macOS are found.
+- Model downloads no longer get stuck when the task worker dies or stops
+  mid-download (killed, or shut down with GIMP): an exited worker that is
+  still a zombie of the Models tab counts as gone, a new worker re-queues
+  the half-done task and resumes it from its `.part` file, and the Models
+  tab no longer shows a download that nobody is doing.
+- macOS: the Models tab sizes models on the first run: an Apple silicon
+  Mac reports its chip and unified memory before ComfyUI has started.
+- A ComfyUI folder that cannot be started says why ("main.py is there but
+  no venv", "the folder does not exist", ...) instead of timing out; on
+  macOS GIMP's own Python is never used to run ComfyUI.
+- "Nothing is selected" and the indexed-image message no longer end with
+  "try again ... keep openfill.log for a bug report".
 - The release zip ships `install.sh` and keeps `gimp-openfill.py`
   executable; unzipped on macOS or Linux, GIMP skipped the plug-in.
 - `install.sh` writes the same minimal config as `install.ps1` (no
