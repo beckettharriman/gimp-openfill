@@ -1,0 +1,212 @@
+[
+  {
+    "i": 0,
+    "rect": [
+      404,
+      49,
+      261,
+      134
+    ],
+    "remove": false,
+    "status": 3,
+    "seconds": 122.9,
+    "error": null,
+    "layers": 2
+  },
+  {
+    "i": 1,
+    "rect": [
+      548,
+      48,
+      133,
+      306
+    ],
+    "remove": false,
+    "status": 3,
+    "seconds": 93.3,
+    "error": null,
+    "layers": 3
+  },
+  {
+    "i": 2,
+    "rect": [
+      59,
+      519,
+      283,
+      245
+    ],
+    "remove": false,
+    "status": 3,
+    "seconds": 73.2,
+    "error": null,
+    "layers": 4
+  },
+  {
+    "i": 3,
+    "rect": [
+      88,
+      444,
+      205,
+      105
+    ],
+    "remove": false,
+    "status": 3,
+    "seconds": 82.2,
+    "error": null,
+    "layers": 5
+  },
+  {
+    "i": 4,
+    "rect": [
+      246,
+      92,
+      310,
+      113
+    ],
+    "remove": true,
+    "status": 3,
+    "seconds": 4.6,
+    "error": null,
+    "layers": 6
+  },
+  {
+    "i": 5,
+    "rect": [
+      60,
+      126,
+      378,
+      204
+    ],
+    "remove": false,
+    "status": 3,
+    "seconds": 83.0,
+    "error": null,
+    "layers": 7
+  },
+  {
+    "i": 6,
+    "rect": [
+      642,
+      63,
+      210,
+      257
+    ],
+    "remove": false,
+    "status": 3,
+    "seconds": 66.3,
+    "error": null,
+    "layers": 8
+  },
+  {
+    "i": 7,
+    "rect": [
+      406,
+      50,
+      391,
+      245
+    ],
+    "remove": false,
+    "status": 3,
+    "seconds": 95.1,
+    "error": null,
+    "layers": 9
+  },
+  {
+    "i": 8,
+    "rect": [
+      570,
+      136,
+      209,
+      107
+    ],
+    "remove": false,
+    "status": 3,
+    "seconds": 93.8,
+    "error": null,
+    "layers": 10
+  },
+  {
+    "i": 9,
+    "rect": [
+      147,
+      553,
+      244,
+      203
+    ],
+    "remove": true,
+    "status": 3,
+    "seconds": 5.3,
+    "error": null,
+    "layers": 11
+  },
+  {
+    "i": 10,
+    "rect": [
+      315,
+      185,
+      156,
+      242
+    ],
+    "remove": false,
+    "status": 3,
+    "seconds": 81.6,
+    "error": null,
+    "layers": 12
+  },
+  {
+    "i": 11,
+    "rect": [
+      584,
+      192,
+      148,
+      244
+    ],
+    "remove": false,
+    "status": 3,
+    "seconds": 73.4,
+    "error": null,
+    "layers": 13
+  },
+  {
+    "i": 12,
+    "rect": [
+      560,
+      64,
+      286,
+      120
+    ],
+    "remove": false,
+    "status": 3,
+    "seconds": 97.2,
+    "error": null,
+    "layers": 14
+  },
+  {
+    "i": 13,
+    "rect": [
+      633,
+      210,
+      384,
+      111
+    ],
+    "remove": false,
+    "status": 3,
+    "seconds": 140.6,
+    "error": null,
+    "layers": 15
+  },
+  {
+    "i": 14,
+    "rect": [
+      544,
+      218,
+      350,
+      270
+    ],
+    "remove": true,
+    "status": 3,
+    "seconds": 5.2,
+    "error": null,
+    "layers": 16
+  }
+]
