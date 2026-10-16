@@ -38,15 +38,14 @@ The network comes into it twice: when the Models tab searches Hugging Face and C
 
 ## The dialogs
 
-|                                                                                                                                                                                              |                                                                                                                                                |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| <img src="docs/screenshots/fill-dialog.png" alt="Generative Fill">                                                                                                                                     | <img src="docs/screenshots/fill-dialog-remove.png" alt="Remove object">                                                                                  |
-| **Generative Fill.** Prompt, Recent prompts, what to avoid, the model and the number of variations are all on the first screen. Change amount and seed sit under Advanced.                   | **Remove object.** Same dialog, other tab. Nothing to type: it uses an installed removal model (LaMa or MAT) when there is one.                |
-| <img src="docs/screenshots/expand-dialog.png" alt="Generative Expand">                                                                                                                                 | <img src="docs/screenshots/settings-models.png" alt="Models">                                                                                            |
-| **Generative Expand.** Drag any edge of the thumbnail outward, or pick a ratio (1:1, 4:5, 3:2, 16:9 and the rest) and where the image sits on a 3x3 grid. It shows the new size as you drag. | **Models.** The download manager. What you have installed first, then Recommended for this PC, then the rest, from Hugging Face and Civitai.   |
-| <img src="docs/screenshots/progress-window.png" alt="Progress">                                                                                                                                        | <img src="docs/screenshots/variations-picker.png" alt="Variations">                                                                                      |
-| **Progress.** Floats over your image without stealing focus: the step, time left, a live preview of the picture forming, and Cancel.                                                         | **Variations.** Ask for up to eight and click through them. The ones you don't keep stay hidden in a layer group in case you change your mind. |
-
+| | |
+|:---:|:---:|
+| <a href="docs/screenshots/fill-dialog.png"><img src="docs/screenshots/fill-dialog.png" height="250" alt="Generative Fill"></a> | <a href="docs/screenshots/fill-dialog-remove.png"><img src="docs/screenshots/fill-dialog-remove.png" height="250" alt="Remove object"></a> |
+| **Generative Fill.** Prompt, Recent prompts, what to avoid, the model and the number of variations are all on the first screen. Change amount and seed sit under Advanced. | **Remove object.** Same dialog, other tab. Nothing to type: it uses an installed removal model (LaMa or MAT) when there is one. |
+| <a href="docs/screenshots/expand-dialog.png"><img src="docs/screenshots/expand-dialog.png" height="400" alt="Generative Expand"></a> | <a href="docs/screenshots/progress-window.png"><img src="docs/screenshots/progress-window.png" height="400" alt="Progress"></a> |
+| **Generative Expand.** Drag any edge of the thumbnail outward, or pick a ratio (1:1, 4:5, 3:2, 16:9 and the rest) and where the image sits on a 3x3 grid. It shows the new size as you drag. | **Progress.** Floats over your image without stealing focus: the step, time left, a live preview of the picture forming, and Cancel. |
+| <a href="docs/screenshots/settings-models.png"><img src="docs/screenshots/settings-models.png" height="290" alt="Models"></a> | <a href="docs/screenshots/variations-picker.png"><img src="docs/screenshots/tiles/variations-picker.png" height="290" alt="Variations"></a> |
+| **Models.** The download manager. What you have installed first, then Recommended for this PC, then the rest, from Hugging Face and Civitai. | **Variations.** Ask for up to eight and click through them. The ones you don't keep stay hidden in a layer group in case you change your mind. |
 
 ## Models, and what fits your PC
 
