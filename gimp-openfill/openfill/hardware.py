@@ -6,7 +6,7 @@ free disk space on the models drive, operating system.
 
 Detection is best effort and never raises: the graphics card comes from
 ``nvidia-smi`` when it is installed, otherwise from a running ComfyUI's
-``/system_stats``, otherwise it is unknown. :func:`fit` is a pure function
+``/system_stats``, otherwise from the chip on an Apple silicon Mac, otherwise it is unknown. :func:`fit` is a pure function
 that turns a catalog entry and a :class:`Hardware` into a :class:`FitVerdict`
 (runs comfortably, runs with offloading, too big, unknown).
 
@@ -192,6 +192,30 @@ def parse_system_stats(data: dict[str, Any]) -> tuple[str, int, int | None] | No
     return name, int(vram), ram_bytes
 
 
+def gpu_from_apple_silicon(
+    runner: Callable[..., Any] = subprocess.run, platform_name: str = sys.platform, machine: str | None = None
+) -> tuple[str, int, int] | None:
+    """(chip name, graphics budget, system memory) on an Apple silicon Mac, else None.
+
+    The GPU shares the unified memory; like :func:`parse_system_stats` for an MPS
+    device, about 70% of it is budgeted for the model and the rest left as system memory.
+    """
+    if platform_name != "darwin" or (machine or platform.machine()) != "arm64":
+        return None
+    try:
+        r = runner(
+            ["sysctl", "-n", "machdep.cpu.brand_string", "hw.memsize"], capture_output=True, text=True, timeout=5
+        )
+        brand, mem = (r.stdout or "").strip().splitlines()[:2]
+        total = int(mem)
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return None
+    if getattr(r, "returncode", 1) != 0 or total <= 0:
+        return None
+    vram = int(total * 0.7)
+    return brand.strip() or "Apple silicon", vram, total - vram
+
+
 def gpu_from_comfyui(
     url: str, opener: Callable[..., Any] = urlopen, timeout: float = 2.0
 ) -> tuple[str, int, int | None] | None:
@@ -268,6 +292,7 @@ def detect(
     comfy_url: str | None = None,
     nvidia: Callable[[], tuple[str, int] | None] = gpu_from_nvidia_smi,
     comfy: Callable[[str], Any] = gpu_from_comfyui,
+    apple: Callable[[], tuple[str, int, int] | None] = gpu_from_apple_silicon,
 ) -> Hardware:
     """Detect the hardware (see the module docstring). Never raises."""
     ram = system_ram()
@@ -290,6 +315,14 @@ def detect(
             name, vram, comfy_ram = stats
             ram = ram or comfy_ram
             source = "comfyui"
+    if not source:
+        try:
+            chip = apple()
+        except Exception:  # noqa: BLE001
+            chip = None
+        if chip:
+            name, vram, ram = chip
+            source = "apple-silicon"
     return Hardware(name, vram, ram, disk_free(models_root), os_name(), source)
 
 
