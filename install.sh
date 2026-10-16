@@ -166,38 +166,78 @@ else
   echo "Copied plug-in (with models/catalog.json) to $TARGET"
 fi
 
+# A ComfyUI the plug-in can start: a checkout with main.py and a venv (mirrors config.comfy_layout).
+comfy_usable() {
+  [ -f "$1/main.py" ] || return 1
+  for venv in venv .venv env; do
+    for py in bin/python3 bin/python; do
+      [ -x "$1/$venv/$py" ] && return 0
+    done
+  done
+  return 1
+}
+
+# First usable ComfyUI in the usual places (mirrors comfy_setup.detect_comfy; empty when none).
+find_comfy() {
+  for dir in "$HOME/ComfyUI" "$HOME/Documents/ComfyUI" "$HOME/Desktop/ComfyUI" "$HOME/Downloads/ComfyUI" \
+      "$HOME/Library/Application Support/StabilityMatrix/Packages/ComfyUI" \
+      "${XDG_DATA_HOME:-$HOME/.local/share}/StabilityMatrix/Packages/ComfyUI" \
+      "$HOME/pinokio/api/comfy.git/app"; do
+    if comfy_usable "$dir"; then
+      echo "$dir"
+      return
+    fi
+  done
+}
+
+# Default config (only if missing). comfy_dir is written only when a ComfyUI is given or found;
+# the models are left to the plug-in's defaults and the Models tab, as install.ps1 does.
 mkdir -p "$CONFIG_DIR"
 if [ ! -f "$CONFIG" ]; then
-  [ -n "$COMFY_DIR" ] || COMFY_DIR="$HOME/ComfyUI"
-  # JSON-escape backslashes and double quotes in the path.
-  ESCAPED=$(printf '%s' "$COMFY_DIR" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g')
+  if [ -z "$COMFY_DIR" ]; then
+    COMFY_DIR=$(find_comfy)
+    [ -z "$COMFY_DIR" ] || echo "Found ComfyUI: $COMFY_DIR"
+  fi
+  COMFY_LINE=""
+  if [ -n "$COMFY_DIR" ]; then
+    # JSON-escape backslashes and double quotes in the path.
+    ESCAPED=$(printf '%s' "$COMFY_DIR" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g')
+    COMFY_LINE="
+  \"comfy_dir\": \"$ESCAPED\","
+  fi
   umask 077  # config.json will hold the Hugging Face token
   cat > "$CONFIG" <<EOF
-{
+{$COMFY_LINE
   "backend": "comfyui",
-  "comfy_dir": "$ESCAPED",
   "url": "http://127.0.0.1:8188",
   "autostart": true,
-  "idle_timeout_minutes": 20,
-  "checkpoint": "sd-v1-5-inpainting.ckpt",
-  "sdxl_checkpoint": "sd_xl_base_1.0.safetensors",
-  "fooocus_head": "fooocus_inpaint_head.pth",
-  "fooocus_patch": "inpaint_v26.fooocus.patch",
-  "quality": "fast"
+  "idle_timeout_minutes": 20
 }
 EOF
   echo "Wrote default config to $CONFIG"
 else
   echo "Keeping existing config at $CONFIG"
+  if [ -z "$COMFY_DIR" ]; then
+    COMFY_DIR=$(sed -n 's/^ *"comfy_dir": *"\(.*\)",\{0,1\} *$/\1/p' "$CONFIG" | head -n 1)
+  fi
 fi
 
-if [ -n "$COMFY_DIR" ] && [ ! -f "$COMFY_DIR/main.py" ] && [ ! -f "$COMFY_DIR/ComfyUI/main.py" ]; then
-  echo "warning: ComfyUI not found at $COMFY_DIR. See docs/models.md for the backend setup." >&2
+HAVE_COMFY=0
+if [ -n "$COMFY_DIR" ] && comfy_usable "$COMFY_DIR"; then
+  HAVE_COMFY=1
+elif [ -n "$COMFY_DIR" ]; then
+  echo "warning: no usable ComfyUI at $COMFY_DIR (it needs main.py and a venv folder)." >&2
 fi
 echo ""
-echo "Next steps:"
-echo "  1. Restart GIMP (plug-ins are registered at start-up)."
-echo "  2. Open Filters > OpenFill > Generative Fill Settings... and check the ComfyUI folder."
-echo "  3. In the Models tab, download a model (SD 1.5 inpainting is the small default) and press Set active."
-echo "  4. Select an area of an image and run Filters > OpenFill > Generative Fill..."
+echo "OpenFill is installed. Next steps:"
+echo "  1. Start (or restart) GIMP; plug-ins are registered at start-up."
+if [ "$HAVE_COMFY" = 1 ]; then
+  echo "  2. Open an image, select an area and run Filters > OpenFill > Generative Fill..."
+else
+  echo "  2. Install ComfyUI in a folder with a venv (the README shows how), then run this script again"
+  echo "     with --comfy-dir <folder>, or choose 'I already have ComfyUI' when OpenFill asks for it."
+  echo "  3. Open an image, select an area and run Filters > OpenFill > Generative Fill..."
+fi
+echo "The first time, the model manager opens: download LaMa (object removal) and DreamShaper 8 Inpainting"
+echo "(fill and expand), about 2.3 GB together, then run Generative Fill again."
 echo "To remove the plug-in later: sh install.sh --uninstall (add --remove-config to delete the settings too)."
