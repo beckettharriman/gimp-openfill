@@ -5,8 +5,11 @@
 free disk space on the models drive, operating system.
 
 Detection is best effort and never raises: the graphics card comes from
-``nvidia-smi`` when it is installed, otherwise from a running ComfyUI's
-``/system_stats``, otherwise from the chip on an Apple silicon Mac, otherwise it is unknown. :func:`fit` is a pure function
+``nvidia-smi`` when it is installed, otherwise from NVIDIA's management
+library (NVML, which the driver ships; inside the GIMP Flatpak it is there
+when nvidia-smi is not), otherwise from a running ComfyUI's
+``/system_stats``, otherwise from the chip on an Apple silicon Mac,
+otherwise it is unknown. :func:`fit` is a pure function
 that turns a catalog entry and a :class:`Hardware` into a :class:`FitVerdict`
 (runs comfortably, runs with offloading, too big, unknown).
 
@@ -62,7 +65,7 @@ class Hardware:
     ram_bytes: int | None = None
     disk_free_bytes: int | None = None
     os_name: str = ""
-    gpu_source: str = ""  # "nvidia-smi", "comfyui" or "" (unknown)
+    gpu_source: str = ""  # "nvidia-smi", "nvml", "comfyui", "apple-silicon" or "" (unknown)
 
     @property
     def vram_gb(self) -> float | None:
@@ -164,6 +167,65 @@ def gpu_from_nvidia_smi(runner: Callable[..., Any] = subprocess.run) -> tuple[st
     if getattr(r, "returncode", 1) != 0:
         return None
     return parse_nvidia_smi(r.stdout or "")
+
+
+class _NvmlMemory(ctypes.Structure):
+    _fields_ = [("total", ctypes.c_ulonglong), ("free", ctypes.c_ulonglong), ("used", ctypes.c_ulonglong)]
+
+
+def _load_nvml() -> Any:
+    if sys.platform == "win32":
+        names = ["nvml.dll", str(Path(os.environ.get("SYSTEMROOT", r"C:\Windows")) / "System32" / "nvml.dll")]
+    elif sys.platform == "darwin":
+        return None
+    else:
+        names = ["libnvidia-ml.so.1", "libnvidia-ml.so"]
+    for name in names:
+        try:
+            return ctypes.CDLL(name)
+        except OSError:
+            continue
+    return None
+
+
+def gpu_from_nvml(loader: Callable[[], Any] = _load_nvml) -> tuple[str, int] | None:
+    """Name and total memory of the largest NVIDIA card from the driver's NVML library, or None.
+
+    Needs no nvidia-smi, so it also works inside the GIMP Flatpak, whose NVIDIA
+    GL extension ships ``libnvidia-ml.so.1`` but no ``nvidia-smi``.
+    """
+    try:
+        lib = loader()
+        if lib is None or lib.nvmlInit_v2() != 0:
+            return None
+    except (OSError, AttributeError):
+        return None
+    best: tuple[str, int] | None = None
+    try:
+        count = ctypes.c_uint(0)
+        if lib.nvmlDeviceGetCount_v2(ctypes.byref(count)) != 0:
+            return None
+        for i in range(count.value):
+            handle = ctypes.c_void_p()
+            if lib.nvmlDeviceGetHandleByIndex_v2(i, ctypes.byref(handle)) != 0:
+                continue
+            mem = _NvmlMemory()
+            name = ctypes.create_string_buffer(96)
+            if lib.nvmlDeviceGetMemoryInfo(handle, ctypes.byref(mem)) != 0:
+                continue
+            if lib.nvmlDeviceGetName(handle, name, ctypes.sizeof(name)) != 0:
+                continue
+            label = name.value.decode("utf-8", "replace").strip()
+            if label and mem.total > 0 and (best is None or mem.total > best[1]):
+                best = (label, int(mem.total))
+    except (OSError, AttributeError, ValueError):
+        return None
+    finally:
+        try:
+            lib.nvmlShutdown()
+        except (OSError, AttributeError):
+            pass
+    return best
 
 
 def parse_system_stats(data: dict[str, Any]) -> tuple[str, int, int | None] | None:
@@ -291,6 +353,7 @@ def detect(
     models_root: str | Path | None = None,
     comfy_url: str | None = None,
     nvidia: Callable[[], tuple[str, int] | None] = gpu_from_nvidia_smi,
+    nvml: Callable[[], tuple[str, int] | None] = gpu_from_nvml,
     comfy: Callable[[str], Any] = gpu_from_comfyui,
     apple: Callable[[], tuple[str, int, int] | None] = gpu_from_apple_silicon,
 ) -> Hardware:
@@ -306,7 +369,15 @@ def detect(
     if found:
         name, vram = found
         source = "nvidia-smi"
-    elif comfy_url:
+    else:
+        try:
+            found = nvml()
+        except Exception:  # noqa: BLE001
+            found = None
+        if found:
+            name, vram = found
+            source = "nvml"
+    if not source and comfy_url:
         try:
             stats = comfy(comfy_url)
         except Exception:  # noqa: BLE001

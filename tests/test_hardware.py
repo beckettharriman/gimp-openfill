@@ -84,6 +84,36 @@ class ParseTests(unittest.TestCase):
         self.assertIsNone(hwmod.gpu_from_comfyui(""))
 
 
+class _FakeNvml:
+    """Stands in for libnvidia-ml: fills the ctypes out-parameters like the real library."""
+
+    def __init__(self, cards, init=0):
+        self.cards, self.init, self.shut_down = cards, init, False
+
+    def nvmlInit_v2(self):
+        return self.init
+
+    def nvmlShutdown(self):
+        self.shut_down = True
+        return 0
+
+    def nvmlDeviceGetCount_v2(self, count):
+        count._obj.value = len(self.cards)
+        return 0
+
+    def nvmlDeviceGetHandleByIndex_v2(self, i, handle):
+        handle._obj.value = i + 1
+        return 0
+
+    def nvmlDeviceGetMemoryInfo(self, handle, mem):
+        mem._obj.total = self.cards[handle.value - 1][1]
+        return 0
+
+    def nvmlDeviceGetName(self, handle, buf, size):
+        buf.value = self.cards[handle.value - 1][0].encode()
+        return 0
+
+
 class DetectTests(unittest.TestCase):
     def test_nvidia_first(self):
         with tempfile.TemporaryDirectory() as d:
@@ -93,9 +123,11 @@ class DetectTests(unittest.TestCase):
         self.assertTrue(got.os_name)
 
     def test_comfyui_second_then_unknown(self):
-        got = hwmod.detect(None, "http://x", nvidia=lambda: None, comfy=lambda _u: ("Arc", 16 * GB, 64 * GB))
+        got = hwmod.detect(
+            None, "http://x", nvidia=lambda: None, nvml=lambda: None, comfy=lambda _u: ("Arc", 16 * GB, 64 * GB)
+        )
         self.assertEqual((got.gpu_name, got.vram_bytes, got.gpu_source), ("Arc", 16 * GB, "comfyui"))
-        got = hwmod.detect(None, None, nvidia=lambda: None, apple=lambda: None)
+        got = hwmod.detect(None, None, nvidia=lambda: None, nvml=lambda: None, apple=lambda: None)
         self.assertIsNone(got.vram_bytes)
         self.assertEqual(got.gpu_source, "")
         self.assertIn("not detected", got.summary())
@@ -104,15 +136,39 @@ class DetectTests(unittest.TestCase):
         def boom(*_a):
             raise RuntimeError("x")
 
-        got = hwmod.detect(None, "http://x", nvidia=boom, comfy=boom, apple=boom)
+        got = hwmod.detect(None, "http://x", nvidia=boom, nvml=boom, comfy=boom, apple=boom)
         self.assertIsNone(got.vram_bytes)
+
+    def test_nvml_when_nvidia_smi_is_missing(self):
+        got = hwmod.detect(
+            None, "http://x", nvidia=lambda: None, nvml=lambda: ("RTX 2070", 8 * GB), comfy=lambda _u: ("x", 1, 1)
+        )
+        self.assertEqual((got.gpu_name, got.vram_bytes, got.gpu_source), ("RTX 2070", 8 * GB, "nvml"))
+
+    def test_gpu_from_nvml(self):
+        lib = _FakeNvml([("Small", 4 * GB), ("NVIDIA GeForce RTX 2070", 8 * GB)])
+        self.assertEqual(hwmod.gpu_from_nvml(lambda: lib), ("NVIDIA GeForce RTX 2070", 8 * GB))
+        self.assertTrue(lib.shut_down)
+        self.assertIsNone(hwmod.gpu_from_nvml(lambda: None))
+        self.assertIsNone(hwmod.gpu_from_nvml(lambda: _FakeNvml([], init=9)))
+        self.assertIsNone(hwmod.gpu_from_nvml(lambda: _FakeNvml([])))
+
+        def missing():
+            raise OSError("no libnvidia-ml")
+
+        self.assertIsNone(hwmod.gpu_from_nvml(missing))
 
     def test_apple_silicon_after_comfyui(self):
         chip = ("Apple M3", 11 * GB, 5 * GB)
-        got = hwmod.detect(None, None, nvidia=lambda: None, apple=lambda: chip)
+        got = hwmod.detect(None, None, nvidia=lambda: None, nvml=lambda: None, apple=lambda: chip)
         self.assertEqual((got.gpu_name, got.vram_bytes, got.ram_bytes, got.gpu_source), (*chip, "apple-silicon"))
         got = hwmod.detect(
-            None, "http://x", nvidia=lambda: None, comfy=lambda _u: ("mps", 9 * GB, 4 * GB), apple=lambda: chip
+            None,
+            "http://x",
+            nvidia=lambda: None,
+            nvml=lambda: None,
+            comfy=lambda _u: ("mps", 9 * GB, 4 * GB),
+            apple=lambda: chip,
         )
         self.assertEqual(got.gpu_source, "comfyui")  # a running ComfyUI knows best
 

@@ -206,14 +206,18 @@ def _candidate_paths(
     # A git checkout with a venv in the home folder (the usual place on macOS and Linux).
     out.append((home / "ComfyUI", "ComfyUI folder"))
     # ComfyUI Desktop remembers where the user put its files.
-    base = _read_json(appdata / "ComfyUI" / "config.json").get("basePath")
-    if isinstance(base, str) and base:
-        out.append((Path(base), "ComfyUI Desktop"))
+    xdg_config = Path(env["XDG_CONFIG_HOME"]) if env.get("XDG_CONFIG_HOME") else home / ".config"
+    xdg_data = Path(env["XDG_DATA_HOME"]) if env.get("XDG_DATA_HOME") else home / ".local" / "share"
+    for desktop in (appdata, home / "Library/Application Support", xdg_config):
+        base = _read_json(desktop / "ComfyUI" / "config.json").get("basePath")
+        if isinstance(base, str) and base:
+            out.append((Path(base), "ComfyUI Desktop"))
     # Stability Matrix: the library may have been moved; its default is %APPDATA%\StabilityMatrix.
     libs = [
         appdata / "StabilityMatrix",
         local / "StabilityMatrix",
         home / "Library/Application Support/StabilityMatrix",
+        xdg_data / "StabilityMatrix",
     ]
     for settings in (appdata / "StabilityMatrix" / "library.json", appdata / "StabilityMatrix" / "settings.json"):
         lib = _read_json(settings).get("LibraryPath") or _read_json(settings).get("libraryPath")
@@ -367,7 +371,9 @@ def preflight(
             "unknown",
         )
     checks: list[Check] = []
-    kind = gpu_kind(adapters, bool(getattr(hw, "gpu_name", None) and getattr(hw, "gpu_source", "") == "nvidia-smi"))
+    kind = gpu_kind(
+        adapters, bool(getattr(hw, "gpu_name", None) and getattr(hw, "gpu_source", "") in ("nvidia-smi", "nvml"))
+    )
     name = getattr(hw, "gpu_name", None) or ""
     vram = getattr(hw, "vram_gb", None)
     if kind == "nvidia":

@@ -188,6 +188,22 @@ class DetectTests(unittest.TestCase):
         (root / "main.py").write_text("")
         self.assertEqual([(c.path, c.source) for c in self.found()], [(root, "Stability Matrix")])
 
+    def test_stability_matrix_on_linux(self):
+        root = self.home / ".local" / "share" / "StabilityMatrix" / "Packages" / "ComfyUI"
+        (root / "venv" / "bin").mkdir(parents=True)
+        (root / "venv" / "bin" / "python3").write_bytes(b"")
+        (root / "main.py").write_text("")
+        self.assertEqual([(c.path, c.source) for c in self.found()], [(root, "Stability Matrix")])
+
+    def test_desktop_config_on_macos_and_linux(self):
+        for folder in (self.home / "Library" / "Application Support", self.home / ".config"):
+            with self.subTest(folder=folder):
+                base = make_portable(self.home / folder.name / "Desk")
+                cfg = folder / "ComfyUI" / "config.json"
+                cfg.parent.mkdir(parents=True)
+                cfg.write_text(json.dumps({"basePath": str(base)}), encoding="utf-8")
+                self.assertIn((base, "ComfyUI Desktop"), [(c.path, c.source) for c in self.found()])
+
     def test_broken_config_json_does_not_raise(self):
         cfg = Path(self.env["APPDATA"]) / "ComfyUI" / "config.json"
         cfg.parent.mkdir(parents=True)
