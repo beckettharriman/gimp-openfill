@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- CI also runs the unit tests on Windows (next to Linux and macOS).
 - Standard GIMP install is now the headline: the release zip
   (`openfill-<version>.zip`) holds a self-contained `gimp-openfill/` folder
   (code, `models/catalog.json`, `models/comfy_setup.json`, README, COPYING)
@@ -33,6 +34,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fills and Generative Expand no longer leave a faint outline on smooth
+  areas. The generated layer drifted a few levels off the original at its
+  edge (on a 4000 x 3000 sky: a 5-level step around the fill, about 8 levels
+  at an expand's old edge beside a photo's sky); OpenFill now measures that
+  drift where the layer must match the original and evens it out across the
+  layer, leaving the generated detail alone (`seam_correction`, on by
+  default; evidence in `docs/evidence/seam-2026-10-16/`).
 - The graphics card is read from NVIDIA's management library (NVML) when
   `nvidia-smi` is missing, as it is inside the GIMP Flatpak, so the Models
   tab sizes models on the first run there too.
