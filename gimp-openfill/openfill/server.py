@@ -26,7 +26,7 @@ from urllib.parse import urlparse
 
 from .backend import BackendUnavailable, GenerationCancelled
 from .comfy_api import ComfyClient
-from .config import Paths, Settings, comfy_layout
+from .config import Paths, Settings, comfy_layout, comfy_problem, in_app_bundle
 from .supervisor import WATCHERS_DIRNAME, pid_is_python
 
 ProgressCallback = Callable[[float, str], None]
@@ -67,11 +67,6 @@ def _hidden_python() -> str:
             if candidate.exists():
                 return str(candidate)
     return str(exe)
-
-
-def in_app_bundle(path: str | Path) -> bool:
-    """``path`` lies inside a macOS ``.app`` bundle (``GIMP.app/Contents/...``)."""
-    return any(part.endswith(".app") for part in Path(path).parts)
 
 
 def helper_python(
@@ -195,8 +190,8 @@ class ServerManager:
         layout = comfy_layout(self.settings.comfy_dir)
         if layout is None:
             raise BackendUnavailable(
-                f"ComfyUI was not found at '{self.settings.comfy_dir}'. Install the portable "
-                "build there or set the ComfyUI folder in Filters > OpenFill > Generative Fill Settings."
+                f"{comfy_problem(self.settings.comfy_dir)} Install ComfyUI there or set the ComfyUI folder in "
+                "Filters > OpenFill > Generative Fill Settings."
             )
         self.paths.ensure()
         url = self.settings.url

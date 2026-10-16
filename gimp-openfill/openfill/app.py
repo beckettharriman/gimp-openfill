@@ -35,7 +35,7 @@ from .backend import (
 from .backends.a1111 import A1111Backend
 from .backends.comfy import ComfyBackend
 from .comfy_api import ComfyApiError, ComfyClient
-from .config import Paths, Settings, comfy_layout
+from .config import Paths, Settings, comfy_layout, comfy_problem
 from .geometry import Rect
 from .log import get_logger
 from .progress import OverallProgress
@@ -229,7 +229,7 @@ class App:
         if ComfyClient(self.server.url(), timeout=3).is_alive(timeout=2.0):
             return
         raise BackendUnavailable(
-            f"ComfyUI was not found in '{self.settings.comfy_dir}'. Set the ComfyUI folder in {SETTINGS_MENU}, "
+            f"{comfy_problem(self.settings.comfy_dir)} Set the ComfyUI folder in {SETTINGS_MENU}, "
             "or install ComfyUI there (see the README, Install)."
         )
 
@@ -430,7 +430,7 @@ class App:
         """Make ``path`` the ComfyUI folder; raises ``BackendError`` when it holds no ComfyUI."""
         if comfy_layout(path) is None:
             raise BackendError(
-                f"No ComfyUI was found in '{path}'. Choose the folder that holds python_embeded and ComfyUI "
+                f"{comfy_problem(path)} Choose the folder that holds python_embeded and ComfyUI "
                 "(the unpacked ComfyUI_windows_portable folder), or a ComfyUI checkout that holds main.py "
                 "and a venv (or .venv) folder."
             )
