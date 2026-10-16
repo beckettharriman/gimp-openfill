@@ -33,6 +33,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- The graphics card is read from NVIDIA's management library (NVML) when
+  `nvidia-smi` is missing, as it is inside the GIMP Flatpak, so the Models
+  tab sizes models on the first run there too.
+- A fill or Generative Expand made without OpenCV on the server (the result
+  starts from a flat colour) now says so once, and OpenFill installs the
+  pinned `opencv-python-headless` into ComfyUI's Python in the background.
+  Installing the inpaint nodes also installs it when it is missing.
+- A ComfyUI venv without pip (made with `uv venv`) gets pip from
+  `ensurepip` before OpenFill installs node requirements or OpenCV into it.
+- ComfyUI is also found in Stability Matrix's Linux library
+  (`~/.local/share/StabilityMatrix`) and through ComfyUI Desktop's settings
+  on macOS and Linux. `install.sh` notes a ComfyUI without OpenCV.
 - macOS: the supervisor and the task worker start. GIMP 3.2 signs the
   Python in GIMP.app with a launch constraint, so the kernel killed them
   when the plug-in started them with its own interpreter; the backend never

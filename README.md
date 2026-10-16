@@ -2,7 +2,7 @@
 
 # OpenFill
 
-[![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](COPYING) ![GIMP 3.2](https://img.shields.io/badge/GIMP-3.2-444.svg) ![Windows tested](https://img.shields.io/badge/tested%20on-Windows%20%7C%20Linux%20%7C%20macOS-444.svg) ![Python + ComfyUI](https://img.shields.io/badge/built%20with-Python%20%2B%20ComfyUI-orange.svg) ![Local](https://img.shields.io/badge/100%25-local-30d158.svg) ![Beta](https://img.shields.io/badge/status-beta-e8a33d.svg)
+[![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](COPYING) ![GIMP 3.2](https://img.shields.io/badge/GIMP-3.2-444.svg) ![Tested on Windows, Linux and macOS](https://img.shields.io/badge/tested%20on-Windows%20%7C%20Linux%20%7C%20macOS-444.svg) ![Python + ComfyUI](https://img.shields.io/badge/built%20with-Python%20%2B%20ComfyUI-orange.svg) ![Local](https://img.shields.io/badge/100%25-local-30d158.svg) ![Beta](https://img.shields.io/badge/status-beta-e8a33d.svg)
 
 *Generative fill, expand and object removal for GIMP 3, running on your graphics card. You own the whole pipeline, nothing leaves your computer.*
 
@@ -96,7 +96,7 @@ You need GIMP 3.2 or newer and ComfyUI. OpenFill uses GIMP's own Python and need
 powershell -ExecutionPolicy Bypass -File install.ps1
 ```
 
-**ComfyUI by hand.** Download the portable build from the [ComfyUI releases](https://github.com/Comfy-Org/ComfyUI/releases), extract it (Windows 10 and 11 can open `.7z` with `tar -xf`), and point OpenFill at the folder that holds `python_embeded` in `Filters > OpenFill > Generative Fill Settings`. Any other ComfyUI checkout with a `venv` works too. Add the [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes) at the commit pinned in `models/catalog.json` (the Models tab does this for you), and for a cleaner seam on Generative Expand, OpenCV:
+**ComfyUI by hand.** Download the portable build from the [ComfyUI releases](https://github.com/Comfy-Org/ComfyUI/releases), extract it (Windows 10 and 11 can open `.7z` with `tar -xf`), and point OpenFill at the folder that holds `python_embeded` in `Filters > OpenFill > Generative Fill Settings`. Any other ComfyUI checkout with a `venv` works too. Add the [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes) at the commit pinned in `models/catalog.json` (the Models tab does this for you, together with OpenCV, which fills and Generative Expand need to continue the picture into the new area). If OpenCV is still missing when you run a fill, OpenFill says so and installs it in the background. To add it yourself:
 
 ```powershell
 python_embeded\python.exe -s -m pip install opencv-python-headless
@@ -122,7 +122,7 @@ Tested end to end on a MacBook Air M3 (16 GB, macOS 14.7) with GIMP 3.2.6: fill,
    venv/bin/pip install -r requirements.txt opencv-python-headless
    ```
 
-   OpenCV (`opencv-python-headless`) matters more here than it sounds: without it Generative Expand paints the new border from a flat colour and the result rarely matches the photo.
+   OpenCV (`opencv-python-headless`) matters more here than it sounds: without it Generative Expand paints the new border from a flat colour and the result rarely matches the photo. If you leave it out, OpenFill installs it into this venv the first time a fill needs it, and tells you.
 3. **Install the plug-in.** From the unzipped release or a clone: `sh install.sh`. It finds `~/ComfyUI` by itself (otherwise add `--comfy-dir <folder>`).
 4. **Restart GIMP** and run `Filters > OpenFill > Generative Fill...`; download LaMa and DreamShaper 8 Inpainting when the model manager opens.
 
@@ -141,7 +141,7 @@ GIMP's own Python can only be started by GIMP on macOS, so OpenFill runs its bac
 sh install.sh --comfy-dir ~/ComfyUI
 ```
 
-Tested on Fedora with the GIMP 3.2.6 Flatpak (its profile is in `~/.config/GIMP/3.2`): Generative Fill starts ComfyUI from inside the sandbox and stops it when GIMP closes. Point `--comfy-dir` at a ComfyUI checkout with a `venv` (`install.sh` also finds one in `~/ComfyUI`). Inside the Flatpak the graphics card is only detected once ComfyUI has started, so the first Recommended for this PC list can miss it. The Download ComfyUI button is Windows-only.
+Tested on Fedora with the GIMP 3.2.6 Flatpak (its profile is in `~/.config/GIMP/3.2`): Generative Fill starts ComfyUI from inside the sandbox and stops it when GIMP closes. Point `--comfy-dir` at a ComfyUI checkout with a `venv` (`install.sh` also finds one in `~/ComfyUI`). The graphics card is read from the NVIDIA driver's own library, so the Recommended for this PC list is right on the first run even inside the Flatpak, which has no `nvidia-smi`. A venv made with `uv venv` has no pip; OpenFill adds it with `ensurepip` when it needs to install the inpaint nodes' requirements or OpenCV. The Download ComfyUI button is Windows-only.
 
 </details>
 
