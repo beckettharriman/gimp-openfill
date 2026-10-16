@@ -291,11 +291,17 @@ class ServerManager:
         return task_id
 
     def task_status(self) -> dict[str, Any]:
-        """The worker's ``tasks-status.json`` (current task, queue, history)."""
+        """The worker's ``tasks-status.json`` (current task, queue, history).
+
+        A "current" task whose worker is gone (killed, or shut down with GIMP mid-download)
+        is dropped, so the Models tab does not show a download that nobody is doing."""
         try:
-            return json.loads((self.paths.base / "tasks-status.json").read_text(encoding="utf-8"))
+            status = json.loads((self.paths.base / "tasks-status.json").read_text(encoding="utf-8"))
         except (OSError, ValueError):
             return {}
+        if status.get("current") and not self.task_worker_alive():
+            status["current"] = None
+        return status
 
     def request_cancel(self) -> None:
         """Cancel the running task and drop everything still queued."""
@@ -312,7 +318,12 @@ class ServerManager:
     def pending_tasks(self) -> list[dict[str, Any]]:
         """Decoded queued tasks, oldest first."""
         out = []
+        worker = None
         for p in sorted(self.tasks_dir.glob("*.json")) if self.tasks_dir.is_dir() else []:
+            if p.name.endswith(".running.json"):
+                worker = self.task_worker_alive() if worker is None else worker
+                if not worker:
+                    continue  # left by a worker that is gone; the next worker re-queues it
             try:
                 out.append(json.loads(p.read_text(encoding="utf-8")))
             except (OSError, ValueError):

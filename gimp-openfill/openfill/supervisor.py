@@ -139,6 +139,16 @@ def pid_alive(pid: int) -> bool:
             return k32.WaitForSingleObject(handle, 0) == 0x102  # WAIT_TIMEOUT -> still running
         finally:
             k32.CloseHandle(handle)
+    # A child of ours that has exited stays a zombie (and answers kill(pid, 0)) until it is
+    # reaped, e.g. a task worker that died while the Models tab that started it is still open.
+    try:
+        reaped, _status = os.waitpid(pid, os.WNOHANG)
+        if reaped == pid:
+            return False
+    except ChildProcessError:
+        pass  # not our child: only kill() can tell
+    except OSError:
+        pass
     try:
         os.kill(pid, 0)
         return True
@@ -408,9 +418,28 @@ class TaskWorker:
     # lifecycle ---------------------------------------------------------
 
     def start(self) -> None:
-        """Start the worker thread."""
+        """Start the worker thread, after re-queueing the tasks a stopped worker left half done."""
+        self.requeue_orphans()
         self._write_status()
         self._thread.start()
+
+    def requeue_orphans(self) -> list[str]:
+        """Put ``*.running.json`` tasks back in the queue and return their names.
+
+        Only one worker runs per profile, so a running task found at start belongs to a
+        worker that was killed or shut down with GIMP mid-download. Downloads resume from
+        their ``.part`` file.
+        """
+        names = []
+        for running in sorted(self.tasks_dir.glob("*.running.json")):
+            queued = running.with_name(running.name[: -len(".running.json")] + ".json")
+            try:
+                os.replace(running, queued)
+            except OSError:
+                continue
+            names.append(queued.name)
+            self.log(f"re-queued {queued.name}: its worker stopped before it finished")
+        return names
 
     def stop(self) -> None:
         """Ask the worker thread to finish after the current task."""

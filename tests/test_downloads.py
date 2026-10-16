@@ -791,3 +791,15 @@ class ProcessIdentityTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class OrphanedTaskTests(WorkerFixture):
+    """A worker killed or shut down with GIMP mid-download leaves a ``.running.json`` behind."""
+
+    def test_next_worker_requeues_it(self):
+        tasks = self.profile / "tasks"
+        (tasks / "1-download.running.json").write_text('{"id": "1-download", "type": "download"}')
+        (tasks / "2-download.json").write_text('{"id": "2-download", "type": "download"}')
+        self.assertEqual(self.worker.requeue_orphans(), ["1-download.json"])
+        self.assertEqual([p.name for p in self.worker.pending()], ["1-download.json", "2-download.json"])
+        self.assertEqual(self.worker.requeue_orphans(), [])

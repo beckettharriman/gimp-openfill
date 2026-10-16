@@ -6,6 +6,7 @@
 import contextlib
 import io
 import os
+import time
 import unittest
 from pathlib import Path
 
@@ -92,6 +93,26 @@ class StartLockAndWatcherTests(unittest.TestCase):
         self.assertIsNotNone(name)
         self.assertIn("python", name)
         self.assertIsNone(supervisor.process_name(999999))
+
+    @unittest.skipIf(os.name == "nt", "zombies are a POSIX thing")
+    def test_exited_child_is_not_alive(self):
+        # A task worker killed while its parent (the Models tab) is still open becomes a zombie;
+        # it must not count as a running worker, or queued downloads never start.
+        import signal
+        import subprocess
+        import sys
+
+        child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+        pid = child.pid
+        self.assertTrue(supervisor.pid_alive(pid))
+        os.kill(pid, signal.SIGKILL)
+        for _ in range(100):  # until the kernel has turned it into a zombie
+            if not supervisor.pid_alive(pid):
+                break
+            time.sleep(0.05)
+        self.assertFalse(supervisor.pid_alive(pid))
+        self.assertFalse(supervisor.pid_is_python(pid))
+        child.returncode = -9  # already reaped; keep Popen from waiting for it
 
     def test_live_watchers(self):
         folder = self.base / supervisor.WATCHERS_DIRNAME

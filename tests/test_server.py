@@ -260,3 +260,24 @@ class HelperPythonTests(unittest.TestCase):
     def test_in_app_bundle(self):
         self.assertTrue(server.in_app_bundle(self.GIMP_PY))
         self.assertFalse(server.in_app_bundle("/Users/me/ComfyUI/venv/bin/python3"))
+
+
+class StaleTaskStatusTests(ManagerCase):
+    """tasks-status.json and *.running.json written by a worker that is gone."""
+
+    def setUp(self):
+        super().setUp()
+        status = {"worker_pid": 999999, "current": {"type": "download", "model_id": "mat", "done": 1}, "history": []}
+        (self.paths.base / "tasks-status.json").write_text(json.dumps(status), encoding="utf-8")
+        self.manager.tasks_dir.mkdir(parents=True, exist_ok=True)
+        (self.manager.tasks_dir / "1-download.running.json").write_text('{"model_id": "mat"}', encoding="utf-8")
+        (self.manager.tasks_dir / "2-download.json").write_text('{"model_id": "lama"}', encoding="utf-8")
+
+    def test_dead_worker_shows_nothing_running(self):
+        self.assertIsNone(self.manager.task_status()["current"])
+        self.assertEqual([t["model_id"] for t in self.manager.pending_tasks()], ["lama"])
+
+    def test_live_worker_keeps_its_task(self):
+        with mock.patch.object(ServerManager, "task_worker_alive", return_value=True):
+            self.assertEqual(self.manager.task_status()["current"]["model_id"], "mat")
+            self.assertEqual([t["model_id"] for t in self.manager.pending_tasks()], ["mat", "lama"])
