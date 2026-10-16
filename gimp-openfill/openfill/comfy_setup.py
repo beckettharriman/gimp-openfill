@@ -203,12 +203,18 @@ def _candidate_paths(
     for folder in ("Downloads", "Desktop", "Documents"):
         out.append((home / folder / "ComfyUI_windows_portable", "portable folder"))
         out.append((home / folder / "ComfyUI", "portable folder"))
+    # A git checkout with a venv in the home folder (the usual place on macOS and Linux).
+    out.append((home / "ComfyUI", "ComfyUI folder"))
     # ComfyUI Desktop remembers where the user put its files.
     base = _read_json(appdata / "ComfyUI" / "config.json").get("basePath")
     if isinstance(base, str) and base:
         out.append((Path(base), "ComfyUI Desktop"))
     # Stability Matrix: the library may have been moved; its default is %APPDATA%\StabilityMatrix.
-    libs = [appdata / "StabilityMatrix", local / "StabilityMatrix"]
+    libs = [
+        appdata / "StabilityMatrix",
+        local / "StabilityMatrix",
+        home / "Library/Application Support/StabilityMatrix",
+    ]
     for settings in (appdata / "StabilityMatrix" / "library.json", appdata / "StabilityMatrix" / "settings.json"):
         lib = _read_json(settings).get("LibraryPath") or _read_json(settings).get("libraryPath")
         if isinstance(lib, str) and lib:
@@ -257,6 +263,10 @@ def detect_comfy(
 
 
 # ----------------------------------------------------------------- preflight ----
+
+# Where to read how to install ComfyUI by hand where Download ComfyUI cannot help.
+MANUAL_INSTALL_MAC = "https://github.com/comfyanonymous/ComfyUI#apple-mac-silicon"
+MANUAL_INSTALL_LINUX = "https://github.com/comfyanonymous/ComfyUI#manual-install-windows-linux"
 
 
 @dataclass(frozen=True)
@@ -338,8 +348,24 @@ def preflight(
     port: int,
     port_in_use: bool,
     need_bytes: int = NEED_FREE_BYTES,
+    platform: str = sys.platform,
 ) -> Preflight:
     """Plain-words checks before the big download. ``hw`` is a :class:`hardware.Hardware`."""
+    if platform != "win32":
+        # The pinned download is the Windows portable build (python_embeded\python.exe).
+        system = "macOS" if platform == "darwin" else "Linux"
+        manual = MANUAL_INSTALL_MAC if platform == "darwin" else MANUAL_INSTALL_LINUX
+        return Preflight(
+            (
+                Check(
+                    "platform",
+                    "block",
+                    f"Download ComfyUI only sets up the Windows build, which does not run on {system}. Install "
+                    f"ComfyUI yourself ({manual}) in a folder with a venv, then choose 'I already have ComfyUI'.",
+                ),
+            ),
+            "unknown",
+        )
     checks: list[Check] = []
     kind = gpu_kind(adapters, bool(getattr(hw, "gpu_name", None) and getattr(hw, "gpu_source", "") == "nvidia-smi"))
     name = getattr(hw, "gpu_name", None) or ""

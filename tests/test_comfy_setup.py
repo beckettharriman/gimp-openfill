@@ -173,6 +173,21 @@ class DetectTests(unittest.TestCase):
         found = self.found()
         self.assertEqual([c.source for c in found], ["installed by OpenFill", "portable folder"])
 
+    def test_checkout_in_home_folder(self):
+        # The layout macOS and Linux users get from git clone + python3 -m venv venv.
+        root = self.home / "ComfyUI"
+        (root / "venv" / "bin").mkdir(parents=True)
+        (root / "venv" / "bin" / "python3").write_bytes(b"")
+        (root / "main.py").write_text("")
+        self.assertEqual([(c.path, c.source) for c in self.found()], [(root, "ComfyUI folder")])
+
+    def test_stability_matrix_on_macos(self):
+        root = self.home / "Library" / "Application Support" / "StabilityMatrix" / "Packages" / "ComfyUI"
+        (root / "venv" / "bin").mkdir(parents=True)
+        (root / "venv" / "bin" / "python3").write_bytes(b"")
+        (root / "main.py").write_text("")
+        self.assertEqual([(c.path, c.source) for c in self.found()], [(root, "Stability Matrix")])
+
     def test_broken_config_json_does_not_raise(self):
         cfg = Path(self.env["APPDATA"]) / "ComfyUI" / "config.json"
         cfg.parent.mkdir(parents=True)
@@ -185,7 +200,20 @@ class PreflightTests(unittest.TestCase):
 
     def run_pf(self, adapters, hw=None, free=50 * GB, port_in_use=False):
         hw = hw or Hardware()
-        return comfy_setup.preflight(self.m, hw, adapters, free, Path("C:/x"), 8188, port_in_use)
+        return comfy_setup.preflight(self.m, hw, adapters, free, Path("C:/x"), 8188, port_in_use, platform="win32")
+
+    def test_macos_blocks_the_windows_download(self):
+        pf = comfy_setup.preflight(self.m, Hardware(), None, 50 * GB, Path("/x"), 8188, False, platform="darwin")
+        self.assertTrue(pf.blocked)
+        self.assertIn("does not run on macOS", pf.text())
+        self.assertIn(comfy_setup.MANUAL_INSTALL_MAC, pf.text())
+        self.assertIn("I already have ComfyUI", pf.text())
+
+    def test_linux_blocks_the_windows_download(self):
+        pf = comfy_setup.preflight(self.m, Hardware(), None, 50 * GB, Path("/x"), 8188, False, platform="linux")
+        self.assertTrue(pf.blocked)
+        self.assertIn("does not run on Linux", pf.text())
+        self.assertIn(comfy_setup.MANUAL_INSTALL_LINUX, pf.text())
 
     def nvidia(self, vram=8):
         return Hardware(gpu_name="NVIDIA GeForce RTX 4070", vram_bytes=vram * GB, gpu_source="nvidia-smi")

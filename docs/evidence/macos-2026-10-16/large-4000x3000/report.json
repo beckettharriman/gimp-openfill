@@ -1,0 +1,51 @@
+[
+  {
+    "case": "01-fill-4000x3000",
+    "status": 3,
+    "seconds": 862.8,
+    "error": null,
+    "size": [
+      4000,
+      3000
+    ],
+    "layers": [
+      [
+        "Generative Fill: a large grey boulder on grass, photo",
+        2080,
+        1840
+      ],
+      [
+        "Background",
+        4000,
+        3000
+      ]
+    ]
+  },
+  {
+    "case": "02-expand-right-1000",
+    "status": 3,
+    "seconds": 206.1,
+    "error": null,
+    "size": [
+      5000,
+      3000
+    ],
+    "layers": [
+      [
+        "Generative Expand",
+        3096,
+        3000
+      ],
+      [
+        "Generative Fill: a large grey boulder on grass, photo",
+        2080,
+        1840
+      ],
+      [
+        "Background",
+        4000,
+        3000
+      ]
+    ]
+  }
+]

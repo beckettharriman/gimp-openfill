@@ -2,7 +2,7 @@
 
 # OpenFill
 
-[![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](COPYING) ![GIMP 3.2](https://img.shields.io/badge/GIMP-3.2-444.svg) ![Windows tested](https://img.shields.io/badge/tested%20on-Windows-444.svg) ![Python + ComfyUI](https://img.shields.io/badge/built%20with-Python%20%2B%20ComfyUI-orange.svg) ![Local](https://img.shields.io/badge/100%25-local-30d158.svg) ![Beta](https://img.shields.io/badge/status-beta-e8a33d.svg)
+[![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](COPYING) ![GIMP 3.2](https://img.shields.io/badge/GIMP-3.2-444.svg) ![Windows tested](https://img.shields.io/badge/tested%20on-Windows%20%7C%20Linux%20%7C%20macOS-444.svg) ![Python + ComfyUI](https://img.shields.io/badge/built%20with-Python%20%2B%20ComfyUI-orange.svg) ![Local](https://img.shields.io/badge/100%25-local-30d158.svg) ![Beta](https://img.shields.io/badge/status-beta-e8a33d.svg)
 
 *Generative fill, expand and object removal for GIMP 3, running on your graphics card. You own the whole pipeline, nothing leaves your computer.*
 
@@ -13,7 +13,7 @@
 
 
 > [!IMPORTANT]
-> **Beta.** This is an early release of OpenFill. It works end to end on Windows with GIMP 3.2.6 and an 8 GB laptop GPU, which is what I build and test on. It also runs end to end on Linux (GIMP 3.2.6 Flatpak on Fedora, RTX 2070 Max-Q), where the demo above was recorded. macOS hasn't been tried. Most of the rough edges are in what the models draw, not in the plug-in; [Status](#status) lists them.
+> **Beta.** This is an early release of OpenFill. It works end to end on Windows with GIMP 3.2.6 and an 8 GB laptop GPU, which is what I build and test on. It also runs end to end on Linux (GIMP 3.2.6 Flatpak on Fedora, RTX 2070 Max-Q), where the demo above was recorded, and on macOS (GIMP 3.2.6, Apple M3); the macOS steps are under Install. Most of the rough edges are in what the models draw, not in the plug-in; [Status](#status) lists them.
 
 ## Why I made this
 
@@ -58,7 +58,7 @@ OpenFill doesn't ship a model. On first run it opens the download manager, where
 | Quality fill | RealVisXL V5 with the Fooocus inpaint patch | 8 GB | about 21 s |
 | Generative Expand | SD 1.5 Inpainting, then DreamShaper 8 | 4 GB | |
 
-Times are for a 512 px selection on an RTX 4070 Laptop (8 GB); the first request of a session adds about 35 s while the backend starts. FLUX.1 Fill (8 GB as a GGUF, 16 GB full size) and Qwen-Image-Edit (12 GB) are opt-in and much slower. Without an NVIDIA card, SD 1.5 runs on the CPU in minutes rather than seconds; AMD and Apple GPUs are untested.
+Times are for a 512 px selection on an RTX 4070 Laptop (8 GB); the first request of a session adds about 35 s while the backend starts. FLUX.1 Fill (8 GB as a GGUF, 16 GB full size) and Qwen-Image-Edit (12 GB) are opt-in and much slower. Without an NVIDIA card, SD 1.5 runs on the CPU in minutes rather than seconds; AMD GPUs are untested; on an Apple M3 a warm fill takes 50 to 90 s.
 
 The defaults come from a judged benchmark of 33 cases per model. Every download is checked against a published SHA-256, and the live Hugging Face and Civitai search never offers pickled `.ckpt` or `.bin` files, since those can run code when loaded. Details in [docs/models.md](docs/models.md) and [docs/performance.md](docs/performance.md).
 
@@ -107,15 +107,41 @@ To build the release zip yourself: `python tools/make_release_zip.py`.
 </details>
 
 <details>
-<summary><b>Linux, Flatpak and macOS</b></summary>
+<summary><b>macOS</b></summary>
 
-`install.sh` finds the GIMP 3 profile on Linux, Flatpak and macOS. Start GIMP once first so the profile exists, then:
+Tested end to end on a MacBook Air M3 (16 GB, macOS 14.7) with GIMP 3.2.6: fill, remove, expand, text to image, variations, the Models tab downloads, and the backend starting on the Apple GPU and stopping when GIMP closes. The Download ComfyUI button is Windows-only, so ComfyUI is set up once in Terminal.
+
+1. **Install GIMP 3.2** from [gimp.org](https://www.gimp.org/downloads/) (or `brew install --cask gimp`), open it once and quit it.
+2. **Install ComfyUI** in `~/ComfyUI` with a `venv`. It needs Python 3.10 or newer; the `/usr/bin/python3` that comes with macOS is too old, so use one from [python.org](https://www.python.org/downloads/macos/) or `brew install python@3.13`:
+
+   ```sh
+   git clone https://github.com/comfyanonymous/ComfyUI.git ~/ComfyUI
+   cd ~/ComfyUI
+   python3.13 -m venv venv
+   venv/bin/pip install torch torchvision torchaudio
+   venv/bin/pip install -r requirements.txt opencv-python-headless
+   ```
+
+   OpenCV (`opencv-python-headless`) matters more here than it sounds: without it Generative Expand paints the new border from a flat colour and the result rarely matches the photo.
+3. **Install the plug-in.** From the unzipped release or a clone: `sh install.sh`. It finds `~/ComfyUI` by itself (otherwise add `--comfy-dir <folder>`).
+4. **Restart GIMP** and run `Filters > OpenFill > Generative Fill...`; download LaMa and DreamShaper 8 Inpainting when the model manager opens.
+
+On a MacBook Air M3 with 16 GB, a 512 px fill with DreamShaper 8 takes 50 to 90 s once warm (25 steps at 2 to 3 s each; up to about 2.5 minutes after a long session on this fanless laptop), Remove object with LaMa about 5 s, and the first request of a session another 20 to 70 s while ComfyUI loads. A selection larger than about 700 px is filled in tiles, which costs several minutes per tile pass on a Mac (a 1040 x 800 px fill on a 4000 x 3000 photo took about 14 minutes); fill large areas in a few smaller pieces. Intel Macs are untested.
+
+GIMP's own Python can only be started by GIMP on macOS, so OpenFill runs its background helper (the supervisor that starts and stops ComfyUI and does the downloads) with ComfyUI's Python. OpenFill's windows show up in the Dock as "Python"; that is how GIMP runs Python plug-ins on macOS.
+
+</details>
+
+<details>
+<summary><b>Linux and Flatpak</b></summary>
+
+`install.sh` finds the GIMP 3 profile on Linux and Flatpak. Start GIMP once first so the profile exists, then:
 
 ```sh
 sh install.sh --comfy-dir ~/ComfyUI
 ```
 
-Tested on Fedora with the GIMP 3.2.6 Flatpak (its profile is in `~/.config/GIMP/3.2`): Generative Fill starts ComfyUI from inside the sandbox and stops it when GIMP closes. Point `--comfy-dir` at a ComfyUI checkout with a `venv`. Inside the Flatpak the graphics card is only detected once ComfyUI has started, so the first Recommended for this PC list can miss it. The Download ComfyUI button is Windows-only, and macOS is untested; if you try it, I'd like to hear how it went.
+Tested on Fedora with the GIMP 3.2.6 Flatpak (its profile is in `~/.config/GIMP/3.2`): Generative Fill starts ComfyUI from inside the sandbox and stops it when GIMP closes. Point `--comfy-dir` at a ComfyUI checkout with a `venv` (`install.sh` also finds one in `~/ComfyUI`). Inside the Flatpak the graphics card is only detected once ComfyUI has started, so the first Recommended for this PC list can miss it. The Download ComfyUI button is Windows-only.
 
 </details>
 
@@ -138,7 +164,7 @@ The plug-in installs as `gimp-openfill/` and keeps settings in `<GIMP profile>/o
 
 ## Status
 
-Works end to end on Windows and on Linux (GIMP 3.2.6, including the Flatpak): fill, remove, expand, text to image, the model manager, variations, and the backend starting and stopping itself. On Windows, 25 failure scenarios (no backend, corrupt settings, port in use, ComfyUI or GIMP killed mid-job, no network, cancel at every stage) pass in a real GIMP, and the unit tests run on any Python 3.10 or newer.
+Works end to end on Windows, on Linux (GIMP 3.2.6, including the Flatpak) and on macOS (GIMP 3.2.6, Apple M3): fill, remove, expand, text to image, the model manager, variations, and the backend starting and stopping itself. On Windows, 25 failure scenarios (no backend, corrupt settings, port in use, ComfyUI or GIMP killed mid-job, no network, cancel at every stage) pass in a real GIMP, and the unit tests run on any Python 3.10 or newer.
 
 Where the models still fall short:
 
@@ -147,7 +173,7 @@ Where the models still fall short:
 - **Generative Expand gets weaker beyond 25% per side.** Expand in rounds; OpenFill also splits large expansions itself.
 - Fine textures like fabric come back softer in large fills.
 
-Not tested yet: macOS, FLUX and Qwen end to end, and the AUTOMATIC1111 backend. Next up: ControlNet and reference images, and LoRA selection. Changes are in [CHANGELOG.md](CHANGELOG.md); [CONTRIBUTING.md](CONTRIBUTING.md) covers the tests.
+Not tested yet: FLUX and Qwen end to end, Intel Macs, and the AUTOMATIC1111 backend. Next up: ControlNet and reference images, and LoRA selection. Changes are in [CHANGELOG.md](CHANGELOG.md); [CONTRIBUTING.md](CONTRIBUTING.md) covers the tests.
 
 ## Where it came from
 

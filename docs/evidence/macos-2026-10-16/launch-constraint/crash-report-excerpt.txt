@@ -1,0 +1,4 @@
+  "procPath" : "\/Applications\/GIMP.app\/Contents\/MacOS\/python3",
+  "parentProc" : "Python",
+  "exception" : {"codes":"0x0000000000000000, 0x0000000000000000","rawCodes":[0,0],"type":"EXC_CRASH","signal":"SIGKILL (Code Signature Invalid)"},
+  "termination" : {"flags":66,"code":4,"namespace":"CODESIGNING","indicator":"Launch Constraint Violation"},

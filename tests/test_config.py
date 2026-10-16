@@ -254,3 +254,39 @@ class ComfyLayoutTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ComfyProblemTests(unittest.TestCase):
+    """What the user is told when the ComfyUI folder cannot be started."""
+
+    def test_reasons(self):
+        from openfill.config import comfy_problem
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.assertIn("No ComfyUI folder", comfy_problem(""))
+            self.assertIn("does not exist", comfy_problem(root / "nope"))
+            self.assertIn("neither main.py", comfy_problem(root))
+            (root / "main.py").write_text("")
+            (root / "venv" / "bin").mkdir(parents=True)
+            (root / "venv" / "bin" / "python3").write_text("")
+            self.assertEqual(comfy_problem(root), "")
+
+    def test_checkout_without_venv_on_macos_inside_gimp(self):
+        # GIMP.app's Python can neither be started by the supervisor (launch constraint) nor run ComfyUI.
+        from openfill import config
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "main.py").write_text("")
+            with (
+                mock.patch.object(config.sys, "platform", "darwin"),
+                mock.patch.object(config.sys, "executable", "/Applications/GIMP.app/Contents/MacOS/python3"),
+            ):
+                self.assertIsNone(config.comfy_layout(root))
+                self.assertIn("no venv", config.comfy_problem(root))
+            with (
+                mock.patch.object(config.sys, "platform", "linux"),
+                mock.patch.object(config.sys, "executable", "/usr/bin/python3"),
+            ):
+                self.assertEqual(config.comfy_layout(root)["python"], Path("/usr/bin/python3"))

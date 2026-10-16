@@ -218,3 +218,66 @@ class CancelAndWatcherTests(ManagerCase):
     def test_no_registration_without_a_managed_backend(self):
         self.manager.touch()
         self.assertFalse((self.paths.base / "watchers").exists())
+
+
+class HelperPythonTests(unittest.TestCase):
+    """macOS: GIMP.app's Python has a launch constraint, so helpers run on another interpreter."""
+
+    GIMP_PY = "/Applications/GIMP.app/Contents/MacOS/python3"
+
+    def test_other_platforms_keep_the_plug_in_interpreter(self):
+        for platform in ("win32", "linux"):
+            self.assertEqual(
+                server.helper_python(r"C:\GIMP\bin\pythonw.exe", platform, "/c/venv/bin/python3"),
+                r"C:\GIMP\bin\pythonw.exe",
+            )
+
+    def test_macos_outside_an_app_bundle_keeps_it(self):
+        self.assertEqual(server.helper_python("/opt/homebrew/bin/python3", "darwin", None), "/opt/homebrew/bin/python3")
+
+    def test_macos_uses_comfyui_python(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            venv_py = Path(tmp) / "venv" / "bin" / "python3"
+            venv_py.parent.mkdir(parents=True)
+            venv_py.write_text("")
+            self.assertEqual(server.helper_python(self.GIMP_PY, "darwin", venv_py), str(venv_py))
+
+    def test_macos_falls_back_to_path_python_outside_the_bundle(self):
+        seen = {}
+
+        def which(name, path=None):
+            seen["path"] = path
+            return "/opt/homebrew/bin/python3"
+
+        path_env = os.pathsep.join(["/Applications/GIMP.app/Contents/MacOS", "/opt/homebrew/bin", "/usr/bin"])
+        got = server.helper_python(self.GIMP_PY, "darwin", "/missing/venv/bin/python3", which, path_env)
+        self.assertEqual(got, "/opt/homebrew/bin/python3")
+        self.assertNotIn("GIMP.app", seen["path"])
+
+    def test_macos_without_any_other_python_keeps_it(self):
+        self.assertEqual(server.helper_python(self.GIMP_PY, "darwin", None, lambda *a, **k: None, ""), self.GIMP_PY)
+
+    def test_in_app_bundle(self):
+        self.assertTrue(server.in_app_bundle(self.GIMP_PY))
+        self.assertFalse(server.in_app_bundle("/Users/me/ComfyUI/venv/bin/python3"))
+
+
+class StaleTaskStatusTests(ManagerCase):
+    """tasks-status.json and *.running.json written by a worker that is gone."""
+
+    def setUp(self):
+        super().setUp()
+        status = {"worker_pid": 999999, "current": {"type": "download", "model_id": "mat", "done": 1}, "history": []}
+        (self.paths.base / "tasks-status.json").write_text(json.dumps(status), encoding="utf-8")
+        self.manager.tasks_dir.mkdir(parents=True, exist_ok=True)
+        (self.manager.tasks_dir / "1-download.running.json").write_text('{"model_id": "mat"}', encoding="utf-8")
+        (self.manager.tasks_dir / "2-download.json").write_text('{"model_id": "lama"}', encoding="utf-8")
+
+    def test_dead_worker_shows_nothing_running(self):
+        self.assertIsNone(self.manager.task_status()["current"])
+        self.assertEqual([t["model_id"] for t in self.manager.pending_tasks()], ["lama"])
+
+    def test_live_worker_keeps_its_task(self):
+        with mock.patch.object(ServerManager, "task_worker_alive", return_value=True):
+            self.assertEqual(self.manager.task_status()["current"]["model_id"], "mat")
+            self.assertEqual([t["model_id"] for t in self.manager.pending_tasks()], ["mat", "lama"])

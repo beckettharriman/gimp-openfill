@@ -14,6 +14,7 @@ import json
 import logging
 import os
 import re
+import shutil
 import socket
 import subprocess
 import sys
@@ -25,7 +26,7 @@ from urllib.parse import urlparse
 
 from .backend import BackendUnavailable, GenerationCancelled
 from .comfy_api import ComfyClient
-from .config import Paths, Settings, comfy_layout
+from .config import Paths, Settings, comfy_layout, comfy_problem, in_app_bundle
 from .supervisor import WATCHERS_DIRNAME, pid_is_python
 
 ProgressCallback = Callable[[float, str], None]
@@ -66,6 +67,30 @@ def _hidden_python() -> str:
             if candidate.exists():
                 return str(candidate)
     return str(exe)
+
+
+def helper_python(
+    executable: str,
+    platform: str,
+    comfy_python: str | Path | None,
+    which: Callable[..., str | None] = shutil.which,
+    path_env: str | None = None,
+) -> str:
+    """Interpreter for the supervisor and task worker.
+
+    On macOS, GIMP signs the Python in GIMP.app with a launch constraint: only
+    GIMP may start it, and the kernel kills it when a plug-in does
+    ("Launch Constraint Violation"). There the helpers run on ComfyUI's own
+    Python (the supervisor needs only the standard library), else on the first
+    python3 on PATH outside an app bundle. Everywhere else: ``executable``.
+    """
+    if platform != "darwin" or not in_app_bundle(executable):
+        return executable
+    if comfy_python and Path(comfy_python).exists() and not in_app_bundle(comfy_python):
+        return str(comfy_python)
+    path_env = os.environ.get("PATH", "") if path_env is None else path_env
+    outside = os.pathsep.join(d for d in path_env.split(os.pathsep) if d and not in_app_bundle(d))
+    return which("python3", path=outside) or executable
 
 
 class ServerManager:
@@ -165,8 +190,8 @@ class ServerManager:
         layout = comfy_layout(self.settings.comfy_dir)
         if layout is None:
             raise BackendUnavailable(
-                f"ComfyUI was not found at '{self.settings.comfy_dir}'. Install the portable "
-                "build there or set the ComfyUI folder in Filters > OpenFill > Generative Fill Settings."
+                f"{comfy_problem(self.settings.comfy_dir)} Install ComfyUI there or set the ComfyUI folder in "
+                "Filters > OpenFill > Generative Fill Settings."
             )
         self.paths.ensure()
         url = self.settings.url
@@ -182,7 +207,7 @@ class ServerManager:
             raise BackendUnavailable(port_in_use_message(host, port))
         gimp_pid = os.getppid()
         cmd = [
-            _hidden_python(),
+            self._helper_python(),
             str(Path(__file__).with_name("supervisor.py")),
             "--mode",
             "backend",
@@ -238,7 +263,7 @@ class ServerManager:
         if self.task_worker_alive():
             return
         cmd = [
-            _hidden_python(),
+            self._helper_python(),
             str(Path(__file__).with_name("supervisor.py")),
             "--mode",
             "tasks",
@@ -266,11 +291,17 @@ class ServerManager:
         return task_id
 
     def task_status(self) -> dict[str, Any]:
-        """The worker's ``tasks-status.json`` (current task, queue, history)."""
+        """The worker's ``tasks-status.json`` (current task, queue, history).
+
+        A "current" task whose worker is gone (killed, or shut down with GIMP mid-download)
+        is dropped, so the Models tab does not show a download that nobody is doing."""
         try:
-            return json.loads((self.paths.base / "tasks-status.json").read_text(encoding="utf-8"))
+            status = json.loads((self.paths.base / "tasks-status.json").read_text(encoding="utf-8"))
         except (OSError, ValueError):
             return {}
+        if status.get("current") and not self.task_worker_alive():
+            status["current"] = None
+        return status
 
     def request_cancel(self) -> None:
         """Cancel the running task and drop everything still queued."""
@@ -287,7 +318,12 @@ class ServerManager:
     def pending_tasks(self) -> list[dict[str, Any]]:
         """Decoded queued tasks, oldest first."""
         out = []
+        worker = None
         for p in sorted(self.tasks_dir.glob("*.json")) if self.tasks_dir.is_dir() else []:
+            if p.name.endswith(".running.json"):
+                worker = self.task_worker_alive() if worker is None else worker
+                if not worker:
+                    continue  # left by a worker that is gone; the next worker re-queues it
             try:
                 out.append(json.loads(p.read_text(encoding="utf-8")))
             except (OSError, ValueError):
@@ -298,6 +334,11 @@ class ServerManager:
     def supervisor_stderr_log(self) -> Path:
         """Where the supervisor's stderr goes (argument errors, crashes before its own log is open)."""
         return self.paths.base / SUPERVISOR_STDERR_FILENAME
+
+    def _helper_python(self) -> str:
+        """See :func:`helper_python`; ComfyUI's interpreter comes from the configured folder."""
+        layout = comfy_layout(self.settings.comfy_dir) if self.settings.comfy_dir else None
+        return helper_python(_hidden_python(), sys.platform, layout["python"] if layout else None)
 
     def _spawn_detached(self, cmd: list[str]) -> None:
         """Start ``cmd`` detached and hidden; its stderr is appended to :attr:`supervisor_stderr_log`."""
@@ -321,6 +362,8 @@ class ServerManager:
         }
         env = dict(os.environ)
         env.pop("PYTHONPATH", None)
+        if cmd and cmd[0] != _hidden_python():
+            env.pop("PYTHONHOME", None)  # GIMP's Python home breaks any other interpreter
         kwargs["env"] = env
         if IS_WINDOWS:
             # No DETACHED_PROCESS: Windows ignores CREATE_NO_WINDOW next to it, and a

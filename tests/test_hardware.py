@@ -95,7 +95,7 @@ class DetectTests(unittest.TestCase):
     def test_comfyui_second_then_unknown(self):
         got = hwmod.detect(None, "http://x", nvidia=lambda: None, comfy=lambda _u: ("Arc", 16 * GB, 64 * GB))
         self.assertEqual((got.gpu_name, got.vram_bytes, got.gpu_source), ("Arc", 16 * GB, "comfyui"))
-        got = hwmod.detect(None, None, nvidia=lambda: None)
+        got = hwmod.detect(None, None, nvidia=lambda: None, apple=lambda: None)
         self.assertIsNone(got.vram_bytes)
         self.assertEqual(got.gpu_source, "")
         self.assertIn("not detected", got.summary())
@@ -104,8 +104,26 @@ class DetectTests(unittest.TestCase):
         def boom(*_a):
             raise RuntimeError("x")
 
-        got = hwmod.detect(None, "http://x", nvidia=boom, comfy=boom)
+        got = hwmod.detect(None, "http://x", nvidia=boom, comfy=boom, apple=boom)
         self.assertIsNone(got.vram_bytes)
+
+    def test_apple_silicon_after_comfyui(self):
+        chip = ("Apple M3", 11 * GB, 5 * GB)
+        got = hwmod.detect(None, None, nvidia=lambda: None, apple=lambda: chip)
+        self.assertEqual((got.gpu_name, got.vram_bytes, got.ram_bytes, got.gpu_source), (*chip, "apple-silicon"))
+        got = hwmod.detect(
+            None, "http://x", nvidia=lambda: None, comfy=lambda _u: ("mps", 9 * GB, 4 * GB), apple=lambda: chip
+        )
+        self.assertEqual(got.gpu_source, "comfyui")  # a running ComfyUI knows best
+
+    def test_gpu_from_apple_silicon(self):
+        out = SimpleNamespace(returncode=0, stdout="Apple M3\n17179869184\n")
+        got = hwmod.gpu_from_apple_silicon(lambda *a, **k: out, "darwin", "arm64")
+        self.assertEqual(got, ("Apple M3", int(16 * GB * 0.7), 16 * GB - int(16 * GB * 0.7)))
+        self.assertIsNone(hwmod.gpu_from_apple_silicon(lambda *a, **k: out, "darwin", "x86_64"))  # Intel Mac
+        self.assertIsNone(hwmod.gpu_from_apple_silicon(lambda *a, **k: out, "linux", "arm64"))
+        bad = SimpleNamespace(returncode=0, stdout="garbage")
+        self.assertIsNone(hwmod.gpu_from_apple_silicon(lambda *a, **k: bad, "darwin", "arm64"))
 
     def test_disk_free_uses_existing_parent(self):
         with tempfile.TemporaryDirectory() as d:

@@ -312,8 +312,36 @@ def comfy_layout(comfy_dir: str | Path) -> dict[str, Path] | None:
                 exe = root / venv / py
                 if exe.exists():
                     candidates.append((exe, main, root))
-        candidates.append((Path(sys.executable), main, root))
+        # The interpreter running this code, when it can be started from here: not on macOS
+        # when it is GIMP's own Python (GIMP.app has a launch constraint and no PyTorch).
+        if not (sys.platform == "darwin" and in_app_bundle(sys.executable)):
+            candidates.append((Path(sys.executable), main, root))
     if not candidates:
         return None
     python, main, cwd = candidates[0]
     return {"python": python, "main": main, "cwd": cwd}
+
+
+def in_app_bundle(path: str | Path) -> bool:
+    """``path`` lies inside a macOS ``.app`` bundle (``GIMP.app/Contents/...``)."""
+    return any(part.endswith(".app") for part in Path(path).parts)
+
+
+def comfy_problem(comfy_dir: str | Path) -> str:
+    """Why ``comfy_dir`` is not a ComfyUI OpenFill can start, in plain words ("" when it is)."""
+    if not comfy_dir:
+        return "No ComfyUI folder is set."
+    if comfy_layout(comfy_dir) is not None:
+        return ""
+    root = Path(comfy_dir)
+    if not root.is_dir():
+        return f"ComfyUI was not found at '{root}': the folder does not exist."
+    if (root / "main.py").is_file():
+        return (
+            f"ComfyUI was not found at '{root}' in a form OpenFill can start: main.py is there but no venv. "
+            "Create one in that folder (python3 -m venv venv, then install ComfyUI's requirements into it)."
+        )
+    return (
+        f"ComfyUI was not found at '{root}': it holds neither main.py with a venv nor the portable build "
+        "(python_embeded and ComfyUI)."
+    )

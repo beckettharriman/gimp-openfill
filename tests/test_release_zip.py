@@ -26,6 +26,7 @@ class ReleaseZipTests(unittest.TestCase):
         for need in (
             "Install OpenFill.cmd",
             "install.ps1",
+            "install.sh",
             "README.md",
             "COPYING",
             "models/catalog.json",
@@ -67,6 +68,14 @@ class ReleaseZipTests(unittest.TestCase):
         data = zipfile.ZipFile(self.zip).read("Install OpenFill.cmd")
         self.assertIn(b"\r\n", data)
         self.assertNotIn(b"\n", data.replace(b"\r\n", b""))
+
+    def test_entry_point_and_install_sh_stay_executable(self):
+        # GIMP on Linux and macOS does not load a plug-in whose entry point is not executable.
+        with zipfile.ZipFile(self.zip) as zf:
+            for name in ("gimp-openfill/gimp-openfill.py", "install.sh"):
+                # Archive Utility (Finder) applies the mode only with the regular-file type bits set.
+                self.assertEqual(zf.getinfo(name).external_attr >> 16, 0o100755, name)
+            self.assertEqual(zf.getinfo("README.md").external_attr >> 16, 0o100644)
 
     def test_version_comes_from_the_package(self):
         self.assertRegex(make_release_zip.read_version(), r"^\d+\.\d+\.\d+")

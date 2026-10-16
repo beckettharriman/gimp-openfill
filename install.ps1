@@ -97,6 +97,7 @@ function Find-Comfy {
         Add-Cand (Join-Path $homeDir "$f\ComfyUI_windows_portable") "portable folder"
         Add-Cand (Join-Path $homeDir "$f\ComfyUI") "portable folder"
     }
+    Add-Cand (Join-Path $homeDir "ComfyUI") "ComfyUI folder"
     $desk = Read-JsonQuiet (Join-Path $appData "ComfyUI\config.json")
     if ($desk -and $desk.basePath) { Add-Cand ([string]$desk.basePath) "ComfyUI Desktop" }
     $libs = @((Join-Path $appData "StabilityMatrix"), (Join-Path $local "StabilityMatrix"))

@@ -1,0 +1,99 @@
+[
+  {
+    "case": "01-grayscale",
+    "status": 3,
+    "seconds": 96.2,
+    "error": null,
+    "base_type": "1",
+    "precision": "150",
+    "layers": [
+      "Generative Fill: a large grey boulder on grass, photo",
+      "Background"
+    ]
+  },
+  {
+    "case": "02-indexed-64",
+    "status": 0,
+    "seconds": 1.3,
+    "error": null,
+    "base_type": "2",
+    "precision": "150",
+    "layers": [
+      "Background"
+    ]
+  },
+  {
+    "case": "03-16bit",
+    "status": 3,
+    "seconds": 61.9,
+    "error": null,
+    "base_type": "0",
+    "precision": "250",
+    "layers": [
+      "Generative Fill: a large grey boulder on grass, photo",
+      "Background"
+    ]
+  },
+  {
+    "case": "04-rgba-transparent-area",
+    "status": 3,
+    "seconds": 87.4,
+    "error": null,
+    "base_type": "0",
+    "precision": "150",
+    "layers": [
+      "Generative Fill: a large grey boulder on grass, photo",
+      "Background"
+    ]
+  },
+  {
+    "case": "05-group-layer-selected",
+    "status": 3,
+    "seconds": 71.1,
+    "error": null,
+    "base_type": "0",
+    "precision": "150",
+    "layers": [
+      "Generative Fill: a large grey boulder on grass, photo",
+      "group",
+      "overlay",
+      "Background"
+    ]
+  },
+  {
+    "case": "06-feathered-ellipse",
+    "status": 3,
+    "seconds": 97.1,
+    "error": null,
+    "base_type": "0",
+    "precision": "150",
+    "layers": [
+      "Generative Fill: a large grey boulder on grass, photo",
+      "Background"
+    ]
+  },
+  {
+    "case": "07-selection-at-corner",
+    "status": 3,
+    "seconds": 58.1,
+    "error": null,
+    "base_type": "0",
+    "precision": "150",
+    "layers": [
+      "Generative Fill: a large grey boulder on grass, photo",
+      "Background"
+    ]
+  },
+  {
+    "case": "08-two-separate-areas",
+    "status": 3,
+    "seconds": 5.3,
+    "error": null,
+    "base_type": "0",
+    "precision": "150",
+    "layers": [
+      "Object Removal",
+      "Background"
+    ]
+  }
+]

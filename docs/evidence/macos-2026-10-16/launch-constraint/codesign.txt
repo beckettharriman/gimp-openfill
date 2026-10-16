@@ -1,0 +1,10 @@
+Executable=/Applications/GIMP.app/Contents/MacOS/python3
+Identifier=python3
+Executable Segment base=0
+Executable Segment limit=16384
+Executable Segment flags=0x1
+Launch Constraints:
+	Has Parent Launch Constraints
+Authority=Developer ID Application: GNOME Foundation (T25BQ8HSJF)
+Authority=Developer ID Certification Authority
+TeamIdentifier=T25BQ8HSJF

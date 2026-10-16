@@ -14,7 +14,9 @@ from __future__ import annotations
 
 import argparse
 import re
+import stat
 import sys
+import time
 import zipfile
 from pathlib import Path
 
@@ -22,6 +24,7 @@ ROOT = Path(__file__).resolve().parent.parent
 FILES = (
     "Install OpenFill.cmd",
     "install.ps1",
+    "install.sh",
     "README.md",
     "COPYING",
     "CHANGELOG.md",
@@ -34,6 +37,8 @@ FILES = (
 PLUGIN_DIR = "gimp-openfill"
 # Copies placed inside the plug-in folder so it works wherever it is dropped.
 BUNDLED = ("models/catalog.json", "models/comfy_setup.json", "README.md", "COPYING")
+# Unzipped on Linux or macOS these must stay executable: GIMP skips a plug-in whose entry point is not.
+EXECUTABLE = {f"{PLUGIN_DIR}/{PLUGIN_DIR}.py", "install.sh"}
 SKIP_PARTS = {"__pycache__"}
 SKIP_SUFFIXES = {".pyc", ".pyo"}
 
@@ -74,7 +79,10 @@ def build(out_dir: Path, version: str | None = None, root: Path = ROOT) -> Path:
             data = src.read_bytes()
             if rel.endswith((".cmd", ".ps1")):  # Windows scripts want CRLF whatever the checkout used
                 data = data.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
-            zf.writestr(rel, data)
+            info = zipfile.ZipInfo(rel, date_time=time.localtime()[:6])
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = (stat.S_IFREG | (0o755 if rel in EXECUTABLE else 0o644)) << 16
+            zf.writestr(info, data)
     return target
 
 

@@ -63,7 +63,9 @@ powershell -ExecutionPolicy Bypass -File install.ps1 -Link      # junction into 
 & "C:\Users\<you>\AppData\Local\Programs\GIMP 3\bin\gimp-3.2.exe" --new-instance
 ```
 
-On Linux and macOS: `GIMP3_DIRECTORY=/tmp/gimp-profile-test sh install.sh --link`,
+On Linux and macOS: `GIMP3_DIRECTORY=/tmp/gimp-profile-test sh install.sh --link`
+(on macOS the GIMP binaries are in `/Applications/GIMP.app/Contents/MacOS/`, for
+example `gimp-console-3.2`),
 then start GIMP with the same variable set. The first start of a fresh profile
 is slow (font cache); allow about two minutes. `install.ps1 -Uninstall` and
 `sh install.sh --uninstall` remove the plug-in again (add `-RemoveConfig` or

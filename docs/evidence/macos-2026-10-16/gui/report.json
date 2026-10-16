@@ -1,0 +1,49 @@
+{
+  "cases": [
+    {
+      "case": "01-fill-dialog",
+      "status": "4",
+      "seconds": 11.4
+    },
+    {
+      "case": "02-remove-dialog",
+      "status": "4",
+      "seconds": 11.9
+    },
+    {
+      "case": "03-fill-advanced",
+      "status": "4",
+      "seconds": 11.7
+    },
+    {
+      "case": "04-expand-dialog",
+      "status": "4",
+      "seconds": 11.6
+    },
+    {
+      "case": "05-txt2img-dialog",
+      "status": "4",
+      "seconds": 11.4
+    },
+    {
+      "case": "06-settings-general",
+      "status": "4",
+      "seconds": 11.7
+    },
+    {
+      "case": "07-settings-models",
+      "status": "4",
+      "seconds": 15.0
+    },
+    {
+      "case": "08-real-fill-through-dialog",
+      "status": "3",
+      "seconds": 129.5
+    }
+  ],
+  "layers": [
+    "Generative Fill: a stone well with a wooden roof, photo",
+    "Background"
+  ],
+  "ok": true
+}
