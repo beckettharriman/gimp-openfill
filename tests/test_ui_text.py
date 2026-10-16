@@ -5,6 +5,7 @@ from pathlib import Path
 
 from openfill import ui_text as ut
 from openfill.backend import (
+    BackendError,
     BackendUnavailable,
     GenerationCancelled,
     GenerationTimeout,
@@ -204,6 +205,16 @@ class ErrorWordingTests(unittest.TestCase):
     def test_cancel_is_reassuring(self):
         text = ut.with_next_step(describe_error(GenerationCancelled()))
         self.assertIn("Nothing in the image was changed", text)
+
+    def test_refusals_are_shown_as_they_are(self):
+        # A missing selection or an indexed image is not a glitch: no "try again", no bug report.
+        # The wording of app.NO_SELECTION_MESSAGE and app.INDEXED_MESSAGE (app imports GIMP).
+        for text in (
+            "Nothing is selected. Select the area to fill first, then run Generative Fill again.",
+            "This image uses indexed colors, which cannot hold generated pixels without destroying them. "
+            "Convert it with Image > Mode > RGB (or Grayscale) and run the command again.",
+        ):
+            self.assertEqual(ut.with_next_step(describe_error(BackendError(text))), text)
 
     def test_not_doubled(self):
         once = ut.with_next_step("The AI backend is not available: x")

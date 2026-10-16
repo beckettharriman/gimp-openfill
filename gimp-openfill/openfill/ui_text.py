@@ -344,6 +344,9 @@ def clamp_position(
 # ------------------------------------------------------------ errors -----
 
 _NEXT_STEPS = (
+    # Refusals that already say what to do: trying again or a bug report would not help.
+    ("nothing is selected", ""),
+    ("uses indexed colors", ""),
     (
         "was not found at",
         "Next step: open Filters > OpenFill > Generative Fill Settings and choose the backend folder with Browse.",
