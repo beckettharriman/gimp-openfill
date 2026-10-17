@@ -7,94 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
+## [2.0.0-beta.1] - 2026-10-17
 
-- CI also runs the unit tests on Windows (next to Linux and macOS).
-- Standard GIMP install is now the headline: the release zip
-  (`openfill-<version>.zip`) holds a self-contained `gimp-openfill/` folder
-  (code, `models/catalog.json`, `models/comfy_setup.json`, README, COPYING)
-  that is copied into GIMP's plug-ins folder, with no script. Verified on an
-  empty profile with gimp-console: all procedures register. Settings are
-  created on first change; defaults apply until then. `Install OpenFill.cmd`
-  and `install.ps1` stay as the optional path (uninstall, link, model
-  downloads).
-- Generative Expand crops and expands in one frame: dragging an edge inward
-  past the photo crops that side, ratio buttons (Original, 1:1, 5:4, 4:3, 3:2,
-  16:9, Custom) with a Landscape/Portrait switch keep the frame's ratio while
-  it is moved or resized, and the anchor grid snaps it. Several expand rounds
-  share one progress window and one overall progress bar.
-- Renamed the project to OpenFill: menu Filters > OpenFill, plug-in
-  folder and entry script `gimp-openfill/gimp-openfill.py`, package
-  `openfill`, procedures `python-fu-openfill-*`, settings folder
-  `<profile>/openfill` with `openfill.log`, test variables `OPENFILL_*`.
-  Settings in `<profile>/stable-boy` are copied to `<profile>/openfill` on
-  the first run.
-- OpenFill is based on Stable Boy by Torben Giesselmann (GPL-3.0),
-  https://github.com/thndrbrrr/gimp-stable-boy.
-
-### Fixed
-
-- Fills and Generative Expand no longer leave a faint outline on smooth
-  areas. The generated layer drifted a few levels off the original at its
-  edge (on a 4000 x 3000 sky: a 5-level step around the fill, about 8 levels
-  at an expand's old edge beside a photo's sky); OpenFill now measures that
-  drift where the layer must match the original and evens it out across the
-  layer, leaving the generated detail alone (`seam_correction`, on by
-  default; evidence in `docs/evidence/seam-2026-10-16/`).
-- The graphics card is read from NVIDIA's management library (NVML) when
-  `nvidia-smi` is missing, as it is inside the GIMP Flatpak, so the Models
-  tab sizes models on the first run there too.
-- A fill or Generative Expand made without OpenCV on the server (the result
-  starts from a flat colour) now says so once, and OpenFill installs the
-  pinned `opencv-python-headless` into ComfyUI's Python in the background.
-  Installing the inpaint nodes also installs it when it is missing.
-- A ComfyUI venv without pip (made with `uv venv`) gets pip from
-  `ensurepip` before OpenFill installs node requirements or OpenCV into it.
-- ComfyUI is also found in Stability Matrix's Linux library
-  (`~/.local/share/StabilityMatrix`) and through ComfyUI Desktop's settings
-  on macOS and Linux. `install.sh` notes a ComfyUI without OpenCV.
-- macOS: the supervisor and the task worker start. GIMP 3.2 signs the
-  Python in GIMP.app with a launch constraint, so the kernel killed them
-  when the plug-in started them with its own interpreter; the backend never
-  started and the Models tab never downloaded. They now run on ComfyUI's
-  Python (or a python3 on PATH outside the app bundle), without GIMP's
-  PYTHONHOME.
-- macOS: GIMP processes are recognised (libproc), so the backend stops when
-  GIMP closes even if its pid is reused.
-- macOS and Linux: the "ComfyUI is required" notice no longer offers the
-  Windows-only download; it links ComfyUI's install steps for the platform.
-  A checkout in `~/ComfyUI` and Stability Matrix on macOS are found.
-- Model downloads no longer get stuck when the task worker dies or stops
-  mid-download (killed, or shut down with GIMP): an exited worker that is
-  still a zombie of the Models tab counts as gone, a new worker re-queues
-  the half-done task and resumes it from its `.part` file, and the Models
-  tab no longer shows a download that nobody is doing.
-- macOS: the Models tab sizes models on the first run: an Apple silicon
-  Mac reports its chip and unified memory before ComfyUI has started.
-- A ComfyUI folder that cannot be started says why ("main.py is there but
-  no venv", "the folder does not exist", ...) instead of timing out; on
-  macOS GIMP's own Python is never used to run ComfyUI.
-- "Nothing is selected" and the indexed-image message no longer end with
-  "try again ... keep openfill.log for a bug report".
-- The release zip ships `install.sh` and keeps `gimp-openfill.py`
-  executable; unzipped on macOS or Linux, GIMP skipped the plug-in.
-- `install.sh` writes the same minimal config as `install.ps1` (no
-  outdated SD 1.5 and SDXL defaults), finds an existing ComfyUI and prints
-  the current next steps.
-- A cancelled or failed multi-round Generative Expand removes the layers
-  earlier rounds added and restores the canvas.
-- Windows: OpenFill detaches from the blank terminal window GIMP opens when
-  it runs Python plug-ins, and its child processes run without a window.
-- Installing custom nodes no longer fails when a folder on PATH cannot be read
-  (WinError 448, for example a junction from a package manager); that folder
-  is skipped while looking for git.
-
-## [2.0.0-beta.1] - 2026-10-09
-
-First public beta: model management from inside GIMP, a redesigned
-prompt-first UX with progress, preview and cancel, a hardened backend and
-downloader, and fixes from an end-to-end test matrix run in a real GIMP 3.2.6
-(`docs/evidence/overnight-2026-10-09/`).
+First public beta, and the first release under the name OpenFill: model
+management from inside GIMP, a redesigned prompt-first UX with progress,
+preview and cancel, a hardened backend and downloader, and fixes from
+end-to-end runs in a real GIMP 3.2.6 on Windows, Linux (Flatpak) and macOS
+(`docs/evidence/`).
 
 ### Added
 
@@ -171,6 +90,28 @@ downloader, and fixes from an end-to-end test matrix run in a real GIMP 3.2.6
 
 ### Changed
 
+- CI also runs the unit tests on Windows (next to Linux and macOS).
+- Standard GIMP install is now the headline: the release zip
+  (`openfill-<version>.zip`) holds a self-contained `gimp-openfill/` folder
+  (code, `models/catalog.json`, `models/comfy_setup.json`, README, COPYING)
+  that is copied into GIMP's plug-ins folder, with no script. Verified on an
+  empty profile with gimp-console: all procedures register. Settings are
+  created on first change; defaults apply until then. `Install OpenFill.cmd`
+  and `install.ps1` stay as the optional path (uninstall, link, model
+  downloads).
+- Generative Expand crops and expands in one frame: dragging an edge inward
+  past the photo crops that side, ratio buttons (Original, 1:1, 5:4, 4:3, 3:2,
+  16:9, Custom) with a Landscape/Portrait switch keep the frame's ratio while
+  it is moved or resized, and the anchor grid snaps it. Several expand rounds
+  share one progress window and one overall progress bar.
+- Renamed the project to OpenFill: menu Filters > OpenFill, plug-in
+  folder and entry script `gimp-openfill/gimp-openfill.py`, package
+  `openfill`, procedures `python-fu-openfill-*`, settings folder
+  `<profile>/openfill` with `openfill.log`, test variables `OPENFILL_*`.
+  Settings in `<profile>/stable-boy` are copied to `<profile>/openfill` on
+  the first run.
+- OpenFill is based on Stable Boy by Torben Giesselmann (GPL-3.0),
+  https://github.com/thndrbrrr/gimp-stable-boy.
 - Generative Expand renders all sides in one pass, splits large expansions
   into rounds, and uses the model you pick. When the Expand default (SD 1.5
   inpainting, then DreamShaper 8) is installed and you picked another model,
@@ -227,6 +168,60 @@ downloader, and fixes from an end-to-end test matrix run in a real GIMP 3.2.6
 
 ### Fixed
 
+- Fills and Generative Expand no longer leave a faint outline on smooth
+  areas. The generated layer drifted a few levels off the original at its
+  edge (on a 4000 x 3000 sky: a 5-level step around the fill, about 8 levels
+  at an expand's old edge beside a photo's sky); OpenFill now measures that
+  drift where the layer must match the original and evens it out across the
+  layer, leaving the generated detail alone (`seam_correction`, on by
+  default; evidence in `docs/evidence/seam-2026-10-16/`).
+- The graphics card is read from NVIDIA's management library (NVML) when
+  `nvidia-smi` is missing, as it is inside the GIMP Flatpak, so the Models
+  tab sizes models on the first run there too.
+- A fill or Generative Expand made without OpenCV on the server (the result
+  starts from a flat colour) now says so once, and OpenFill installs the
+  pinned `opencv-python-headless` into ComfyUI's Python in the background.
+  Installing the inpaint nodes also installs it when it is missing.
+- A ComfyUI venv without pip (made with `uv venv`) gets pip from
+  `ensurepip` before OpenFill installs node requirements or OpenCV into it.
+- ComfyUI is also found in Stability Matrix's Linux library
+  (`~/.local/share/StabilityMatrix`) and through ComfyUI Desktop's settings
+  on macOS and Linux. `install.sh` notes a ComfyUI without OpenCV.
+- macOS: the supervisor and the task worker start. GIMP 3.2 signs the
+  Python in GIMP.app with a launch constraint, so the kernel killed them
+  when the plug-in started them with its own interpreter; the backend never
+  started and the Models tab never downloaded. They now run on ComfyUI's
+  Python (or a python3 on PATH outside the app bundle), without GIMP's
+  PYTHONHOME.
+- macOS: GIMP processes are recognised (libproc), so the backend stops when
+  GIMP closes even if its pid is reused.
+- macOS and Linux: the "ComfyUI is required" notice no longer offers the
+  Windows-only download; it links ComfyUI's install steps for the platform.
+  A checkout in `~/ComfyUI` and Stability Matrix on macOS are found.
+- Model downloads no longer get stuck when the task worker dies or stops
+  mid-download (killed, or shut down with GIMP): an exited worker that is
+  still a zombie of the Models tab counts as gone, a new worker re-queues
+  the half-done task and resumes it from its `.part` file, and the Models
+  tab no longer shows a download that nobody is doing.
+- macOS: the Models tab sizes models on the first run: an Apple silicon
+  Mac reports its chip and unified memory before ComfyUI has started.
+- A ComfyUI folder that cannot be started says why ("main.py is there but
+  no venv", "the folder does not exist", ...) instead of timing out; on
+  macOS GIMP's own Python is never used to run ComfyUI.
+- "Nothing is selected" and the indexed-image message no longer end with
+  "try again ... keep openfill.log for a bug report".
+- The release zip ships `install.sh` and keeps `gimp-openfill.py`
+  executable; unzipped on macOS or Linux, GIMP skipped the plug-in.
+- `install.sh` writes the same minimal config as `install.ps1` (no
+  outdated SD 1.5 and SDXL defaults), finds an existing ComfyUI and prints
+  the current next steps.
+- A cancelled or failed multi-round Generative Expand removes the layers
+  earlier rounds added and restores the canvas.
+- Windows: OpenFill detaches from the blank terminal window GIMP opens when
+  it runs Python plug-ins, and its child processes run without a window.
+- Installing custom nodes no longer fails when a folder on PATH cannot be read
+  (WinError 448, for example a junction from a package manager); that folder
+  is skipped while looking for git.
 - Generative Fill with no selection regenerated the whole image; it now stops
   with "Nothing is selected ..." before starting the backend (`sel-none`).
 - Transparent areas in the context were sent to the model as black; the
@@ -406,6 +401,5 @@ Rectangular selections as processing region; Windows startup fix.
 Initial release: text to image, image to image, inpainting, upscaling via the
 AUTOMATIC1111 WebUI API.
 
-[Unreleased]: https://github.com/thndrbrrr/gimp-stable-boy/compare/v2.0.0-beta.1...HEAD
-[2.0.0-beta.1]: https://github.com/thndrbrrr/gimp-stable-boy/compare/v2.0.0-alpha.1...v2.0.0-beta.1
-[2.0.0-alpha.1]: https://github.com/thndrbrrr/gimp-stable-boy/compare/v0.4...v2.0.0-alpha.1
+[Unreleased]: https://github.com/beckettharriman/gimp-openfill/compare/v2.0.0-beta.1...HEAD
+[2.0.0-beta.1]: https://github.com/beckettharriman/gimp-openfill/releases/tag/v2.0.0-beta.1
