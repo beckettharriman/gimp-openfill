@@ -158,7 +158,7 @@ Tested on Fedora with the GIMP 3.2.6 Flatpak (its profile is in `~/.config/GIMP/
 | `-RemoveConfig` | `--remove-config` | With uninstall, also deletes the settings folder (it holds the Hugging Face token, if any). |
 | `-ListModels`, `-Model <id>` | | Lists or downloads a model without opening GIMP, with resume and checksum. |
 
-The plug-in installs as `gimp-openfill/` and keeps settings in `<GIMP profile>/openfill/config.json`. Settings from an older `stable-boy` folder are copied over on the first run.
+The plug-in installs as `gimp-openfill/` and keeps settings in `<GIMP profile>/openfill/config.json`.
 
 </details>
 
@@ -177,7 +177,7 @@ Not tested yet: FLUX and Qwen end to end, Intel Macs, and the AUTOMATIC1111 back
 
 ## Where it came from
 
-OpenFill began as a port of [Stable Boy](https://github.com/thndrbrrr/gimp-stable-boy), Torben Giesselmann's GIMP 2.10 plug-in for the AUTOMATIC1111 WebUI. GIMP 3 threw out the plug-in API it was written against, so not much of the code survived, but the idea and the license did, and his name stays on it. The backend is [ComfyUI](https://github.com/comfyanonymous/ComfyUI). Acly's [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes) do the inpainting, and his [krita-ai-diffusion](https://github.com/Acly/krita-ai-diffusion) was the reference for how to build the graphs and manage the server. The model authors and their licenses are listed in [docs/models.md](docs/models.md).
+Early versions used code from [Stable Boy](https://github.com/thndrbrrr/gimp-stable-boy) (GPL-3.0). The backend is [ComfyUI](https://github.com/comfyanonymous/ComfyUI). Acly's [comfyui-inpaint-nodes](https://github.com/Acly/comfyui-inpaint-nodes) do the inpainting, and his [krita-ai-diffusion](https://github.com/Acly/krita-ai-diffusion) was the reference for how to build the graphs and manage the server. The model authors and their licenses are listed in [docs/models.md](docs/models.md).
 
 Open, as in GPL and on your own machine. Fill, as in the thing everyone else rents you by the month.
 
