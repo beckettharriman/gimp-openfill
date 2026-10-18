@@ -14,6 +14,7 @@ import os
 import shutil
 import subprocess
 import sys
+import threading
 import time
 from dataclasses import replace
 from pathlib import Path
@@ -156,7 +157,8 @@ class App:
             marker.write_text(desc, encoding="utf-8")
         except OSError:
             pass
-        gimp_io.message(ui_text.cpu_backend_message(flags))
+        if threading.current_thread() is threading.main_thread():  # GIMP calls only from the main thread
+            gimp_io.message(ui_text.cpu_backend_message(flags))
 
     def refresh_models_cache(self, health: HealthStatus) -> None:
         if not health.ok:
@@ -466,14 +468,11 @@ class App:
         return self.server.queue_task(task)
 
     def open_models_folder(self) -> None:
-        path = self.models_root
-        path.mkdir(parents=True, exist_ok=True)
-        if sys.platform == "win32":
-            os.startfile(str(path))  # type: ignore[attr-defined]
-        elif sys.platform == "darwin":
-            subprocess.Popen(["open", str(path)])
-        else:
-            subprocess.Popen(["xdg-open", str(path)])
+        _open_folder(self.models_root)
+
+    def open_log_folder(self) -> None:
+        """The folder with openfill.log and comfyui.log (ComfyUI's console output)."""
+        _open_folder(self.paths.base)
 
     def task_status(self) -> dict:
         return self.server.task_status()
@@ -1177,3 +1176,14 @@ class App:
         if self.server.request_stop():
             return f"Asked the AI backend (pid {state.get('server_pid')}) to shut down."
         return "Could not write the stop request."
+
+
+def _open_folder(path: Path) -> None:
+    """Show ``path`` in the system file manager (created first if missing)."""
+    path.mkdir(parents=True, exist_ok=True)
+    if sys.platform == "win32":
+        os.startfile(str(path))  # type: ignore[attr-defined]
+    elif sys.platform == "darwin":
+        subprocess.Popen(["open", str(path)])
+    else:
+        subprocess.Popen(["xdg-open", str(path)])

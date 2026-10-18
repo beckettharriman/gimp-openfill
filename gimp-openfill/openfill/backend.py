@@ -161,6 +161,8 @@ class HealthStatus:
     fooocus_patches: list[str] = field(default_factory=list)
     vram_total: int = 0
     vram_free: int = 0
+    device: str = ""  # what ComfyUI computes on, e.g. "NVIDIA GeForce RTX 3060 (cuda, 12.0 GB)"
+    device_kind: str = ""  # gpu, cpu or unknown (hardware.backend_device)
 
 
 @dataclass

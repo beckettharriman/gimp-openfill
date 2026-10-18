@@ -372,3 +372,13 @@ class CpuBackendMessageTests(unittest.TestCase):
         self.assertIn("PyTorch", ut.cpu_backend_message(""))
         for flags in ("", "--cpu"):
             self.assertNotIn("\\u2014", ut.cpu_backend_message(flags))
+
+
+class HealthDeviceTests(unittest.TestCase):
+    def test_device_and_cpu_warning(self):
+        gpu = ut.health_text(True, "", 3, True, "NVIDIA GeForce RTX 3060 (cuda, 12.0 GB)", "gpu")
+        self.assertIn("Running on: NVIDIA GeForce RTX 3060", gpu)
+        self.assertNotIn("processor", gpu)
+        cpu = ut.health_text(True, "", 3, True, "cpu (cpu, 31.2 GB)", "cpu")
+        self.assertIn("processor", cpu)
+        self.assertEqual(ut.health_text(True, "", 4, True), "Backend OK: 4 models, inpaint nodes installed.")
