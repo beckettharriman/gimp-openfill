@@ -254,6 +254,24 @@ def parse_system_stats(data: dict[str, Any]) -> tuple[str, int, int | None] | No
     return name, int(vram), ram_bytes
 
 
+def backend_device(data: dict[str, Any]) -> tuple[str, str]:
+    """``(kind, description)`` of the device a running ComfyUI computes on, from its ``/system_stats``.
+
+    ``kind`` is ``"gpu"``, ``"cpu"`` (ComfyUI was started with ``--cpu`` or its PyTorch
+    cannot use the graphics card: every generation then runs on the processor) or
+    ``"unknown"`` (no device listed).
+    """
+    devices = [d for d in data.get("devices") or [] if isinstance(d, dict)]
+    if not devices:
+        return "unknown", ""
+    gpus = [d for d in devices if str(d.get("type", "")).lower() not in ("cpu", "")]
+    best = max(gpus or devices, key=lambda d: d.get("vram_total") or 0)
+    name = str(best.get("name") or best.get("type") or "?").split(" : ", 1)[0].strip()
+    vram = best.get("vram_total")
+    memory = f", {vram / GB:.1f} GB" if isinstance(vram, (int, float)) and vram > 0 else ""
+    return ("gpu" if gpus else "cpu"), f"{name} ({best.get('type', '?')}{memory})"
+
+
 def gpu_from_apple_silicon(
     runner: Callable[..., Any] = subprocess.run, platform_name: str = sys.platform, machine: str | None = None
 ) -> tuple[str, int, int] | None:

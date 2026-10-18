@@ -533,3 +533,22 @@ def model_option_label(name: str, installed: bool, active: bool) -> str:
     if not installed:
         return f"{name} (not downloaded)"
     return name
+
+
+# ComfyUI options that force the processor.
+CPU_FLAGS = ("--cpu",)
+
+
+def cpu_backend_message(flags: str) -> str:
+    """What to tell the user when ComfyUI computes on the processor."""
+    why = (
+        f"because of '{flags}' in Generative Fill Settings > Extra ComfyUI options; remove it if you have a "
+        "supported graphics card"
+        if flags
+        else "because its PyTorch cannot use your graphics card (an AMD or Intel card needs ComfyUI's own "
+        "instructions for that card; the Windows download is for NVIDIA cards)"
+    )
+    return (
+        f"ComfyUI is running on the processor, not the graphics card, {why}. Every generation will be many "
+        "times slower, and the larger models may not finish. The device ComfyUI uses is in openfill.log."
+    )

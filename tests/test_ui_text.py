@@ -363,3 +363,12 @@ class ExpandCropTextTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CpuBackendMessageTests(unittest.TestCase):
+    def test_names_the_flag_or_the_pytorch(self):
+        self.assertIn("--cpu", ut.cpu_backend_message("--cpu"))
+        self.assertIn("Extra ComfyUI options", ut.cpu_backend_message("--cpu"))
+        self.assertIn("PyTorch", ut.cpu_backend_message(""))
+        for flags in ("", "--cpu"):
+            self.assertNotIn("\\u2014", ut.cpu_backend_message(flags))

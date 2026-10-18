@@ -245,3 +245,18 @@ class FitTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class BackendDeviceTests(unittest.TestCase):
+    def test_cpu_gpu_and_unknown(self):
+        cpu = {"devices": [{"name": "cpu", "type": "cpu", "vram_total": 32 * GB}]}
+        self.assertEqual(hwmod.backend_device(cpu), ("cpu", "cpu (cpu, 32.0 GB)"))
+        cuda = {
+            "devices": [
+                {"name": "cuda:0 NVIDIA GeForce RTX 3060 : cudaMallocAsync", "type": "cuda", "vram_total": 12 * GB}
+            ]
+        }
+        kind, desc = hwmod.backend_device(cuda)
+        self.assertEqual(kind, "gpu")
+        self.assertIn("RTX 3060", desc)
+        self.assertEqual(hwmod.backend_device({}), ("unknown", ""))
