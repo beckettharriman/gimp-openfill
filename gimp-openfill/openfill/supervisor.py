@@ -723,6 +723,8 @@ class TaskWorker:
         settings.comfy_dir = str(comfy)
         if task.get("cpu") and "--cpu" not in settings.extra_server_args.split():
             settings.extra_server_args = (settings.extra_server_args + " --cpu").strip()
+        if task.get("cpu"):
+            settings.cpu_comfy_dir = str(comfy)
         settings.save(self.config_path)
         self._finish(task, "done", f"ComfyUI is ready in {comfy}", comfy_dir=str(comfy))
 

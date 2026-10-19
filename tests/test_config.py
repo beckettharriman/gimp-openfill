@@ -290,3 +290,26 @@ class ComfyProblemTests(unittest.TestCase):
                 mock.patch.object(config.sys, "executable", "/usr/bin/python3"),
             ):
                 self.assertEqual(config.comfy_layout(root)["python"], Path("/usr/bin/python3"))
+
+
+class StaleCpuFlagTests(unittest.TestCase):
+    def test_dropped_only_for_another_folder(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            setup = Path(tmp) / "OpenFill" / "ComfyUI_windows_portable"
+            own = Path(tmp) / "MyComfy"
+            s = Settings(comfy_dir=str(setup), extra_server_args="--lowvram --cpu", cpu_comfy_dir=str(setup))
+            self.assertFalse(s.drop_stale_cpu_flag())  # still the folder it was added for
+            s.comfy_dir = str(own)
+            self.assertTrue(s.drop_stale_cpu_flag())
+            self.assertEqual((s.extra_server_args, s.cpu_comfy_dir), ("--lowvram", ""))
+            self.assertFalse(s.drop_stale_cpu_flag())
+
+    def test_typed_by_the_user_is_kept_and_old_settings_use_the_setup_folder(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            setup = Path(tmp) / "ComfyUI_windows_portable"
+            mine = Settings(comfy_dir=str(Path(tmp) / "MyComfy"), extra_server_args="--cpu")
+            self.assertFalse(mine.drop_stale_cpu_flag(setup))  # no setup folder on disk: the user typed it
+            setup.mkdir()
+            self.assertTrue(mine.drop_stale_cpu_flag(setup))  # settings from before cpu_comfy_dir existed
+            same = Settings(comfy_dir=str(setup), extra_server_args="--cpu")
+            self.assertFalse(same.drop_stale_cpu_flag(setup))

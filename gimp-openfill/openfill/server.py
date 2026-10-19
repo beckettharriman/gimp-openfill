@@ -194,6 +194,7 @@ class ServerManager:
                 "Filters > OpenFill > Generative Fill Settings."
             )
         self.paths.ensure()
+        self._drop_stale_cpu_flag()
         url = self.settings.url
         host, port = _split_host_port(url)
         # Something already listening here is not a healthy ComfyUI (ensure_running checked), so launching
@@ -334,6 +335,21 @@ class ServerManager:
     def supervisor_stderr_log(self) -> Path:
         """Where the supervisor's stderr goes (argument errors, crashes before its own log is open)."""
         return self.paths.base / SUPERVISOR_STDERR_FILENAME
+
+    def _drop_stale_cpu_flag(self) -> None:
+        """Download ComfyUI adds --cpu for its own folder on a PC without an NVIDIA card; once the
+        user points OpenFill at another ComfyUI, that flag would keep it on the processor."""
+        from .comfy_setup import default_install_dir  # imported here: comfy_setup is not needed otherwise
+
+        if not self.settings.drop_stale_cpu_flag(default_install_dir() / "ComfyUI_windows_portable"):
+            return
+        try:
+            self.settings.save(self.paths.config)
+        except OSError as err:
+            if self.log:
+                self.log.warning("could not save the settings without --cpu: %s", err)
+        if self.log:
+            self.log.info("removed --cpu: it was added for another ComfyUI folder than %s", self.settings.comfy_dir)
 
     def _helper_python(self) -> str:
         """See :func:`helper_python`; ComfyUI's interpreter comes from the configured folder."""

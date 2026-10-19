@@ -57,6 +57,7 @@ class Settings:
     startup_timeout: int = 240  # seconds to wait for the server
     request_timeout: int = 0  # 0 = estimate per request
     extra_server_args: str = ""  # appended to the ComfyUI command
+    cpu_comfy_dir: str = ""  # the ComfyUI folder Download ComfyUI added --cpu for (no NVIDIA card)
     checkpoint: str = "sd-v1-5-inpainting.ckpt"  # default (SD 1.5) model
     sdxl_checkpoint: str = "sd_xl_base_1.0.safetensors"
     fooocus_head: str = "fooocus_inpaint_head.pth"
@@ -172,6 +173,24 @@ class Settings:
             f"Your settings file could not be read and was moved aside to '{target}'; defaults are in use. "
             "Open Filters > OpenFill > Generative Fill Settings to set the ComfyUI folder and your options again."
         )
+
+    def drop_stale_cpu_flag(self, setup_dir: str | Path | None = None) -> bool:
+        """Remove the ``--cpu`` that Download ComfyUI added for its own folder once another
+        ComfyUI folder is in use; True when the settings changed.
+
+        Settings from before ``cpu_comfy_dir`` existed name no folder: then the folder
+        Download ComfyUI installs to (``setup_dir``) is taken as the one, if it exists. A
+        ``--cpu`` typed by the user for the folder in use is kept.
+        """
+        args = self.extra_server_args.split()
+        if "--cpu" not in args:
+            return False
+        origin = self.cpu_comfy_dir or (str(setup_dir) if setup_dir and Path(setup_dir).is_dir() else "")
+        if not origin or _same_dir(origin, self.comfy_dir):
+            return False
+        self.extra_server_args = " ".join(a for a in args if a != "--cpu")
+        self.cpu_comfy_dir = ""
+        return True
 
     def save(self, path: Path) -> None:
         """Write atomically (temporary file, then rename); owner-only permissions on POSIX."""
@@ -294,6 +313,13 @@ class Paths:
         self.base.mkdir(parents=True, exist_ok=True)
         self.temp.mkdir(parents=True, exist_ok=True)
         return self
+
+
+def _same_dir(a: str | Path, b: str | Path) -> bool:
+    try:
+        return os.path.normcase(os.path.abspath(str(a))) == os.path.normcase(os.path.abspath(str(b)))
+    except (TypeError, ValueError):
+        return False
 
 
 def comfy_layout(comfy_dir: str | Path) -> dict[str, Path] | None:
