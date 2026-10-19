@@ -93,8 +93,22 @@ PREVIEW_ROLE = "preview"
 
 
 def missing_previews(entry: ModelEntry, models_root: Path) -> list[FileSpec]:
-    """The entry's preview decoders that are not on disk."""
-    return [f for f in entry.files if f.role == PREVIEW_ROLE and not file_installed(models_root, f)]
+    """The entry's preview decoders that are not on disk. ComfyUI takes any file named
+    ``<decoder>.<ext>`` in the folder (newer ComfyUI builds ship ``taesd_decoder.safetensors``),
+    so one under another extension counts too."""
+    out = []
+    for f in entry.files:
+        if f.role != PREVIEW_ROLE or file_installed(models_root, f):
+            continue
+        folder = (Path(models_root) / f.dest).parent
+        stem = f.filename.rsplit(".", 1)[0] + "."
+        try:
+            if any(p.name.startswith(stem) and p.stat().st_size > 0 for p in folder.iterdir()):
+                continue
+        except OSError:
+            pass
+        out.append(f)
+    return out
 
 
 @dataclass(frozen=True)

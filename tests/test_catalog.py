@@ -590,3 +590,6 @@ class PreviewFileTests(unittest.TestCase):
                 fh.truncate(main.size)
             self.assertTrue(cat.install_status(entry, Path(tmp), None).installed)
             self.assertEqual([f.filename for f in cat.missing_previews(entry, Path(tmp))], ["taesd_decoder.pth"])
+            (Path(tmp) / "vae_approx").mkdir()
+            (Path(tmp) / "vae_approx" / "taesd_decoder.safetensors").write_bytes(b"x")  # what ComfyUI ships
+            self.assertEqual(cat.missing_previews(entry, Path(tmp)), [])
