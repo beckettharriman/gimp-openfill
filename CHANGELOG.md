@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0-beta.2] - 2026-10-19
+
+From the first user reports: a ComfyUI running on the processor without a
+word, FLUX fills that looked stuck, and FLUX prompts that painted the wrong
+things.
+
+### Added
+
+- OpenFill logs the device ComfyUI runs on at every start and, when it is
+  the processor, says so once and why: `--cpu` in Extra ComfyUI options, or
+  a PyTorch that cannot use the graphics card. Settings > Check backend ends
+  with "Running on: ..." and flags the processor.
+- Settings > Open log folder: openfill.log and comfyui.log, the console of
+  the hidden ComfyUI.
+- Live preview files: SD 1.5, SDXL and FLUX models download their small
+  TAESD preview decoder (about 5 MB, MIT) with them, so the progress window
+  shows the image forming. A model downloaded earlier fetches its decoder in
+  the background before its next job.
+- FLUX.1 Fill GGUF Q6_K for 12 GB cards, sharper than the Q4_0 for 8 GB.
+- The Fill dialog reminds FLUX users to describe only what goes in the
+  selection: FLUX paints everything the prompt names.
+
+### Fixed
+
+- The `--cpu` that Download ComfyUI adds on a PC without an NVIDIA card is
+  removed once OpenFill uses another ComfyUI folder, instead of keeping that
+  one on the processor.
+
 ## [2.0.0-beta.1] - 2026-10-17
 
 First public beta, and the first release under the name OpenFill: model
@@ -401,5 +429,6 @@ Rectangular selections as processing region; Windows startup fix.
 Initial release: text to image, image to image, inpainting, upscaling via the
 AUTOMATIC1111 WebUI API.
 
-[Unreleased]: https://github.com/beckettharriman/gimp-openfill/compare/v2.0.0-beta.1...HEAD
+[Unreleased]: https://github.com/beckettharriman/gimp-openfill/compare/v2.0.0-beta.2...HEAD
+[2.0.0-beta.2]: https://github.com/beckettharriman/gimp-openfill/releases/tag/v2.0.0-beta.2
 [2.0.0-beta.1]: https://github.com/beckettharriman/gimp-openfill/releases/tag/v2.0.0-beta.1
