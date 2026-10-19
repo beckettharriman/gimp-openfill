@@ -250,9 +250,11 @@ def _choice_options(config: Gimp.ProcedureConfig, prop: str) -> list[tuple[str, 
 
 def _model_options(
     config: Gimp.ProcedureConfig, kind: str, settings: Settings
-) -> tuple[list[tuple[str, str]], str, bool]:
+) -> tuple[list[tuple[str, str]], str, bool, frozenset]:
     """Model dropdown: the active model first, then the catalog models that
-    can do ``kind`` (downloaded ones before the others)."""
+    can do ``kind`` (downloaded ones before the others). Also: the active model's
+    name, whether it only removes objects, and the dropdown ids that are FLUX models
+    ("active" included when the active model is one)."""
     from pathlib import Path
 
     from openfill import catalog as cat
@@ -260,6 +262,7 @@ def _model_options(
     nicks = [n for n, _ in (_choice_options(config, "model") or [("active", "Active model")])]
     active_name, prompt_free = settings.active_model, False
     installed_rows, other_rows = [], []
+    flux_ids: set[str] = set()
     try:
         catalog = cat.load_catalog(plugin_dir=Path(__file__).resolve().parent)
         root = cat.default_models_root(settings.comfy_dir)
@@ -267,9 +270,13 @@ def _model_options(
         active_id = cat.effective_active(catalog, root, nodes, settings.active_model)
         active_name = active_id or "none installed"
         for entry in catalog:
+            if entry.arch == "flux":
+                flux_ids.add(entry.id)
             if entry.id == active_id:
                 active_name = entry.name
                 prompt_free = "remove" in entry.capabilities
+                if entry.arch == "flux":
+                    flux_ids.add("active")
                 continue
             if entry.id not in nicks or not entry.runnable:
                 continue
@@ -283,7 +290,7 @@ def _model_options(
     except Exception:  # noqa: BLE001 - the dropdown still offers the active model
         pass
     options = [("active", ui_text.model_option_label(active_name, True, True))]
-    return options + installed_rows + other_rows, active_name, prompt_free
+    return options + installed_rows + other_rows, active_name, prompt_free, frozenset(flux_ids)
 
 
 def _image_sizes(image: Gimp.Image | None) -> tuple[tuple[int, int] | None, tuple[int, int] | None]:
@@ -320,7 +327,7 @@ def _generation_dialog(
     if hooks.get("mode") == "remove":
         values["remove"] = True
     values.update(hooks.get("values") or {})  # test hook: start values as if picked under Advanced
-    models, active_name, prompt_free = _model_options(config, kind, settings)
+    models, active_name, prompt_free, flux_models = _model_options(config, kind, settings)
     if hooks.get("prompt_free"):  # test hook: as if the active model only removed objects
         active_name, prompt_free = str(hooks["prompt_free"]), True
     image_size, selection_size = _image_sizes(image)
@@ -341,6 +348,7 @@ def _generation_dialog(
         default_size=(settings.txt2img_width, settings.txt2img_height),
         active_prompt_free=prompt_free,
         active_name=active_name,
+        flux_models=flux_models,
         show_advanced=bool(hooks.get("advanced")),
         test_text=hooks.get("type"),
         test_key=hooks.get("press"),

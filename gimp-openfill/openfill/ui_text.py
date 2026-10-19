@@ -248,6 +248,10 @@ def elapsed_text(elapsed: str, remaining: str | None = None) -> str:
     return f"Elapsed {elapsed}"
 
 
+# FLUX Fill paints what the prompt names and does not follow instructions about the picture.
+FLUX_PROMPT_HINT = "FLUX paints everything you name: describe only what goes in the selection."
+
+
 def prompt_free_warning(model_name: str) -> str:
     """Fill dialog note when the active model ignores prompts (removal models)."""
     short = (model_name or "The active model").split(" - ")[0]

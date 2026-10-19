@@ -384,6 +384,7 @@ class GenerationDialog(Gtk.Dialog):
         active_name: str = "",
         show_advanced: bool = False,
         thumbnail: object | None = None,
+        flux_models: frozenset = frozenset(),
     ) -> None:
         super().__init__(title=self.TITLES[kind], modal=True)
         self.kind = kind
@@ -393,6 +394,7 @@ class GenerationDialog(Gtk.Dialog):
         self.default_size = default_size
         self.active_prompt_free = active_prompt_free
         self.active_name = active_name
+        self.flux_models = flux_models
         self._syncing = False
         self.set_default_size(self.WIDTH, -1)
         self.set_border_width(6)
@@ -743,6 +745,8 @@ class GenerationDialog(Gtk.Dialog):
             model = self.model_combo.get_active_id() if hasattr(self, "model_combo") else "active"
             if not self.removing and model == "active" and self.active_prompt_free:
                 warnings.append(ui_text.prompt_free_warning(self.active_name))
+            elif not self.removing and model in self.flux_models:
+                warnings.append(ui_text.FLUX_PROMPT_HINT)
         elif self.kind == "expand" and hasattr(self, "expand_state"):
             m, st = self.expand_state.margins, self.expand_state
             status = ui_text.expand_status((st.image_w, st.image_h), m.left, m.top, m.right, m.bottom)

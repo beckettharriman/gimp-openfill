@@ -382,3 +382,10 @@ class HealthDeviceTests(unittest.TestCase):
         cpu = ut.health_text(True, "", 3, True, "cpu (cpu, 31.2 GB)", "cpu")
         self.assertIn("processor", cpu)
         self.assertEqual(ut.health_text(True, "", 4, True), "Backend OK: 4 models, inpaint nodes installed.")
+
+
+class FluxHintTests(unittest.TestCase):
+    def test_short_plain_line(self):
+        self.assertLessEqual(len(ut.FLUX_PROMPT_HINT), 100)
+        self.assertIn("FLUX", ut.FLUX_PROMPT_HINT)
+        self.assertNotIn("—", ut.FLUX_PROMPT_HINT)
