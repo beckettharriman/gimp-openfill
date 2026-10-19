@@ -24,7 +24,8 @@
       "requires_nodes": [],
       "requires_models": [],
       "files": [
-        {"role": "checkpoint", "url": "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-inpainting/resolve/main/sd-v1-5-inpainting.ckpt", "dest": "checkpoints/sd-v1-5-inpainting.ckpt", "size": 4265437280, "sha256": "c6bbc15e3224e6973459ba78de4998b80b50112b0ae5b5c67113d56b4e366b19"}
+        {"role": "checkpoint", "url": "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-inpainting/resolve/main/sd-v1-5-inpainting.ckpt", "dest": "checkpoints/sd-v1-5-inpainting.ckpt", "size": 4265437280, "sha256": "c6bbc15e3224e6973459ba78de4998b80b50112b0ae5b5c67113d56b4e366b19"},
+        {"role": "preview", "url": "https://github.com/madebyollin/taesd/raw/d968ebf70e930b76243c773a63162ed94482361f/taesd_decoder.pth", "dest": "vae_approx/taesd_decoder.pth", "size": 4913399, "sha256": "02873377c3f4659cd9f9adb2f718dcb434ba4c7bba3af3ee7bb95cbdabe2d3cf", "optional": true, "license": "MIT"}
       ]
     },
     {
@@ -45,7 +46,8 @@
       ],
       "requires_models": ["fooocus-inpaint-patch"],
       "files": [
-        {"role": "checkpoint", "url": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors", "dest": "checkpoints/sd_xl_base_1.0.safetensors", "size": 6938078334, "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"}
+        {"role": "checkpoint", "url": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors", "dest": "checkpoints/sd_xl_base_1.0.safetensors", "size": 6938078334, "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"},
+        {"role": "preview", "url": "https://github.com/madebyollin/taesd/raw/d968ebf70e930b76243c773a63162ed94482361f/taesdxl_decoder.pth", "dest": "vae_approx/taesdxl_decoder.pth", "size": 4913541, "sha256": "a3956b8a7a763f251c7357aad6375dacdb6d971121c73e97a3069fc33a94fe1e", "optional": true, "license": "MIT"}
       ]
     },
     {
@@ -88,7 +90,8 @@
       ],
       "requires_models": ["fooocus-inpaint-patch"],
       "files": [
-        {"role": "checkpoint", "url": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v9/resolve/main/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors", "dest": "checkpoints/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors", "size": 7105348188, "sha256": "c9e3e68f89b8e38689e1097d4be4573cf308de4e3fd044c64ca697bdb4aa8bca"}
+        {"role": "checkpoint", "url": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v9/resolve/main/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors", "dest": "checkpoints/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors", "size": 7105348188, "sha256": "c9e3e68f89b8e38689e1097d4be4573cf308de4e3fd044c64ca697bdb4aa8bca"},
+        {"role": "preview", "url": "https://github.com/madebyollin/taesd/raw/d968ebf70e930b76243c773a63162ed94482361f/taesdxl_decoder.pth", "dest": "vae_approx/taesdxl_decoder.pth", "size": 4913541, "sha256": "a3956b8a7a763f251c7357aad6375dacdb6d971121c73e97a3069fc33a94fe1e", "optional": true, "license": "MIT"}
       ]
     },
     {
@@ -112,7 +115,33 @@
         {"role": "unet", "url": "https://huggingface.co/YarvixPA/FLUX.1-Fill-dev-GGUF/resolve/main/flux1-fill-dev-Q4_0.gguf", "dest": "unet/flux1-fill-dev-Q4_0.gguf", "size": 6809920800, "sha256": "fc9c8398f7ba88d1fe670b5011330c1b08c70838828a0d8f876fe5402653321b"},
         {"role": "clip1", "url": "https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/resolve/main/t5-v1_1-xxl-encoder-Q5_K_M.gguf", "dest": "clip/t5-v1_1-xxl-encoder-Q5_K_M.gguf", "size": 3386856640, "sha256": "b51cbb10b1a7aac6dd1c3b62f0ed908bfd06e0b42d2f3577d43e061361f51dae", "license": "Apache-2.0"},
         {"role": "clip2", "url": "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors", "dest": "clip/clip_l.safetensors", "size": 246144152, "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd", "license": "Apache-2.0"},
-        {"role": "vae", "url": "https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/ae.safetensors", "dest": "vae/ae.safetensors", "size": 335304388, "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38", "gated": true, "license": "Apache-2.0", "optional": true}
+        {"role": "vae", "url": "https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/ae.safetensors", "dest": "vae/ae.safetensors", "size": 335304388, "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38", "gated": true, "license": "Apache-2.0", "optional": true},
+        {"role": "preview", "url": "https://github.com/madebyollin/taesd/raw/d968ebf70e930b76243c773a63162ed94482361f/taef1_decoder.pth", "dest": "vae_approx/taef1_decoder.pth", "size": 4943336, "sha256": "beae86f2eeaf0cea884dc8ffe639fb297dac8c984441bb53420f07d767785104", "optional": true, "license": "MIT"}
+      ]
+    },
+    {
+      "id": "flux1-fill-dev-gguf-q6",
+      "name": "FLUX.1 Fill [dev] GGUF Q6_K, for 12 GB cards (+ T5 GGUF, CLIP-L, FLUX VAE)",
+      "tier": "quality",
+      "capabilities": ["fill", "expand"],
+      "arch": "flux",
+      "template": "flux_fill",
+      "page": "https://huggingface.co/YarvixPA/FLUX.1-Fill-dev-GGUF",
+      "license": {"name": "FLUX.1 [dev] Non-Commercial License", "url": "https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/blob/main/LICENSE.md"},
+      "gated": true,
+      "source_type": "community-quantization",
+      "uploader": "YarvixPA (GGUF of black-forest-labs/FLUX.1-Fill-dev); city96 (T5 GGUF); comfyanonymous (CLIP-L); black-forest-labs (VAE, gated)",
+      "min_vram_gb": 12,
+      "requires_nodes": [
+        {"repo": "https://github.com/city96/ComfyUI-GGUF", "folder": "ComfyUI-GGUF", "commit": "6ea2651e7df66d7585f6ffee804b20e92fb38b8a", "license": "Apache-2.0"}
+      ],
+      "requires_models": [],
+      "files": [
+        {"role": "unet", "url": "https://huggingface.co/YarvixPA/FLUX.1-Fill-dev-GGUF/resolve/main/flux1-fill-dev-Q6_K.gguf", "dest": "unet/flux1-fill-dev-Q6_K.gguf", "size": 9860932896, "sha256": "d538635d81ed5eca59fa2f5a7b68709f0b5584d936570a8695e4d1ae4d518a72"},
+        {"role": "clip1", "url": "https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/resolve/main/t5-v1_1-xxl-encoder-Q5_K_M.gguf", "dest": "clip/t5-v1_1-xxl-encoder-Q5_K_M.gguf", "size": 3386856640, "sha256": "b51cbb10b1a7aac6dd1c3b62f0ed908bfd06e0b42d2f3577d43e061361f51dae", "license": "Apache-2.0"},
+        {"role": "clip2", "url": "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors", "dest": "clip/clip_l.safetensors", "size": 246144152, "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd", "license": "Apache-2.0"},
+        {"role": "vae", "url": "https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/ae.safetensors", "dest": "vae/ae.safetensors", "size": 335304388, "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38", "gated": true, "license": "Apache-2.0", "optional": true},
+        {"role": "preview", "url": "https://github.com/madebyollin/taesd/raw/d968ebf70e930b76243c773a63162ed94482361f/taef1_decoder.pth", "dest": "vae_approx/taef1_decoder.pth", "size": 4943336, "sha256": "beae86f2eeaf0cea884dc8ffe639fb297dac8c984441bb53420f07d767785104", "optional": true, "license": "MIT"}
       ]
     },
     {
@@ -134,7 +163,8 @@
         {"role": "unet", "url": "https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/resolve/main/flux1-fill-dev.safetensors", "dest": "diffusion_models/flux1-fill-dev.safetensors", "size": 23804922408, "sha256": "03e289f530df51d014f48e675a9ffa2141bc003259bf5f25d75b957e920a41ca", "gated": true},
         {"role": "clip1", "url": "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn.safetensors", "dest": "clip/t5xxl_fp8_e4m3fn.safetensors", "size": 4893934904, "sha256": "7d330da4816157540d6bb7838bf63a0f02f573fc48ca4d8de34bb0cbfd514f09", "license": "Apache-2.0"},
         {"role": "clip2", "url": "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors", "dest": "clip/clip_l.safetensors", "size": 246144152, "sha256": "660c6f5b1abae9dc498ac2d21e1347d2abdb0cf6c0c0c8576cd796491d9a6cdd", "license": "Apache-2.0", "optional": true},
-        {"role": "vae", "url": "https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/resolve/main/ae.safetensors", "dest": "vae/ae.safetensors", "size": 335304388, "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38", "gated": true, "optional": true}
+        {"role": "vae", "url": "https://huggingface.co/black-forest-labs/FLUX.1-Fill-dev/resolve/main/ae.safetensors", "dest": "vae/ae.safetensors", "size": 335304388, "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38", "gated": true, "optional": true},
+        {"role": "preview", "url": "https://github.com/madebyollin/taesd/raw/d968ebf70e930b76243c773a63162ed94482361f/taef1_decoder.pth", "dest": "vae_approx/taef1_decoder.pth", "size": 4943336, "sha256": "beae86f2eeaf0cea884dc8ffe639fb297dac8c984441bb53420f07d767785104", "optional": true, "license": "MIT"}
       ]
     },
     {
@@ -218,7 +248,8 @@
       "requires_nodes": [],
       "requires_models": [],
       "files": [
-        {"role": "checkpoint", "url": "https://huggingface.co/SG161222/Realistic_Vision_V6.0_B1_noVAE/resolve/main/Realistic_Vision_V6.0_NV_B1_inpainting_fp16.safetensors", "dest": "checkpoints/Realistic_Vision_V6.0_NV_B1_inpainting_fp16.safetensors", "size": 2136906350, "sha256": "d939cbdbce19a9d8837794acd06ef8db1ad4a2f2bcf1418432d897eac98f1afd"}
+        {"role": "checkpoint", "url": "https://huggingface.co/SG161222/Realistic_Vision_V6.0_B1_noVAE/resolve/main/Realistic_Vision_V6.0_NV_B1_inpainting_fp16.safetensors", "dest": "checkpoints/Realistic_Vision_V6.0_NV_B1_inpainting_fp16.safetensors", "size": 2136906350, "sha256": "d939cbdbce19a9d8837794acd06ef8db1ad4a2f2bcf1418432d897eac98f1afd"},
+        {"role": "preview", "url": "https://github.com/madebyollin/taesd/raw/d968ebf70e930b76243c773a63162ed94482361f/taesd_decoder.pth", "dest": "vae_approx/taesd_decoder.pth", "size": 4913399, "sha256": "02873377c3f4659cd9f9adb2f718dcb434ba4c7bba3af3ee7bb95cbdabe2d3cf", "optional": true, "license": "MIT"}
       ]
     },
     {
@@ -237,7 +268,8 @@
       "requires_nodes": [],
       "requires_models": [],
       "files": [
-        {"role": "checkpoint", "url": "https://huggingface.co/Lykon/DreamShaper/resolve/main/DreamShaper_8_INPAINTING.inpainting.safetensors", "dest": "checkpoints/DreamShaper_8_INPAINTING.inpainting.safetensors", "size": 2132703862, "sha256": "ac84e05d5039d7a8aea3ced335ac7c56da6d3c6816465651f928b137c3a7b24a"}
+        {"role": "checkpoint", "url": "https://huggingface.co/Lykon/DreamShaper/resolve/main/DreamShaper_8_INPAINTING.inpainting.safetensors", "dest": "checkpoints/DreamShaper_8_INPAINTING.inpainting.safetensors", "size": 2132703862, "sha256": "ac84e05d5039d7a8aea3ced335ac7c56da6d3c6816465651f928b137c3a7b24a"},
+        {"role": "preview", "url": "https://github.com/madebyollin/taesd/raw/d968ebf70e930b76243c773a63162ed94482361f/taesd_decoder.pth", "dest": "vae_approx/taesd_decoder.pth", "size": 4913399, "sha256": "02873377c3f4659cd9f9adb2f718dcb434ba4c7bba3af3ee7bb95cbdabe2d3cf", "optional": true, "license": "MIT"}
       ]
     },
     {
@@ -258,7 +290,8 @@
       ],
       "requires_models": ["fooocus-inpaint-patch"],
       "files": [
-        {"role": "checkpoint", "url": "https://huggingface.co/SG161222/RealVisXL_V5.0/resolve/main/RealVisXL_V5.0_fp16.safetensors", "dest": "checkpoints/RealVisXL_V5.0_fp16.safetensors", "size": 6938065488, "sha256": "6a35a7855770ae9820a3c931d4964c3817b6d9e3c6f9c4dabb5b3a94e5643b80"}
+        {"role": "checkpoint", "url": "https://huggingface.co/SG161222/RealVisXL_V5.0/resolve/main/RealVisXL_V5.0_fp16.safetensors", "dest": "checkpoints/RealVisXL_V5.0_fp16.safetensors", "size": 6938065488, "sha256": "6a35a7855770ae9820a3c931d4964c3817b6d9e3c6f9c4dabb5b3a94e5643b80"},
+        {"role": "preview", "url": "https://github.com/madebyollin/taesd/raw/d968ebf70e930b76243c773a63162ed94482361f/taesdxl_decoder.pth", "dest": "vae_approx/taesdxl_decoder.pth", "size": 4913541, "sha256": "a3956b8a7a763f251c7357aad6375dacdb6d971121c73e97a3069fc33a94fe1e", "optional": true, "license": "MIT"}
       ]
     }
   ]

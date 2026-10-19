@@ -232,7 +232,47 @@ class App:
                 f"'{model_display_name(entry.name)}' needs the custom node pack(s) {', '.join(status.missing_nodes)}; "
                 "press Install nodes in the Models tab."
             )
+        self._fetch_missing_previews(entry)
         return entry, cat.model_spec_for(entry, self.catalog)
+
+    def _fetch_missing_previews(self, entry: cat.ModelEntry) -> None:
+        """Queue the model's live-preview decoder (a few MB) when it is missing, e.g. for a model
+        downloaded before OpenFill fetched them. The job runs anyway; the preview appears once it is there."""
+        missing = cat.missing_previews(entry, self.models_root)
+        if not missing or self.settings.backend != "comfyui":
+            return
+        try:
+            current = self.server.task_status().get("current") or {}
+            busy = [current, *self.server.pending_tasks()]
+            if any(
+                t.get("type") == "download"
+                and {f.get("dest") for f in t.get("files") or []} & {f.dest for f in missing}
+                for t in busy
+            ):
+                return
+            self.server.queue_task(
+                {
+                    "type": "download",
+                    "model_id": entry.id,
+                    "models_root": str(self.models_root),
+                    "use_token": False,
+                    "files": [
+                        {
+                            "url": f.url,
+                            "dest": f.dest,
+                            "size": f.size,
+                            "sha256": f.sha256,
+                            "gated": False,
+                            "optional": True,
+                            "role": f.role,
+                        }
+                        for f in missing
+                    ],
+                }
+            )
+            self.log.info("queued the live-preview file(s) %s", ", ".join(f.filename for f in missing))
+        except (OSError, ValueError) as err:
+            self.log.warning("could not queue the live-preview file: %s", err)
 
     def profile_for(self, model: ModelSpec) -> geometry.ModelProfile:
         base = geometry.PROFILES.get(model.arch, geometry.SD15)

@@ -87,6 +87,16 @@ class CatalogError(ValueError):
     """The catalog file is missing, malformed or names an unknown model."""
 
 
+# Role of the small TAESD decoder ComfyUI draws the live preview with (models/vae_approx). Downloaded
+# with the model, but a model without it is still installed: only the preview is missing.
+PREVIEW_ROLE = "preview"
+
+
+def missing_previews(entry: ModelEntry, models_root: Path) -> list[FileSpec]:
+    """The entry's preview decoders that are not on disk."""
+    return [f for f in entry.files if f.role == PREVIEW_ROLE and not file_installed(models_root, f)]
+
+
 @dataclass(frozen=True)
 class FileSpec:
     """One downloadable file of a catalog entry."""
@@ -586,8 +596,8 @@ def install_status(
     """Compute the :class:`InstallStatus` of ``entry`` (files, nodes, companion models)."""
     missing, partial = [], []
     for f in entry.files:
-        if file_installed(models_root, f):
-            continue
+        if f.role == PREVIEW_ROLE or file_installed(models_root, f):
+            continue  # a missing live-preview decoder only costs the preview
         missing.append(f.dest)
         if (Path(models_root) / (f.dest + ".part")).exists():
             partial.append(f.dest)
@@ -604,7 +614,7 @@ def install_status(
         except CatalogError:
             missing_models.append(dep)
             continue
-        if any(not file_installed(models_root, f) for f in dep_entry.files):
+        if any(not file_installed(models_root, f) for f in dep_entry.files if f.role != PREVIEW_ROLE):
             missing_models.append(dep)
     seen = None
     if server_files is not None:

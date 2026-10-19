@@ -567,3 +567,26 @@ class ViewModelTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PreviewFileTests(unittest.TestCase):
+    def test_generative_models_bring_their_preview_decoder(self):
+        entries = cat.load_catalog(CATALOG)
+        want = {"sd15": "taesd_decoder.pth", "sdxl": "taesdxl_decoder.pth", "flux": "taef1_decoder.pth"}
+        for e in entries:
+            if e.arch in want and cat.live_main_file(e) is not None:
+                previews = [f for f in e.files if f.role == cat.PREVIEW_ROLE]
+                self.assertEqual([f.filename for f in previews], [want[e.arch]], e.id)
+                self.assertTrue(previews[0].optional and previews[0].sha256, e.id)
+                self.assertEqual(previews[0].dest, "vae_approx/" + want[e.arch])
+
+    def test_a_missing_preview_does_not_uninstall_the_model(self):
+        entry = cat.by_id(cat.load_catalog(CATALOG), "dreamshaper-8-inpainting")
+        with tempfile.TemporaryDirectory() as tmp:
+            main = cat.live_main_file(entry)
+            path = Path(tmp) / main.dest
+            path.parent.mkdir(parents=True)
+            with open(path, "wb") as fh:
+                fh.truncate(main.size)
+            self.assertTrue(cat.install_status(entry, Path(tmp), None).installed)
+            self.assertEqual([f.filename for f in cat.missing_previews(entry, Path(tmp))], ["taesd_decoder.pth"])

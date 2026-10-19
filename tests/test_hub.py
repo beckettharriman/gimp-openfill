@@ -171,7 +171,7 @@ class HuggingFaceMappingTests(unittest.TestCase):
         self.assertEqual(main["size"], lfs["size"])
         # companions are the bundled FLUX text encoders and VAE, optional, with their own gating
         companions = {f["role"]: f for f in raw["files"][1:]}
-        self.assertEqual(set(companions), {"clip1", "clip2", "vae"})
+        self.assertEqual(set(companions), {"clip1", "clip2", "vae", "preview"})
         self.assertTrue(all(f["optional"] for f in companions.values()))
         self.assertTrue(companions["vae"]["gated"])
         self.assertEqual([n["folder"] for n in raw["requires_nodes"]], ["ComfyUI-GGUF"])
