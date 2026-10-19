@@ -105,6 +105,8 @@ SETTINGS_CONNECTION = "Connection and troubleshooting"
 CHOOSE_FOLDER = "Choose the ComfyUI folder"
 BROWSE = "Browse..."
 CHECK_BACKEND = "Check backend"
+OPEN_LOG_FOLDER = "Open log folder"
+OPEN_LOG_FOLDER_TIP = "openfill.log and comfyui.log, the hidden ComfyUI console (device, errors)."
 CHECK_BACKEND_TIP = "Starts the backend if needed and checks that it answers."
 CHECK_BACKEND_IDLE = "Press Check backend to test the AI backend. The first start takes about a minute."
 CHECK_BACKEND_RUNNING = "Checking. The first start takes about a minute..."
@@ -439,12 +441,22 @@ def unexpected_error(type_name: str, detail: str) -> str:
     return with_next_step(f"Something went wrong: {type_name}: {detail}")
 
 
-def health_text(ok: bool, detail: str, model_count: int, inpaint_nodes: bool) -> str:
+def health_text(
+    ok: bool, detail: str, model_count: int, inpaint_nodes: bool, device: str = "", device_kind: str = ""
+) -> str:
     """Result line of the Settings > General "Check backend" button."""
     if ok:
         models = f"{model_count} model{'s' if model_count != 1 else ''}"
         nodes = "inpaint nodes installed" if inpaint_nodes else "inpaint nodes missing (SDXL quality fill needs them)"
-        return f"Backend OK: {models}, {nodes}."
+        text = f"Backend OK: {models}, {nodes}."
+        if device:
+            text += f" Running on: {device}."
+        if device_kind == "cpu":
+            text += (
+                " That is the processor, not the graphics card: every generation will be very slow. "
+                "Remove --cpu from Extra ComfyUI options, or use a ComfyUI whose PyTorch supports your card."
+            )
+        return text
     reason = " ".join((detail or "no answer").split())
     if len(reason) > 220:
         reason = reason[:217].rstrip() + "..."
@@ -533,3 +545,22 @@ def model_option_label(name: str, installed: bool, active: bool) -> str:
     if not installed:
         return f"{name} (not downloaded)"
     return name
+
+
+# ComfyUI options that force the processor.
+CPU_FLAGS = ("--cpu",)
+
+
+def cpu_backend_message(flags: str) -> str:
+    """What to tell the user when ComfyUI computes on the processor."""
+    why = (
+        f"because of '{flags}' in Generative Fill Settings > Extra ComfyUI options; remove it if you have a "
+        "supported graphics card"
+        if flags
+        else "because its PyTorch cannot use your graphics card (an AMD or Intel card needs ComfyUI's own "
+        "instructions for that card; the Windows download is for NVIDIA cards)"
+    )
+    return (
+        f"ComfyUI is running on the processor, not the graphics card, {why}. Every generation will be many "
+        "times slower, and the larger models may not finish. The device ComfyUI uses is in openfill.log."
+    )

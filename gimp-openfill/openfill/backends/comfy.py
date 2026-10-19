@@ -10,7 +10,7 @@ import time
 import uuid
 from pathlib import Path
 
-from .. import workflow
+from .. import hardware, workflow
 from ..backend import (
     Backend,
     BackendUnavailable,
@@ -93,6 +93,7 @@ class ComfyBackend(Backend):
             patches = self.client.combo_options("INPAINT_LoadFooocusInpaint", "patch") if caps.inpaint_nodes else []
         except ComfyApiError as err:
             return HealthStatus(False, f"server answered but node info failed: {err}", version)
+        device_kind, device = hardware.backend_device(stats)
         return HealthStatus(
             True,
             f"ComfyUI {version}",
@@ -103,6 +104,8 @@ class ComfyBackend(Backend):
             patches,
             int(devices[0].get("vram_total", 0)),
             int(devices[0].get("vram_free", 0)),
+            device,
+            device_kind,
         )
 
     def progress(self) -> Progress:

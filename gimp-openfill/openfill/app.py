@@ -14,11 +14,12 @@ import os
 import shutil
 import subprocess
 import sys
+import threading
 import time
 from dataclasses import replace
 from pathlib import Path
 
-from . import caption, comfy_setup, geometry, gimp_io, hardware, quality, workflow
+from . import caption, comfy_setup, geometry, gimp_io, hardware, quality, ui_text, workflow
 from . import catalog as cat
 from .backend import (
     SETTINGS_MENU,
@@ -95,6 +96,7 @@ class App:
         # interactive=False (scripts, batch): no progress window, so a failure never waits for a click
         self.interactive = interactive
         self._opencv_noted = False
+        self._device_checked = False
         self.paths = Paths.for_profile(gimp_io.profile_dir()).ensure()
         self.settings = Settings.load(self.paths.config)
         self.log = get_logger(self.paths.log, debug=self.settings.debug)
@@ -129,7 +131,34 @@ class App:
         timeout = float(self.settings.request_timeout or 0)
         if self.settings.backend == "a1111":
             return A1111Backend(url, timeout, self.log)
+        self._check_device(url)
         return ComfyBackend(url, request_timeout=timeout, logger=self.log, models_root=self.models_root)
+
+    def _check_device(self, url: str) -> None:
+        """Log the device ComfyUI computes on; when it is the processor, say so loudly
+        (once per backend start): every generation is then many times slower."""
+        if self._device_checked:
+            return
+        self._device_checked = True
+        try:
+            kind, desc = hardware.backend_device(ComfyClient(url, timeout=3).system_stats())
+        except (ComfyApiError, OSError, ValueError) as err:
+            self.log.info("backend device: unknown (%s)", err)
+            return
+        self.log.info("backend device: %s", desc or "none listed")
+        if kind != "cpu":
+            return
+        flags = " ".join(a for a in self.settings.extra_server_args.split() if a in ui_text.CPU_FLAGS)
+        self.log.warning("ComfyUI runs on the processor, not a graphics card (%s)", flags or "its PyTorch has no GPU")
+        marker = self.paths.base / f"cpu-warned-{self.server.read_state().get('server_pid', 0)}"
+        if marker.exists():
+            return
+        try:
+            marker.write_text(desc, encoding="utf-8")
+        except OSError:
+            pass
+        if threading.current_thread() is threading.main_thread():  # GIMP calls only from the main thread
+            gimp_io.message(ui_text.cpu_backend_message(flags))
 
     def refresh_models_cache(self, health: HealthStatus) -> None:
         if not health.ok:
@@ -439,14 +468,11 @@ class App:
         return self.server.queue_task(task)
 
     def open_models_folder(self) -> None:
-        path = self.models_root
-        path.mkdir(parents=True, exist_ok=True)
-        if sys.platform == "win32":
-            os.startfile(str(path))  # type: ignore[attr-defined]
-        elif sys.platform == "darwin":
-            subprocess.Popen(["open", str(path)])
-        else:
-            subprocess.Popen(["xdg-open", str(path)])
+        _open_folder(self.models_root)
+
+    def open_log_folder(self) -> None:
+        """The folder with openfill.log and comfyui.log (ComfyUI's console output)."""
+        _open_folder(self.paths.base)
 
     def task_status(self) -> dict:
         return self.server.task_status()
@@ -1150,3 +1176,14 @@ class App:
         if self.server.request_stop():
             return f"Asked the AI backend (pid {state.get('server_pid')}) to shut down."
         return "Could not write the stop request."
+
+
+def _open_folder(path: Path) -> None:
+    """Show ``path`` in the system file manager (created first if missing)."""
+    path.mkdir(parents=True, exist_ok=True)
+    if sys.platform == "win32":
+        os.startfile(str(path))  # type: ignore[attr-defined]
+    elif sys.platform == "darwin":
+        subprocess.Popen(["open", str(path)])
+    else:
+        subprocess.Popen(["xdg-open", str(path)])

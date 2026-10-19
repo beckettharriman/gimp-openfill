@@ -874,7 +874,9 @@ def _settings_test_backend(app: App, values: dict, report: Callable[[str], None]
         app.refresh_models_cache(health)
     except Exception as err:  # noqa: BLE001 - the cache only fills the legacy checkpoint lists
         app.log.warning("models cache not refreshed: %s", err)
-    return ui_text.health_text(True, health.detail, len(health.checkpoints), health.inpaint_nodes)
+    return ui_text.health_text(
+        True, health.detail, len(health.checkpoints), health.inpaint_nodes, health.device, health.device_kind
+    )
 
 
 def _settings_dialog(procedure: Gimp.Procedure, config: Gimp.ProcedureConfig) -> bool:
@@ -907,6 +909,7 @@ def _settings_dialog(procedure: Gimp.Procedure, config: Gimp.ProcedureConfig) ->
         ranges,
         models_panel_factory=lambda: ModelsPanel(App()),
         test_backend=lambda v, report: _settings_test_backend(test_app, v, report),
+        open_logs=test_app.open_log_folder,
         autoclose_seconds=float(hooks.get("autoclose") or 0),
         tab=str(hooks.get("settings_tab") or "") or ("" if test_app.has_model_for("remove") else "models"),
         show_advanced=bool(hooks.get("advanced")),

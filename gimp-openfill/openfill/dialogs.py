@@ -935,6 +935,7 @@ class SettingsDialog(Gtk.Dialog):
         ranges: dict,
         models_panel_factory: Callable[[], Gtk.Widget] | None = None,
         test_backend: Callable[[dict, Callable[[str], None]], str] | None = None,
+        open_logs: Callable[[], None] | None = None,
     ) -> None:
         super().__init__(title=ui_text.SETTINGS_TITLE, modal=True)
         self.values = dict(values)
@@ -943,6 +944,7 @@ class SettingsDialog(Gtk.Dialog):
         self.widgets: dict[str, Gtk.Widget] = {}
         self.expanders: list[Gtk.Expander] = []
         self._test_backend = test_backend
+        self._open_logs = open_logs
         self._alive = True
         self.connect("destroy", self._on_destroy)
         self.set_default_size(900, 760)
@@ -989,6 +991,11 @@ class SettingsDialog(Gtk.Dialog):
         self.test_label.set_selectable(True)
         self.test_label.set_text(ui_text.CHECK_BACKEND_IDLE)
         test_row.pack_start(self.test_label, True, True, 0)
+        if self._open_logs is not None:
+            logs = Gtk.Button(label=ui_text.OPEN_LOG_FOLDER)
+            logs.set_tooltip_text(ui_text.OPEN_LOG_FOLDER_TIP)
+            logs.connect("clicked", lambda _b: self._open_logs())
+            test_row.pack_end(logs, False, False, 0)
         box.pack_start(test_row, False, False, 0)
 
         for title, fields in (
@@ -1182,6 +1189,7 @@ def run_settings_dialog(
     select_model: str = "",
     test_steps: list | None = None,
     test_out: str = "",
+    open_logs: Callable[[], None] | None = None,
 ) -> dict | None:
     """Show the Settings dialog; the collected values, or None when cancelled.
 
@@ -1191,7 +1199,7 @@ def run_settings_dialog(
     appends the backend label and the model rows (in list order) to the JSON
     lines file ``test_out``.
     """
-    dialog = SettingsDialog(values, choices, ranges, models_panel_factory, test_backend)
+    dialog = SettingsDialog(values, choices, ranges, models_panel_factory, test_backend, open_logs)
     set_transient(dialog)
     for expander in dialog.expanders[:1] if show_advanced else []:
         expander.set_expanded(True)
