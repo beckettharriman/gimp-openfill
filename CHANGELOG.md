@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0-beta.2] - 2026-10-19
 
 From the first user reports: a ComfyUI running on the processor without a
-word, FLUX fills that looked stuck, and FLUX prompts that painted the wrong
-things.
+word, FLUX fills that looked stuck, FLUX prompts that painted the wrong
+things, and GTX 10 cards that failed every job.
 
 ### Added
 
@@ -31,6 +31,15 @@ things.
 
 ### Fixed
 
+- Older NVIDIA cards (GTX 10 series and earlier) work: every job used to
+  fail at once with "The GPU ran out of memory" (issue #2). The ComfyUI
+  that Download ComfyUI installs ships a PyTorch made for RTX 20 cards and
+  newer; OpenFill now reads the card's compute capability and fetches the
+  same ComfyUI release built for older cards (CUDA 12.6) instead.
+- A CUDA error is no longer reported as running out of memory. Real
+  out-of-memory errors keep ComfyUI's own first line, and a ComfyUI whose
+  PyTorch cannot run the card says so, once after it starts and on any job,
+  with what to download.
 - The `--cpu` that Download ComfyUI adds on a PC without an NVIDIA card is
   removed once OpenFill uses another ComfyUI folder, instead of keeping that
   one on the processor.
