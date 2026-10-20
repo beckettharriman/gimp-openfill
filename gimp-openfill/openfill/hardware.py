@@ -66,6 +66,7 @@ class Hardware:
     disk_free_bytes: int | None = None
     os_name: str = ""
     gpu_source: str = ""  # "nvidia-smi", "nvml", "comfyui", "apple-silicon" or "" (unknown)
+    compute_capability: float | None = None  # NVIDIA CUDA compute capability, e.g. 6.1 (GTX 10) or 8.9 (RTX 40)
 
     @property
     def vram_gb(self) -> float | None:
@@ -228,6 +229,70 @@ def gpu_from_nvml(loader: Callable[[], Any] = _load_nvml) -> tuple[str, int] | N
     return best
 
 
+def parse_compute_capability(text: str) -> float | None:
+    """Lowest ``compute_cap`` in ``nvidia-smi --query-gpu=compute_cap`` output (one card per line)."""
+    caps = []
+    for line in (text or "").splitlines():
+        try:
+            caps.append(float(line.strip()))
+        except ValueError:
+            continue
+    return min(caps) if caps else None
+
+
+def gpu_compute_capability(
+    runner: Callable[..., Any] = subprocess.run, loader: Callable[[], Any] = _load_nvml
+) -> float | None:
+    """CUDA compute capability of the NVIDIA card (the lowest, with several), or None.
+
+    From ``nvidia-smi`` when it is there, else from NVML. Decides which PyTorch
+    build can run the card: CUDA 12.8 and newer builds start at 7.5 (RTX 20 / GTX 16).
+    """
+    exe = shutil.which("nvidia-smi")
+    if exe is None and sys.platform == "win32":
+        candidate = Path(os.environ.get("SYSTEMROOT", r"C:\Windows")) / "System32" / "nvidia-smi.exe"
+        exe = str(candidate) if candidate.is_file() else None
+    if exe is not None:
+        try:
+            r = runner(
+                [exe, "--query-gpu=compute_cap", "--format=csv,noheader"],
+                capture_output=True,
+                text=True,
+                timeout=10,
+                **_hidden(),
+            )
+            if getattr(r, "returncode", 1) == 0:
+                cap = parse_compute_capability(r.stdout or "")
+                if cap is not None:
+                    return cap
+        except (OSError, subprocess.SubprocessError):
+            pass
+    try:
+        lib = loader()
+        if lib is None or lib.nvmlInit_v2() != 0:
+            return None
+    except (OSError, AttributeError):
+        return None
+    caps = []
+    try:
+        count = ctypes.c_uint(0)
+        if lib.nvmlDeviceGetCount_v2(ctypes.byref(count)) == 0:
+            for i in range(count.value):
+                handle, major, minor = ctypes.c_void_p(), ctypes.c_int(0), ctypes.c_int(0)
+                if lib.nvmlDeviceGetHandleByIndex_v2(i, ctypes.byref(handle)) != 0:
+                    continue
+                if lib.nvmlDeviceGetCudaComputeCapability(handle, ctypes.byref(major), ctypes.byref(minor)) == 0:
+                    caps.append(major.value + minor.value / 10)
+    except (OSError, AttributeError, ValueError):
+        return None
+    finally:
+        try:
+            lib.nvmlShutdown()
+        except (OSError, AttributeError):
+            pass
+    return min(caps) if caps else None
+
+
 def parse_system_stats(data: dict[str, Any]) -> tuple[str, int, int | None] | None:
     """(gpu name, vram bytes, ram bytes) from ComfyUI's ``/system_stats``; None without a GPU device."""
     devices = [d for d in data.get("devices") or [] if isinstance(d, dict)]
@@ -372,6 +437,7 @@ def detect(
     comfy_url: str | None = None,
     nvidia: Callable[[], tuple[str, int] | None] = gpu_from_nvidia_smi,
     nvml: Callable[[], tuple[str, int] | None] = gpu_from_nvml,
+    compute: Callable[[], float | None] = gpu_compute_capability,
     comfy: Callable[[str], Any] = gpu_from_comfyui,
     apple: Callable[[], tuple[str, int, int] | None] = gpu_from_apple_silicon,
 ) -> Hardware:
@@ -412,7 +478,13 @@ def detect(
         if chip:
             name, vram, ram = chip
             source = "apple-silicon"
-    return Hardware(name, vram, ram, disk_free(models_root), os_name(), source)
+    cap = None
+    if source in ("nvidia-smi", "nvml"):
+        try:
+            cap = compute()
+        except Exception:  # noqa: BLE001
+            cap = None
+    return Hardware(name, vram, ram, disk_free(models_root), os_name(), source, cap)
 
 
 # --------------------------------------------------------------------- fit ----

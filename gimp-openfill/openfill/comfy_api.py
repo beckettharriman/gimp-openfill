@@ -37,6 +37,22 @@ class ComfyApiError(RuntimeError):
         self.payload = payload or {}
 
 
+# What PyTorch says when it was built without the graphics card's architecture.
+UNSUPPORTED_GPU_SIGNS = (
+    "no kernel image is available",
+    "cudaerrornokernelimagefordevice",
+    "is not compatible with the current pytorch installation",
+)
+
+
+def unsupported_gpu_line(log_text: str) -> str:
+    """PyTorch's 'not compatible with the current PyTorch installation' warning from ComfyUI's log, or ""."""
+    for line in (log_text or "").splitlines():
+        if any(sign in line.lower() for sign in UNSUPPORTED_GPU_SIGNS):
+            return " ".join(line.split())[:300]
+    return ""
+
+
 class ComfyExecutionError(ComfyApiError):
     """``execution_error`` event from the server (includes the exception type)."""
 
@@ -48,9 +64,17 @@ class ComfyExecutionError(ComfyApiError):
 
     @property
     def is_out_of_memory(self) -> bool:
-        """True when the server ran out of GPU (or CUDA) memory."""
+        """True when the server ran out of GPU (or CUDA) memory. Other CUDA errors are not: a
+        PyTorch built without the card's architecture fails with 'CUDA error: no kernel image is
+        available for execution on the device', which no smaller selection fixes."""
         text = f"{self.exception_type} {self!s}".lower()
-        return "outofmemory" in text or "out of memory" in text or "cuda error" in text
+        return "outofmemory" in text or "out of memory" in text
+
+    @property
+    def is_unsupported_gpu(self) -> bool:
+        """True when ComfyUI's PyTorch has no code for this graphics card (too old or too new)."""
+        text = f"{self.exception_type} {self!s} {self.traceback}".lower()
+        return any(s in text for s in UNSUPPORTED_GPU_SIGNS)
 
 
 class ComfyClient:

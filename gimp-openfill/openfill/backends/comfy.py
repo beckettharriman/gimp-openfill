@@ -27,6 +27,7 @@ from ..backend import (
     Progress,
     ProgressCallback,
     Txt2ImgRequest,
+    UnsupportedGpu,
     WorkflowRejected,
 )
 from ..comfy_api import ComfyApiError, ComfyClient, ComfyExecutionError
@@ -242,6 +243,8 @@ class ComfyBackend(Backend):
                 activity_extension=0.0 if self.request_timeout else ACTIVITY_EXTENSION,
             )
         except ComfyExecutionError as err:
+            if err.is_unsupported_gpu:
+                raise UnsupportedGpu(str(err)) from err
             if err.is_out_of_memory:
                 raise OutOfMemory(str(err)) from err
             raise WorkflowRejected(f"{err.node_type or 'node'}: {err}") from err

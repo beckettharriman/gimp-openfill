@@ -592,3 +592,38 @@ class UnpackProgressTests(unittest.TestCase):
                 lambda: ticks.append(1),
             )
         self.assertEqual(len(ticks), 3)
+
+
+class OlderGpuBuildTests(unittest.TestCase):
+    """Issue #2: a GTX 10 card needs the CUDA 12.6 build; the standard one's PyTorch starts at sm_75."""
+
+    m = comfy_setup.parse_manifest(RAW)
+
+    def hw(self, cap, name="NVIDIA GeForce GTX 1060 with Max-Q Design"):
+        return Hardware(gpu_name=name, vram_bytes=6 * GB, gpu_source="nvidia-smi", compute_capability=cap)
+
+    def pf(self, hw):
+        return comfy_setup.preflight(
+            self.m, hw, ["NVIDIA GeForce"], 50 * GB, Path("C:/x"), 8188, False, platform="win32"
+        )
+
+    def test_manifest_has_the_pinned_build_for_older_cards(self):
+        older = self.m.for_older_gpus()
+        self.assertEqual(older.archive_name, "ComfyUI_windows_portable_nvidia_cu126.7z")
+        self.assertEqual(older.archive_size, 1895335518)
+        self.assertEqual(older.folder, self.m.folder)
+        self.assertEqual((older.nodes, older.pip), (self.m.nodes, self.m.pip))
+
+    def test_pascal_gets_it_and_turing_does_not(self):
+        pascal = self.pf(self.hw(6.1))
+        self.assertTrue(pascal.older_gpu)
+        self.assertIn("older than the RTX 20 series", pascal.text())
+        for cap in (7.5, 8.9, None):
+            with self.subTest(cap=cap):
+                self.assertFalse(self.pf(self.hw(cap, "NVIDIA GeForce RTX 4070")).older_gpu)
+
+    def test_unofficial_url_for_older_cards_is_refused(self):
+        bad = json.loads(json.dumps(RAW))
+        bad["comfyui"]["older_gpus"]["asset"]["url"] = "https://example.com/ComfyUI_windows_portable_nvidia_cu126.7z"
+        with self.assertRaises(comfy_setup.SetupError):
+            comfy_setup.parse_manifest(bad)

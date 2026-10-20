@@ -23,7 +23,7 @@ import shutil
 import subprocess
 import sys
 from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 from urllib.request import urlopen
@@ -74,6 +74,21 @@ class SetupManifest:
     amd_instructions: str
     nodes: tuple[NodeSpec, ...]
     pip: tuple[str, ...]
+    # The same release built for NVIDIA cards below ``older_below_compute`` (CUDA 12.6 PyTorch):
+    # (archive name, url, size, sha256), or None.
+    older_asset: tuple[str, str, int, str] | None = None
+    older_below_compute: float = 0.0
+
+    def needs_older_build(self, compute_capability: float | None) -> bool:
+        """True when the card's compute capability is below what the main build's PyTorch supports."""
+        return bool(self.older_asset and compute_capability and compute_capability < self.older_below_compute)
+
+    def for_older_gpus(self) -> SetupManifest:
+        """This manifest with the archive for older NVIDIA cards (same folder, nodes and packages)."""
+        if not self.older_asset:
+            return self
+        name, url, size, sha = self.older_asset
+        return replace(self, archive_name=name, archive_url=url, archive_size=size, archive_sha256=sha)
 
     @property
     def download_bytes(self) -> int:
@@ -93,10 +108,21 @@ def parse_manifest(raw: Mapping[str, Any]) -> SetupManifest:
         size = int(a["size"])
         nodes = tuple(NodeSpec(n["repo"], n["folder"], n["commit"], n.get("license", "")) for n in raw.get("nodes", []))
         pip = tuple(str(p) for p in raw.get("pip", []))
+        older = c.get("older_gpus") or {}
+        older_asset = None
+        if older:
+            oa = older["asset"]
+            older_asset = (str(oa["name"]), str(oa["url"]), int(oa["size"]), str(oa["sha256"]).lower())
+        older_below = float(older.get("below_compute") or 0.0)
     except (KeyError, TypeError, ValueError) as err:
         raise SetupError(f"comfy_setup.json is incomplete: {err!r}") from err
-    if not url.startswith("https://github.com/comfyanonymous/ComfyUI/releases/download/"):
-        raise SetupError(f"the ComfyUI archive must come from the official GitHub releases: {url}")
+    for u in (url, older_asset[1] if older_asset else url):
+        if not u.startswith("https://github.com/comfyanonymous/ComfyUI/releases/download/"):
+            raise SetupError(f"the ComfyUI archive must come from the official GitHub releases: {u}")
+    if older_asset and (
+        not downloads.is_safe_name(older_asset[0]) or not _SHA_RE.match(older_asset[3]) or older_asset[2] <= 0
+    ):
+        raise SetupError("comfy_setup.json: the archive for older cards needs a safe name, its size and a SHA-256")
     if not downloads.is_safe_name(name) or not downloads.is_safe_name(folder):
         raise SetupError("comfy_setup.json holds an unsafe file or folder name")
     if not _SHA_RE.match(sha) or size <= 0:
@@ -121,6 +147,8 @@ def parse_manifest(raw: Mapping[str, Any]) -> SetupManifest:
         amd_instructions=str(c.get("amd_instructions", "")),
         nodes=nodes,
         pip=pip,
+        older_asset=older_asset,
+        older_below_compute=older_below,
     )
 
 
@@ -289,6 +317,7 @@ class Preflight:
     checks: tuple[Check, ...]
     gpu: str
     gpu_name: str = ""
+    older_gpu: bool = False  # an NVIDIA card the main build's PyTorch cannot run: use the build for older cards
 
     @property
     def blocked(self) -> bool:
@@ -389,6 +418,15 @@ def preflight(
         else:
             mem = f" ({vram:.0f} GB graphics memory)" if vram else ""
             checks.append(Check("gpu", "ok", f"Graphics card: {name or 'NVIDIA'}{mem}."))
+        if manifest.needs_older_build(getattr(hw, "compute_capability", None)):
+            checks.append(
+                Check(
+                    "gpu_build",
+                    "ok",
+                    f"{name or 'This card'} is older than the RTX 20 series, so OpenFill downloads ComfyUI's "
+                    "build for older NVIDIA cards (CUDA 12.6). The standard build would not run on it.",
+                )
+            )
     elif kind == "other":
         checks.append(
             Check(
@@ -444,7 +482,8 @@ def preflight(
         )
     else:
         checks.append(Check("port", "ok", f"Port {port} is free."))
-    return Preflight(tuple(checks), kind, name)
+    older = kind == "nvidia" and manifest.needs_older_build(getattr(hw, "compute_capability", None))
+    return Preflight(tuple(checks), kind, name, older)
 
 
 # -------------------------------------------------------------------- setup ----

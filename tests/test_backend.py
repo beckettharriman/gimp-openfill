@@ -202,3 +202,16 @@ class NoOpenCvFallbackTests(unittest.TestCase):
         result, runs = self._inpaint([])
         self.assertEqual(runs, ["navier-stokes"])
         self.assertNotIn("prefill_fallback", result.info)
+
+
+class GpuErrorWordingTests(unittest.TestCase):
+    def test_out_of_memory_keeps_comfyui_text(self):
+        text = backend.describe_error(backend.OutOfMemory("CUDA out of memory. Tried to allocate 2.00 GiB"))
+        self.assertIn("ran out of memory", text)
+        self.assertIn("ComfyUI said: CUDA out of memory", text)
+
+    def test_unsupported_gpu_says_what_to_get(self):
+        text = backend.describe_error(backend.UnsupportedGpu("CUDA error: no kernel image is available"))
+        self.assertNotIn("out of memory", text)
+        self.assertIn("ComfyUI_windows_portable_nvidia_cu126.7z", text)
+        self.assertIn("no kernel image", text)

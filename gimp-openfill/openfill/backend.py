@@ -35,6 +35,10 @@ class OutOfMemory(BackendError):
     """The GPU ran out of memory while generating."""
 
 
+class UnsupportedGpu(BackendError):
+    """ComfyUI's PyTorch has no code for this graphics card (for example a GTX 10 card with a CUDA 13 build)."""
+
+
 class GenerationTimeout(BackendError):
     """The request exceeded the configured timeout."""
 
@@ -258,6 +262,12 @@ def _with_next_step(text: str, step: str) -> str:
     return f"{text} {step}".strip()
 
 
+def _first_line(text: str, limit: int = 200) -> str:
+    """The first line of an error text, shortened: enough to search for, short enough for a dialog."""
+    line = next((ln.strip() for ln in text.splitlines() if ln.strip()), "")
+    return line if len(line) <= limit else line[: limit - 3].rstrip() + "..."
+
+
 def describe_error(error: BaseException) -> str:
     """Short, user-facing description for a backend failure: plain words plus a next step.
 
@@ -279,6 +289,14 @@ def describe_error(error: BaseException) -> str:
         return (
             "The GPU ran out of memory. Try a smaller selection, fewer variations, or the SD 1.5 model "
             "instead of SDXL, and close other programs that use the graphics card."
+            + (f" (ComfyUI said: {_first_line(text)})" if text else "")
+        )
+    if isinstance(error, UnsupportedGpu):
+        return (
+            "ComfyUI cannot use this graphics card: its PyTorch was made for newer cards. NVIDIA cards older "
+            "than the RTX 20 series (GTX 10 and earlier) need ComfyUI's build for older cards, "
+            "ComfyUI_windows_portable_nvidia_cu126.7z on the ComfyUI releases page. Unpack it and choose its "
+            f"folder in {SETTINGS_MENU}." + (f" (ComfyUI said: {_first_line(text)})" if text else "")
         )
     if isinstance(error, GenerationTimeout):
         return _with_next_step(

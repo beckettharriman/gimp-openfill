@@ -698,6 +698,9 @@ class TaskWorker:
     def _setup_comfy(self, task: dict[str, Any]) -> None:
         """Download and install the pinned ComfyUI (see comfy_setup.py), then save it as the ComfyUI folder."""
         manifest = comfy_setup.load_manifest()
+        if task.get("older_gpu"):
+            manifest = manifest.for_older_gpus()  # CUDA 12.6 PyTorch: runs GTX 10 and older NVIDIA cards
+            self.log(f"older NVIDIA card: using {manifest.archive_name}")
         install_dir = Path(str(task.get("install_dir") or ""))
         if not install_dir.is_absolute():
             raise comfy_setup.SetupError(f"the install folder {str(install_dir)!r} is not an absolute path")

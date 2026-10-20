@@ -35,7 +35,7 @@ from .backend import (
 )
 from .backends.a1111 import A1111Backend
 from .backends.comfy import ComfyBackend
-from .comfy_api import ComfyApiError, ComfyClient
+from .comfy_api import ComfyApiError, ComfyClient, unsupported_gpu_line
 from .config import Paths, Settings, comfy_layout, comfy_problem
 from .geometry import Rect
 from .log import get_logger
@@ -146,19 +146,32 @@ class App:
             self.log.info("backend device: unknown (%s)", err)
             return
         self.log.info("backend device: %s", desc or "none listed")
+        if kind == "gpu":
+            # PyTorch warns at start-up when it has no code for the card ("... with CUDA capability
+            # sm_61 is not compatible with the current PyTorch installation"); every job would then
+            # fail with a CUDA error. Say so before the first one.
+            warning = unsupported_gpu_line(self.server.server_log_tail(400))
+            if warning:
+                self.log.warning("ComfyUI's PyTorch does not support this graphics card: %s", warning)
+                self._warn_once("gpu-warned", warning, ui_text.unsupported_gpu_message(warning))
+            return
         if kind != "cpu":
             return
         flags = " ".join(a for a in self.settings.extra_server_args.split() if a in ui_text.CPU_FLAGS)
         self.log.warning("ComfyUI runs on the processor, not a graphics card (%s)", flags or "its PyTorch has no GPU")
-        marker = self.paths.base / f"cpu-warned-{self.server.read_state().get('server_pid', 0)}"
+        self._warn_once("cpu-warned", desc, ui_text.cpu_backend_message(flags))
+
+    def _warn_once(self, prefix: str, detail: str, message: str) -> None:
+        """Show ``message`` once per backend start (a marker file named after ComfyUI's pid)."""
+        marker = self.paths.base / f"{prefix}-{self.server.read_state().get('server_pid', 0)}"
         if marker.exists():
             return
         try:
-            marker.write_text(desc, encoding="utf-8")
+            marker.write_text(detail, encoding="utf-8")
         except OSError:
             pass
         if threading.current_thread() is threading.main_thread():  # GIMP calls only from the main thread
-            gimp_io.message(ui_text.cpu_backend_message(flags))
+            gimp_io.message(message)
 
     def refresh_models_cache(self, health: HealthStatus) -> None:
         if not health.ok:
@@ -560,9 +573,11 @@ class App:
             port_answers(host, port, timeout=0.5),
         )
 
-    def queue_comfy_setup(self, install_dir: Path, cpu: bool = False) -> str:
+    def queue_comfy_setup(self, install_dir: Path, cpu: bool = False, older_gpu: bool = False) -> str:
         """Queue the download and install of the pinned ComfyUI as a background task."""
-        return self.server.queue_task({"type": "setup_comfy", "install_dir": str(install_dir), "cpu": bool(cpu)})
+        return self.server.queue_task(
+            {"type": "setup_comfy", "install_dir": str(install_dir), "cpu": bool(cpu), "older_gpu": bool(older_gpu)}
+        )
 
     # features ------------------------------------------------------------
 

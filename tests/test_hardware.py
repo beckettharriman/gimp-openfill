@@ -4,6 +4,7 @@
 import tempfile
 import unittest
 from types import SimpleNamespace
+from unittest import mock
 
 from openfill import hardware as hwmod
 from openfill.catalog import FileSpec, load_catalog
@@ -260,3 +261,20 @@ class BackendDeviceTests(unittest.TestCase):
         self.assertEqual(kind, "gpu")
         self.assertIn("RTX 3060", desc)
         self.assertEqual(hwmod.backend_device({}), ("unknown", ""))
+
+
+class ComputeCapabilityTests(unittest.TestCase):
+    def test_parse_takes_the_lowest_card(self):
+        self.assertEqual(hwmod.parse_compute_capability("8.6\n6.1\n"), 6.1)
+        self.assertIsNone(hwmod.parse_compute_capability("[N/A]\n"))
+
+    def test_detect_reads_it_for_nvidia_only(self):
+        got = hwmod.detect(None, None, nvidia=lambda: ("GTX 1060", 6 * GB), compute=lambda: 6.1)
+        self.assertEqual(got.compute_capability, 6.1)
+        got = hwmod.detect(None, None, nvidia=lambda: None, nvml=lambda: None, apple=lambda: None, compute=lambda: 6.1)
+        self.assertIsNone(got.compute_capability)
+
+    def test_from_nvidia_smi(self):
+        with mock.patch.object(hwmod.shutil, "which", return_value="/usr/bin/nvidia-smi"):
+            cap = hwmod.gpu_compute_capability(runner=lambda *a, **k: SimpleNamespace(returncode=0, stdout="6.1\n"))
+        self.assertEqual(cap, 6.1)

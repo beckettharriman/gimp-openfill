@@ -307,3 +307,38 @@ class ComfyBackendTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GpuErrorClassificationTests(unittest.TestCase):
+    """Issue #2: a GTX 1060 with a CUDA 13 PyTorch failed with a CUDA error that was shown as out of memory."""
+
+    def err(self, message, exception_type="RuntimeError", traceback=""):
+        from openfill.comfy_api import ComfyExecutionError
+
+        return ComfyExecutionError(message, exception_type, "INPAINT_InpaintWithModel", traceback)
+
+    def test_no_kernel_image_is_not_out_of_memory(self):
+        e = self.err("CUDA error: no kernel image is available for execution on the device")
+        self.assertFalse(e.is_out_of_memory)
+        self.assertTrue(e.is_unsupported_gpu)
+
+    def test_real_out_of_memory(self):
+        e = self.err("CUDA out of memory. Tried to allocate 2.00 GiB", "torch.OutOfMemoryError")
+        self.assertTrue(e.is_out_of_memory)
+        self.assertFalse(e.is_unsupported_gpu)
+
+    def test_other_cuda_errors_are_neither(self):
+        e = self.err("CUDA error: an illegal memory access was encountered")
+        self.assertFalse(e.is_out_of_memory)
+        self.assertFalse(e.is_unsupported_gpu)
+
+    def test_startup_warning_in_the_log(self):
+        from openfill.comfy_api import unsupported_gpu_line
+
+        log = (
+            "[INFO] Total VRAM 6144 MB\n"
+            "UserWarning: NVIDIA GeForce GTX 1060 with Max-Q Design with CUDA capability sm_61 is not compatible "
+            "with the current PyTorch installation.\n[INFO] Device: cuda:0"
+        )
+        self.assertIn("sm_61", unsupported_gpu_line(log))
+        self.assertEqual(unsupported_gpu_line("[INFO] Device: cuda:0 NVIDIA GeForce RTX 4070"), "")

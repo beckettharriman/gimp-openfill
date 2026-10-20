@@ -568,3 +568,13 @@ def cpu_backend_message(flags: str) -> str:
         f"ComfyUI is running on the processor, not the graphics card, {why}. Every generation will be many "
         "times slower, and the larger models may not finish. The device ComfyUI uses is in openfill.log."
     )
+
+
+def unsupported_gpu_message(detail: str) -> str:
+    """What to tell the user when ComfyUI's PyTorch has no code for the graphics card."""
+    return (
+        "ComfyUI cannot use this graphics card: its PyTorch was made for newer cards, so every generation "
+        "would fail. NVIDIA cards older than the RTX 20 series (GTX 10 and earlier) need ComfyUI's build for "
+        "older cards, ComfyUI_windows_portable_nvidia_cu126.7z on the ComfyUI releases page. Unpack it and "
+        f"choose its folder in Filters > OpenFill > Generative Fill Settings. (PyTorch said: {detail})"
+    )

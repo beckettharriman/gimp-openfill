@@ -15,6 +15,16 @@
       "size": 2003629308,
       "sha256": "3dca347842ed1c6c833105fafb1669284685a3e54df41578d5f94bcc898ae039"
     },
+    "older_gpus": {
+      "note": "The main build's PyTorch (CUDA 13) runs on NVIDIA cards from compute capability 7.5 (RTX 20 / GTX 16) up. Older cards (GTX 10 and earlier) get the CUDA 12.6 build of the same release, whose PyTorch is built for 5.0 to 9.0.",
+      "below_compute": 7.5,
+      "asset": {
+        "name": "ComfyUI_windows_portable_nvidia_cu126.7z",
+        "url": "https://github.com/comfyanonymous/ComfyUI/releases/download/v0.39.0/ComfyUI_windows_portable_nvidia_cu126.7z",
+        "size": 1895335518,
+        "sha256": "c42e7d5f6a5e931f6551dcf102d739a55c5f4a4df921f748e1de9de9f648d6a2"
+      }
+    },
     "amd_instructions": "https://github.com/comfyanonymous/ComfyUI#amd-gpus-windows-and-linux"
   },
   "nodes": [
